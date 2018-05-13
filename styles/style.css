@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css?family=Gaegu');
+@import url('https://fonts.googleapis.com/css?family=Redressed');
+@import url('https://fonts.googleapis.com/css?family=Zeyada');
+@import url('https://fonts.googleapis.com/css?family=Lovers+Quarrel');
+@import url('https://fonts.googleapis.com/css?family=Bad+Script');
+@import url('https://fonts.googleapis.com/css?family=Dawning+of+a+New+Day');
+@import url('https://fonts.googleapis.com/css?family=Ruthie');
+@import url('https://fonts.googleapis.com/css?family=Dancing+Script');
+body {
+    overflow: none;
+}
+
+.geek-background {
+    background-image: url('../assets/bg_main.jpg');
+    background-repeat: no-repeat;
+    background-position: 38vw 16vw;
+    background-size: 25% auto;
+}
+
+#home {
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('../assets/bg_home.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+body>div>.container-fluid {
+    height: 100vh;
+}
+
+nav {
+    background-color: transparent;
+}
+
+#navbarNavAltMarkup>div {
+    width: 70%;
+}
+
+#greeter_message{
+    font-family: 'Dancing Script', cursive;
+}
+
+#showcase {
+    color: aliceblue;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    overflow: hidden;
+    background-image: url('../assets/bg_showcase.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* -moz-box-shadow: inset 0px -11px 11px -2.5px rgba(0,0,0,0.25);
+    -webkit-box-shadow: inset 0px -11px 11px -2.5px rgba(0,0,0,0.25);
+    box-shadow: inset 0px -11px 11px -2.5px rgba(0,0,0,0.25); */
+}
+
+#showcase > div {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#showcase > div > div.row {
+    height: 34vh !important;
+}
+
+#showcase > div > div.row > div {
+    /* height: 20%; */
+    border-radius: 0.2em;
+    background-color: rgba(255, 255, 255, 0.38);
+}
+
+.card-subtitle {
+    height: 4.7vh;
+    opacity: 0.7;
+}
+
+.card-title {
+    height: 3.8vh;
+    /* height: 20%; */
+}
+
+.card-text {
+    height: 11vh;
+}
+
+::-webkit-scrollbar { 
+        display: none; 
+    }
+
+    #showcase > div > div.row > div > div    {
+    background-color: rgba(0, 0, 0, 0.38);
+}
+
+#showcase > div > div.row {
+    min-height: fit-content;
+}
+
+    #showcase > div > div.row.mb-2.px-4 > div:nth-child(1) {
+        background-image: url('../assets/bgGeneratorImage.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: fixed;
+    }
+    
+    #showcase > div > div > div:nth-child(2) {
+        background-image: url('../assets/wapp.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: fixed;
+    }
+
+    #showcase > div > div.row.mb-2.px-4 > div.col.p-3.ml-2 > div > div > p > a {
+        text-decoration: underline;
+    }
