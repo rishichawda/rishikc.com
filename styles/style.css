@@ -13,8 +13,7 @@ body {
 .geek-background {
     background-image: url('../assets/bg_main.jpg');
     background-repeat: no-repeat;
-    background-position: 38vw 16vw;
-    background-size: 25% auto;
+    background-position:center;
 }
 
 #home {
