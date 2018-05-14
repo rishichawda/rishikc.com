@@ -164,7 +164,7 @@ nav {
     #home > div > div.row.p-5.text-white {
         font-size: 1.6em;
         font-family: 'Marck Script';
-        margin-top: 34vh;
+        margin-top: 38vw;
     } 
 
     #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(1) {
@@ -194,4 +194,10 @@ nav {
 
     #showcase > div {
         margin-top: 25vh;
+    }
+
+    @media (max-width: 691px){
+        #home > div > div.row.p-5.text-white {
+            margin-top: 43vw;
+        } 
     }
