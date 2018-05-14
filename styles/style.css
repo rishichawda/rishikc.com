@@ -37,7 +37,7 @@ nav {
 }
 
 #greeter_message{
-    animation-delay: 0.34;
+    animation-delay: 0.34s;
     font-family: 'Dancing Script', cursive;
 }
 
