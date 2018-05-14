@@ -196,7 +196,7 @@ nav {
         margin-top: 25vh;
     }
 
-    @media (max-width: 691px){
+    @media (max-width: 978px){
         #home > div > div.row.p-5.text-white {
             margin-top: 34vw;
         } 
