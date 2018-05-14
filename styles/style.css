@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css?family=Gaegu');
-@import url('https://fonts.googleapis.com/css?family=Redressed');
-@import url('https://fonts.googleapis.com/css?family=Zeyada');
-@import url('https://fonts.googleapis.com/css?family=Lovers+Quarrel');
-@import url('https://fonts.googleapis.com/css?family=Bad+Script');
 @import url('https://fonts.googleapis.com/css?family=Dawning+of+a+New+Day');
 @import url('https://fonts.googleapis.com/css?family=Ruthie');
 @import url('https://fonts.googleapis.com/css?family=Dancing+Script');
+@import url('https://fonts.googleapis.com/css?family=Satisfy');
+@import url('https://fonts.googleapis.com/css?family=Cookie');
+@import url('https://fonts.googleapis.com/css?family=Marck+Script');
+
 body {
     overflow: none;
 }
@@ -38,6 +37,7 @@ nav {
 }
 
 #greeter_message{
+    animation-delay: 0.34;
     font-family: 'Dancing Script', cursive;
 }
 
@@ -71,17 +71,49 @@ nav {
     background-color: rgba(255, 255, 255, 0.38);
 }
 
+.card {
+    height: 6.5vh !important;\
+}
+
+.card:focus-within{
+    min-height: fit-content;
+}
+
 .card-subtitle {
+    display: none;
     height: 4.7vh;
     opacity: 0.7;
 }
 
 .card-title {
-    height: 3.8vh;
+    height: 21.4vh;
+    outline: none;
     /* height: 20%; */
 }
 
+.card-title:focus {
+    height: 3.8vh;
+    
+}
+
+.card-title:focus ~ .card-subtitle{
+    display: block;
+}
+
+.card-title:focus ~ .card-text{
+    display: block;
+}
+
+.card-title:focus ~ .btn-group{
+    display: block;
+}
+
+.card-body > .btn-group {
+    display: none;
+}
+
 .card-text {
+    display: none;
     height: 11vh;
 }
 
@@ -97,7 +129,7 @@ nav {
     min-height: fit-content;
 }
 
-    #showcase > div > div.row.mb-2.px-4 > div:nth-child(1) {
+#showcase > div > div:nth-child(1) > div:nth-child(1) {
         background-image: url('../assets/bgGeneratorImage.jpg');
         background-size: cover;
         background-repeat: no-repeat;
@@ -110,7 +142,56 @@ nav {
         background-repeat: no-repeat;
         background-position: fixed;
     }
-
+    
     #showcase > div > div.row.mb-2.px-4 > div.col.p-3.ml-2 > div > div > p > a {
         text-decoration: underline;
+    }
+    
+    #showcase > div > div:nth-child(2) > div:nth-child(1) {
+        background-image: url('../assets/wapp-ext.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: fixed;
+    }
+
+    #showcase > div > div:nth-child(2) > div:nth-child(2) {
+        background-image: url('../assets/ttt.jpg');
+        background-size: contain;
+        background-repeat: repeat;
+        background-position: fixed;
+    }
+
+    #home > div > div.row.p-5.text-white {
+        font-size: 1.6em;
+        font-family: 'Marck Script';
+        margin-top: 34vh;
+    } 
+
+    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(1) {
+        animation-delay: 0.52s;
+    }
+    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(2) {
+        animation-delay: 0.92s;
+    }
+    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(3) {
+        animation-delay: 1.37s;
+    }
+    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(4) {
+        animation-delay: 1.73s;
+    }
+    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(5) {
+        animation-delay: 2.14s;
+    }
+    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(6) {
+        animation-delay: 2.59s;
+    }
+    #home > div > div.row.p-5.text-white > div > p:nth-child(2) > span:nth-child(1) {
+        animation-delay: 3.8s;
+    }
+    #home > div > div.row.p-5.text-white > div > p:nth-child(2) > span:nth-child(2) {
+        animation-delay: 5.6s;
+    }
+
+    #showcase > div {
+        margin-top: 25vh;
     }
