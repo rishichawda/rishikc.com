@@ -164,7 +164,7 @@ nav {
     #home > div > div.row.p-5.text-white {
         font-size: 1.6em;
         font-family: 'Marck Script';
-        margin-top: 38vw;
+        margin-top: 34vw;
     } 
 
     #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(1) {
@@ -197,10 +197,10 @@ nav {
     }
 
     @media (max-width: 978px){
-        #home > div > div.row.p-5.text-white {
+/*         #home > div > div.row.p-5.text-white {
             margin-top: 34vw;
-        } 
+        }  */
         #greeter_message {
-            font-size: 1.1em ;
+            font-size: 2em ;
         }
     }
