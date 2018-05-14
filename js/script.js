@@ -17,6 +17,7 @@ function show_home() {
     $('#showcase').addClass('slideOutRight').one("webkitAnimationEnd oAnimationEnd msAnimationEnd animationEnd",
     function(event) {
         $('#home').addClass('zoomIn');
+        $('.fadeIn').removeClass('fadeIn');
         $('#showcase').removeClass('slideOutRight');
         $('#greeter_message').removeClass('jackInTheBox');
         $('#home').show().one("webkitAnimationEnd oAnimationEnd msAnimationEnd animationEnd",
