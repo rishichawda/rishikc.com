@@ -198,6 +198,9 @@ nav {
 
     @media (max-width: 691px){
         #home > div > div.row.p-5.text-white {
-            margin-top: 43vw;
+            margin-top: 34vw;
         } 
+        #greeter_message {
+            font-size: 2.9em ;
+        }
     }
