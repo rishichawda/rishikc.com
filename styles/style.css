@@ -5,6 +5,11 @@
 @import url('https://fonts.googleapis.com/css?family=Cookie');
 @import url('https://fonts.googleapis.com/css?family=Marck+Script');
 
+:root::before {
+    content: url('../assets/bg_main.jpg') url('../assets/bg_home.jpg') url('../assets/poly-bg2.jpg');
+    display: none;
+}
+
 body {
     overflow: none;
 }
