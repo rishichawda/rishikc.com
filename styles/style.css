@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Dancing+Script');
 @import url('https://fonts.googleapis.com/css?family=Marck+Script');
-
 :root::before {
     content: url('../assets/bg_main.jpg') url('../assets/bg_home.jpg') url('../assets/poly-bg2.jpg');
     display: none;
@@ -13,7 +12,7 @@ body {
 .geek-background {
     background-image: url('../assets/bg_main.jpg');
     background-repeat: no-repeat;
-    background-position:center;
+    background-position: center;
 }
 
 #home {
@@ -37,7 +36,13 @@ nav {
     width: 70%;
 }
 
-#greeter_message{
+@media (max-width: 520px) {
+    #greeter_message {
+        font-size: 2.5em;
+    }
+}
+
+#greeter_message {
     animation-delay: 0.34s;
     font-family: 'Dancing Script', cursive;
 }
@@ -57,16 +62,16 @@ nav {
     box-shadow: inset 0px -11px 11px -2.5px rgba(0,0,0,0.25); */
 }
 
-#showcase > div {
+#showcase>div {
     overflow-x: hidden;
     overflow-y: scroll;
 }
 
-#showcase > div > div.row {
+#showcase>div>div.row {
     height: 34vh !important;
 }
 
-#showcase > div > div.row > div {
+#showcase>div>div.row>div {
     /* height: 20%; */
     border-radius: 0.2em;
     background-color: rgba(255, 255, 255, 0.38);
@@ -76,7 +81,7 @@ nav {
     height: 6.5vh !important;
 }
 
-.card:focus-within{
+.card:focus-within {
     min-height: fit-content;
 }
 
@@ -94,22 +99,21 @@ nav {
 
 .card-title:focus {
     height: 3.8vh;
-    
 }
 
-.card-title:focus ~ .card-subtitle{
+.card-title:focus~.card-subtitle {
     display: block;
 }
 
-.card-title:focus ~ .card-text{
+.card-title:focus~.card-text {
     display: block;
 }
 
-.card-title:focus ~ .btn-group{
+.card-title:focus~.btn-group {
     display: block;
 }
 
-.card-body > .btn-group {
+.card-body>.btn-group {
     display: none;
 }
 
@@ -118,81 +122,88 @@ nav {
     height: 11vh;
 }
 
-::-webkit-scrollbar { 
-        display: none; 
-    }
+::-webkit-scrollbar {
+    display: none;
+}
 
-    #showcase > div > div.row > div > div    {
+#showcase>div>div.row>div>div {
     background-color: rgba(0, 0, 0, 0.38);
 }
 
-#showcase > div > div.row {
+#showcase>div>div.row {
     min-height: fit-content;
 }
 
-#showcase > div > div:nth-child(1) > div:nth-child(1) {
-        background-image: url('../assets/bgGeneratorImage.jpg');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: fixed;
-    }
-    
-    #showcase > div > div > div:nth-child(2) {
-        background-image: url('../assets/wapp.png');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: fixed;
-    }
-    
-    #showcase > div > div.row.mb-2.px-4 > div.col.p-3.ml-2 > div > div > p > a {
-        text-decoration: underline;
-    }
-    
-    #showcase > div > div:nth-child(2) > div:nth-child(1) {
-        background-image: url('../assets/wapp-ext.jpg');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: fixed;
-    }
+#showcase>div>div:nth-child(1)>div:nth-child(1) {
+    background-image: url('../assets/bgGeneratorImage.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: fixed;
+}
 
-    #showcase > div > div:nth-child(2) > div:nth-child(2) {
-        background-image: url('../assets/ttt.jpg');
-        background-size: contain;
-        background-repeat: repeat;
-        background-position: fixed;
-    }
+#showcase>div>div>div:nth-child(2) {
+    background-image: url('../assets/wapp.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: fixed;
+}
 
-    #home > div > div.row.p-5.text-white {
-        font-size: 1.6em;
-        font-family: 'Marck Script';
-        margin-top: 25%;
-    } 
+#showcase>div>div.row.mb-2.px-4>div.col.p-3.ml-2>div>div>p>a {
+    text-decoration: underline;
+}
 
-    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(1) {
-        animation-delay: 0.52s;
-    }
-    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(2) {
-        animation-delay: 0.92s;
-    }
-    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(3) {
-        animation-delay: 1.37s;
-    }
-    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(4) {
-        animation-delay: 1.73s;
-    }
-    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(5) {
-        animation-delay: 2.14s;
-    }
-    #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(6) {
-        animation-delay: 2.59s;
-    }
-    #home > div > div.row.p-5.text-white > div > p:nth-child(2) > span:nth-child(1) {
-        animation-delay: 3.58s;
-    }
-    #home > div > div.row.p-5.text-white > div > p:nth-child(2) > span:nth-child(2) {
-        animation-delay: 5.47s;
-    }
+#showcase>div>div:nth-child(2)>div:nth-child(1) {
+    background-image: url('../assets/wapp-ext.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: fixed;
+}
 
-    #showcase > div {
-        margin-top: 25vh;
-    }
+#showcase>div>div:nth-child(2)>div:nth-child(2) {
+    background-image: url('../assets/ttt.jpg');
+    background-size: contain;
+    background-repeat: repeat;
+    background-position: fixed;
+}
+
+#home>div>div.row.p-5.text-white {
+    font-size: 1.6em;
+    font-family: 'Marck Script';
+    margin-top: 25%;
+}
+
+#home>div>div.row.p-5.text-white>div>p:nth-child(1)>span:nth-child(1) {
+    animation-delay: 0.52s;
+}
+
+#home>div>div.row.p-5.text-white>div>p:nth-child(1)>span:nth-child(2) {
+    animation-delay: 0.92s;
+}
+
+#home>div>div.row.p-5.text-white>div>p:nth-child(1)>span:nth-child(3) {
+    animation-delay: 1.37s;
+}
+
+#home>div>div.row.p-5.text-white>div>p:nth-child(1)>span:nth-child(4) {
+    animation-delay: 1.73s;
+}
+
+#home>div>div.row.p-5.text-white>div>p:nth-child(1)>span:nth-child(5) {
+    animation-delay: 2.14s;
+}
+
+#home>div>div.row.p-5.text-white>div>p:nth-child(1)>span:nth-child(6) {
+    animation-delay: 2.59s;
+}
+
+#home>div>div.row.p-5.text-white>div>p:nth-child(2)>span:nth-child(1) {
+    animation-delay: 3.58s;
+}
+
+#home>div>div.row.p-5.text-white>div>p:nth-child(2)>span:nth-child(2) {
+    animation-delay: 5.47s;
+}
+
+#showcase>div {
+    margin-top: 25vh;
+}
