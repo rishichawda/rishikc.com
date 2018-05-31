@@ -165,8 +165,27 @@ nav {
     #home > div > div.row.p-5.text-white {
         font-size: 1.6em;
         font-family: 'Marck Script';
-        margin-top: 25vw;
+        margin-top: 25vh;
     } 
+
+    @media (max-width: 470px) and (max-height:700px) {
+        #home > div > div.row.p-5.text-white {
+            margin-top: 13.3vh;
+        } 
+        #greeter_message {
+            font-size: 2.5em;
+        }
+    }
+
+    @media (max-width: 380px) and (max-height:520px) {
+        #home > div > div.row.p-5.text-white {
+            margin-top: 11vh;
+            font-size: 1.24em;
+        } 
+        #greeter_message {
+            font-size: 2.5em;
+        }
+    }
 
     #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(1) {
         animation-delay: 0.52s;
@@ -195,52 +214,4 @@ nav {
 
     #showcase > div {
         margin-top: 25vh;
-    }
-
-    @media (max-width: 978px){
-        #home > div > div.row.p-5.text-white {
-            margin-top: 34vw;
-        } 
-    }
-    @media (max-width: 826px){
-        #home > div > div.row.p-5.text-white {
-            margin-top: 38vw;
-        }
-    }
-
-
-    @media ( min-width: 493px) and (max-width: 700px){
-        #home > div > div.row.p-5.text-white {
-            margin-top: 52vw;
-        }
-        #greeter_message {
-            font-size: 3.4em ;
-        }
-    }
-
-    @media (max-width: 493px){
-        #home > div > div.row.p-5.text-white {
-            margin-top: 61vw;
-        }
-        #greeter_message {
-            font-size: 2.5em ;
-        }
-    }
-
-    @media (max-width: 443px){
-        #home > div > div.row.p-5.text-white {
-            margin-top: 34vh;
-        }
-        #greeter_message {
-            font-size: 2.5em ;
-        }
-    }
-
-    @media (max-width: 349px){
-        #home > div > div.row.p-5.text-white {
-            margin-top: 25vh;
-        }
-        #greeter_message {
-            font-size: 2.5em ;
-        }
     }
