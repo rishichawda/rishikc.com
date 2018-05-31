@@ -1,8 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Dawning+of+a+New+Day');
-@import url('https://fonts.googleapis.com/css?family=Ruthie');
 @import url('https://fonts.googleapis.com/css?family=Dancing+Script');
-@import url('https://fonts.googleapis.com/css?family=Satisfy');
-@import url('https://fonts.googleapis.com/css?family=Cookie');
 @import url('https://fonts.googleapis.com/css?family=Marck+Script');
 
 :root::before {
@@ -77,7 +73,7 @@ nav {
 }
 
 .card {
-    height: 6.5vh !important;\
+    height: 6.5vh !important;
 }
 
 .card:focus-within{
@@ -169,7 +165,7 @@ nav {
     #home > div > div.row.p-5.text-white {
         font-size: 1.6em;
         font-family: 'Marck Script';
-        margin-top: 34vw;
+        margin-top: 25vw;
     } 
 
     #home > div > div.row.p-5.text-white > div > p:nth-child(1) > span:nth-child(1) {
@@ -202,10 +198,40 @@ nav {
     }
 
     @media (max-width: 978px){
-/*         #home > div > div.row.p-5.text-white {
+        #home > div > div.row.p-5.text-white {
             margin-top: 34vw;
-        }  */
+        } 
+    }
+    @media (max-width: 826px){
+        #home > div > div.row.p-5.text-white {
+            margin-top: 38vw;
+        }
+    }
+
+
+    @media ( min-width: 403px) and (max-width: 700px){
+        #home > div > div.row.p-5.text-white {
+            margin-top: 38vh;
+        }
         #greeter_message {
-            font-size: 2em ;
+            font-size: 3.4em ;
+        }
+    }
+
+    @media (max-width: 403px){
+        #home > div > div.row.p-5.text-white {
+            margin-top: 25vh;
+        }
+        #greeter_message {
+            font-size: 2.5em ;
+        }
+    }
+
+    @media (max-width: 322px){
+        #home > div > div.row.p-5.text-white {
+            margin-top: 20vh;
+        }
+        #greeter_message {
+            font-size: 2.5em ;
         }
     }
