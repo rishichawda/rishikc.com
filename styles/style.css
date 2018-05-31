@@ -209,27 +209,36 @@ nav {
     }
 
 
-    @media ( min-width: 403px) and (max-width: 700px){
+    @media ( min-width: 493px) and (max-width: 700px){
         #home > div > div.row.p-5.text-white {
-            margin-top: 38vh;
+            margin-top: 52vw;
         }
         #greeter_message {
             font-size: 3.4em ;
         }
     }
 
-    @media (max-width: 403px){
+    @media (max-width: 493px){
         #home > div > div.row.p-5.text-white {
-            margin-top: 25vh;
+            margin-top: 61vw;
         }
         #greeter_message {
             font-size: 2.5em ;
         }
     }
 
-    @media (max-width: 322px){
+    @media (max-width: 443px){
         #home > div > div.row.p-5.text-white {
-            margin-top: 20vh;
+            margin-top: 34vh;
+        }
+        #greeter_message {
+            font-size: 2.5em ;
+        }
+    }
+
+    @media (max-width: 349px){
+        #home > div > div.row.p-5.text-white {
+            margin-top: 25vh;
         }
         #greeter_message {
             font-size: 2.5em ;
