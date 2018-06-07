@@ -21,7 +21,35 @@
             <div class="navbar w-100" id="navbarNavAltMarkup">
                 <div class="navbar-nav m-auto">
                     <div onclick="slide_in_myproj();" class="nav-item nav-link mx-auto">Work</div>
-                    <div class="nav-item nav-link mx-auto">Contact</div>
+                    <div class="nav-item nav-link mx-auto" data-toggle="modal" data-target="#contactcard">Contact</div>
+                    <!-- Contacts card -->
+                    <div class="modal fade" id="contactcard" tabindex="-1" role="dialog" aria-labelledby="contactcardtitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="list-group">
+                                        <a href="https://github.com/rishichawda" class="list-group-item list-group-item-action flex-column align-items-start my-2 animated fadeIn">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <div class="card-body py-0 pl-5 lead">
+                                                    <img class="mr-5" src="./assets/github.png" width="30" height="30" alt=""> Github
+                                                </div>
+                                                <small class="text-muted">View GitHub profile.</small>
+                                            </div>
+                                        </a>
+                                        <a href="https://www.linkedin.com/in/rkrishi" class="list-group-item list-group-item-action flex-column align-items-start my-2 animated fadeIn">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <div class="card-body py-0 pl-5 lead">
+                                                        <img class="mr-5" src="./assets/linkedin.png" width="30" height="30" alt=""> LinkedIn
+                                                    </div>
+                                                    <small class="text-muted">View LinkedIn profile.</small>
+                                                </div>
+                                            </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Contacts card -->
                 </div>
             </div>
         </nav>
