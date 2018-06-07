@@ -207,3 +207,17 @@ nav {
 #showcase>div {
     margin-top: 25vh;
 }
+
+.modal-content {
+    background: transparent;
+    border: none;
+}
+
+#contactcard > div > div > div > div > a {
+    border-radius: 0.25em;
+    animation-delay: 0.25s;
+}
+
+#contactcard > div > div > div > div > a:nth-child(2) {
+    animation-delay: 0.47s;
+}
