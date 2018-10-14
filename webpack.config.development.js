@@ -8,11 +8,13 @@ module.exports = {
   mode: 'development',
   entry: `${__dirname}/index.js`,
   context: __dirname,
-  devTools: 'source-map',
   output: {
     path: `${__dirname}/dist`,
     filename: 'index.js',
     publicPath: '/',
+  },
+  devServer: {
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -27,7 +29,7 @@ module.exports = {
       },
       {
         test: /\.(scss|css)$/,
-        include: path.resolve(__dirname, './styles'),
+        include: path.resolve(__dirname, './src'),
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],

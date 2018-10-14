@@ -23,7 +23,7 @@ module.exports = {
       },
       {
         test: /\.(scss|css)$/,
-        include: path.resolve(__dirname, './styles'),
+        include: path.resolve(__dirname, './src'),
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],
