@@ -1,23 +1,19 @@
+/* eslint-disable react/prefer-stateless-function */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './index.scss';
 import ContactsCard from '../contacts';
-import { Link } from 'react-router-dom';
 
 class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.ref = null;
-  }
-
   render() {
     return (
       <nav className="navbar navbar-expand navbar-light">
         <div className="navbar w-100" id="navbarNavAltMarkup">
           <div className="navbar-nav m-auto">
             <Link
-              to='/works'
+              to="/works"
               className="nav-item nav-link mx-auto"
             >
               Work
