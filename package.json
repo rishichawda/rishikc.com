@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.development --mode development",
-    "build": "webpack --config ./webpack.config.production -p"
+    "build": "webpack --config ./webpack.config.production -p",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -16,9 +18,10 @@
   "bugs": {
     "url": "https://github.com/rishichawda/rishichawda.github.io/issues"
   },
-  "homepage": "https://github.com/rishichawda/rishichawda.github.io#readme",
+  "homepage": "https://rishichawda.github.io",
   "dependencies": {
     "cz-conventional-changelog": "^2.1.0",
+    "gh-pages": "^2.0.1",
     "react": "^16.5.2",
     "react-async-component": "^2.0.0",
     "react-dom": "^16.5.2",
