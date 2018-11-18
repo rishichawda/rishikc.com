@@ -4,9 +4,9 @@
 /* eslint-disable react/jsx-curly-brace-presence */
 /* eslint-disable quotes */
 import React, { Component } from 'react';
-import Navbar from '../navbar/index.js';
+import Navbar from '../../navbar/index.js';
 import './index.scss';
-import '../assets/animate.css';
+import '../../assets/animate.css';
 
 class HomePage extends Component {
   constructor(props) {

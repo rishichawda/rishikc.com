@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+    overflow: none;
+}
+
+:root::before {
+    content: url('./assets/bg_main.jpg') url('./assets/bg_home.jpg') url('./assets/poly-bg2.jpg');
+    display: none;
+}
+
+.geek-background {
+    position: absolute;
+    background-image: url('./assets/bg_main.jpg');
+    background-repeat: no-repeat;
+    background-position: 50% -50%;
+}

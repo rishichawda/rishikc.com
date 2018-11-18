@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router-dom';
-import backbutton from '../assets/outline_arrow_back_ios_white_18dp.png';
+import backbutton from '../../assets/outline_arrow_back_ios_white_18dp.png';
 
 const getNode = findDOMNode;
 
