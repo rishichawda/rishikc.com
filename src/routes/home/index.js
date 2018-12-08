@@ -7,6 +7,10 @@ import React from "react";
 import "./index.scss";
 import "../../assets/animate.css";
 
-const HomePage = () => <div id="home">HOME PAGE</div>;
+const HomePage = () => (
+  <div role="main" className="container hero-section">
+  Home page.
+  </div>
+);
 
 export default HomePage;

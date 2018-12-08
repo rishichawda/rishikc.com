@@ -8,9 +8,11 @@ import {
 } from 'react-router-dom';
 import { Home } from './src/index.js';
 import './src/index.scss';
+import Navbar from './src/components/navbar/index.js';
 
 const App = () => (
   <Router>
+    <Navbar />
     <Switch>
       <Route path="/" exact component={Home} />
       <Redirect from="*" to="/404" />

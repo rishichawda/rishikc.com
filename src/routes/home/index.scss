@@ -2,5 +2,9 @@
 @import url('https://fonts.googleapis.com/css?family=Dancing+Script');
 @import url('https://fonts.googleapis.com/css?family=Marck+Script');
 
-#home {
+
+.container {
+    &.hero-section {
+        height: 70vh;
+    }
 }
