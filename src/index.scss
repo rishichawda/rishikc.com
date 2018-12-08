@@ -12,6 +12,7 @@ body {
 
 .container {
     display: flex;
+    box-sizing: border-box;
     width: 100%;
     margin: auto;
     max-width: 1280px;

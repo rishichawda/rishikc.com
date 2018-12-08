@@ -10,15 +10,14 @@ import {
 import Home from './src/routes/home/index.js';
 import './src/index.scss';
 import Navbar from './src/components/navbar/index.js';
+import About from './src/components/about/index.js';
 
 const App = () => (
-  <Router>
+  <React.Fragment>
     <Navbar />
-    <Switch>
-      <Route path="/" exact component={Home} />
-      <Redirect from="*" to="/404" />
-    </Switch>
-  </Router>
+    <Home />
+    <About />
+  </React.Fragment>
 );
 
 const render = () => {

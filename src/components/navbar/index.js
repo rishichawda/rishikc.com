@@ -4,9 +4,9 @@ import './index.scss';
 const Navbar = () => (
   <div className="navbar">
     <div className="navbar-links">
-      <span>About</span>
-      <span>Skills</span>
-      <span>Works</span>
+      <a href="#about"><span>About</span></a>
+      <a href="#about"><span>Skills</span></a>
+      <a href="#about"><span>Works</span></a>
     </div>
   </div>
 );

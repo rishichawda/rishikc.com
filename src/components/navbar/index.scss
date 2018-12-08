@@ -17,14 +17,21 @@
             min-width: 100%;
             justify-content: center;
         }
-        span {
-            @media only screen and (max-width: 700px) {
-                margin: 0 2%;
+
+        a {
+            text-decoration: none;
+            display: flex;
+            color: black;
+            margin: 0 0.7em;
+            span {
+                @media only screen and (max-width: 700px) {
+                    margin: 0 2%;
+                }
+                white-space: nowrap;
+                padding: 0.7em 1.1em;
+                min-width: fit-content;
+                cursor: pointer;
             }
-            white-space: nowrap;
-            padding: 2% 6.1%;
-            min-width: fit-content;
-            cursor: pointer;
         }
     }
 }
