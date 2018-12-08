@@ -12,6 +12,7 @@ const HomePage = () => (
   <div role="main" className="container hero-section">
     <div className="intro">
       <div className="image">
+        {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
         <img src={geekImage} alt="geek-image" />
       </div>
       <div>
