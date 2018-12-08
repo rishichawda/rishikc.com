@@ -6,15 +6,13 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
-import { Home, ShowCase, NotFound404 } from './src/index.js';
+import { Home } from './src/index.js';
 import './src/index.scss';
 
 const App = () => (
   <Router>
     <Switch>
       <Route path="/" exact component={Home} />
-      <Route path="/works" exact component={ShowCase} />
-      <Route path="/404" exact component={NotFound404} />
       <Redirect from="*" to="/404" />
     </Switch>
   </Router>
