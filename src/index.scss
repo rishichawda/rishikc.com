@@ -1,6 +1,10 @@
 body {
     margin: 0;
     overflow: none;
+    transition: all 1s;
+    -moz-transition: all 1s;
+    -o-transition: all 1s;
+    -webkit-transition: all 1s;
 }
 
 .container {

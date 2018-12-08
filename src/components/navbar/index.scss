@@ -9,13 +9,22 @@
         display: flex;
         flex-direction: row;
         list-style: none;
-        width: fit-content;
         margin: 0;
-        li {
+        width: 50%;
+        padding: 0 3%;
+        
+        @media only screen and (max-width: 700px) {
+            min-width: 100%;
+            justify-content: center;
+        }
+        span {
+            @media only screen and (max-width: 700px) {
+                margin: 0 2%;
+            }
             white-space: nowrap;
-            padding: 2%;
-            margin: 0 2%;
+            padding: 2% 6.1%;
             min-width: fit-content;
+            cursor: pointer;
         }
     }
 }
