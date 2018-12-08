@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     box-sizing: border-box;
+    animation: slideIn 3.4s linear;
 
     .navbar-links {
         display: flex;
@@ -33,5 +34,19 @@
                 cursor: pointer;
             }
         }
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    70% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0%);
     }
 }
