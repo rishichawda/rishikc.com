@@ -1,4 +1,21 @@
 .navbar {
     width: 100vw;
-    background-color: orange;
+    padding: 0.7%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+
+    .navbar-links {
+        display: flex;
+        flex-direction: row;
+        list-style: none;
+        width: fit-content;
+        margin: 0;
+        li {
+            white-space: nowrap;
+            padding: 2%;
+            margin: 0 2%;
+            min-width: fit-content;
+        }
+    }
 }
