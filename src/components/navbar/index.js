@@ -6,11 +6,11 @@ class Navbar extends Component {
         return (
             <div className="navbar">
                 <ul className="navbar-links">
-                    <li>Link 1</li>
-                    <li>Link 2</li>
-                    <li>Link 3</li>
-                    <li>Link 4</li>
-                    <li>Link 5</li>
+                    <li>About</li>
+                    <li>Skills</li>
+                    <li>Works</li>
+                    <li>Other stuff</li>
+                    <li>Some more</li>
                 </ul>
             </div>
         );
