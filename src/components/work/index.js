@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './index.scss';
 
-class About extends Component {
+class Work extends Component {
     render() {
         return (
-            <section className="container about-section" id="about">
-                <h2>About</h2>
+            <section className="container work-section" id="work">
+                <h2>Projects</h2>
                 <p>Lorem Ipsum is simply dummy text of the
                 printing and typesetting industry. Lorem Ipsum
                 has been the industry's standard dummy text
@@ -24,4 +24,4 @@ class About extends Component {
     }
 }
 
-export default About;
+export default Work;

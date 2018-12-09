@@ -10,6 +10,12 @@ body {
     -webkit-transition: all 1s;
 }
 
+section {
+    position: relative;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
 .container {
     display: flex;
     box-sizing: border-box;
