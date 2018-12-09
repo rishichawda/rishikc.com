@@ -1,16 +1,23 @@
 /* eslint-disable import/extensions */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from 'react-router-dom';
-import Home from './src/routes/home/index.js';
+import Loadable from 'react-loadable';
 import './src/index.scss';
-import Navbar from './src/components/navbar/index.js';
-import About from './src/components/about/index.js';
+
+const Navbar = Loadable({
+  loader: () => import('./src/components/navbar/index.js'),
+  loading: () => <div>Loading..</div>,
+});
+
+const Home = Loadable({
+  loader: () => import('./src/routes/home/index.js'),
+  loading: () => <div>Loading..</div>,
+});
+
+const About = Loadable({
+  loader: () => import('./src/components/about/index.js'),
+  loading: () => <div>Loading..</div>,
+});
 
 const App = () => (
   <React.Fragment>

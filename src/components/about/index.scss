@@ -1,4 +1,8 @@
 .about-section {
     padding: 2%;
     margin-top: 30vh;
+    height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    scroll-behavior: smooth;
 }
