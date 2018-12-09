@@ -29,6 +29,11 @@ const Work = Loadable({
   loading: () => <div>Loading..</div>,
 });
 
+const Footer = Loadable({
+  loader: () => import('./src/components/footer/index.js'),
+  loading: () => <div>Loading..</div>,
+});
+
 const App = () => (
   <React.Fragment>
     <Navbar />
@@ -36,6 +41,7 @@ const App = () => (
     <About />
     <Skills />
     <Work />
+    <Footer />
   </React.Fragment>
 );
 
