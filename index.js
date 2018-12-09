@@ -24,12 +24,18 @@ const Skills = Loadable({
   loading: () => <div>Loading..</div>,
 });
 
+const Work = Loadable({
+  loader: () => import('./src/components/work/index.js'),
+  loading: () => <div>Loading..</div>,
+});
+
 const App = () => (
   <React.Fragment>
     <Navbar />
     <Home />
     <About />
     <Skills />
+    <Work />
   </React.Fragment>
 );
 
