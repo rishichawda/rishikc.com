@@ -4,7 +4,7 @@ import './index.scss';
 class About extends Component {
     render() {
         return (
-            <div className="container about-section" id="about">
+            <section className="container about-section" id="about">
                 <h2>About</h2>
                 <p>Lorem Ipsum is simply dummy text of the
                 printing and typesetting industry. Lorem Ipsum
@@ -19,7 +19,7 @@ class About extends Component {
                 Ipsum passages, and more recently with desktop
                 publishing software like Aldus PageMaker
                 including versions of Lorem Ipsum.</p>
-            </div>
+            </section>
         );
     }
 }
