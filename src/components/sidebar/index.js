@@ -10,10 +10,10 @@ const Navbar = () => (
       <a href="#projects"><span>Have a look at some projects!</span></a>
     </div>
     <div className="footer">
-      {/* <a href="#"><i className="fab fa-linkedin" /></a>
+      <a href="#"><i className="fab fa-linkedin" /></a>
       <a href="#"><i className="fab fa-github" /></a>
       <a href="#"><i className="fab fa-instagram" /></a>
-      <a href="#"><i className="fas fa-envelope" /></a> */}
+      <a href="#"><i className="fas fa-envelope" /></a>
     </div>
   </aside>
 );

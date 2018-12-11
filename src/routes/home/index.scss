@@ -5,7 +5,9 @@
 
 .container {
     &.hero-section {
-        height: 70vh;
+        height: 100vh;
+        width: 80%;
+        float: right;
         display: flex;
         padding: 2% 0;
         .intro {
@@ -42,7 +44,6 @@
 
                 img {
                     width: auto;
-                    height: 88%;
                     animation: fadeIn 1s linear;
                 }
             }

@@ -6,7 +6,7 @@
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
-    position: relative;
+    position: fixed;
     background-color: aliceblue;
     animation: slideIn 1.1s linear;
     will-change: transform;
