@@ -1,0 +1,78 @@
+.sidebar {
+    height: 100vh;
+    padding: 0.2em 2em;
+    display: flex;
+    width: 20%;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    background-color: aliceblue;
+    animation: slideIn 1.1s linear;
+    will-change: transform;
+
+    .sidebar-links {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        margin: 0;
+        width: 100%;
+        align-self: center;
+        padding: 0 3%;
+        margin: auto;
+        
+        @media only screen and (max-width: 700px) {
+            min-width: 100%;
+            justify-content: center;
+        }
+
+        a {
+            text-decoration: none;
+            display: flex;
+            width: fit-content;
+            color: black;
+            span {
+                @media only screen and (max-width: 700px) {
+                    margin: 0 2%;
+                }
+                white-space: nowrap;
+                padding: 0.7em 1.1em;
+                min-width: fit-content;
+                cursor: pointer;
+            }
+        }
+    }
+    .footer {
+        width: 100%;
+        justify-content: space-around;
+        display: flex;
+        bottom: 2em;
+        position: absolute;
+        padding: 2%;
+        box-sizing: border-box;
+        font-size: 1.6em;
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    }
+
+    65% {
+        opacity: 0.2;
+    }
+
+    100% {
+        opacity: 1;
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+    }
+}

@@ -5,7 +5,7 @@ import Loadable from 'react-loadable';
 import './src/index.scss';
 
 const Navbar = Loadable({
-  loader: () => import('./src/components/navbar/index.js'),
+  loader: () => import('./src/components/sidebar/index.js'),
   loading: () => <div>Loading..</div>,
 });
 
