@@ -17,9 +17,10 @@ section {
 }
 
 .container {
+    height: 100vh;
+    width: 80%;
+    float: right;
     display: flex;
+    padding: 2% 0;
     box-sizing: border-box;
-    width: 100%;
-    margin: auto;
-    max-width: 1280px;
 }

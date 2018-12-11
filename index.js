@@ -5,7 +5,7 @@ import Loadable from 'react-loadable';
 import './src/index.scss';
 
 const Navbar = Loadable({
-  loader: () => import('./src/components/navbar/index.js'),
+  loader: () => import('./src/components/sidebar/index.js'),
   loading: () => <div>Loading..</div>,
 });
 
@@ -25,7 +25,7 @@ const Skills = Loadable({
 });
 
 const Work = Loadable({
-  loader: () => import('./src/components/work/index.js'),
+  loader: () => import('./src/components/projects/index.js'),
   loading: () => <div>Loading..</div>,
 });
 
@@ -41,7 +41,6 @@ const App = () => (
     <About />
     <Skills />
     <Work />
-    <Footer />
   </React.Fragment>
 );
 
