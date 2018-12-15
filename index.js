@@ -25,12 +25,12 @@ const Skills = Loadable({
 });
 
 const Work = Loadable({
-  loader: () => import('./src/components/projects/index.js'),
+  loader: () => import('./src/components/work/index.js'),
   loading: () => <div>Loading..</div>,
 });
 
-const Footer = Loadable({
-  loader: () => import('./src/components/footer/index.js'),
+const Projects = Loadable({
+  loader: () => import('./src/components/projects/index.js'),
   loading: () => <div>Loading..</div>,
 });
 
@@ -39,8 +39,9 @@ const App = () => (
     <Navbar />
     <Home />
     <About />
-    <Skills />
     <Work />
+    <Skills />
+    <Projects />
   </React.Fragment>
 );
 

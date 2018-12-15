@@ -25,22 +25,18 @@
             min-width: 100%;
             justify-content: center;
         }
-
-        a {
-            text-decoration: none;
-            display: flex;
-            width: fit-content;
-            color: black;
             span {
                 @media only screen and (max-width: 700px) {
                     margin: 0 2%;
                 }
-                white-space: nowrap;
+                text-decoration: none;
+                display: flex;
+                width: fit-content;
+                color: black;
                 padding: 0.7em 1.1em;
                 min-width: fit-content;
                 cursor: pointer;
             }
-        }
     }
     .footer {
         width: 100%;
