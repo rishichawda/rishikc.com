@@ -31,6 +31,7 @@ class Navbar extends React.Component {
         <div className="footer">
           <a href="https://www.linkedin.com/in/rkrishi"><i className="fab fa-linkedin" /></a>
           <a href="https://github.com/rishichawda"><i className="fab fa-github" /></a>
+          <a href="https://medium.com/@rishii.kumar.chawda"><i className="fab fa-medium" /></a>
           <a href="https://www.instagram.com/rishi.py"><i className="fab fa-instagram" /></a>
           <a href="/"><i className="fas fa-envelope" /></a>
         </div>
