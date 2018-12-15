@@ -29,10 +29,10 @@ class Navbar extends React.Component {
           <span onClick={this.scrollToProjectsSection}>Have a look at some projects!</span>
         </div>
         <div className="footer">
-          <a href="#"><i className="fab fa-linkedin" /></a>
-          <a href="#"><i className="fab fa-github" /></a>
-          <a href="#"><i className="fab fa-instagram" /></a>
-          <a href="#"><i className="fas fa-envelope" /></a>
+          <a href="https://www.linkedin.com/in/rkrishi"><i className="fab fa-linkedin" /></a>
+          <a href="https://github.com/rishichawda"><i className="fab fa-github" /></a>
+          <a href="https://www.instagram.com/rishi.py"><i className="fab fa-instagram" /></a>
+          <a href="/"><i className="fas fa-envelope" /></a>
         </div>
       </aside>
     );
