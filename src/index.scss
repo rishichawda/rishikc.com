@@ -24,3 +24,24 @@ section {
     padding: 2% 0;
     box-sizing: border-box;
 }
+
+.scroll-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    height: 2rem;
+    width: 2rem;
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    cursor: pointer;
+    padding: 1rem;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.2);
+
+    i {
+        color: #a6c5e0;
+    }
+}
