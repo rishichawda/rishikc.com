@@ -6,32 +6,32 @@ import './src/index.scss';
 
 const Navbar = Loadable({
   loader: () => import('./src/components/sidebar/index.js'),
-  loading: () => <div>Loading..</div>,
+  loading: () => null,
 });
 
 const Home = Loadable({
   loader: () => import('./src/routes/home/index.js'),
-  loading: () => <div>Loading..</div>,
+  loading: () => null,
 });
 
 const About = Loadable({
   loader: () => import('./src/components/about/index.js'),
-  loading: () => <div>Loading..</div>,
+  loading: () => null,
 });
 
 const Skills = Loadable({
   loader: () => import('./src/components/skills/index.js'),
-  loading: () => <div>Loading..</div>,
+  loading: () => null,
 });
 
 const Work = Loadable({
   loader: () => import('./src/components/work/index.js'),
-  loading: () => <div>Loading..</div>,
+  loading: () => null,
 });
 
 const Projects = Loadable({
   loader: () => import('./src/components/projects/index.js'),
-  loading: () => <div>Loading..</div>,
+  loading: () => null,
 });
 
 const App = () => (
