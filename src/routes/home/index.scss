@@ -27,7 +27,7 @@
                 width: 50%;
                 padding: 2%;
                 white-space: nowrap;
-                animation: fadeIn 2s linear;
+                animation: fadeIn 3s linear;
 
                 p {
                     animation: fadeIn 4s linear;
@@ -44,7 +44,7 @@
 
                 img {
                     width: auto;
-                    animation: fadeIn 1s linear;
+                    animation: fadeIn 3s linear;
                 }
             }
         }
@@ -53,6 +53,9 @@
 
 @keyframes fadeIn {
     0% {
+        opacity: 0;
+    }
+    70% {
         opacity: 0;
     }
     100% {
