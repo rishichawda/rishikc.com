@@ -1,0 +1,28 @@
+.work-section {
+    padding: 2%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    h2 {
+        text-align: center;
+    }
+
+    q {
+        color: darkgrey;
+        line-height: 2.5em;
+    }
+
+    * {
+        width: 80%;
+    }
+
+    p {
+        line-height: 1.6em;
+        span {
+            margin: auto 0.2em;
+            color: rgba($color: #000000, $alpha: 0.43)
+        }
+    }
+}
