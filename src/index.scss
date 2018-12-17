@@ -1,11 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
-html { height: 100%; overflow:auto; }
-body { height: 100%; }
-
 body {
     margin: 0;
-    overflow: none;
+    overflow: hidden;
     font-family: 'Roboto';
     transition: all 1s;
     -moz-transition: all 1s;
