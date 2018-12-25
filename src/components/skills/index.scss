@@ -1,9 +1,55 @@
 .skills-section {
-    padding: 2%;
-    margin-top: 30vh;
-    height: 100vh;
+  padding: 2%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  @media only screen and (max-width: 1081px) {
+    width: 90%;
+  }
+
+  .skill-set {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    width: 79%;
+    padding: 2%;
+    margin-top: 1em;
+    justify-content: space-between;
+
+    .card {
+      box-shadow: 5px 4px 1px -1px rgba(0, 0, 0, 0.25);
+      border: solid rgba(0, 0, 0, 0.25) 0.5px;
+      padding: 1.6%;
+      border-radius: 50%;
+      transition: all 0.25s ease-in-out;
+      height: 142px;
+      width: 142px;
+      box-sizing: border-box;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-items: center;
+
+      &:hover {
+        box-shadow: 5px 4px 1px 1px rgba(0, 0, 0, 0.25);
+      }
+
+      img {
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    .js-logo {
+      div {
+        background-color: #f0db4f;
+        border-radius: 50%;
+        overflow: hidden;
+        img {
+          height: 100%;
+          width: 100%;
+        }
+      }
+    }
+  }
 }

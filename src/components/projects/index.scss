@@ -1,9 +1,11 @@
 .work-section {
     padding: 2%;
-    margin-top: 30vh;
     height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-direction: column;
+
+    @media only screen and (max-width: 1081px) {
+        width: 90%;
+    }
 }

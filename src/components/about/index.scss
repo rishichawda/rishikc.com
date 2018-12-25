@@ -1,9 +1,43 @@
 .about-section {
     padding: 2%;
-    margin-top: 30vh;
     height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-direction: column;
+
+    @media only screen and (max-width: 1081px) {
+        width: 90%;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    q {
+        color: darkgrey;
+        line-height: 2.5em;
+    }
+
+    * {
+        width: 80%;
+    }
+
+    p {
+        line-height: 1.6em;
+        span {
+            margin: auto 0.2em;
+            color: rgba($color: #000000, $alpha: 0.43)
+        }
+    }
+
+    .by-jobs {
+        margin: 1em auto;
+
+        & + span {
+            float: right;
+            width: fit-content;
+            color: black;
+            font-weight: 500;
+        }
+    }
 }

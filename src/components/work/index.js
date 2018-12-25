@@ -1,27 +1,34 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './index.scss';
 
-class Work extends Component {
-    render() {
-        return (
-            <section className="container work-section" id="work">
-                <h2>Work</h2>
-                <p>Lorem Ipsum is simply dummy text of the
-                printing and typesetting industry. Lorem Ipsum
-                has been the industry's standard dummy text
-                ever since the 1500s, when an unknown printer
-                took a galley of type and scrambled it to make
-                a type specimen book. It has survived not only
-                five centuries, but also the leap into
-                electronic typesetting, remaining essentially
-                unchanged. It was popularised in the 1960s with
-                the release of Letraset sheets containing Lorem
-                Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker
-                including versions of Lorem Ipsum.</p>
-            </section>
-        );
-    }
-}
+const Work = () => (
+  <section className="container work-section" id="work">
+    <h2>Career</h2>
+    <p>Glad you want to know that!</p>
+    <p>{'Currently, I\'m focused on Web development and design.'}</p>
+    <p>
+      {'I work as a Software Development Engineer in a startup '}
+      {'where we have to handle everything in the development cycle - '}
+      {'from design, development and testing to deployment and maintenance!'}
+    </p>
+    <p>
+      {'Sounds interesting? Well, try thinking of a situation where '}
+      {'you got no similar issues on Github, no question on stackoverflow '}
+      {'and just a small team working on a project! Thank God it is rare, '}
+      {'but yeah - it is fun when the team is good.'}
+    </p>
+    <p>
+      {'I work on freelancing projects whenever I have time or '}
+      {'whenever there\'s a nice opportunity. I also contribute '}
+      {'to the open source repositories on Github.'}
+      <span>
+        {'If you have a repository where we can work together or have '}
+        {'a freelancing project for me - just add me as a contributor or ping me '}
+        {'on my social media handle! Preferrably LinkedIn. Or maybe check out some '}
+        {'of the repositories on my github profile and you can contribute there as well!'}
+      </span>
+    </p>
+  </section>
+);
 
 export default Work;
