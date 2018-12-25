@@ -1,6 +1,6 @@
 .sidebar {
     height: 100vh;
-    padding: 0.2em 2em;
+    padding: 0.2em 1%;
     display: flex;
     width: 20%;
     flex-direction: column;
@@ -10,17 +10,28 @@
     background-color: aliceblue;
     animation: slideIn 1.1s linear;
     will-change: transform;
+    transition: all 0.5s ease-in-out;
+
+    @media only screen and (max-width: 1081px) {
+        width: 10%;
+        will-change: width;
+    }
 
     .sidebar-links {
         display: flex;
         flex-direction: column;
+        box-sizing: border-box;
         list-style: none;
         margin: 0;
         width: 100%;
         align-self: center;
         padding: 0 3%;
         margin: auto;
-        
+
+        @media only screen and (max-width: 1081px) {
+            display: none;
+        }
+
         @media only screen and (max-width: 700px) {
             min-width: 100%;
             justify-content: center;
@@ -33,7 +44,7 @@
                 display: flex;
                 width: fit-content;
                 color: black;
-                padding: 0.7em 1.1em;
+                padding: 7% 1%;
                 min-width: fit-content;
                 cursor: pointer;
             }
@@ -42,11 +53,45 @@
         width: 100%;
         justify-content: space-around;
         display: flex;
-        bottom: 2em;
+        bottom: 5%;
         position: absolute;
         padding: 2%;
         box-sizing: border-box;
         font-size: 1.6em;
+
+        hr {
+            background: #86858561;
+            width: 70%;
+            height: 1.1px;
+            box-shadow: none;
+            border: none;
+
+            @media only screen and (max-width: 1081px) {
+                display: block;
+            }
+        }
+
+        i.sidebar-icon {
+            display: none;
+
+            @media only screen and (max-width: 1081px) {
+                display: block;
+            }
+
+        }
+
+        @media only screen and (max-width: 1081px) {
+            flex-direction: column;
+            align-items: center;
+            padding: 7%;
+            height: 100%;
+            bottom: 0;
+            transition: all 1s linear;
+
+            a {
+                padding: 5%;
+            }
+        }
 
         a {
             text-decoration: none;

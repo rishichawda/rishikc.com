@@ -25,12 +25,17 @@ class Navbar extends React.Component {
     return (
       <aside className="sidebar">
         <div className="sidebar-links">
-          <span onClick={this.scrollToAboutSection}>About this geek.</span>
-          <span onClick={this.scrollToWorkSection}>What do I do? Hmm..</span>
-          <span onClick={this.scrollToSkillsSection}>Skills, you asked?</span>
-          <span onClick={this.scrollToProjectsSection}>Have a look at some projects!</span>
+          <span className="link-title" onClick={this.scrollToAboutSection}>About this geek.</span>
+          <span className="link-title" onClick={this.scrollToWorkSection}>What do I do? Hmm..</span>
+          <span className="link-title" onClick={this.scrollToSkillsSection}>Skills, you asked?</span>
+          <span className="link-title" onClick={this.scrollToProjectsSection}>Have a look at some projects!</span>
         </div>
         <div className="footer">
+          <i className="sidebar-icon fas fa-info-circle" onClick={this.scrollToAboutSection} />
+          <i className="sidebar-icon fas fa-briefcase" onClick={this.scrollToWorkSection} />
+          <i className="sidebar-icon far fa-lightbulb" onClick={this.scrollToSkillsSection} />
+          <i className="sidebar-icon fas fa-code" onClick={this.scrollToProjectsSection} />
+          <hr />
           <a href="https://www.linkedin.com/in/rkrishi"><i className="fab fa-linkedin" /></a>
           <a href="https://github.com/rishichawda"><i className="fab fa-github" /></a>
           <a href="https://medium.com/@rishii.kumar.chawda"><i className="fab fa-medium" /></a>

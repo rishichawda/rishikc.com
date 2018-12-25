@@ -10,6 +10,9 @@
         float: right;
         display: flex;
         padding: 2% 0;
+        @media only screen and (max-width: 1081px) {
+            width: 90%;
+        }
         .intro {
             display: flex;
             align-items: center;
