@@ -1,8 +1,11 @@
 const webpack = require('webpack');
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
+  devtool: '',
   mode: 'production',
   entry: `${__dirname}/index.js`,
   output: {
@@ -19,7 +22,7 @@ module.exports = {
       },
       {
         test: /\.(jpg|jpeg|png)$/,
-        use: 'file-loader',
+        use: 'url-loader',
       },
       {
         test: /\.(scss|css)$/,
@@ -39,4 +42,27 @@ module.exports = {
       template: './public/index.html',
     }),
   ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
+    },
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true,
+      }),
+      new OptimizeCSSAssetsPlugin({
+        cssProcessorPluginOptions: {
+          preset: ['default', { discardComments: { removeAll: true } }],
+        },
+      }),
+    ],
+  },
 };
