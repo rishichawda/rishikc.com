@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
+import { FaInfoCircle, FaLinkedin, FaGithub, FaMedium, FaInstagram, FaCode } from 'react-icons/fa';
+import { IoMdMail, IoIosBriefcase, IoMdColorWand } from 'react-icons/io';
 import './index.scss';
 
 class Navbar extends React.Component {
@@ -31,16 +33,16 @@ class Navbar extends React.Component {
           <span className="link-title" onClick={this.scrollToProjectsSection}>Have a look at some projects!</span>
         </div>
         <div className="footer">
-          <i className="sidebar-icon fas fa-info-circle" onClick={this.scrollToAboutSection} />
-          <i className="sidebar-icon fas fa-briefcase" onClick={this.scrollToWorkSection} />
-          <i className="sidebar-icon far fa-lightbulb" onClick={this.scrollToSkillsSection} />
-          <i className="sidebar-icon fas fa-code" onClick={this.scrollToProjectsSection} />
+          <FaInfoCircle className="sidebar-icon" onClick={this.scrollToAboutSection} />
+          <IoIosBriefcase className="sidebar-icon" onClick={this.scrollToWorkSection} />
+          <IoMdColorWand className="sidebar-icon" onClick={this.scrollToSkillsSection} />
+          <FaCode className="sidebar-icon" onClick={this.scrollToProjectsSection} />
           <hr />
-          <a href="https://www.linkedin.com/in/rkrishi"><i className="fab fa-linkedin" /></a>
-          <a href="https://github.com/rishichawda"><i className="fab fa-github" /></a>
-          <a href="https://medium.com/@rishii.kumar.chawda"><i className="fab fa-medium" /></a>
-          <a href="https://www.instagram.com/rishi.py"><i className="fab fa-instagram" /></a>
-          <a href="/"><i className="fas fa-envelope" /></a>
+          <a href="https://www.linkedin.com/in/rkrishi"><FaLinkedin /></a>
+          <a href="https://github.com/rishichawda"><FaGithub /></a>
+          <a href="https://medium.com/@rishii.kumar.chawda"><FaMedium /></a>
+          <a href="https://www.instagram.com/rishi.py"><FaInstagram /></a>
+          <a href="/"><IoMdMail /></a>
         </div>
       </aside>
     );
