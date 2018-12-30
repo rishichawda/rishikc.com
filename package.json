@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.development --mode development",
-    "build": "webpack --config ./webpack.config.production -p",
+    "build": "cross-env NODE_ENV=production webpack --config ./webpack.config.production -p",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
@@ -38,6 +38,7 @@
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.0",
     "compression-webpack-plugin": "^2.0.0",
+    "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
     "cz-conventional-changelog": "^2.1.0",
     "eslint": "^5.6.1",
@@ -45,13 +46,14 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
-    "file-loader": "^2.0.0",
     "gh-pages": "^2.0.1",
     "html-webpack-plugin": "^3.2.0",
     "node-sass": "^4.9.3",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
-    "uglifyjs-webpack-plugin": "^2.0.1",
+    "uglifyjs-webpack-plugin": "^2.1.1",
+    "url-loader": "^1.1.2",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9"

@@ -25,7 +25,7 @@ module.exports = {
       },
       {
         test: /\.(jpg|jpeg|png)$/,
-        use: 'file-loader',
+        use: 'url-loader',
       },
       {
         test: /\.(scss|css)$/,

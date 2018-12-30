@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
-import { FaInfoCircle, FaLinkedin, FaGithub, FaMedium, FaInstagram, FaCode } from 'react-icons/fa';
+import {
+  FaInfoCircle, FaLinkedin, FaGithub, FaMedium, FaInstagram, FaCode,
+} from 'react-icons/fa';
 import { IoMdMail, IoIosBriefcase, IoMdColorWand } from 'react-icons/io';
 import './index.scss';
 
