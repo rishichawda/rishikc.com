@@ -1,5 +1,5 @@
 .sidebar {
-    height: 100vh;
+    height: 100%;
     padding: 0.2em 1%;
     display: flex;
     width: 20%;
@@ -72,7 +72,7 @@
             }
         }
 
-        i.sidebar-icon {
+        svg.sidebar-icon {
             display: none;
 
             @media only screen and (max-width: 1081px) {
