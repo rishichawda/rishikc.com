@@ -3,12 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Loadable from 'react-loadable';
 import './src/index.scss';
-import ScrollTop from './src/components/scrollbutton';
-
-const Sidebar = Loadable({
-  loader: () => import('./src/components/sidebar/index.js'),
-  loading: () => null,
-});
+import Navbar from './src/components/navbar/index.js';
 
 const Home = Loadable({
   loader: () => import('./src/routes/home/index.js'),
@@ -37,13 +32,12 @@ const Projects = Loadable({
 
 const App = () => (
   <React.Fragment>
-    <Sidebar />
+    <Navbar />
     <Home />
     <About />
     <Work />
     <Skills />
     <Projects />
-    <ScrollTop />
   </React.Fragment>
 );
 

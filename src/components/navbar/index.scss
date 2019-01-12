@@ -1,0 +1,66 @@
+.navbar {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    height: 2.5em;
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    justify-content: center;
+    background-color: #fff;
+    .sidebar-links {
+        display: flex;
+        box-sizing: border-box;
+        list-style: none;
+        margin: 0;
+        width: 70%;
+        justify-content: space-around;
+        align-self: center;
+        padding: 0 3%;
+        margin: auto;
+        @media only screen and (max-width: 690px) {
+            width: 90%;
+        }
+        span {
+            text-decoration: none;
+            display: flex;
+            width: fit-content;
+            color: black;
+            padding: 2%;
+            font-size: 0.8em;
+            min-width: fit-content;
+            cursor: pointer;
+            text-transform: uppercase;
+            position: relative;
+        }
+        .current-active {
+            color: orange;
+            &::after {
+                content: '';
+                display: flex;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: orange;
+            }
+        }
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    }
+    65% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateX(0%);
+        transform: translateX(0%);
+    }
+}
