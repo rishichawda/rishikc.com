@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
-
 body {
     margin: 0;
     overflow: hidden;
@@ -8,10 +7,12 @@ body {
     -moz-transition: all 1s;
     -o-transition: all 1s;
     -webkit-transition: all 1s;
+}
 
-    // @media only screen and (max-width: 1081px) {
-    //     overflow: scroll;
-    // }
+#root {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
 }
 
 section {
@@ -44,7 +45,6 @@ section {
     border-radius: 50%;
     background-color: #fff;
     box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.2);
-
     i {
         color: #a6c5e0;
     }
