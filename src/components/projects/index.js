@@ -4,7 +4,7 @@ import './index.scss';
 class Work extends Component {
     render() {
         return (
-            <section className="container work-section" id="projects">
+            <section className="container project-section" id="projects">
                 <h2>Projects</h2>
                 <p>Lorem Ipsum is simply dummy text of the
                 printing and typesetting industry. Lorem Ipsum
