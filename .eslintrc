@@ -1,17 +1,21 @@
 {
   "parser": "babel-eslint",
-  "extends": "airbnb",
+  "extends": [
+    "airbnb",
+    "prettier"
+  ],
   "rules": {
     "react/jsx-filename-extension": 0,
-    "global-require": "warn",
-    "import/no-extraneous-dependencies": "warn"
+    "import/no-unresolved": 0
   },
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     }
   },
-  "plugins": ["react"],
+  "plugins": [
+    "react"
+  ],
   "env": {
     "browser": true
   }

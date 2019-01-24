@@ -4,20 +4,23 @@ import ReactDOM from 'react-dom';
 import Loadable from 'react-loadable';
 import './src/index.scss';
 
-// const Home = Loadable({
-//   loader: () => import('./src/routes/home/index.js'),
-//   loading: () => null,
-// });
+const Hero = Loadable({
+  loader: () => import('./src/hero-section/index.jsx'),
+  loading: () => null,
+});
 
-// const About = Loadable({
-//   loader: () => import('./src/components/about/index.js'),
-//   loading: () => null,
-// });
+const About = Loadable({
+  loader: () => import('./src/about/index.js'),
+  loading: () => null,
+});
 
 
 
 const App = () => (
-  <div>clean start</div>
+  <>
+    <Hero />
+    <About />
+  </>
 );
 
 const render = () => {

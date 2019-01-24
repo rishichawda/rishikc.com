@@ -1,0 +1,60 @@
+.intro-card {
+  max-width: 80%;
+  border-radius: 12px;
+  position: relative;
+  bottom: -200px;
+  background: #fff;
+  padding: 30px;
+  box-shadow: 0 20px 80px 0 rgba(153, 153, 153, .3);
+  margin-left: auto;
+  margin-right: auto;
+  .hero-image {
+    width: auto;
+    height: 100%;
+  }
+  .hero-intro {
+    -ms-flex: 1;
+    flex: 1;
+    height: 100%;
+    padding-left: 10%;
+    flex-direction: column;
+    font-family: Roboto sans-serif;
+    h5 {
+      font-size: 14px;
+      font-family: roboto, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2.1px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      color: #222;
+      line-height: 1.2;
+    }
+    h2 {
+      font-size: 48px;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      color: #222;
+      line-height: 1.2;
+      margin-top: 0;
+      font-family: PT Sans;
+    }
+    h4 {
+      font-size: 16px;
+      font-weight: 500;
+      font-family: roboto, sans-serif;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      color: #222;
+      line-height: 1.2;
+    }
+  }
+}
+
+.hero-section {
+  justify-items: center;
+  height: 100%;
+  width: 100%;
+  background-image: -moz-linear-gradient(0deg, #766dff 0%, #88f3ff 100%);
+  background-image: -webkit-linear-gradient(0deg, #766dff 0%, #88f3ff 100%);
+  background-image: -ms-linear-gradient(0deg, #766dff 0%, #88f3ff 100%);
+}
