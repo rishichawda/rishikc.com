@@ -4,7 +4,7 @@ import developerAtDesk from '../assets/about-right.png';
 
 export default () => (
   <section className="container about-section">
-    <div>
+    <div className="about-section-inner">
       <div className="about-content">
         <h4>About me</h4>
         <p>{'I\'m a web and native apps developer from Bangalore, India.'}</p>

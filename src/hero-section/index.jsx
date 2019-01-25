@@ -19,31 +19,31 @@ export default () => (
           <a href="https://www.linkedin.com/in/rkrishi">
             <li>
               <FaLinkedin />
-              LinkedIn
+              <span>LinkedIn</span>
             </li>
           </a>
           <a href="https://github.com/rishichawda">
             <li>
               <FaGithub />
-              Github
+              <span>Github</span>
             </li>
           </a>
           <a href="https://medium.com/@rishii.kumar.chawda">
             <li>
               <FaMedium />
-              Medium Blogs
+              <span>Medium Blogs</span>
             </li>
           </a>
           <a href="https://www.instagram.com/rishi.py">
             <li>
               <FaInstagram />
-              Instagram
+              <span>Instagram</span>
             </li>
           </a>
           <a href="/">
             <li>
               <IoMdMail />
-              Mail
+              <span>Mail</span>
             </li>
           </a>
         </ul>
