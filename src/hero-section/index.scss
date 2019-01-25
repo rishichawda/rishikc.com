@@ -18,10 +18,12 @@
     height: 100%;
     padding-left: 10%;
     flex-direction: column;
-    font-family: Roboto sans-serif;
+    font-family: Roboto, sans-serif;
+    line-height: 26px;
+    font-size: 16px;
+    font-weight: 400;
     h5 {
       font-size: 14px;
-      font-family: roboto, sans-serif;
       text-transform: uppercase;
       letter-spacing: 2.1px;
       font-weight: 400;
@@ -41,11 +43,42 @@
     h4 {
       font-size: 16px;
       font-weight: 500;
-      font-family: roboto, sans-serif;
       text-transform: uppercase;
       margin-bottom: 20px;
       color: #222;
       line-height: 1.2;
+    }
+    p {
+      max-width: 540px;
+      color: #777;
+      margin-bottom: 40px;
+    }
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      cursor: auto;
+      a {
+        text-decoration: none;
+      }
+      li {
+        margin-bottom: 15px;
+        position: relative;
+        font-size: 16px;
+        color: #777;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        float: left;
+        clear: both;
+        width: fit-content;
+        svg {
+          padding: 0 0.5em;
+          padding-left: 0;
+          font-size: 1.5em;
+          color: #557dce;
+        }
+      }
     }
   }
 }
