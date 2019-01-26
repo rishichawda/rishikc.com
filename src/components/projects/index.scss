@@ -66,6 +66,9 @@
       }
 
       .repo-title {
+        a {
+          text-decoration: none;
+        }
         h4 {
           color: #37474F;
           transition: color .2s ease-out;

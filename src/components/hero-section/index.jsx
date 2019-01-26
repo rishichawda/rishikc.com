@@ -7,7 +7,7 @@ import heroImage from '../../images/1456505540091_2.jpg'
 import './index.scss'
 
 export default () => (
-  <div className="hero-section">
+  <section className="hero-section">
     <div className="container intro-card">
     <div className="hero-image">
       <img src={heroImage} alt="hero-img" />
@@ -51,5 +51,5 @@ export default () => (
         </ul>
       </div>
     </div>
-  </div>
+  </section>
     )

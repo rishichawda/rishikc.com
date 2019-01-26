@@ -10,7 +10,7 @@ export default () => (
       <a href="https://github.com/rishichawda/markdown-magic-build-badge">
         <article className="card lang-js">
           <div className="repo-title">
-            <a>
+            <a href="https://github.com/rishichawda/markdown-magic-build-badge">
               <h4>markdown-magic-build-badge</h4>
             </a>
           </div>
@@ -29,7 +29,7 @@ export default () => (
       <a href="https://github.com/rishichawda/react-lite-components">
         <article className="card lang-js">
           <div className="repo-title">
-            <a>
+            <a href="https://www.npmjs.com/package/react-lite-components">
               <h4>react-lite-components</h4>
             </a>
           </div>
@@ -48,7 +48,7 @@ export default () => (
       <a href="https://github.com/rishichawda/bgcreate">
         <article className="card lang-js">
           <div className="repo-title">
-            <a>
+            <a href="https://github.com/rishichawda/bgcreate">
               <h4>bgcreate</h4>
             </a>
           </div>
