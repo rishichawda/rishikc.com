@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'gatsby'
+import { FaArrowRight } from 'react-icons/fa'
 import './index.scss';
 
 export default () => (
@@ -7,19 +8,20 @@ export default () => (
     <h2>blogs</h2>
     <div className="inner-container">
       <Link to="/blogs">
-        <div className="card">
+        <article className="card">
 
-        </div>
+        </article>
       </Link>
       <Link to="/blogs">
-        <div className="card">
+        <article className="card">
 
-        </div>
+        </article>
       </Link>
       <Link to="/blogs">
-        <div className="card">
-
-        </div>
+        <article className="card">
+          <span style={{ fontSize: 20 }}>View All</span>
+          <FaArrowRight style={{ marginLeft: 20, fontSize: 20 }} />
+        </article>
       </Link>
     </div>
   </section>
