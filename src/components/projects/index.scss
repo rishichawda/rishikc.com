@@ -13,6 +13,7 @@
     text-align: center;
     text-transform: uppercase;
     color: #222;
+    font-weight: 400;
     font-family: Poppins, sans-serif;
     font-size: 36px;
     margin: auto;
@@ -25,6 +26,7 @@
     font-family: Poppins, sans-serif;
     margin: auto;
     margin-bottom: 18px;
+    font-weight: 300;
     a {
       text-decoration: none;
       font-weight: 500;
@@ -92,6 +94,7 @@
       .repo-description {
         p {
           text-align: left;
+          font-weight: 300;
         }
       }
 
