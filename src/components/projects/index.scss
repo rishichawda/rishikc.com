@@ -63,6 +63,9 @@
       background: #fff;
       padding: 10% 5%;
       box-shadow: 0 1px 5px rgba(0,0,0,0.15);
+      &.lang-js {
+        border-top-color: #FBDD51 !important;
+      }
       &:hover {
         box-shadow: 0 15px 30px rgba(0,0,0,0.15);
       }
@@ -96,10 +99,6 @@
           text-align: left;
           font-weight: 300;
         }
-      }
-
-      &.lang-js {
-        border-top-color: #FBDD51;
       }
     }
   }
