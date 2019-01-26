@@ -14,6 +14,7 @@ export default () => (
       <div className="about-image">
         <img src={developerAtDesk} alt="about-right" />
       </div>
+      <h4 className="max-width820">About me</h4>
     </div>
   </section>
     )
