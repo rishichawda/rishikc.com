@@ -8,7 +8,7 @@
     font-family: Poppins, sans-serif;
     transition: color .2s ease-out;
     font-size: 1.25em;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.4;
   }
   a {
@@ -37,7 +37,7 @@
       margin: 0;
       margin-bottom: 36px;
       font-size: 1.25em;
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.4;
     }
     p {
@@ -53,17 +53,92 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
+  .original-article-link {
+    a {
+      text-decoration: none;
+      color: #222;
+      display: flex;
+      svg {
+        align-self: center;
+      }
+      &:hover {
+        color: #777;
+      }
+    }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+    p {
+      color: #222;
+      font-size: 1.1em;
+      font-family: Poppins, sans-serif;
+      margin-bottom: 18px;
+      font-weight: 500;
+      margin-right: 10px;
+      &:hover {
+        color: #777;
+      }
+    }
+  }
   .blog-title {
+    h4{
     color: #222;
     font-family: Poppins, sans-serif;
     transition: color .2s ease-out;
     margin: 0;
-    margin-bottom: 36px;
+    margin-bottom: 20px;
     font-size: 1.9em;
-    font-weight: 600;
+    font-weight: 300;
     line-height: 1.4;
   }
+}
   .blog-body {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    text-align: left;
 
+    .article-image {
+      width: 80%;
+      margin: 20px auto;
+      img {
+        width: 100%;
+      }
+    }
+    p {
+      color: #222;
+      font-size: 1.1em;
+      font-family: Poppins, sans-serif;
+      margin-bottom: 18px;
+      font-weight: 300;
+      a {
+        color: #222;
+        font-weight: 500;
+      }
+    }
+
+    span.code {
+      background: rgba(0,0,0,.05);
+      border-radius: 2px;
+      padding: 2px 7px;
+    }
+
+    code {
+      color: #222;
+      font-size: 1.1em;
+      font-family: monospace, sans-serif;
+      line-height: 1.6em;
+      display: flex;
+      overflow: scroll;
+      white-space: nowrap;
+      font-weight: 300;
+      margin: 10px 0;
+      box-sizing: border-box;
+      background: rgba(0,0,0,.05);
+      padding: 1em 2em;
+      width: 100%;
+    }
   }
 }

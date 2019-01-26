@@ -15,6 +15,7 @@
     color: #fff;
     font-family: Poppins, sans-serif;
     font-size: 36px;
+    font-weight: 400;
     margin: auto;
     margin-bottom: 18px;
   }
@@ -66,7 +67,7 @@
           transition: color .2s ease-out;
           margin: 0;
           font-size: 1.25em;
-          font-weight: 600;
+          font-weight: 500;
           line-height: 1.4;
           cursor: pointer;
           &:hover {

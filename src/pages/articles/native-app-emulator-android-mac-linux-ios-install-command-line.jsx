@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'gatsby'
+import { GoLinkExternal } from 'react-icons/go'
 import BlogTemplate from '../../templates/blog'
 import './index.scss'
 import bannerImage from '../../images/rn_logo_medium.png'
@@ -12,6 +12,12 @@ export default () => (
       bannerImage={bannerImage}
     >
       <article className="blog-content container">
+      <div className="original-article-link">
+        <a href="https://medium.com/@rishii.kumar.chawda/install-android-emulator-for-react-native-app-without-installing-android-studio-727d7734528">
+          <p>{'Read this article on Medium.'}</p>
+          <GoLinkExternal />
+        </a>
+      </div>
         <div className="blog-title">
         <h4>{'Install Android Emulator for Mac, Linux and Windows without installing Android Studio'}</h4>
         </div>

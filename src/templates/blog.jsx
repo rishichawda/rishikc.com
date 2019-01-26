@@ -5,19 +5,19 @@ import './blog.scss';
 
 export default ({ meta_desc, meta_keywords, meta_title, children, bannerImage }) => (
   <>
-  <Helmet>
+    <Helmet>
       <html lang="en"></html>
       <title>{meta_title}</title>
       <meta name="description" content={meta_desc} />
       <meta name="keywords" content={meta_keywords} />
     </Helmet>
-  <div role="container article-template">
-    <div className="article-banner">
-      <img src={bannerImage} alt="article-banner"/>
+    <div role="container" className="article-template">
+      <div className="article-banner">
+        <img src={bannerImage} alt="article-banner" />
+      </div>
+      <div className="article-content">
+        {children || 'Article content.'}
+      </div>
     </div>
-    <div className="article-content">
-    { children || 'Article content.'}
-    </div>
-  </div>
   </>
 );
