@@ -1,5 +1,6 @@
 .blog-section {
   height: 500px;
+  min-height: fit-content;
   padding: 3%;
   max-width: 1280px;
   flex-direction: column;
@@ -12,7 +13,6 @@
   h2 {
     text-align: center;
     text-transform: uppercase;
-    // color: #222;
     color: #fff;
     font-family: Poppins, sans-serif;
     font-size: 36px;
@@ -22,15 +22,23 @@
   }
   .inner-container {
     display: flex;
+    box-sizing: border-box;
+    flex-wrap: wrap;
     flex-direction: row;
-    height: 100%;
+    height: fit-content;
+    justify-content: space-around;
     width: 100%;
     max-width: 1280px;
-    padding: 1%;
+    padding: 1% 3%;
+    a {
+      margin: 20px;
+      box-sizing: border-box;
+      width: 350px;
+      height: 300px;
+    }
     .card {
-      flex: 1;
-      margin: 0 20px;
       height: 100%;
+      width: 100%;
       border-radius: 10px;
       transition: box-shadow 0.5s ease-in-out;
       background: #fff;
