@@ -3,7 +3,7 @@ import { Link } from 'gatsby'
 import Helmet from 'react-helmet'
 import './blog.scss';
 
-export default ({ meta_desc, meta_keywords, meta_title, children }) => (
+export default ({ meta_desc, meta_keywords, meta_title, children, bannerImage }) => (
   <>
   <Helmet>
       <html lang="en"></html>
@@ -13,7 +13,7 @@ export default ({ meta_desc, meta_keywords, meta_title, children }) => (
     </Helmet>
   <div role="container article-template">
     <div className="article-banner">
-    Article banner.
+      <img src={bannerImage} alt="article-banner"/>
     </div>
     <div className="article-content">
     { children || 'Article content.'}

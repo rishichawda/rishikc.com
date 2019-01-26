@@ -48,3 +48,22 @@
     }
   }
 }
+
+.blog-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  .blog-title {
+    color: #222;
+    font-family: Poppins, sans-serif;
+    transition: color .2s ease-out;
+    margin: 0;
+    margin-bottom: 36px;
+    font-size: 1.9em;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .blog-body {
+
+  }
+}
