@@ -22,7 +22,7 @@ export default () => (
         <h4>{'Install Android Emulator for Mac, Linux and Windows without installing Android Studio'}</h4>
         </div>
         <div className="blog-body">
-
+          <p>{'This page will be updated soon. Don\'t worry, you can still read the article on the medium link above the title!'}</p>
         </div>
       </article>
     </BlogTemplate>

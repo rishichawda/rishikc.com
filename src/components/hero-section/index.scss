@@ -69,7 +69,7 @@
     }
     h4 {
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 400;
       text-transform: uppercase;
       margin-bottom: 20px;
       color: #222;
@@ -78,6 +78,7 @@
     p {
       max-width: 540px;
       color: #777;
+      font-weight: 300;
       margin-bottom: 40px;
     }
     ul {
@@ -104,6 +105,10 @@
         clear: both;
         width: fit-content;
         span {
+          font-weight: 300;
+          &:hover {
+            filter: drop-shadow(0px 0px 1px rgb(207, 207, 207));
+          }
           @media only screen and (max-width: 770px) {
             display: none;
           }
