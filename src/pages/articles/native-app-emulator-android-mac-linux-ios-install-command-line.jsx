@@ -1,12 +1,11 @@
 import React from 'react'
 import { Link } from 'gatsby'
-
+import BlogTemplate from '../../templates/blog'
 import './index.scss';
 
 export default () => (
-  <>
-    blog 1
-    <Link to='/blogs'>back to blogs</Link>
-  </>
+    <BlogTemplate>
+      <Link to='/articles'>back to blogs</Link>
+    </BlogTemplate>
 );
 
