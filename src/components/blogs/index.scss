@@ -44,11 +44,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
+      border-radius: 2px;
       transition: box-shadow 0.5s ease-in-out;
       background: #fff;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.15);
       &:hover {
-        box-shadow: 0 5px 20px 10px rgba(0,0,0,.08);
+        // box-shadow: 0 5px 20px 10px rgba(0,0,0,.08);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
       }
     }
   }

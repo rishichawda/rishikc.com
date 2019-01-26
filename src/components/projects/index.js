@@ -8,19 +8,19 @@ export default () => (
     <p>Some of my recent open source projects. You can take a look at all of them <a href="https://www.github.com/rishichawda">here</a>.</p>
     <div className="inner-container">
       <Link to="/">
-        <div className="card">
+        <article className="card lang-js">
 
-        </div>
+        </article>
       </Link>
       <Link to="/">
-        <div className="card">
+        <article className="card lang-js">
 
-        </div>
+        </article>
       </Link>
       <Link to="/">
-        <div className="card">
+        <article className="card lang-js">
 
-        </div>
+        </article>
       </Link>
     </div>
   </section>

@@ -7,7 +7,7 @@
   &.container {
     max-width: 100%;
     width: 100%;
-    background: #f9f9ff;
+    // background: #f9f9ff;
   }
   h2 {
     text-align: center;
@@ -50,11 +50,17 @@
     .card {
       height: 100%;
       width: 100%;
-      border-radius: 10px;
+      border-radius: 2px;
+      border-top: 3px solid;
       transition: box-shadow 0.5s ease-in-out;
       background: #fff;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.15);
       &:hover {
-        box-shadow: 0 10px 30px 0 rgba(0,0,0,.08);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+      }
+
+      &.lang-js {
+        border-top-color: #FBDD51;
       }
     }
   }
