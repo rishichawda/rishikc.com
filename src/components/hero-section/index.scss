@@ -1,0 +1,127 @@
+.intro-card {
+  width: 80%;
+  border-radius: 12px;
+  position: relative;
+  bottom: -200px;
+  background: #fff;
+  padding: 30px;
+  box-shadow: 0 20px 80px 0 rgba(153, 153, 153, .3);
+  margin-left: auto;
+  margin-right: auto;
+  @media only screen and (max-width: 1120px) {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    bottom: -130px;
+    color: rgb(119, 119, 119);
+    font-family: poppins, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 26px;
+    padding: 30px;
+    position: relative;
+    text-align: left;
+    height: fit-content;
+  }
+  .hero-image {
+    flex: 2;
+    border-radius: 10px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+  .hero-intro {
+    -ms-flex: 1;
+    flex: 1 1;
+    height: 100%;
+    padding-left: 5%;
+    flex-direction: column;
+    font-family: poppins, sans-serif;
+    line-height: 26px;
+    font-size: 16px;
+    font-weight: 400;
+    @media only screen and (max-width: 1120px) {
+      padding-left: 0;
+    }
+    h5 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2.1px;
+      font-weight: 400;
+      margin-bottom: 12px;
+      color: #222;
+      line-height: 1.2;
+    }
+    h2 {
+      font-size: 48px;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      color: #222;
+      line-height: 1.2;
+      margin-top: 0;
+      font-family: PT Sans;
+    }
+    h4 {
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      color: #222;
+      line-height: 1.2;
+    }
+    p {
+      max-width: 540px;
+      color: #777;
+      margin-bottom: 40px;
+    }
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      cursor: auto;
+      @media only screen and (max-width: 1120px) {
+        display: flex;
+        justify-content: space-between;
+      }
+      a {
+        text-decoration: none;
+      }
+      li {
+        margin-bottom: 15px;
+        position: relative;
+        font-size: 16px;
+        color: #777;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        float: left;
+        clear: both;
+        width: fit-content;
+        span {
+          @media only screen and (max-width: 770px) {
+            display: none;
+          }
+        }
+        svg {
+          padding: 0 0.5em;
+          padding-left: 0;
+          font-size: 1.5em;
+          color: #557dce;
+        }
+      }
+    }
+  }
+}
+
+.hero-section {
+  justify-items: center;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #766dff 0%, #88f3ff 100%);
+}

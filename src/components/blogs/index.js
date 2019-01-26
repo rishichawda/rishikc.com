@@ -3,21 +3,20 @@ import { Link } from 'gatsby'
 import './index.scss';
 
 export default () => (
-  <section className="container project-section">
-    <h2>open source projects</h2>
-    <p>Some of my recent open source projects. You can take a look at all of them <a href="https://www.github.com/rishichawda">here</a>.</p>
+  <section className="container blog-section">
+    <h2>blogs</h2>
     <div className="inner-container">
-      <Link to="/">
+      <Link to="/blogs">
         <div className="card">
 
         </div>
       </Link>
-      <Link to="/">
+      <Link to="/blogs">
         <div className="card">
 
         </div>
       </Link>
-      <Link to="/">
+      <Link to="/blogs">
         <div className="card">
 
         </div>

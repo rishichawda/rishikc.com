@@ -1,44 +1,20 @@
-import React from 'react';
+import React from 'react'
 import './index.scss';
+import developerAtDesk from '../../images/about-right.png';
 
-const About = () => (
-  <section className="container about-section" id="about">
-    <h2>About</h2>
-    <p>
-      {'Looks like you\'re really interested! So I\'ll let you in a little secret..'}
-    </p>
-    <p>{'And tell you my \'secret mantra\'!'}</p>
-    <q>Eat. Sleep. Code. Repeat.</q>
-    <p>
-      {'Haha! Expected something else? Well, that\'s where most of my time goes. '}
-      {'Infront of my laptop. If not coding, then either reading documentations, '}
-      {'articles or blogs. If not that, then I\'m just spidering the web, exploring '}
-      {'repositories / codebases, looking at what other programmers and developers '}
-      {'are up to.'}
-      <span>
-        PS: If you have any suggestions, you can ping the details on any of my
-        social media handles! Would love to have more content for reading!
-      </span>
-    </p>
-    <p>
-      I also like books, traveling
-      <span>
-        {'( yes, infact programmers need it the most - you can\'t keep being '}
-        {'frustrated 24x7 with your own code! )'}
-      </span>
-      , good food and music, and art.
-    </p>
-
-    <p>
-      {'One of the best advices I\'ve ever heard,'}
-      <p className="by-jobs">
-        “If today were the last day of my life, would I want to do what I am
-        about to do today?’ And whenever the answer has been ‘no’ for too many
-        days in a row, I know I need to change something.”
-      </p>
-      <span> - Steve Jobs</span>
-    </p>
+export default () => (
+  <section className="container about-section">
+    <div className="about-section-inner">
+      <div className="about-content">
+        <h4>About me</h4>
+        <p>{'I\'m a web and native apps developer from Bangalore, India.'}</p>
+        <p>I design and develop websites, progressive web applications and native mobile applications for Android and iOS.</p>
+        <p>Apart from good food, traveling, music and art - I am interested in search engine optimisation, analytics, online marketing and data science.</p>
+      </div>
+      <div className="about-image">
+        <img src={developerAtDesk} alt="about-right" />
+      </div>
+      <h4 className="max-width820">About me</h4>
+    </div>
   </section>
-);
-
-export default About;
+    )

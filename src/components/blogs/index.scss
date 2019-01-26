@@ -1,4 +1,4 @@
-.project-section {
+.blog-section {
   height: 500px;
   min-height: fit-content;
   padding: 3%;
@@ -7,29 +7,16 @@
   &.container {
     max-width: 100%;
     width: 100%;
-    background: #f9f9ff;
+    background: linear-gradient(90deg, #766dff 0%, #88f3ff 100%);
   }
   h2 {
     text-align: center;
     text-transform: uppercase;
-    color: #222;
+    color: #fff;
     font-family: Poppins, sans-serif;
     font-size: 36px;
     margin: auto;
     margin-bottom: 18px;
-  }
-
-  p {
-    text-align: center;
-    color: #222;
-    font-family: Poppins, sans-serif;
-    margin: auto;
-    margin-bottom: 18px;
-    a {
-      text-decoration: none;
-      font-weight: 500;
-      color: #766dff;
-    }
   }
   .inner-container {
     display: flex;
