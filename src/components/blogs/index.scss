@@ -35,10 +35,15 @@
       box-sizing: border-box;
       width: 350px;
       height: 300px;
+      text-decoration: none;
+      color: rgb(110, 189, 255) !important;
     }
     .card {
       height: 100%;
       width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 10px;
       transition: box-shadow 0.5s ease-in-out;
       background: #fff;
