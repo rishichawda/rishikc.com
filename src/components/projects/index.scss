@@ -7,6 +7,7 @@
     background: #f9f9ff;
     max-width: 100%;
     width: 100%;
+    // background: linear-gradient(90deg, #766dff 0%, #88f3ff 100%);
   }
   h2 {
     text-align: center;
@@ -16,7 +17,19 @@
     font-size: 36px;
     margin: auto;
     margin-bottom: 18px;
-    text-transform: uppercase;
+  }
+
+  p {
+    text-align: center;
+    color: #222;
+    font-family: Poppins, sans-serif;
+    margin: auto;
+    margin-bottom: 18px;
+    a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #766dff;
+    }
   }
   .inner-container {
     display: flex;

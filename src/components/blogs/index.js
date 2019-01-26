@@ -2,7 +2,7 @@ import React from 'react'
 import './index.scss';
 
 export default () => (
-  <section className="container project-section">
+  <section className="container blog-section">
   <h2>blogs</h2>
   <div className="inner-container">
   <div className="card">
