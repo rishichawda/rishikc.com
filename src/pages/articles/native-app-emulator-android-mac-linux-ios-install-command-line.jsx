@@ -1,4 +1,5 @@
 import React from 'react'
+import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import { GoLinkExternal } from 'react-icons/go'
 import BlogTemplate from '../../templates/blog'
 import './index.scss'
