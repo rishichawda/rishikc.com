@@ -13,10 +13,10 @@ export default () => (
     >
       <article className="blog-content container">
       <div className="original-article-link">
-        <a href="https://medium.com/@rishii.kumar.chawda/install-android-emulator-for-react-native-app-without-installing-android-studio-727d7734528">
+        <OutboundLink href="https://medium.com/@rishii.kumar.chawda/install-android-emulator-for-react-native-app-without-installing-android-studio-727d7734528">
           <p>{'Read this article on Medium.'}</p>
           <GoLinkExternal />
-        </a>
+        </OutboundLink>
       </div>
         <div className="blog-title">
         <h4>{'Install Android Emulator for Mac, Linux and Windows without installing Android Studio'}</h4>

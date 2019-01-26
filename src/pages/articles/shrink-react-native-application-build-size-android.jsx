@@ -1,4 +1,5 @@
 import React from 'react'
+import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import { GoLinkExternal } from 'react-icons/go'
 import BlogTemplate from '../../templates/blog'
 import './index.scss'
@@ -15,10 +16,10 @@ export default () => (
   >
     <article className="blog-content container">
       <div className="original-article-link">
-        <a href="https://medium.com/@rishii.kumar.chawda/reduce-your-react-native-app-size-dramatically-5430d773c92f">
+        <OutboundLink href="https://medium.com/@rishii.kumar.chawda/reduce-your-react-native-app-size-dramatically-5430d773c92f">
           <p>{'Read this article on Medium.'}</p>
           <GoLinkExternal />
-        </a>
+        </OutboundLink>
       </div>
       <div className="blog-title">
         <h4>{'Shrink your React Native application size dramatically!'}</h4>

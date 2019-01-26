@@ -1,4 +1,5 @@
 import React from 'react'
+import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import {
   FaLinkedin, FaGithub, FaMedium, FaInstagram,
 } from 'react-icons/fa';
@@ -18,36 +19,36 @@ export default () => (
         <h4>Web and Mobile App developer.</h4>
         <p>A programmer with a passion for product design and development who loves working on freelancing and open source projects.</p>
         <ul>
-          <a href="https://www.linkedin.com/in/rkrishi">
+          <OutboundLink href="https://www.linkedin.com/in/rkrishi">
             <li>
               <FaLinkedin />
               <span>LinkedIn</span>
             </li>
-          </a>
-          <a href="https://github.com/rishichawda">
+          </OutboundLink>
+          <OutboundLink href="https://github.com/rishichawda">
             <li>
               <FaGithub />
               <span>Github</span>
             </li>
-          </a>
-          <a href="https://medium.com/@rishii.kumar.chawda">
+          </OutboundLink>
+          <OutboundLink href="https://medium.com/@rishii.kumar.chawda">
             <li>
               <FaMedium />
               <span>Medium Blogs</span>
             </li>
-          </a>
-          <a href="https://www.instagram.com/rishi.py">
+          </OutboundLink>
+          <OutboundLink href="https://www.instagram.com/rishi.py">
             <li>
               <FaInstagram />
               <span>Instagram</span>
             </li>
-          </a>
-          <a href="/">
+          </OutboundLink>
+          <OutboundLink href="/">
             <li>
               <IoMdMail />
               <span>Mail</span>
             </li>
-          </a>
+          </OutboundLink>
         </ul>
       </div>
     </div>
