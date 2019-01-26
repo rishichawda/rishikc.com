@@ -5,7 +5,6 @@
   max-width: 1280px;
   flex-direction: column;
   &.container {
-    // background: #f9f9ff;
     max-width: 100%;
     width: 100%;
     background: linear-gradient(90deg, #766dff 0%, #88f3ff 100%);
@@ -18,7 +17,6 @@
     font-size: 36px;
     margin: auto;
     margin-bottom: 18px;
-    text-transform: uppercase;
   }
   .inner-container {
     display: flex;
