@@ -1,5 +1,5 @@
 .intro-card {
-  max-width: 80%;
+  width: 80%;
   border-radius: 12px;
   position: relative;
   bottom: -200px;
@@ -28,19 +28,17 @@
     height: fit-content;
   }
   .hero-image {
-    width: auto;
-    max-width: 70%;
-    height: auto;
+    flex: 2;
     border-radius: 10px;
-    @media only screen and (max-width: 1120px) {
-      margin: auto;
+    overflow: hidden;
+    img {
       width: 100%;
       height: auto;
     }
   }
   .hero-intro {
     -ms-flex: 1;
-    flex: 1;
+    flex: 1 1;
     height: 100%;
     padding-left: 5%;
     flex-direction: column;
