@@ -73,12 +73,17 @@
           font-size: 1.25em;
           font-weight: 600;
           line-height: 1.5;
-          margin-bottom: 36px;
           cursor: pointer;
           &:hover {
             color: #78909C;
           }
         }
+      }
+      
+      .badges {
+        display: flex;
+        margin: 20px 0;
+        margin-bottom: 36px;
       }
 
       .repo-description {
