@@ -1,4 +1,5 @@
 import React from 'react'
+import Img from "gatsby-image";
 import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import {
   FaLinkedin, FaGithub, FaMedium, FaInstagram,
@@ -7,12 +8,14 @@ import { IoMdMail } from 'react-icons/io';
 import heroImage from '../../images/1456505540091_2.png'
 import './index.scss'
 
-export default () => (
+export default ({ heroImage }) => (
   <section className="hero-section">
     <div className="container intro-card">
-    <div className="hero-image">
-      <img src={heroImage} alt="hero-img" />
-    </div>
+      <div className="hero-image">
+        <Img
+          sizes={heroImage.fluid}
+          alt="hero-img" />
+      </div>
       <div className="hero-intro">
         <h5>Hello, I am</h5>
         <h2>Rishi Kumar Chawda</h2>
@@ -53,4 +56,4 @@ export default () => (
       </div>
     </div>
   </section>
-    )
+)
