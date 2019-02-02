@@ -8,4 +8,38 @@
       height: auto;
     }
   }
+  .back-link {
+    justify-content: space-around;
+    display: flex;
+    @media only screen and (max-width: 610px) {
+      flex-direction: column;
+    }
+    a {
+      text-decoration: none;
+      color: #222;
+      display: flex;
+      svg {
+        align-self: center;
+      }
+      &:hover {
+        color: #777;
+      }
+    }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+    p {
+      color: #222;
+      font-size: 1.1em;
+      font-family: Poppins, sans-serif;
+      margin-bottom: 18px;
+      font-weight: 500;
+      margin-right: 10px;
+      &:hover {
+        color: #777;
+      }
+    }
+  }
 }

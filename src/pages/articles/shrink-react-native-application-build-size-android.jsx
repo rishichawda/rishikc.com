@@ -6,6 +6,8 @@ import './index.scss'
 import bannerImage from '../../images/rn_logo_medium.png'
 import screenshot1 from '../../images/rrnas-1.png'
 import screenshot2 from '../../images/rrnas-2.png'
+import { Link } from 'gatsby';
+import { IoIosReturnRight } from 'react-icons/io'
 
 export default () => (
   <BlogTemplate
@@ -20,6 +22,10 @@ export default () => (
           <p>{'Read this article on Medium.'}</p>
           <GoLinkExternal />
         </OutboundLink>
+        <Link to="/articles">
+          <IoIosReturnRight style={{ marginRight: 10 }}/>
+          <p>{'Back to All articles'}</p>
+        </Link>
       </div>
       <div className="blog-title">
         <h4>{'Shrink your React Native application size dramatically!'}</h4>
