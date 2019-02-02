@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'gatsby'
 import Helmet from 'react-helmet'
 import './index.scss';
+import { IoIosReturnRight } from 'react-icons/io'
 
 export default () => (
   <>
@@ -12,7 +13,13 @@ export default () => (
       <meta name="keywords" content="web development, web developer bangalore, web development services, native app development, websites, progressive web apps, app developer, developer in bangalore, bengaluru area india, freelancing projects, freelance development, freelancing services, mobile apps development, android development, ios app development" />
     </Helmet>
     <div className="blog-main container">
-      <h2>Blogs by Rishi Kumar Chawda</h2>
+      <div className="blog-main-header">
+        <h2>Blogs by Rishi Kumar Chawda</h2>
+        <Link to="/">
+          <IoIosReturnRight style={{ marginRight: 10 }} />
+          <p>{'Back to Home'}</p>
+        </Link>
+      </div>
       <Link to="/articles/shrink-react-native-application-build-size-android">
         <article>
           <h4>{'Shrink your React Native application size dramatically!'}</h4>

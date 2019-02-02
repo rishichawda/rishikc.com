@@ -1,9 +1,11 @@
 import React from 'react'
 import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import { GoLinkExternal } from 'react-icons/go'
+import { IoIosReturnRight } from 'react-icons/io'
 import BlogTemplate from '../../templates/blog'
 import './index.scss'
 import bannerImage from '../../images/rn_logo_medium.png'
+import { Link } from 'gatsby';
 
 export default () => (
     <BlogTemplate
@@ -18,6 +20,10 @@ export default () => (
           <p>{'Read this article on Medium.'}</p>
           <GoLinkExternal />
         </OutboundLink>
+        <Link to="/articles">
+          <IoIosReturnRight style={{ marginRight: 10 }}/>
+          <p>{'Back to All articles'}</p>
+        </Link>
       </div>
         <div className="blog-title">
         <h4>{'Install Android Emulator for Mac, Linux and Windows without installing Android Studio'}</h4>
