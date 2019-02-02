@@ -13,9 +13,9 @@ class App extends React.Component {
       <>
         <Helmet>
           <html lang="en"></html>
-          <title>{'Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development'}</title>
-          <meta name="description" content="Bangalore, (also, Bengaluru) India based developer. Experienced with web apps, progressive web apps, native apps for Android and iOS. Loves working on freelancing and open source projects." />
-          <meta name="keywords" content="web, progressive, apps, pwa, native, mobile, android, ios, freelance, freelancing, developer, design, development, freelancer, open, source, projects, blog, bangalore, bengaluru, india" />
+          <title>{'Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India'}</title>
+          <meta name="description" content="Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects." />
+          <meta name="keywords" content="web development, web developer bangalore, web development services, native app development, websites, progressive web apps, app developer, developer in bangalore, bengaluru area india, freelancing projects, freelance development, freelancing services, mobile apps development, android development, ios app development" />
         </Helmet>
         <Hero heroImage={this.props.data.heroImage.childImageSharp}/>
         <About />
