@@ -8,8 +8,8 @@ import bannerImage from '../../images/rn_logo_medium.png'
 export default () => (
     <BlogTemplate
       meta_title="Android Emulator for React Native in Mac, Linux and Windows - The right way to get it working."
-      meta_desc="Let’s quickly set up Android Studio’s emulator in a better way this time — without actually installing Android Studio!"
-      meta_keywords="react, native, android, emulator, android, studio, right, setup, less, space, mac, linux, windows, install, commandline, cli"
+      meta_desc="Let’s quickly set up Android Studio’s emulator in a better way this time — without actually installing Android Studio! Open your terminal first to install Java development kit 8. You can install it through command line or by visiting oracle.com and download the JDK after accepting the license agreement."
+      meta_keywords="react native android, android app emulator, android studio, right setup, less space, mac installation setup, linux installation setup, windows installation setup, install from cli, commandline"
       bannerImage={bannerImage}
     >
       <article className="blog-content container">

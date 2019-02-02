@@ -10,8 +10,8 @@ import screenshot2 from '../../images/rrnas-2.png'
 export default () => (
   <BlogTemplate
     meta_title="Compress your React Native Android App size with just a few lines!"
-    meta_desc="First of all, you’ll need to eject your Native app if you’re using create-react-native-app for your project. This is important since you don’t have access to configurations until you eject, as the build folder is where we have to make changes."
-    meta_keywords="react, native, android, application, app, build, create-react-app, compress, shrink, reduce, apk, size"
+    meta_desc="To reduce your react native application size for android, first we'll need to eject it if you're using create-react-native-app for your project. After that we'll need to configure the build file to generate compressed android builds."
+    meta_keywords="react native app, android application, app build, bundling android app, create-react-app, compress bundle size, shrink application size, reduce apk size, configuration setup, generate build apk"
     bannerImage={bannerImage}
   >
     <article className="blog-content container">
