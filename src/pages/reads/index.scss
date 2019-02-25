@@ -1,0 +1,48 @@
+.quotes-main {
+  display: flex;
+  flex-direction: column;
+  padding: 50px 20px;
+  width: 83%;
+  color: #000;
+  font-family: Poppins, sans-serif;
+  font-size: 1em;
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
+  ul {
+    padding: 0;
+    .quote {
+      p {
+        align-self: flex-end;
+        margin: 1em 0 0 0;
+        font-weight: 400;
+      }
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -o-user-select: none;
+      user-select: none;
+      color: #777;
+      font-size: 1em;
+      line-height: 1.5;
+      letter-spacing: normal;
+      margin: 1.5em 0;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      padding: 1%;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 2px;
+      transition: box-shadow 0.5s ease-in-out;
+      background: #fff;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+      border-left: 2px solid transparent;
+      &:hover {
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+        border-left: 2px solid sandybrown;
+      }
+    }
+  }
+}
