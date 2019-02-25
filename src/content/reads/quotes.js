@@ -1,9 +1,5 @@
 export default [
   {
-    quote: "“Of all the hardships a person had to face, none was more punishing than the simple act of waiting.”",
-    info: "Khaled Hosseini in A Thousand Splendid Suns"
-  },
-  {
     quote: "“Experience is the name everyone gives to their mistakes.”",
     info: "Oscar Wilde",
   },
@@ -51,4 +47,4 @@ export default [
     quote: "“Measuring programming progress by lines of code is like measuring aircraft building progress by weight.”",
     info: "Bill Gates",
   }
-];
+]
