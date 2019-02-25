@@ -6,6 +6,7 @@ import Projects from '../components/projects'
 import Blogs from '../components/blogs'
 
 import './index.scss';
+import Navbar from '../components/navbar';
 
 class App extends React.Component {
   render() {
@@ -17,6 +18,7 @@ class App extends React.Component {
           <meta name="description" content="Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects." />
           <meta name="keywords" content="web development, web developer bangalore, web development services, native app development, websites, progressive web apps, app developer, developer in bangalore, bengaluru area india, freelancing projects, freelance development, freelancing services, mobile apps development, android development, ios app development" />
         </Helmet>
+        <Navbar />
         <Hero heroImage={this.props.data.heroImage.childImageSharp}/>
         <About />
         <Blogs />

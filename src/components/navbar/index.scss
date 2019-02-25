@@ -1,0 +1,23 @@
+.navbar {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  height: 2em;
+  position: absolute;
+  box-sizing: border-box;
+  .navbar-links {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    a {
+      padding: 1em;
+      text-decoration: none;
+      color: #fff;
+      margin-right: 5px;
+      font-size: 1.25em;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+  }
+}
