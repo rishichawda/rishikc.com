@@ -10,14 +10,10 @@ export default () => (
       <OutboundLink href="https://github.com/rishichawda/markdown-magic-build-badge">
         <article className="card lang-js">
           <div className="repo-title">
-            <OutboundLink href="https://github.com/rishichawda/markdown-magic-build-badge">
-              <h4>markdown-magic-build-badge</h4>
-            </OutboundLink>
+            <h4>markdown-magic-build-badge</h4>
           </div>
           <div className="badges">
-            <OutboundLink href="https://www.npmjs.com/package/markdown-magic-branch-badge">
               <img alt="version-badge" src="https://img.shields.io/npm/v/markdown-magic-branch-badge/latest.svg?style=flat-square" />
-            </OutboundLink>
           </div>
           <div className="repo-description">
             <p>
@@ -29,14 +25,10 @@ export default () => (
       <OutboundLink href="https://github.com/rishichawda/react-lite-components">
         <article className="card lang-js">
           <div className="repo-title">
-            <OutboundLink href="https://www.npmjs.com/package/react-lite-components">
-              <h4>react-lite-components</h4>
-            </OutboundLink>
+            <h4>react-lite-components</h4>
           </div>
           <div className="badges">
-            <OutboundLink href="https://www.npmjs.com/package/react-lite-components">
               <img alt="version-badge" src="https://img.shields.io/npm/v/react-lite-components/latest.svg?style=flat-square" />
-            </OutboundLink>
           </div>
           <div className="repo-description">
             <p>
@@ -48,9 +40,7 @@ export default () => (
       <OutboundLink href="https://github.com/rishichawda/bgcreate">
         <article className="card lang-js">
           <div className="repo-title">
-            <OutboundLink href="https://github.com/rishichawda/bgcreate">
-              <h4>bgcreate</h4>
-            </OutboundLink>
+            <h4>bgcreate</h4>
           </div>
           <div className="badges">
             <OutboundLink href="https://bgcreate.netlify.com">
