@@ -43,3 +43,43 @@
     }
   }
 }
+
+.article-content {
+  max-width: 1100px;
+  margin: auto;
+  a.gatsby-resp-image-link {
+    margin-bottom: 70px;
+  }
+  p, li {
+    color: #222;
+    font-size: 1.1em;
+    font-family: Poppins, sans-serif;
+    margin-bottom: 18px;
+    font-weight: 300;
+    a {
+      color: #222;
+      font-weight: 500;
+    }
+  }
+  pre {
+    font-size: 1.1em;
+    font-family: monospace, sans-serif;
+    line-height: 1.6em;
+    display: flex;
+    overflow: scroll;
+    font-weight: 300;
+    margin: 10px 0;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, .05);
+    padding: 1em 2em;
+    width: 100%;
+    code {
+      background-color: transparent;
+    }
+  }
+  code {
+    background: rgba(0, 0, 0, .05);
+    border-radius: 2px;
+    padding: 2px 7px;
+  }
+}
