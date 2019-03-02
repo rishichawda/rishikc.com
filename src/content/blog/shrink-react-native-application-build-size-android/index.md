@@ -29,7 +29,7 @@ Okay so now we’re all set! Let’s get started and get that done fast. Don’t
 
 Now, navigate to the `android / app` folder from your project root directory where you can find your `build.gradle` file.
 
-![build.gradle](./rrnas-1.png)
+![post](./rrnas-1.png)
 
 Here, you’ll find your default build configurations already setup, find the line which looks like this :
 
@@ -47,7 +47,7 @@ def enableSeparateBuildPerCPUArchitecture = true
 
 So you might be wondering what it does. Well, if you scroll down a bit you’ll see `enableProguardInReleaseBuilds` and `enableSeparateBuildPerCPUArchitecture` written at a few more places like here:
 
-![build.gradle](./rrnas-2.png)
+![post](./rrnas-2.png)
 
 As you can see, these variables are being used to enable or disable two build configurations —
 
