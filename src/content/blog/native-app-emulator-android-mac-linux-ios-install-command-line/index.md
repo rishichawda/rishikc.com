@@ -7,9 +7,11 @@ description: To reduce your react native application size for android, first we'
 
 ![banner](./rn_logo_medium.png)
 
-## Android Emulator for React Native in Mac, Linux and Windows - The right way to get it working
+# Android Emulator for React Native in Mac, Linux and Windows - The right way to get it working
 
-### — And save yourself a lot of space!
+## — And save yourself a lot of space!
+
+<br />
 
 So let me ask you first —
 
