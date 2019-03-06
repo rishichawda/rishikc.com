@@ -74,10 +74,21 @@
 .article-content {
   max-width: 1100px;
   margin: auto;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
   a.gatsby-resp-image-link {
     margin: 61px auto;
   }
-  p, li {
+  hr {
+    border-color: #d6d6da;
+    margin: 3.8em 0;
+    border-width: 0.5px;
+  }
+  p,
+  li {
     color: #222;
     font-size: 1.1em;
     line-height: 1.6em;
@@ -86,6 +97,9 @@
     font-weight: 300;
     a {
       color: #222;
+      font-weight: 500;
+    }
+    strong {
       font-weight: 500;
     }
   }

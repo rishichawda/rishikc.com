@@ -96,3 +96,5 @@ That’s all! Now you’ve setup your build configuration to shrink your code al
 Thanks for reading! For more resources on how to reduce the application build size, [follow this link](https://developer.android.com/studio/build/shrink-code).
 
 Happy Hacking! Cheers!
+
+<hr />
