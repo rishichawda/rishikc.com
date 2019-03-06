@@ -3,6 +3,11 @@
   flex-direction: column;
   padding: 20px;
   width: 90%;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
   .blog-main-header {
     display: flex;
     justify-content: space-between;

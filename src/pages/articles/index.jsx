@@ -17,7 +17,7 @@ export default () => (
         <h2>Blogs by Rishi Kumar Chawda</h2>
         <Link to="/">
           <IoIosReturnRight style={{ marginRight: 10 }} />
-          <p>{'Back to Home'}</p>
+          {'Back to Home'}
         </Link>
       </div>
       <Link to="/articles/shrink-react-native-application-build-size-android">

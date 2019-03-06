@@ -18,7 +18,7 @@ export default () => (
         <h2>Some of the snippets / quotes that I found interesting..</h2>
         <Link to="/">
           <IoIosReturnRight style={{ marginRight: 10 }} />
-          <p>{'Back to Home'}</p>
+          {'Back to Home'}
         </Link>
       </div>
       <ul>
