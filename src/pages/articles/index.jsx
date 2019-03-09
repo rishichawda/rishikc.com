@@ -15,10 +15,6 @@ export default () => (
     <div className="blog-main container">
       <div className="blog-main-header">
         <h2>Blogs by Rishi Kumar Chawda</h2>
-        <Link to="/">
-          <IoIosReturnRight style={{ marginRight: 10 }} />
-          {'Back to Home'}
-        </Link>
       </div>
       <Link to="/articles/shrink-react-native-application-build-size-android">
         <article>

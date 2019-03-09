@@ -16,16 +16,12 @@ export default () => (
     <div className="quotes-main container">
       <div className="quotes-main-header">
         <h2>Some of the snippets / quotes that I found interesting..</h2>
-        <Link to="/">
-          <IoIosReturnRight style={{ marginRight: 10 }} />
-          {'Back to Home'}
-        </Link>
       </div>
       <ul>
         {quotes.map((quote, index) => (
           <li key={`${quote.info}${index}`} className="quote">
             {quote.quote}
-            <p> - {quote.info}</p>
+            <p>{quote.info}</p>
           </li>
         ))}
       </ul>
