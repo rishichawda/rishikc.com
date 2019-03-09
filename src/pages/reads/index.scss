@@ -4,7 +4,6 @@
   padding: 50px 20px;
   width: 83%;
   color: #000;
-  font-family: Poppins, sans-serif;
   font-size: 1em;
   font-weight: 300;
   line-height: 1.4;
@@ -14,6 +13,9 @@
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
+  @media only screen and (max-width: 610px) {
+    width: 92%;
+  }
   ul {
     padding: 0;
     .quote {
@@ -24,13 +26,13 @@
       }
       color: #777;
       font-size: 1em;
+      letter-spacing: 0.03em;
       line-height: 1.5;
-      letter-spacing: normal;
       margin: 1.5em 0;
       display: flex;
       flex-direction: column;
       box-sizing: border-box;
-      padding: 1%;
+      padding: 1em;
       align-items: center;
       justify-content: center;
       text-align: center;
@@ -52,7 +54,6 @@
   justify-content: space-between;
   h2 {
     color: #000;
-    font-family: Poppins, sans-serif;
     transition: color .2s ease-out;
     font-size: 1em;
     font-weight: 400;
@@ -77,11 +78,9 @@
   flex-direction: row;
   align-items: center;
   cursor: pointer;
-  margin-bottom: 20px;
   p {
     color: #222;
     font-size: 1.1em;
-    font-family: Poppins, sans-serif;
     margin-bottom: 18px;
     font-weight: 500;
     margin-right: 10px;

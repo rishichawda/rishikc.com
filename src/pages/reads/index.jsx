@@ -21,7 +21,7 @@ export default () => (
         {quotes.map((quote, index) => (
           <li key={`${quote.info}${index}`} className="quote">
             {quote.quote}
-            <p> - {quote.info}</p>
+            <p>{quote.info}</p>
           </li>
         ))}
       </ul>
