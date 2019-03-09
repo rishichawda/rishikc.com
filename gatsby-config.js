@@ -4,6 +4,8 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
+    title: 'Rishi Kumar Chawda - Portfolio and Blog',
+    author: 'Rishi Kumar Chawda',
     siteUrl: `https://rishichawda.now.sh`,
   },
   plugins: [
@@ -66,13 +68,15 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `Rishi Kumar Chawda - Portfolio and Blog`,
+        short_name: `Rishi Kumar Chawda`,
         start_url: `/`,
-        background_color: `#663399`,
-        theme_color: `#663399`,
+        background_color: `#ffffff`,
+        theme_color: `#766dff`,
         display: `minimal-ui`,
-        icon: `src/images/favicon.png`, // This path is relative to the root of the site.
+        include_favicon: true,
+        icon: `src/images/favicon.png`,
+        theme_color_in_head: false,
       },
     },
     {
