@@ -60,7 +60,7 @@
     letter-spacing: 0.05em;
   }
   @media only screen and (max-width: 610px) {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
   a {
     text-decoration: none;
