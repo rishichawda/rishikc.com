@@ -17,15 +17,26 @@ But worried about it if the users would want to install it given its build size?
 
 Or you’re just one of us who are paranoid about build sizes? Don’t worry, we got you covered! 😄 ✔️
 
-First of all, you’ll need to eject your Native app if you’re using [create-react-native-app](https://github.com/react-community/create-react-native-app) for your project ( You might have already done this if you’ve built your application before reading this article ). This is important since you don’t have access to configurations until you eject, as the build folder is where we have to make changes. If you haven’t , you can simply do this by :
+<hr />
+
+In this article, we will cover the following two things:
+
+* Compress our react native application size - by compressing the java bytecode that is generated while building our app and also asking it to try and shrink all the resources that are bundled with the application.
+* Splitting our application bundle into multiple `apk`s to remove unnecessary code which is not required by the device which is going to run it - because a lot of code is bundled with the universal apk that is device specific - meaning that we don't need a lot of code in the device we're going to install it in.
+
+<hr />
+
+Let's get started! ✊
+
+First of all, you’ll need to eject your native app if you’re using [create-react-native-app](https://github.com/react-community/create-react-native-app) for your project ( You might have already done this if you’ve built your application before reading this article ). This is important since you don’t have access to configurations until you eject, as the build folder is where we have to make changes. If you haven’t, you can simply do this by :
 
 ```
 npm run eject
 ```
 
-**Note :** Ejecting a native application is a permanent action! ( Unless you’re using a version control system to keep track of previous versions of your app — from where you can recover the ‘unejected’ version of your app later if you need ). [Learn more about ejecting here.](https://github.com/react-community/create-react-native-app/blob/master/EJECTING.md")
+**Note :** Ejecting a react native application is a permanent action! ( Unless you’re using a version control system to keep track of previous versions of your app — from where you can recover the ‘unejected’ version of your app later if you need ). [Learn more about ejecting here.](https://github.com/react-community/create-react-native-app/blob/master/EJECTING.md")
 
-Okay so now we’re all set! Let’s get started and get that done fast. Don’t worry it just takes a few minutes and your app size will reduce dramatically!
+Okay so now we’re all set! Let’s get started and get that done fast. Don’t worry it just takes a few minutes and your app size will shrink dramatically!
 
 Now, navigate to the `android / app` folder from your project root directory where you can find your `build.gradle` file.
 

@@ -21,7 +21,7 @@ How many of you have installed Android Studio only to use the emulator for your 
 
 And no, I’m not just talking about any average system — even my Macbook Pro with 8GB of RAM makes a lot of noise!
 
-A lot of you might have also come across alternatives like Genymotion , Nox , BlueStacks and a lot others. Some are free, while a lot others with really nice features and performance are paid.
+A lot of you might have also come across alternatives like Genymotion, Nox, BlueStacks and a lot others. Some are free, while a lot others with really nice features and performance are paid.
 
 So most of us stick to the free ones or end up downloading Android Studio for the really good and easy to use emulator it provides.
 
@@ -29,7 +29,9 @@ But it gets worse when you already have Visual Studio Code , a few tabs on Googl
 
 ![post](./image2.png)
 
-Okay enough with the memes, let’s quickly set up Android Studio’s emulator in a better way this time — without actually installing Android Studio! ✊
+Also, some of us are just lazy ( and too comfortable with the command line ) that we don't bother installing some fancy GUI application when we can do it with a few commands. 🤓
+
+Okay enough with the memes, let’s quickly set up Android Studio’s emulator for our react native app in a better way this time — without actually installing Android Studio! ✊
 
 <hr />
 
@@ -48,7 +50,7 @@ Windows and Linux users should make sure that they have set-up path to their Jav
 
 ### Step 2: Install Android SDK.
 
-Once we have installed and set-up Java in our system, we will need to install Android SDK.
+Once we have installed and set-up Java in our system, we will need to install Android SDK so that we can get necessary tools in our systems including the android virtual device manager and emulator itself!
 
 Windows and linux users can download the command line tools [here](https://developer.android.com/studio/#downloads).
 
@@ -74,9 +76,9 @@ Then you simply need to run the below command and try installing android-sdk aga
 touch ~/.android/repositories.cfg
 ```
 
-After installing, make sure you have added android-sdk to your system path.
+After installing, make sure you have added `android-sdk` to your system path.
 
-For Mac and Linux users, you need to add the following line to your .bashrc or .zshrc :
+For Mac and Linux users, you need to add the following line to your `.bashrc` or `.zshrc` :
 
 ```
 export ANDROID_HOME=/path/to/android-sdk
@@ -98,7 +100,7 @@ Now that we know this, let’s continue towards a better development experience!
 
 ### Step 3: Install platform and build tools required for React Native.
 
-Now we can go ahead and set-up platform and build tools to help us in creating and running our virtual device in android emulator.
+Now we can go ahead and set-up platform and build tools to help us in creating and running our virtual device in android emulator. We will use the `sdkmanager` that we just downloaded to our system as a part of `android-sdk`.
 
 To do this, open your terminal and run the following command :
 
