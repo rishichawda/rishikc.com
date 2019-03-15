@@ -3,11 +3,18 @@ import Helmet from 'react-helmet'
 import './blog.scss';
 import { IoIosReturnRight } from 'react-icons/io'
 import { Link, graphql } from 'gatsby';
+import Disqus from 'disqus-react';
 
 export default class BlogTemplate extends React.Component {
   render() {
-    const { meta_desc, meta_keywords, meta_title, children, bannerImage, pageContext } = this.props;
+    const { meta_desc, meta_keywords, meta_title, pageContext } = this.props;
     const { previous, next } = pageContext;
+    const disqusShortname = process.env.DISQUS_NAME;
+    const disqusConfig = {
+      url: this.props.location.href,
+      identifier: this.props.data.markdownRemark.id,
+      title: this.props.data.markdownRemark.frontmatter.title,
+    };
     return (
       <>
         <Helmet>
@@ -20,7 +27,7 @@ export default class BlogTemplate extends React.Component {
           <div className="article-content" dangerouslySetInnerHTML={{ __html: this.props.data.markdownRemark.html }}>
           </div>
           <div className="post-links container">
-            Other articles : 
+            Other articles :
             {previous && (
               <Link to={`articles/${previous.fields.slug}`} rel="prev">
                 <li>{previous.frontmatter.title}</li>
@@ -32,6 +39,7 @@ export default class BlogTemplate extends React.Component {
               </Link>
             )}
           </div>
+          <Disqus.DiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
           <div className="back-link">
             <Link to="/">
               <IoIosReturnRight style={{ marginRight: 10 }} />

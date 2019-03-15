@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "rishichawda.github.io",
+  "name": "portfolio",
   "builds": [
     {
       "src": "package.json",
