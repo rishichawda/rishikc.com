@@ -1,5 +1,9 @@
 export default [
   {
+    quote: "“The joy of discovery is one of the best things about being a software developer.”",
+    info: "",
+  },
+  {
     quote: "“Experience is the name everyone gives to their mistakes.”",
     info: "Oscar Wilde",
   },

@@ -5,3 +5,6 @@
  */
 
 // You can delete this file if you're not using it
+
+// Detect service worker updates and reload page.
+exports.onServiceWorkerUpdateFound = () => window.location.reload(true);
