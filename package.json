@@ -6,6 +6,7 @@
   "author": "rishichawda",
   "dependencies": {
     "autoprefixer": "^9.4.6",
+    "disqus-react": "^1.0.5",
     "gatsby": "^2.0.76",
     "gatsby-image": "^2.0.28",
     "gatsby-plugin-google-analytics": "^2.0.10",
