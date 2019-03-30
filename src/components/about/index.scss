@@ -1,10 +1,9 @@
 .about-section {
-  display: flex;
+  display: block !important;
   padding: 70px;
   box-sizing: border-box;
   margin-top: 200px !important;
   padding-bottom: 50px;
-  height: 80%;
   @media only screen and (max-width: 1100px) {
     padding: 0;
   }
@@ -69,7 +68,8 @@
     align-items: center;
     padding: 20px;
     @media only screen and (max-width: 820px) {
-      margin: 2.5em 0;
+      margin: auto;
+      width: 65%;
     }
     img {
       object-fit: contain;
@@ -79,6 +79,8 @@
       }
       @media only screen and (max-width: 1100px) and (min-width: 820px) {
         margin-right: 50px;
+        width: 38%;
+        min-width: 380px;
       }
       width: 100%;
       height: auto;
