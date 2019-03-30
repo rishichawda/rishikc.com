@@ -25,6 +25,7 @@ export default class Articles extends React.Component {
                 <article>
                   <h4>{frontmatter.title}</h4>
                   <p>{excerpt}</p>
+                  <small>{frontmatter.date}</small>
                 </article>
               </Link>
             ))

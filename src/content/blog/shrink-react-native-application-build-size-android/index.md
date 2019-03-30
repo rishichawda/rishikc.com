@@ -1,6 +1,6 @@
 ---
 title: Shrink your React Native application size dramatically!
-date: "2015-05-01T22:12:03.284Z"
+date: "2018-09-20T22:12:03.284Z"
 description: To reduce your react native application size for android, first we'll need to eject it if you're using create-react-native-app for your project. After that we'll need to configure the build file to generate compressed android builds.
 path: "/articles/shrink-react-native-application-build-size-android"
 ---
