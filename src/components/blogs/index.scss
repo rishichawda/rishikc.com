@@ -48,8 +48,10 @@
     a {
       margin: 20px;
       box-sizing: border-box;
-      // width: 350px;
-      flex: 1;
+      width: 80%;
+      @media screen and (min-width: 883px) {
+        flex: 1 !important;
+      }
       height: 300px;
       text-decoration: none;
       color: rgb(110, 189, 255) !important;
@@ -77,6 +79,7 @@
       }
       .blog-title {
         height: 40%;
+        min-height: fit-content;
         width: 100%;
         margin-bottom: 20px;
         overflow: hidden;
