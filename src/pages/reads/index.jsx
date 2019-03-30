@@ -20,8 +20,8 @@ export default () => (
       <ul>
         {quotes.map((quote, index) => (
           <li key={`${quote.info}${index}`} className="quote">
-            {quote.quote}
-            <p>{quote.info}</p>
+            {`“${quote.quote}”`}
+            <p>{quote.info || ''}</p>
           </li>
         ))}
       </ul>
