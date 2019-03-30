@@ -18,6 +18,16 @@
   }
   ul {
     padding: 0;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    @media only screen and (max-width: 956px) {
+      grid-template-columns: auto auto;
+    }
+    @media only screen and (max-width: 655px) {
+      grid-template-columns: auto;
+      grid-gap: 25px;
+    }
+    grid-gap: 43px 25px;
     .quote {
       p {
         align-self: flex-end;
@@ -28,22 +38,21 @@
       font-size: 1em;
       letter-spacing: 0.03em;
       line-height: 1.5;
-      margin: 1.5em 0;
       display: flex;
       flex-direction: column;
       box-sizing: border-box;
       padding: 1em;
       align-items: center;
-      justify-content: center;
+      justify-content: space-evenly;
       text-align: center;
       border-radius: 2px;
-      transition: box-shadow 0.5s ease-in-out;
+      transition: all 0.5s ease-in-out;
       background: #fff;
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
-      border-left: 2px solid transparent;
+      border-top: 2px solid transparent;
       &:hover {
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-        border-left: 2px solid sandybrown;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.219);
+        border-top: 2px solid sandybrown;
       }
     }
   }
@@ -51,7 +60,8 @@
 
 .quotes-main-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  margin-bottom: 20px;
   h2 {
     color: #000;
     transition: color .2s ease-out;

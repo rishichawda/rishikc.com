@@ -15,8 +15,7 @@ export default [
     info: "Dutch computer scientist Edsger Dijkstra wrote in 1988.",
   },
   {
-    quote: "The simple things are also the most extraordinary things, and only the wise can see them.",
-    info: "Paulo Coelho, The Alchemist",
+    quote: "Things that are impossible just take longer than the things that are possible.",
   },
   {
     quote: "Remember that wherever your heart is, there you will find your treasure.",
@@ -27,7 +26,8 @@ export default [
     info: "John Updike, Rabbit at Rest ",
   },
   {
-    quote: "Things that are impossible just take longer than the things that are possible.",
+    quote: "The simple things are also the most extraordinary things, and only the wise can see them.",
+    info: "Paulo Coelho, The Alchemist",
   },
   {
     quote: "Love all, trust a few, do wrong to none.",
