@@ -24,7 +24,7 @@ export default class Articles extends React.Component {
               <Link to={frontmatter.path} key={id}>
                 <article>
                   <h4>{frontmatter.title}</h4>
-                  <p>{excerpt}</p>
+                  <p>{excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ''}`)[1]}</p>
                   <small>{frontmatter.date}</small>
                 </article>
               </Link>
@@ -47,6 +47,7 @@ export const pageQuery = graphql`
             path
             date(formatString: "MMMM DD, YYYY")
             title
+            subtitle
           }
         }
       }

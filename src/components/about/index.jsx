@@ -17,4 +17,4 @@ export default () => (
       <h4 className="max-width820">About me</h4>
     </div>
   </section>
-    )
+)
