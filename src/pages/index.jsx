@@ -10,6 +10,7 @@ import Navbar from '../components/navbar';
 
 class App extends React.Component {
   render() {
+    const { edges } = this.props.data.allMarkdownRemark;
     return (
       <>
         <Helmet>
@@ -21,7 +22,7 @@ class App extends React.Component {
         <Navbar />
         <Hero heroImage={this.props.data.heroImage.childImageSharp}/>
         <About />
-        <Blogs />
+        <Blogs posts={edges}/>
         <Projects />
       </>
     );
@@ -37,7 +38,20 @@ export const pageQuery = graphql`
         }
       }
     }
+    allMarkdownRemark(sort: { order: DESC, fields: [frontmatter___date] }) {
+      edges {
+        node {
+          id
+          frontmatter {
+            path
+            title
+            description
+          }
+        }
+      }
+    }
   }
 `
+
 
 export default App

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'gatsby'
 import Helmet from 'react-helmet'
 import './index.scss';
-import { IoIosReturnRight } from 'react-icons/io'
+// import { IoIosReturnRight } from 'react-icons/io'
 
 export default class Articles extends React.Component {
   render () {
@@ -37,7 +37,7 @@ export default class Articles extends React.Component {
 }
 
 export const pageQuery = graphql`
-  query {
+  query articlesList {
     allMarkdownRemark(sort: { order: DESC, fields: [frontmatter___date] }) {
       edges {
         node {

@@ -5,7 +5,6 @@ import {
   FaLinkedin, FaGithub, FaMedium, FaInstagram,
 } from 'react-icons/fa';
 import { IoMdMail } from 'react-icons/io';
-import heroImage from '../../images/1456505540091_2.png'
 import './index.scss'
 
 export default ({ heroImage }) => (

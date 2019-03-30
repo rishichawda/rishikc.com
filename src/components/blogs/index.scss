@@ -7,17 +7,30 @@
   &.container {
     max-width: 100%;
     width: 100%;
-    background: linear-gradient(90deg, #766dff 0%, #88f3ff 100%);
+    // background: linear-gradient(90deg, #766dff 0%, #88f3ff 100%);
   }
   h2 {
     text-align: center;
     text-transform: uppercase;
-    color: #fff;
+    // color: #fff;
     font-family: Poppins, sans-serif;
     font-size: 36px;
     font-weight: 400;
     margin: auto;
     margin-bottom: 18px;
+  }
+  p {
+    text-align: center;
+    color: #222;
+    font-family: Poppins, sans-serif;
+    margin: auto;
+    margin-bottom: 18px;
+    font-weight: 300;
+    a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #766dff;
+    }
   }
   .inner-container {
     display: flex;
@@ -35,13 +48,18 @@
     a {
       margin: 20px;
       box-sizing: border-box;
-      width: 350px;
+      // width: 350px;
+      flex: 1;
       height: 300px;
       text-decoration: none;
       color: rgb(110, 189, 255) !important;
     }
     .card {
       height: 100%;
+      border-top: 3px solid #766dff;
+      &.link-all {
+        border: none;
+      }
       width: 100%;
       display: flex;
       flex-direction: column;
