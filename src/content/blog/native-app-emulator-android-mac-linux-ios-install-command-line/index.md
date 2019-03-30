@@ -1,7 +1,8 @@
 ---
 title: Android Emulator for React Native in Mac, Linux and Windows - The right way to get it working.
 date: "2015-05-01T22:12:03.284Z"
-description: To reduce your react native application size for android, first we'll need to eject it if you're using create-react-native-app for your project. After that we'll need to configure the build file to generate compressed android builds.
+description: Let’s quickly set up Android Studio’s emulator in a better way this time — without actually installing Android Studio! Open your terminal first to install Java development kit 8. You can install it through command line or by visiting oracle.com and download the JDK after accepting the license agreement.
+path: "/articles/native-app-emulator-android-mac-linux-ios-install-command-line"
 ---
 
 
