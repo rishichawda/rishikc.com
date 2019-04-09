@@ -13,7 +13,7 @@ import { fadeInOnView } from '../utils';
 class App extends React.Component {
   
   componentDidMount() {
-    fadeInOnView.init('fade-in-element');
+    fadeInOnView.init('fade-in-up-element');
   }
 
   componentWillUnMount() {

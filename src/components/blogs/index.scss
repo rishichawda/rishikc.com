@@ -71,6 +71,7 @@
       justify-content: center;
       border-radius: 2px;
       transition: box-shadow 0.5s ease-in-out;
+      will-change: transform;
       background: #fff;
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
       &:hover {

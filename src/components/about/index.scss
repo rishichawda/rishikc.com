@@ -63,6 +63,7 @@
   }
   .about-image {
     display: flex;
+    will-change: transform;
     flex: 1;
     height: 100%;
     align-items: center;

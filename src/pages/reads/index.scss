@@ -50,6 +50,7 @@
       background: #fff;
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
       border-top: 2px solid transparent;
+      will-change: transform;
       &:hover {
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.219);
         border-top: 2px solid sandybrown;
@@ -98,4 +99,22 @@
       color: #777;
     }
   }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.83, 0.83)
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in-element {
+animation: fade-in 0.7s;
+}
+
+.hidden {
+  opacity: 0;
 }
