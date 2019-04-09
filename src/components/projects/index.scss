@@ -49,6 +49,9 @@
       display: flex;
       box-sizing: border-box;
       width: 350px;
+      @media screen and (max-width: 883px) {
+        width: 80% !important;
+      }
       height: 300px;
       text-decoration: none;
     }
@@ -63,6 +66,7 @@
       transition: box-shadow 0.5s ease-in-out;
       background: #fff;
       padding: 10% 5%;
+      will-change: transform;
       box-shadow: 0 1px 5px rgba(0,0,0,0.15);
       &.lang-js {
         border-top-color: #FBDD51 !important;

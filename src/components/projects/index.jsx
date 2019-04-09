@@ -3,12 +3,12 @@ import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import './index.scss';
 
 export default () => (
-  <section className="container project-section">
+  <section className="container project-section hidden">
     <h2>open source projects</h2>
     <p>Some of my recent open source projects. You can take a look at all of them <a href="https://www.github.com/rishichawda">here</a>.</p>
     <div className="inner-container">
       <OutboundLink href="https://github.com/rishichawda/markdown-magic-build-badge">
-        <article className="card lang-js">
+        <article className="card lang-js hidden">
           <div className="repo-title">
             <h4>markdown-magic-build-badge</h4>
           </div>
@@ -23,7 +23,7 @@ export default () => (
         </article>
       </OutboundLink>
       <OutboundLink href="https://github.com/rishichawda/react-lite-components">
-        <article className="card lang-js">
+        <article className="card lang-js hidden">
           <div className="repo-title">
             <h4>react-lite-components</h4>
           </div>
@@ -38,7 +38,7 @@ export default () => (
         </article>
       </OutboundLink>
       <OutboundLink href="https://github.com/rishichawda/bgcreate">
-        <article className="card lang-js">
+        <article className="card lang-js hidden">
           <div className="repo-title">
             <h4>bgcreate</h4>
           </div>

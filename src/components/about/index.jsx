@@ -3,7 +3,7 @@ import './index.scss';
 import developerAtDesk from '../../images/about-right.png';
 
 export default () => (
-  <section className="container about-section">
+  <section className="container about-section hidden">
     <div className="about-section-inner">
       <div className="about-content">
         <h4>About me</h4>
@@ -11,7 +11,7 @@ export default () => (
         <p>I design and develop websites, progressive web applications and native mobile applications for Android and iOS.</p>
         <p>Apart from good food, traveling, music and art - I am interested in search engine optimisation, analytics, online marketing and data science.</p>
       </div>
-      <div className="about-image">
+      <div className="about-image hidden">
         <img src={developerAtDesk} alt="about-right" />
       </div>
       <h4 className="max-width820">About me</h4>
