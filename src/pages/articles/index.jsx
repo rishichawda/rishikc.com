@@ -2,9 +2,19 @@ import React from 'react'
 import { Link } from 'gatsby'
 import Helmet from 'react-helmet'
 import './index.scss';
+import { fadeInOnView } from '../../utils';
 // import { IoIosReturnRight } from 'react-icons/io'
 
 export default class Articles extends React.Component {
+
+  componentDidMount() {
+    fadeInOnView.init('zoom-in-element');
+  }
+
+  componentWillUnMount() {
+    fadeInOnView.unload();
+  }
+
   render () {
     const { edges: posts } = this.props.data.allMarkdownRemark;
     return (
@@ -22,7 +32,7 @@ export default class Articles extends React.Component {
           {
             posts.map(({ node: { id, excerpt, frontmatter } }) => (
               <Link to={frontmatter.path} key={id}>
-                <article>
+                <article className="hidden">
                   <h4>{frontmatter.title}</h4>
                   <p>{excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ''}`)[1]}</p>
                   <small>{frontmatter.date}</small>
