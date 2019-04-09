@@ -9,7 +9,7 @@ import './index.scss'
 
 export default ({ heroImage }) => (
   <section className="hero-section">
-    <div className="container intro-card">
+    <div className="container intro-card hidden">
       <div className="hero-image">
         <Img
           sizes={heroImage.fluid}

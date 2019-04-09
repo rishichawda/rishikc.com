@@ -7,8 +7,19 @@ import Blogs from '../components/blogs'
 
 import './index.scss';
 import Navbar from '../components/navbar';
+import { fadeInOnView } from '../utils';
+
 
 class App extends React.Component {
+  
+  componentDidMount() {
+    fadeInOnView.init('fade-in-element');
+  }
+
+  componentWillUnMount() {
+    fadeInOnView.unload();
+  }
+
   render() {
     const { edges } = this.props.data.allMarkdownRemark;
     return (

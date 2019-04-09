@@ -7,14 +7,14 @@ export default class BlogSection extends React.Component {
   render() {
     const { posts } = this.props;
     return (
-      <section className="container blog-section">
+      <section className="container blog-section hidden">
         <h2>blogs</h2>
         <p>You can view all of my blog posts <Link to="/articles">here</Link>.</p>
         <div className="inner-container">
           {
             posts.slice(0, 2).map(({ node: { id, frontmatter } }) => (
               <Link to={frontmatter.path} key={id}>
-            <article className="card">
+            <article className="card hidden">
               <div className="blog-title">
                 <h4>{frontmatter.title}</h4>
               </div>
