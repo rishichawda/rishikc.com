@@ -8,16 +8,25 @@
 @keyframes fade-in-up {
   from {
     opacity: 0;
+    -webkit-transform: translate3d(0, 47px, 0);
+    -moz-transform: translate3d(0, 47px, 0);
+    -o-transform: translate3d(0, 47px, 0);
     transform: translate3d(0, 47px, 0);
   }
   to {
     opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
 }
 
 .fade-in-up-element {
-animation: fade-in-up 1.1s;
+  -webkit-animation: fade-in-up 1.1s;
+  -moz-animation: fade-in-up 1.1s;
+  -o-animation: fade-in-up 1.1s;
+  animation: fade-in-up 1.1s;
 }
 
 .hidden {

@@ -63,6 +63,9 @@
       box-sizing: border-box;
       border-radius: 2px;
       border-top: 3px solid;
+      -webkit-transition: box-shadow 0.5s ease-in-out;
+      -moz-transition: box-shadow 0.5s ease-in-out;
+      -o-transition: box-shadow 0.5s ease-in-out;
       transition: box-shadow 0.5s ease-in-out;
       background: #fff;
       padding: 10% 5%;
@@ -81,6 +84,9 @@
         }
         h4 {
           color: #37474F;
+          -webkit-transition: color .2s ease-out;
+          -moz-transition: color .2s ease-out;
+          -o-transition: color .2s ease-out;
           transition: color .2s ease-out;
           margin: 0;
           font-size: 1.25em;

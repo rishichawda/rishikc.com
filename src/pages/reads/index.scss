@@ -46,6 +46,9 @@
       justify-content: space-evenly;
       text-align: center;
       border-radius: 2px;
+      -webkit-transition: all 0.5s ease-in-out;
+      -moz-transition: all 0.5s ease-in-out;
+      -o-transition: all 0.5s ease-in-out;
       transition: all 0.5s ease-in-out;
       background: #fff;
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
@@ -104,7 +107,10 @@
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: scale(0.83, 0.83)
+    -webkit-transform: scale(0.83, 0.83);
+    -moz-transform: scale(0.83, 0.83);
+    -o-transform: scale(0.83, 0.83);
+    transform: scale(0.83, 0.83);
   }
   to {
     opacity: 1;
@@ -112,7 +118,10 @@
 }
 
 .fade-in-element {
-animation: fade-in 0.7s;
+  -webkit-animation: fade-in 0.7s;
+  -moz-animation: fade-in 0.7s;
+  -o-animation: fade-in 0.7s;
+  animation: fade-in 0.7s;
 }
 
 .hidden {

@@ -14,6 +14,9 @@
     h2 {
       color: #000;
       font-family: Poppins, sans-serif;
+      -webkit-transition: color .2s ease-out;
+      -moz-transition: color .2s ease-out;
+      -o-transition: color .2s ease-out;
       transition: color .2s ease-out;
       font-size: 1.25em;
       font-weight: 500;
@@ -60,6 +63,9 @@
     box-sizing: border-box;
     justify-content: center;
     border-radius: 2px;
+    -webkit-transition: box-shadow 0.5s ease-in-out;
+    -moz-transition: box-shadow 0.5s ease-in-out;
+    -o-transition: box-shadow 0.5s ease-in-out;
     transition: box-shadow 0.5s ease-in-out;
     background: #fff;
     will-change: transform;
@@ -71,6 +77,9 @@
     }
     h4 {
       color: #222;
+      -webkit-transition: color .2s ease-out;
+      -moz-transition: color .2s ease-out;
+      -o-transition: color .2s ease-out;
       transition: color .2s ease-out;
       margin: 0;
       margin-bottom: 36px;
@@ -133,6 +142,9 @@
   .blog-title {
     h4 {
       color: #222;
+      -webkit-transition: color .2s ease-out;
+      -moz-transition: color .2s ease-out;
+      -o-transition: color .2s ease-out;
       transition: color .2s ease-out;
       margin: 0;
       margin-bottom: 20px;
@@ -190,6 +202,9 @@
 @keyframes zoom-in-with-fade {
   from {
     opacity: 0;
+    -webkit-transform: scale(1, 0.70);
+    -moz-transform: scale(1, 0.70);
+    -o-transform: scale(1, 0.70);
     transform: scale(1, 0.70);
   }
   to {
@@ -198,5 +213,8 @@
 }
 
 .zoom-in-element {
-animation: zoom-in-with-fade 0.43s;
+  -webkit-animation: zoom-in-with-fade 0.43s;
+  -moz-animation: zoom-in-with-fade 0.43s;
+  -o-animation: zoom-in-with-fade 0.43s;
+  animation: zoom-in-with-fade 0.43s;
 }
