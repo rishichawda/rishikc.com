@@ -1,3 +1,5 @@
+import {throttle} from './throttle';
+
 const animateHTML = () => {
   let elems;
   let windowHeight;
@@ -10,7 +12,7 @@ const animateHTML = () => {
     checkPosition();
   }
   function addEventHandlers() {
-    window.addEventListener('scroll', checkPosition);
+    window.addEventListener('scroll', throttle(checkPosition, 470, { leading: true, trailing: true}));
   }
   function checkPosition() {
     for (var i = 0; i < elems.length; i++) {
