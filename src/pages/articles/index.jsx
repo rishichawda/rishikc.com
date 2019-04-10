@@ -3,6 +3,7 @@ import { Link } from 'gatsby'
 import Helmet from 'react-helmet'
 import './index.scss';
 import { fadeInOnView } from '../../utils';
+import Layout from '../../components/layout';
 // import { IoIosReturnRight } from 'react-icons/io'
 
 export default class Articles extends React.Component {
@@ -18,7 +19,7 @@ export default class Articles extends React.Component {
   render () {
     const { edges: posts } = this.props.data.allMarkdownRemark;
     return (
-      <>
+      <Layout>
         <Helmet>
           <html lang="en"></html>
           <title>{'Blogs | Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India'}</title>
@@ -41,7 +42,7 @@ export default class Articles extends React.Component {
             ))
           }
         </div>
-      </>
+      </Layout>
     );
   }
 }

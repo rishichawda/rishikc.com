@@ -5,6 +5,7 @@ import { IoIosReturnRight } from 'react-icons/io'
 import { Link } from 'gatsby';
 import quotes from '../../content/reads/quotes'
 import { fadeInOnView } from '../../utils';
+import Layout from '../../components/layout';
 
 export default class Reads extends React.Component {
 
@@ -18,7 +19,7 @@ export default class Reads extends React.Component {
 
   render() {
     return (
-      <>
+      <Layout>
         <Helmet>
           <html lang="en"></html>
           <title>{'Blogs | Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India'}</title>
@@ -38,7 +39,7 @@ export default class Reads extends React.Component {
             ))}
           </ul>
         </div>
-      </>
+      </Layout>
     )
   }
 }
