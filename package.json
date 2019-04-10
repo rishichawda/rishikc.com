@@ -6,6 +6,7 @@
   "author": "rishichawda",
   "dependencies": {
     "autoprefixer": "^9.4.6",
+    "babel-plugin-styled-components": "^1.10.0",
     "disqus-react": "^1.0.5",
     "gatsby": "^2.0.76",
     "gatsby-image": "^2.0.28",
@@ -16,6 +17,7 @@
     "gatsby-plugin-sass": "^2.0.7",
     "gatsby-plugin-sharp": "^2.0.18",
     "gatsby-plugin-sitemap": "^2.0.5",
+    "gatsby-plugin-styled-components": "^3.0.7",
     "gatsby-remark-copy-linked-files": "^2.0.9",
     "gatsby-remark-images": "^3.0.5",
     "gatsby-remark-prismjs": "^3.2.4",
@@ -30,7 +32,12 @@
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-helmet": "^5.2.0",
-    "react-icons": "^3.3.0"
+    "react-icons": "^3.3.0",
+    "styled-components": "^4.2.0",
+    "typeface-open-sans": "0.0.54",
+    "typeface-poppins": "0.0.72",
+    "typeface-pt-sans": "0.0.72",
+    "typeface-roboto": "0.0.54"
   },
   "keywords": [
     "gatsby"

@@ -8,6 +8,7 @@ import Blogs from '../components/blogs'
 import './index.scss';
 import Navbar from '../components/navbar';
 import { fadeInOnView } from '../utils';
+import Layout from '../components/layout';
 
 
 class App extends React.Component {
@@ -23,7 +24,7 @@ class App extends React.Component {
   render() {
     const { edges } = this.props.data.allMarkdownRemark;
     return (
-      <>
+      <Layout>
         <Helmet>
           <html lang="en"></html>
           <title>{'Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India'}</title>
@@ -35,7 +36,7 @@ class App extends React.Component {
         <About />
         <Blogs posts={edges}/>
         <Projects />
-      </>
+      </Layout>
     );
   }
 }

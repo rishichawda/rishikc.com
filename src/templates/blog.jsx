@@ -4,6 +4,7 @@ import './blog.scss';
 import { IoIosReturnRight } from 'react-icons/io'
 import { Link, graphql } from 'gatsby';
 import Disqus from 'disqus-react';
+import Layout from '../components/layout';
 
 export default class BlogTemplate extends React.Component {
   render() {
@@ -16,7 +17,7 @@ export default class BlogTemplate extends React.Component {
       title: this.props.data.markdownRemark.frontmatter.title,
     };
     return (
-      <>
+      <Layout>
         <Helmet>
           <html lang="en"></html>
           <title>{meta_title}</title>
@@ -51,7 +52,7 @@ export default class BlogTemplate extends React.Component {
             </Link>
           </div>
         </div>
-      </>
+      </Layout>
     );
   }
 }
