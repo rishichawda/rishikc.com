@@ -13,6 +13,7 @@ const animateHTML = () => {
   }
   function addEventHandlers() {
     window.addEventListener('scroll', throttle(checkPosition, 101, { leading: true, trailing: true}));
+    window.addEventListener('resize', throttle(checkPosition, 101, { leading: true, trailing: true}));
   }
   function checkPosition() {
     for (var i = 0; i < elems.length; i++) {
@@ -32,6 +33,7 @@ const animateHTML = () => {
   }
   function unload() {
     window.removeEventListener('scroll', checkPosition);
+    window.removeEventListener('resize', checkPosition);
   }
   return {
     init: init,
