@@ -3,7 +3,7 @@ title: Android Emulator for React Native in Mac, Linux and Windows - The right w
 subtitle: — And save yourself a lot of space!
 date: "2019-01-12T22:12:03.284Z"
 description: Let’s quickly set up Android Studio’s emulator in a better way this time — without actually installing Android Studio! Open your terminal first to install Java development kit 8. You can install it through command line or by visiting oracle.com and download the JDK after accepting the license agreement.
-path: "/articles/native-app-emulator-android-mac-linux-ios-install-command-line"
+path: "/articles/native-app-emulator-android-mac-linux-ios-install-command-line/"
 ---
 
 

@@ -9,13 +9,20 @@ import Layout from '../components/layout';
 export default class BlogTemplate extends React.Component {
   render() {
     const { meta_desc, meta_keywords, meta_title, pageContext } = this.props;
-    const { previous, next } = pageContext;
+    let { previous, next } = pageContext;
     const disqusShortname = process.env.DISQUS_NAME;
     const disqusConfig = {
       url: this.props.location.href,
       identifier: this.props.data.markdownRemark.id,
       title: this.props.data.markdownRemark.frontmatter.title,
     };
+    const posts = this.props.data.allMarkdownRemark.edges;
+    console.log(posts);
+    console.log(previous, next);
+    previous = previous || posts[0].node;
+    next = next || posts[posts.length - 1].node;
+    console.log(previous, next);
+    const otherArticles = [ previous, next ];
     return (
       <Layout>
         <Helmet>
@@ -29,16 +36,12 @@ export default class BlogTemplate extends React.Component {
           </div>
           <div className="post-links container">
             Other articles :
-            {previous && (
-              <Link to={`articles/${previous.fields.slug}`} rel="prev">
-                <li>{previous.frontmatter.title}</li>
+            <Link to={otherArticles[0].fields ? `articles/${otherArticles[0].fields.slug}` : otherArticles[0].frontmatter.path} rel="prev">
+                <li>{otherArticles[0].frontmatter.title}</li>
               </Link>
-            )}
-            {next && (
-              <Link to={`articles/${next.fields.slug}`} rel="next">
-                <li>{next.frontmatter.title}</li>
+            <Link to={otherArticles[1].fields ? `articles/${otherArticles[1].fields.slug}` : otherArticles[1].frontmatter.path} rel="next">
+                <li>{otherArticles[1].frontmatter.title}</li>
               </Link>
-            )}
           </div>
           <Disqus.DiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
           <div className="back-link">
@@ -67,6 +70,16 @@ export const pageQuery = graphql`
         title
         date(formatString: "MMMM DD, YYYY")
         description
+      }
+    }
+    allMarkdownRemark(sort: { order: DESC, fields: [frontmatter___date] }) {
+      edges {
+        node {
+          frontmatter {
+            path
+            title
+          }
+        }
       }
     }
   }
