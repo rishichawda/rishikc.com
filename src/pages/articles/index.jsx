@@ -3,6 +3,7 @@ import { Link } from 'gatsby'
 import Helmet from 'react-helmet'
 import './index.scss';
 import { fadeInOnView } from '../../utils';
+import { graphql } from 'gatsby';
 import Layout from '../../components/layout';
 // import { IoIosReturnRight } from 'react-icons/io'
 
