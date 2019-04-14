@@ -4,7 +4,7 @@ import Hero from '../components/hero-section'
 import About from '../components/about'
 import Projects from '../components/projects'
 import Blogs from '../components/blogs'
-
+import { graphql } from 'gatsby';
 import './index.scss';
 import Navbar from '../components/navbar';
 import { fadeInOnView } from '../utils';

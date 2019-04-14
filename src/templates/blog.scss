@@ -77,6 +77,18 @@
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
+
+  blockquote {
+    border-width: 0 0 0 5px;
+    border-color: #e8e8e8;
+    display: flex;
+    border-style: solid;
+    padding: 0 5%;
+    margin: 4.3% 3.4%;
+    font-size: 1.1em;
+    font-style: italic;
+  }
+
   h1, h2, h3 {
     font-weight: 400;
   }
