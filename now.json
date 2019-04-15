@@ -1,6 +1,7 @@
 {
   "version": 2,
   "name": "portfolio",
+  "alias": "rishichawda.now.sh",
   "builds": [
     {
       "src": "package.json",
