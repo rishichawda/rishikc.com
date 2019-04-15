@@ -12,4 +12,5 @@ require('typeface-roboto')
 require('typeface-poppins')
 require('./src/pages/index.scss')
 
-exports.onServiceWorkerUpdateFound = () => window.location.reload(true);
+// Reference : https://github.com/gatsbyjs/gatsby/issues/9087#issuecomment-459105021
+export const onServiceWorkerUpdateReady = () => window.location.reload(true);
