@@ -45,7 +45,7 @@ The `config` directory at the root contains all the configuration files related 
 
 ![config directory snapshot](./config-snap.png)
 
-You might also notice that it is nested and that the webpack configuration lives in its own directory. This makes the configurations more organised and easier to manage. This might seem trivial but when the application starts growing , and with that the build process might also get complex - which then demands a well organised place of its own. Also, this brings a peace of mind while working with it -- a large mess of configuration files is the last thing you might want while deploying your application in production!
+You might also notice that it is nested and that the webpack configuration lives in its own directory. This makes the configurations more organised and easier to manage. This might seem trivial but when the application starts growing , and with that the build process might also get complex - which then demands a well organised place of its own. Also, this brings a peace of mind while working with it -- a large mess of configuration files is the last thing you might want while deploying your application in production! 👀
 
 <br/>
 
@@ -54,6 +54,7 @@ The other `config` directory inside our `src` folder is for configurations relat
 <br/>
 
 ## But wait, what about the `resources` and `assets` directories? Aren't assets also a part of the 'resources' for our web application?
+<br/>
 
 ![good question](./shrek.jpg)
 
@@ -67,7 +68,7 @@ This directory may also contain data / other 'resources' which can be occasional
 
 ## And what about our pages and their components?? 
 
-So, here comes the interesting part. Atleast I think so. This is something that has been derived from a few other solutions on architecting react applications as well as other web applications along with some of my own practical experience. And by far, I'm pretty satisfied with it!
+So, here comes the interesting part. Atleast I think so. This is something that has been derived from a few other solutions on architecting react applications as well as other web applications along with some of my own practical experience. And by far, I'm pretty satisfied with it! 🤓
 
 To start with, let's assume our web application contains a home page, a profile page for the users and just for the sake of not having just two pages in the example, a third page that we will call -- the other page. So the directory structure would look something like this : 
 
@@ -90,7 +91,7 @@ To start with, let's assume our web application contains a home page, a profile 
 
 Notice how all the pages have their own separate directory with an entry point? And how that 'other' page has a component folder? Why do we need another component folder? Don't we already have a component folder in the root of `src` directory?
 
-Wait, just hold on for a second! I'll explain it real quick!
+Wait, just hold on for a second! I'll explain it real quick! ☝
 
 This is what I call the "branching" structure. Each page has their own directory, their own set of components which are not used anywhere else except in that specific page, their own styles rules and other stuff which are associated with only that page. If any component is shared by two pages, guess where they'd go? Yes, you guessed it right -- the `components` directory in the root of our `src` directory!
 
@@ -98,9 +99,13 @@ But.. you might wonder.. what is the point of doing that?
 
  Let's say, one day you and your teammates decide to get rid of the 'other' page -- *maybe the name wasn't good enough?* -- so what do you do? Spend an entire afternoon or a day on removing code, breaking and fixing the application? **NO**.
  
- You just go ahead and delete the directory and remove its reference from where it was attached to / used in the web application. *And voila, it's done!*
+ You just go ahead and delete the directory and remove its reference from where it was attached to / used in the web application. *And voila, it's done!* 💁🏻‍♂️
  
  Nothing breaks in your app just because a bunch of code was deleted! Everything is independent of each other's existence even if they were binded together at some point! A lot less to work with and worry about, isn't it? And yeah, this principle can be applied to almost any application / software and not just some react application.
+ 
+<br/>
+
+ ![welcome](./welcome.jpg)
 
  Some of you might think -- Well no, our application / software is quite complex and stuff is just too interconnected with each other. They ***shared*** code, were ***bridged*** together, etc. But I guess you might understand now what to do with the "shared code" and "bridges" if you try to apply this principle to it! This is just a simple example to demonstrate and give you an idea of how parts of the product can be organised for convenience and maintainability.
 
@@ -145,13 +150,13 @@ export default Layout;
 
  ```
 
-Better now, isn't it? Even this website, with its simplicity, has a layout component!
+Better now, isn't it? Even this website, with its simplicity, has a layout component! 🤓
 
 <br/>
 
 ## But wait.. There's more!!
 
-Yes, I haven't forgotten about reducers, the lengthy sagas, services, a ton of action creators and what not! But that's for the second part of this article since I don't want it to become too long and exhausting to read. Also, this first part might serve as a good starting point for beginners or other fellow developers who are new to React development.
+Yes, I haven't forgotten about reducers, the lengthy sagas, services, a ton of action creators and what not! But that's for the [second part of this article](/articles/architecting-react-applications-redux-store-services-and-sagas/) since I don't want it to become too long and exhausting to read. Also, this first part might serve as a good starting point for beginners or other fellow developers who are new to React development.
 
 <br/>
 
@@ -159,10 +164,10 @@ Yes, I haven't forgotten about reducers, the lengthy sagas, services, a ton of a
 
 *Please leave a comment below or you can also contact me through my social media profiles listed [here](/).*
 
-*Thank you for reading!*
+*Thank you for reading!* 😄
 
 <br/>
 
-Happy hacking! Cheers!
+Happy hacking! Cheers! 🎉
 
 <hr/>
