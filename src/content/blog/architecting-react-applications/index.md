@@ -151,7 +151,7 @@ Better now, isn't it? Even this website, with its simplicity, has a layout compo
 
 ## But wait.. There's more!!
 
-Yes, yes. I haven't forgotten about reducers, the lengthy sagas, the services, a ton of action creators and what not! But that's for the second part of this article since I don't want it to become too long and exhausting to read. Also, this first part might serve as a good starting point for beginners or other fellow developers who are new to React development.
+Yes, I haven't forgotten about reducers, the lengthy sagas, services, a ton of action creators and what not! But that's for the second part of this article since I don't want it to become too long and exhausting to read. Also, this first part might serve as a good starting point for beginners or other fellow developers who are new to React development.
 
 <br/>
 
