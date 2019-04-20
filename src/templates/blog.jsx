@@ -21,7 +21,11 @@ export default class BlogTemplate extends React.Component {
     const otherArticles = [previous, next];
     return (
       <Layout
-        pageTitle={`${disqusConfig.title}${this.props.data.markdownRemark.frontmatter.subtitle ? ` - ${this.props.data.markdownRemark.frontmatter.subtitle}` : ''}`}
+        pageTitle={`${disqusConfig.title}${
+          this.props.data.markdownRemark.frontmatter.subtitle
+            ? ` - ${this.props.data.markdownRemark.frontmatter.subtitle}`
+            : ""
+        }`}
         pageDesription={this.props.data.markdownRemark.frontmatter.description}
       >
         <div role="container" className="article-template">
