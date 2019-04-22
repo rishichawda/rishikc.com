@@ -12,7 +12,7 @@ export default class BlogSection extends React.Component {
         <p>You can view all of my blog posts <Link to="/articles">here</Link>.</p>
         <div className="inner-container">
           {
-            posts.slice(0, 2).map(({ node: { id, frontmatter } }) => (
+            posts.slice(0, 2).map(({ node: { id, excerpt, frontmatter } }) => (
               <Link to={frontmatter.path} key={id}>
             <article className="card hidden">
               <div className="blog-title">
@@ -20,7 +20,13 @@ export default class BlogSection extends React.Component {
               </div>
               <div className="blog-description">
                 <p>
-                  {frontmatter.description}
+                  {
+                    frontmatter.brief || excerpt.split(
+                      `${frontmatter.title}${
+                        frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ""
+                      }`
+                    )[1]
+                  }
                 </p>
               </div>
             </article>
