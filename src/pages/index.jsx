@@ -58,9 +58,12 @@ export const pageQuery = graphql`
       edges {
         node {
           id
+          excerpt(pruneLength: 430)
           frontmatter {
             path
             title
+            subtitle
+            brief
             description
           }
         }
