@@ -2,7 +2,8 @@
 title: Android Emulator for React Native in Mac, Linux and Windows - The right way to get it working
 subtitle: — And save yourself a lot of space!
 date: "2019-01-12T22:12:03.284Z"
-description: Let’s quickly set up Android Studio’s emulator in a better way this time — without actually installing Android Studio! Open your terminal first to install Java development kit 8. You can install it through command line or by visiting oracle.com and download the JDK after accepting the license agreement.
+keywords: "install android emulator, install android emulator mac, android emulator linux system, install emulator command line, install android emulator windows, android studio emulator installation, install command line emulator"
+description: Let's quickly install Android emulator in Mac, Linux and Windows - all from command line. We'll do a minimal installation with android sdk, required tools and ofcourse - the emulator! Then we'll setup a virtual device and test run to check if it was properly installed and use it in a better way.
 path: "/articles/native-app-emulator-android-mac-linux-ios-install-command-line/"
 ---
 
@@ -54,7 +55,7 @@ Windows and Linux users should make sure that they have set-up path to their Jav
 
 Once we have installed and set-up Java in our system, we will need to install Android SDK so that we can get necessary tools in our systems including the android virtual device manager and emulator itself!
 
-Windows and linux users can download the command line tools [here](https://developer.android.com/studio/#downloads).
+Windows and linux users can directly [download the command line tools](https://developer.android.com/studio/#downloads) required for installing the android emulator.
 
 Mac users can install it by running:
 
@@ -171,6 +172,17 @@ emulator -avd myTestDevice
 ```
 
 And now your android emulator will start with the device you just created! But this time in a better way just like you always deserved — without wasting your precious storage space! 🎉
+
+
+<br/>
+
+*Did you like this article? Or did I miss something? Is there something that you have that can be added to this article -- that can make it even better?*
+
+*Please leave a comment below or you can also contact me through my [social media profiles](/).*
+
+*Thank you for reading!* 😄
+
+<br/>
 
 Happy Hacking! Cheers!
 
