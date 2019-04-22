@@ -1,7 +1,8 @@
 ---
 title: Shrink your React Native application size dramatically!
 date: "2018-09-20T22:12:03.284Z"
-description: To reduce your react native application size for android, first we'll need to eject it if you're using create-react-native-app for your project. After that we'll need to configure the build file to generate compressed android builds.
+keywords: "react native application build, react native android application, descrease android application build size, reduce application build size, react native build configuration, react native android build gradle, react native development"
+description: To reduce your react native application size for android, we'll need to configure the build file to generate compressed bundle for your react native app and then split it into multiple bundles for all architectures so that it can be made more lightweight.
 path: "/articles/shrink-react-native-application-build-size-android/"
 ---
 
@@ -35,7 +36,7 @@ First of all, you’ll need to eject your native app if you’re using [create-r
 npm run eject
 ```
 
-**Note :** Ejecting a react native application is a permanent action! ( Unless you’re using a version control system to keep track of previous versions of your app — from where you can recover the ‘unejected’ version of your app later if you need ). [Learn more about ejecting here.](https://github.com/react-community/create-react-native-app/blob/master/EJECTING.md")
+**Note :** Ejecting a react native application is a permanent action! ( Unless you’re using a version control system to keep track of previous versions of your app — from where you can recover the ‘unejected’ version of your app later if you need ). [Learn more about ejecting.](https://github.com/react-community/create-react-native-app/blob/master/EJECTING.md")
 
 Okay so now we’re all set! Let’s get started and get that done fast. Don’t worry it just takes a few minutes and your app size will shrink dramatically!
 
@@ -105,7 +106,18 @@ Oh, and by the way if you need a universal `.apk` that supports all device archi
 
 That’s all! Now you’ve setup your build configuration to shrink your code along with resources and create separate `.apk` for different architectures — thus removing unnecessary code from the final build.
 
-Thanks for reading! For more resources on how to reduce the application build size, [follow this link](https://developer.android.com/studio/build/shrink-code).
+Thanks for reading! You can check out more resources on [how to reduce the application build size](https://developer.android.com/studio/build/shrink-code).
+
+
+<br/>
+
+*Did you like this article? Or did I miss something? Is there something that you have that can be added to this article -- that can make it even better?*
+
+*Please leave a comment below or you can also contact me through my [social media profiles](/).*
+
+*Thank you for reading!* 😄
+
+<br/>
 
 Happy Hacking! Cheers!
 

@@ -1,7 +1,8 @@
 ---
 title: Architecting React Applications - What I learned from my experience as a Web developer
 date: "2019-04-11T22:12:03.284Z"
-description: React has always been popular for its short learning curve and easy to use APIs. But if you have been working with this popular javascript library for a while now, you might agree with me on this one as well -- If you don't pay attention to it's structure it will soon become an unmaintainable mess.
+keywords: "react application architecture, web development with reactjs, reactjs web development best practices, react application structure, reactjs web development, directory structure for react project, react application configuration"
+description: Like any other web application, React applications also require close attention to their architecture. Introduction of Hooks might have shown us new ways of abstractions in our React applications but what about so many applications that are still using older versions of React?
 path: "/articles/architecting-react-applications/"
 ---
 
@@ -13,7 +14,7 @@ path: "/articles/architecting-react-applications/"
 
 <br />
 
-React has always been popular for its short learning curve and easy to use APIs. But if you have been working with this popular javascript library for a while now, you might agree with me on this one as well -- If you don't pay attention to it's structure it will soon become an unmaintainable mess. 
+React has always been popular for its short learning curve and easy to use APIs. But if you have been working with this [popular javascript library](https://reactjs.org/) for a while now, you might agree with me on this one as well -- If you don't pay attention to it's structure it will soon become an unmaintainable mess. 
 
 Before joining my first job, I had some experience as a freelancer but didn't know much about best practices and architecture apart from what I had come across either online or while development. And even as a freelancer I didn't have experience with such large scale applications that we had to work with later in the job. This is when I started paying more attention to architecture. In the start, things used to get a little confusing sometimes - mostly because I was a bit more conscious about my code than before - which was obvious as I was part of a team now and not a solo freelancer.
 
@@ -21,7 +22,7 @@ So I started looking through GitHub, online articles, papers and books. And as I
 
 > The key to a robust, scalable and easy to maintain React application is architecture.
 
-This applies to any application or software but with React, abstraction was a bit more difficult than other libraries / frameworks. This was until Hooks were introduced - but we will keep it out of the context for now as it is still fairly new and most of the applications are still built with older versions of React. Also, there are a lot of improvements to be made; lot of do's and dont's to be discovered with its usage. 
+This applies to any application or software but with React, abstraction was a bit more difficult than other libraries / frameworks. This was until [Hooks were introduced](https://reactjs.org/docs/hooks-intro.html) - but we will keep it out of the context for now as it is still fairly new and most of the applications are still built with older versions of React. Also, there are a lot of improvements to be made; lot of do's and dont's to be discovered with its usage. 
 
 As of now, I think the principle that I follow for structuring React applications will work fairly well with Hooks too! Since the focus was on a scalable web application architecture - not just React.
 
@@ -39,7 +40,7 @@ The first thing you might notice, and wonder maybe - and if you don't, I'd recom
 
 <br/>
 
-## Two config directories?! Why though??
+## Two config directories for a single web application?! Why though??
 
 The `config` directory at the root contains all the configuration files related to build - like our application's webpack config or any other bundler that we might use, environment files and other configs.
 
@@ -53,7 +54,7 @@ The other `config` directory inside our `src` folder is for configurations relat
 
 <br/>
 
-## But wait, what about the `resources` and `assets` directories? Aren't assets also a part of the 'resources' for our web application?
+## But wait, what about the `resources` and `assets` directories? Aren't assets also a part of the 'resources' for our react application?
 <br/>
 
 ![good question](./shrek.jpg)
@@ -66,7 +67,7 @@ This directory may also contain data / other 'resources' which can be occasional
 
 <br />
 
-## And what about our pages and their components?? 
+## And what about our pages and all the react components?? 
 
 So, here comes the interesting part. Atleast I think so. This is something that has been derived from a few other solutions on architecting react applications as well as other web applications along with some of my own practical experience. And by far, I'm pretty satisfied with it! 🤓
 
@@ -111,7 +112,7 @@ But.. you might wonder.. what is the point of doing that?
 
  <br/>
 
- ## A little tip -- something that I learnt while working with GatsbyJS
+ ## A little tip -- something that I learnt while developing progressive web applications with GatsbyJS
 
  You can also go ahead and add another directory to the `src` -- called `layouts` ( or maybe add it to the `components` directory, whichever feels more appropriate to you ) which contains a layout file which is global to the application, or even have multiple layouts ; each associated with certain parts of the application. For example, let's assume our application also has a fancy navbar and a decent footer which goes into all of our pages. Instead of having them shoved inside our `components` directory and then repeatedly used inside each page - we can have a layout file that contains the navbar and the footer and renders the `children` that are passed to it, like so :
 
@@ -154,15 +155,15 @@ Better now, isn't it? Even this website, with its simplicity, has a layout compo
 
 <br/>
 
-## But wait.. There's more!!
+## But wait.. There's more to architecting react applications!!
 
 Yes, I haven't forgotten about reducers, the lengthy sagas, services, a ton of action creators and what not! But that's for the [second part of this article](/articles/architecting-react-applications-redux-store-services-and-sagas/) since I don't want it to become too long and exhausting to read. Also, this first part might serve as a good starting point for beginners or other fellow developers who are new to React development.
 
 <br/>
 
-*Did you like this article? Or did I miss something? Is there something that you have that can be added to this -- that can make it even better?*
+*Did you like this article? Or did I miss something? Is there something that you have that can be added to this article -- that can make it even better?*
 
-*Please leave a comment below or you can also contact me through my social media profiles listed [here](/).*
+*Please leave a comment below or you can also contact me through my [social media profiles](/).*
 
 *Thank you for reading!* 😄
 

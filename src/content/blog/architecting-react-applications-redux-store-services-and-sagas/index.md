@@ -2,7 +2,7 @@
 title: Architecting React Applications - Part II
 subtitle: Prettifying the complex codebase
 date: "2019-04-19T22:12:03.284Z"
-description: Second part of the previous article - Architecting React Applications - which was focused on structuring basic parts of a web application built with react.
+brief: Second part of the previous article - Architecting React Applications - which was focused on structuring basic parts of a web application built with react.
 path: "/articles/architecting-react-applications-redux-store-services-and-sagas/"
 ---
 

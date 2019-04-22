@@ -27,6 +27,7 @@ export default class BlogTemplate extends React.Component {
             : ""
         }`}
         pageDesription={this.props.data.markdownRemark.frontmatter.description}
+        keywords={this.props.data.markdownRemark.frontmatter.keywords}
       >
         <div role="container" className="article-template">
           <div
@@ -89,6 +90,7 @@ export const pageQuery = graphql`
         date(formatString: "MMMM DD, YYYY")
         description
         subtitle
+        keywords
       }
     }
     allMarkdownRemark(sort: { order: DESC, fields: [frontmatter___date] }) {
