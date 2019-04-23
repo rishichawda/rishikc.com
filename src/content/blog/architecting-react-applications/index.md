@@ -61,9 +61,9 @@ The other `config` directory inside our `src` folder is for configurations relat
 
 Well, the `assets` directory here is meant ***only*** for images and other media *, duhh,*
 
-whereas, `resources` is for data that might be required by our web application, for example, constants and other static data which basically doesn't have any / much logic associated to it. You can also add small methods to return the data, perhaps formatted to specific needs, and / or perform ***minor*** operations on them there which can be used by parts of our application, which by the way -- *trust me* -- will make your code a lot cleaner and more organised.
+whereas, `resources` is for data that might be required by our web application, for example, constants and other static data which basically doesn't have any or much logic associated to it. You can also add small methods to return the data, perhaps formatted to specific needs, and / or perform ***minor*** operations on them there which can be used by parts of our application, which by the way -- *trust me* -- will make your code a lot cleaner and more organised.
 
-This directory may also contain data / other 'resources' which can be occasionally fetched and stored / updated and then processed before they are used in certain parts of our web application. Well, I guess you get the idea.
+This directory may also contain data and other 'resources' which can be occasionally fetched, stored and updated; and maybe processed a little before they are used in certain parts of our web application. Well, I guess you get the idea.
 
 <br />
 
