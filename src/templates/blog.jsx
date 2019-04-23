@@ -1,6 +1,5 @@
 import React from "react";
 import "./blog.scss";
-import { IoIosReturnRight } from "react-icons/io";
 import { Link, graphql } from "gatsby";
 import Disqus from "disqus-react";
 import Layout from "../components/layout";
@@ -37,7 +36,7 @@ export default class BlogTemplate extends React.Component {
             }}
           />
           <div className="post-links container">
-            Other articles :
+            <h4>Other articles :</h4>
             <Link
               to={
                 otherArticles[0].fields
@@ -65,12 +64,11 @@ export default class BlogTemplate extends React.Component {
           />
           <div className="back-link">
             <Link to="/">
-              <IoIosReturnRight style={{ marginRight: 10 }} />
-              {"Back to Home"}
+              {"Go to Homepage"}
             </Link>
+            <hr/>
             <Link to="/articles">
-              <IoIosReturnRight style={{ marginRight: 10 }} />
-              {"Back to All articles"}
+              {"View All articles"}
             </Link>
           </div>
         </div>
