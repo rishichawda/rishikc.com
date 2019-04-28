@@ -33,7 +33,7 @@ export default ({ heroImage }) => (
               <span>Github</span>
             </li>
           </OutboundLink>
-          <OutboundLink href="https://medium.com/@rishii.kumar.chawda">
+          <OutboundLink href="https://medium.com/@rishiikc">
             <li>
               <FaMedium />
               <span>Medium Blogs</span>
