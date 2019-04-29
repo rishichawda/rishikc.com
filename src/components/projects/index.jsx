@@ -17,7 +17,7 @@ export default () => (
           </div>
           <div className="repo-description">
             <p>
-              🎊 A plugin to update your branch badges to point to correct branch status.
+              🎊 A plugin to update your branch badges to point to correct branch status. Can be used in a script, as a git hook or directly from the command line itself!
           </p>
           </div>
         </article>
@@ -50,6 +50,40 @@ export default () => (
           <div className="repo-description">
             <p>
               Create background images and download files to your device.<br /> ( Currently under maintenance )
+          </p>
+          </div>
+        </article>
+      </OutboundLink>
+      <OutboundLink href="https://github.com/rishichawda/simple-typeracer">
+        <article className="card lang-js hidden">
+          <div className="repo-title">
+            <h4>Typeracer</h4>
+          </div>
+          <div className="badges">
+            <OutboundLink href="https://typerace.now.sh">
+              <img alt="version-badge" src="https://img.shields.io/website-up-down-green-red/https/shields.io.svg?label=click here to visit&style=flat-square" />
+            </OutboundLink>
+          </div>
+          <div className="repo-description">
+            <p>
+              Simple typeracer app with less distractions and funny auto generated texts. A simple two-hour programming gig done on a lazy weekend. Don't expect much!! :)
+          </p>
+          </div>
+        </article>
+      </OutboundLink>
+      <OutboundLink href="https://github.com/rishichawda/calendar-app">
+        <article className="card lang-js hidden">
+          <div className="repo-title">
+            <h4>Minimal Cal</h4>
+          </div>
+          <div className="badges">
+            <OutboundLink href="">
+              <img alt="version-badge" src="https://img.shields.io/static/v1.svg?label=click here to visit&message=repository&color=9cf&style=flat-square" />
+            </OutboundLink>
+          </div>
+          <div className="repo-description">
+            <p>
+              Cross platform reminders and notes application for Mac, Linux and Windows. Built with ElectronJS and boredom. <br/><br/>🚧 Work in progress.
           </p>
           </div>
         </article>
