@@ -77,9 +77,13 @@
     }
     p {
       max-width: 540px;
+      font-family: 'Open Sans', sans-serif;
       color: #777;
-      font-weight: 300;
       margin-bottom: 40px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      line-height: 1.5em;
+      font-size: 1.025em;
     }
     ul {
       list-style: none;
@@ -105,9 +109,12 @@
         clear: both;
         width: fit-content;
         span {
+          font-family: 'Open Sans', sans-serif;
           font-weight: 300;
+          letter-spacing: 0.02em;
+          line-height: 1.51em;
           &:hover {
-            filter: drop-shadow(0px 0px 1px rgb(207, 207, 207));
+            filter: drop-shadow(0px 0px 0.5px rgb(207, 207, 207));
           }
           @media only screen and (max-width: 770px) {
             display: none;
