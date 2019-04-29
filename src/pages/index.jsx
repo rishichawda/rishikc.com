@@ -8,6 +8,7 @@ import "./index.scss";
 import Navbar from "../components/navbar";
 import { fadeInOnView } from "../utils";
 import Layout from "../components/layout";
+import Timeline from '../components/timeline';
 
 const pageMeta = {
   title:
@@ -38,6 +39,7 @@ class App extends React.Component {
         <Navbar />
         <Hero heroImage={this.props.data.heroImage.childImageSharp} />
         <About />
+        <Timeline />
         <Blogs posts={edges} />
         <Projects />
       </Layout>
