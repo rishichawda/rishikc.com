@@ -10,8 +10,12 @@
   }
   .back-link {
     justify-content: space-around;
-    display: flex;font-size: 1em;
-    line-height: 1.91em;font-family: 'Open Sans';font-weight: 600;
+    display: flex;
+    font-size: 1em;
+    line-height: 1.91em;
+    font-family: 'Open Sans';
+    font-weight: 600;
+    margin-top: 2.9em;
     @media only screen and (max-width: 610px) {
       flex-direction: column;
     }
