@@ -2,16 +2,7 @@ import React from "react";
 import "./index.scss";
 import Story from "./story";
 
-const timelinedata = [
-  {
-    title: 'Software Development Engineer',
-    time: '2018 - 2019',
-  },
-  {
-    title: 'Freelancer',
-    time: '2016 - 2018',
-  }
-]
+import { data } from './data.json';
 
 class Timeline extends React.Component {
   render() {
@@ -19,7 +10,7 @@ class Timeline extends React.Component {
       <section class="timeline-section">
         <ul class="timeline">
           {
-            timelinedata.map((item, index) => (
+            data.map((item, index) => (
             <Story data={item} position={index % 2 === 0 ? 'l' : 'r'} />
           ))
         }

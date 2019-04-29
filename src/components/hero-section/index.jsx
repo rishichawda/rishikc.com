@@ -18,7 +18,7 @@ export default ({ heroImage }) => (
       <div className="hero-intro">
         <h5>Hello, I am</h5>
         <h2>Rishi Kumar Chawda</h2>
-        <h4>Web and Mobile App developer.</h4>
+        <h4>Web and Mobile App developer</h4>
         <p>A programmer with a passion for product design and development who loves working on freelancing and open source projects.</p>
         <ul>
           <OutboundLink href="https://www.linkedin.com/in/rkrishi">
