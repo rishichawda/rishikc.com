@@ -22,10 +22,13 @@
   p {
     text-align: center;
     color: #222;
-    font-family: Poppins, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     margin: auto;
     margin-bottom: 18px;
     font-weight: 300;
+    letter-spacing: 0.02em;
+    line-height: 1.5em;
+    font-size: 1.025em;
     a {
       text-decoration: none;
       font-weight: 500;
@@ -85,12 +88,13 @@
         overflow: hidden;
         h4 {
           color: #222;
-          font-family: Poppins, sans-serif;
+          font-family: 'Open Sans', sans-serif;
           transition: color .2s ease-out;
           margin: 0;
           font-size: 1.25em;
           font-weight: 400;
           line-height: 1.4;
+          text-align: center;
           cursor: pointer;
           &:hover {
             color: #78909C;
@@ -102,10 +106,13 @@
         overflow: hidden;
         p {
           color: #777;
-          font-family: Poppins, sans-serif;
+          font-family: 'Open Sans', sans-serif;
           margin: auto;
           font-weight: 300;
           margin-bottom: 18px;
+          letter-spacing: 0.02em;
+          line-height: 1.5em;
+          font-size: 1.025em;
         }
       }
     }
