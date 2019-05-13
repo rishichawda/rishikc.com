@@ -37,7 +37,7 @@ export default class Articles extends React.Component {
                 <h4>{frontmatter.title}</h4>
                 <p>
                   {
-                    frontmatter.brief || excerpt.split(
+                      excerpt.split(
                       `${frontmatter.title}${
                         frontmatter.subtitle ? `${frontmatter.subtitle}` : ""
                       }`
@@ -66,7 +66,6 @@ export const pageQuery = graphql`
             date(formatString: "MMMM DD, YYYY")
             title
             subtitle
-            brief
           }
         }
       }
