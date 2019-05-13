@@ -18,11 +18,12 @@ const animateHTML = () => {
   function checkPosition() {
     for (var i = 0; i < elems.length; i++) {
       var positionFromTop = elems[i].getBoundingClientRect().top;
-      if (positionFromTop - windowHeight <= -(windowHeight * 0.11)) {
+      if (positionFromTop - windowHeight < 0) {
         elems[i].className = elems[i].className.replace(
           'hidden',
           animType,
         );
+        elems[i].style.opacity = 1;
       } else if (positionFromTop > windowHeight){
         elems[i].className = elems[i].className.replace(
           animType,
