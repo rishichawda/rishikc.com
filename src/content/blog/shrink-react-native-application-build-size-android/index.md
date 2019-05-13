@@ -24,6 +24,7 @@ Or you’re just one of us who are paranoid about build sizes? Don’t worry, we
 In this article, we will cover the following two things:
 
 * Compress our react native application size - by compressing the java bytecode that is generated while building our app and also asking it to try and shrink all the resources that are bundled with the application.
+
 * Splitting our application bundle into multiple `apk`s to remove unnecessary code which is not required by the device which is going to run it - because a lot of code is bundled with the universal apk that is device specific - meaning that we don't need a lot of code in the device we're going to install it in.
 
 <hr />
@@ -66,6 +67,7 @@ As you can see, these variables are being used to enable or disable two build co
 
 * One for generating separate .apks for different device architectures,
 
+
 ```
 . . .
 splits {
@@ -78,6 +80,7 @@ splits {
 *Don’t worry about having to handle different .apks for each architecture — Google takes care of distributing it to the users! And separating the builds according to architecture removes unnecessary code from your file which is not required on the device it is running.*
 
 * Another one for compressing the Java bytecode generated while building, as in,
+
 
 ```
 . . .

@@ -23,7 +23,7 @@ export default class BlogSection extends React.Component {
                   {
                     frontmatter.brief || excerpt.split(
                       `${frontmatter.title}${
-                        frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ""
+                        frontmatter.subtitle ? `${frontmatter.subtitle}` : ""
                       }`
                     )[1]
                   }
