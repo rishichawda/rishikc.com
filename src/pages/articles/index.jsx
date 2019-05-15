@@ -36,13 +36,17 @@ export default class Articles extends React.Component {
               <article className="hidden">
                 <h4>{frontmatter.title}</h4>
                 <p>
-                  {
-                    frontmatter.brief || excerpt.split(
+                  {frontmatter.brief ||
+                    excerpt.split(
                       `${frontmatter.title}${
                         frontmatter.subtitle ? `${frontmatter.subtitle}` : ""
                       }`
-                    )[1]
-                  }
+                    )[1] ||
+                    excerpt.split(
+                      `${frontmatter.title}${
+                        frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ""
+                      }`
+                    )[1]}
                 </p>
                 <small>{frontmatter.date}</small>
               </article>

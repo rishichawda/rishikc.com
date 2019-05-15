@@ -63,13 +63,9 @@ export default class BlogTemplate extends React.Component {
             config={disqusConfig}
           />
           <div className="back-link">
-            <Link to="/">
-              {"Go to Homepage"}
-            </Link>
-            <hr/>
-            <Link to="/articles">
-              {"View All articles"}
-            </Link>
+            <Link to="/">{"Go to Homepage"}</Link>
+            <hr />
+            <Link to="/articles">{"View All articles"}</Link>
           </div>
         </div>
       </Layout>

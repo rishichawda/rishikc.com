@@ -1,9 +1,12 @@
 {
-  "name": "rishichawda.github.io",
+  "name": "rishichawda.now.sh",
   "private": true,
-  "description": "Personal website.",
+  "description": "Personal website and blog",
   "version": "0.1.0",
-  "author": "rishichawda",
+  "author": {
+    "name": "rishichawda",
+    "url": "https://rishichawda.now.sh"
+  },
   "dependencies": {
     "autoprefixer": "^9.4.6",
     "babel-plugin-styled-components": "^1.10.0",
@@ -11,6 +14,7 @@
     "gatsby": "^2.3.23",
     "gatsby-image": "^2.0.28",
     "gatsby-plugin-google-analytics": "^2.0.10",
+    "gatsby-plugin-google-gtag": "^1.0.17",
     "gatsby-plugin-manifest": "^2.0.24",
     "gatsby-plugin-offline": "^2.0.24",
     "gatsby-plugin-react-helmet": "^3.0.2",
@@ -39,9 +43,6 @@
     "typeface-pt-sans": "0.0.72",
     "typeface-roboto": "0.0.54"
   },
-  "keywords": [
-    "gatsby"
-  ],
   "license": "MIT",
   "scripts": {
     "build": "gatsby build",

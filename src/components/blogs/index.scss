@@ -4,11 +4,13 @@
   padding: 3%;
   max-width: 1280px;
   flex-direction: column;
+
   &.container {
     max-width: 100%;
     width: 100%;
     // background: linear-gradient(90deg, #766dff 0%, #88f3ff 100%);
   }
+
   h2 {
     text-align: center;
     text-transform: uppercase;
@@ -19,6 +21,7 @@
     margin: auto;
     margin-bottom: 18px;
   }
+
   p {
     text-align: center;
     color: #222;
@@ -29,12 +32,14 @@
     letter-spacing: 0.02em;
     line-height: 1.5em;
     font-size: 1.025em;
+
     a {
       text-decoration: none;
       font-weight: 500;
-      color: #766dff;
+      color: #625ae4;
     }
   }
+
   .inner-container {
     display: flex;
     box-sizing: border-box;
@@ -47,23 +52,29 @@
     padding: 1% 3%;
     margin: auto;
     will-change: transform;
+
     a {
       margin: 20px;
       box-sizing: border-box;
       width: 80%;
+
       @media screen and (min-width: 883px) {
         flex: 1 !important;
       }
+
       height: 300px;
       text-decoration: none;
       color: rgb(110, 189, 255) !important;
     }
+
     .card {
       height: 100%;
       border-top: 3px solid #766dff;
+
       &.link-all {
         border: none;
       }
+
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -76,17 +87,20 @@
       will-change: transform;
       background: #fff;
       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+
       &:hover {
         // box-shadow: 0 5px 20px 10px rgba(0,0,0,.08);
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
       }
+
       .blog-title {
         height: 40%;
         min-height: fit-content;
         width: 100%;
         margin-bottom: 20px;
         overflow: hidden;
-        h4 {
+
+        h3 {
           color: #222;
           font-family: 'Open Sans', sans-serif;
           transition: color .2s ease-out;
@@ -96,16 +110,19 @@
           line-height: 1.4;
           text-align: center;
           cursor: pointer;
+
           &:hover {
             color: #78909C;
           }
         }
       }
+
       .blog-description {
         height: 60%;
         overflow: hidden;
+
         p {
-          color: #777;
+          color: rgb(101, 101, 101);
           font-family: 'Open Sans', sans-serif;
           margin: auto;
           font-weight: 300;

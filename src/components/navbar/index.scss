@@ -6,10 +6,12 @@
   height: 2em;
   position: absolute;
   box-sizing: border-box;
+
   .navbar-links {
     margin: auto;
     display: flex;
     flex-direction: row;
+
     a {
       padding: 1em;
       text-decoration: none;
