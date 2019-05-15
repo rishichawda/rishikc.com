@@ -1,6 +1,6 @@
 import React from "react";
 
-const Story = ({ position, data: {title, desc, time} }) => (
+const Story = ({ position, data: { title, desc, time } }) => (
   <li>
     <div className={`direction-${position} hidden`}>
       <div className="story-wrapper">

@@ -5,7 +5,7 @@
   bottom: -200px;
   background: #fff;
   padding: 30px;
-  box-shadow: 0 20px 80px 0 rgba(153, 153, 153, .3);
+  box-shadow: 0 20px 80px 0 rgba(153, 153, 153, 0.3);
   margin-left: auto;
   margin-right: auto;
   @media only screen and (max-width: 1120px) {
@@ -79,7 +79,7 @@
     }
     p {
       max-width: 540px;
-      font-family: 'Open Sans', sans-serif;
+      font-family: "Open Sans", sans-serif;
       color: rgb(101, 101, 101);
       margin-bottom: 40px;
       font-weight: 300;
@@ -111,7 +111,7 @@
         clear: both;
         width: fit-content;
         span {
-          font-family: 'Open Sans', sans-serif;
+          font-family: "Open Sans", sans-serif;
           font-weight: 300;
           letter-spacing: 0.02em;
           line-height: 1.51em;

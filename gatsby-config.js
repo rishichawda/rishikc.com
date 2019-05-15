@@ -1,12 +1,12 @@
 require("dotenv").config({
-  path: `.env.${process.env.NODE_ENV}`,
-})
+  path: `.env.${process.env.NODE_ENV}`
+});
 
 module.exports = {
   siteMetadata: {
-    title: 'Rishi Kumar Chawda - Portfolio and Blog',
-    author: 'Rishi Kumar Chawda',
-    siteUrl: `https://rishichawda.now.sh`,
+    title: "Rishi Kumar Chawda - Portfolio and Blog",
+    author: "Rishi Kumar Chawda",
+    siteUrl: `https://rishichawda.now.sh`
   },
   plugins: [
     `gatsby-plugin-sitemap`,
@@ -15,15 +15,15 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `images`,
-        path: `${__dirname}/src/images`,
-      },
+        path: `${__dirname}/src/images`
+      }
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/src/content/blog`,
-        name: `blog`,
-      },
+        name: `blog`
+      }
     },
     {
       resolve: `gatsby-transformer-remark`,
@@ -32,35 +32,33 @@ module.exports = {
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 1280,
-            },
+              maxWidth: 1280
+            }
           },
           {
             resolve: `gatsby-remark-responsive-iframe`,
             options: {
-              wrapperStyle: `margin-bottom: 1.0725rem`,
-            },
+              wrapperStyle: `margin-bottom: 1.0725rem`
+            }
           },
           {
-
             resolve: `gatsby-remark-prismjs`,
             options: {
               classPrefix: "lang-js",
               inlineCodeMarker: null,
               noInlineHighlight: false,
-              showLineNumbers: true,
+              showLineNumbers: true
             }
           },
           `gatsby-remark-copy-linked-files`,
           {
-
             resolve: `gatsby-remark-smartypants`,
             config: {
-              dashes: 'oldschool'
+              dashes: "oldschool"
             }
           }
-        ],
-      },
+        ]
+      }
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
@@ -77,17 +75,17 @@ module.exports = {
         display: `minimal-ui`,
         include_favicon: true,
         icon: `src/images/favicon.png`,
-        theme_color_in_head: false,
-      },
+        theme_color_in_head: false
+      }
     },
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
         trackingId: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
         head: true,
-        anonymize: true,
-      },
+        anonymize: true
+      }
     },
-    `gatsby-plugin-offline`,
-  ],
-}
+    `gatsby-plugin-offline`
+  ]
+};
