@@ -21,9 +21,13 @@ export default class BlogSection extends React.Component {
               <div className="blog-description">
                 <p>
                   {
-                    excerpt.split(
+                    frontmatter.brief || excerpt.split(
                       `${frontmatter.title}${
                         frontmatter.subtitle ? `${frontmatter.subtitle}` : ""
+                      }`
+                    )[1] || excerpt.split(
+                      `${frontmatter.title}${
+                        frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ""
                       }`
                     )[1]
                   }
