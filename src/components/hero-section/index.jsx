@@ -1,9 +1,46 @@
 import React from "react";
 import Img from "gatsby-image";
-import { OutboundLink } from "gatsby-plugin-google-analytics";
+import { OutboundLink } from "gatsby-plugin-google-gtag";
 import { FaLinkedin, FaGithub, FaMedium, FaInstagram } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 import "./index.scss";
+
+const links = {
+  LinkedIn: {
+    url: "https://www.linkedin.com/in/rkrishi",
+    icon: FaLinkedin,
+  },
+  Github: {
+    url: "https://github.com/rishichawda",
+    icon: FaGithub,
+  },
+  "Medium Blogs": {
+    url: "https://medium.com/@rishiikc",
+    icon: FaMedium,
+  },
+  Instagram: {
+    url: "https://www.instagram.com/rishi.py",
+    icon: FaInstagram,
+  },
+  Mail: {
+    url: "",
+    icon: IoMdMail,
+  },
+};
+
+const onClickProfileUrl = (url) => {
+  if (typeof window !== "undefined" && url) {
+    window.gtag("event", url, { url });
+    window.location.href = url;
+  }
+}
+
+const renderOption = (item) => (
+  <li onClick={() => onClickProfileUrl(item.url)}>
+    <item.icon />
+    <span>LinkedIn</span>
+  </li>
+)
 
 export default ({ heroImage }) => (
   <section className="hero-section">
@@ -20,36 +57,7 @@ export default ({ heroImage }) => (
           loves working on freelancing and open source projects.
         </p>
         <ul>
-          <OutboundLink href="https://www.linkedin.com/in/rkrishi">
-            <li>
-              <FaLinkedin />
-              <span>LinkedIn</span>
-            </li>
-          </OutboundLink>
-          <OutboundLink href="https://github.com/rishichawda">
-            <li>
-              <FaGithub />
-              <span>Github</span>
-            </li>
-          </OutboundLink>
-          <OutboundLink href="https://medium.com/@rishiikc">
-            <li>
-              <FaMedium />
-              <span>Medium Blogs</span>
-            </li>
-          </OutboundLink>
-          <OutboundLink href="https://www.instagram.com/rishi.py">
-            <li>
-              <FaInstagram />
-              <span>Instagram</span>
-            </li>
-          </OutboundLink>
-          <OutboundLink href="/">
-            <li>
-              <IoMdMail />
-              <span>Mail</span>
-            </li>
-          </OutboundLink>
+          {Object.keys(links).map(item => renderOption(links[item]))}
         </ul>
       </div>
     </div>

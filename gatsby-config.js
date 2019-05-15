@@ -79,11 +79,17 @@ module.exports = {
       }
     },
     {
-      resolve: `gatsby-plugin-google-analytics`,
+      resolve: `gatsby-plugin-google-gtag`,
       options: {
-        trackingId: process.env.GOOGLE_ANALYTICS_TRACKING_ID,
-        head: true,
-        anonymize: true
+        trackingIds: [
+          process.env.GOOGLE_ANALYTICS_TRACKING_ID
+        ],
+        gtagConfig: {
+          anonymize_ip: true,
+        },
+        pluginConfig: {
+          head: true,
+        }
       }
     },
     `gatsby-plugin-offline`
