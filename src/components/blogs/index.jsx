@@ -9,21 +9,25 @@ export default class BlogSection extends React.Component {
     return (
       <section className="container blog-section hidden">
         <h2>blogs</h2>
-        <p>You can view all of my blog posts <Link to="/articles">here</Link>.</p>
+        <p>You can view all of my blog posts <Link aria-label='Link to blog posts by Rishi Chawda' to="/articles">here</Link>.</p>
         <div className="inner-container">
           {
             posts.slice(0, 2).map(({ node: { id, excerpt, frontmatter } }) => (
-              <Link to={frontmatter.path} key={id}>
+              <Link to={frontmatter.path} key={id} aria-label={`Blog link to ${frontmatter.title}`}>
             <article className="card hidden">
               <div className="blog-title">
-                <h4>{frontmatter.title}</h4>
+                <h3>{frontmatter.title}</h3>
               </div>
               <div className="blog-description">
                 <p>
                   {
-                    excerpt.split(
+                    frontmatter.brief || excerpt.split(
                       `${frontmatter.title}${
                         frontmatter.subtitle ? `${frontmatter.subtitle}` : ""
+                      }`
+                    )[1] || excerpt.split(
+                      `${frontmatter.title}${
+                        frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ""
                       }`
                     )[1]
                   }

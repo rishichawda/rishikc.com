@@ -7,7 +7,7 @@ import { data } from './data.json';
 class Timeline extends React.Component {
   render() {
     return (
-      <section class="timeline-section">
+      <section role="main" aria-labelledby="Timeline" class="timeline-section">
         <ul class="timeline">
           {
             data.map((item, index) => (

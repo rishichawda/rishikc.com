@@ -49,11 +49,12 @@
     @media only screen and (max-width: 1120px) {
       padding-left: 0;
     }
-    h5 {
+    h1 {
       font-size: 14px;
       text-transform: uppercase;
       letter-spacing: 2.1px;
       font-weight: 400;
+      margin-block-start: 1.67em;
       margin-bottom: 12px;
       color: #222;
       line-height: 1.2;
@@ -67,9 +68,10 @@
       margin-top: 0;
       font-family: PT Sans;
     }
-    h4 {
+    h3 {
       font-size: 16px;
       font-weight: 400;
+      margin-block-start: 1.33em;
       text-transform: uppercase;
       margin-bottom: 20px;
       color: #222;
@@ -78,7 +80,7 @@
     p {
       max-width: 540px;
       font-family: 'Open Sans', sans-serif;
-      color: #777;
+      color: rgb(101, 101, 101);
       margin-bottom: 40px;
       font-weight: 300;
       letter-spacing: 0.02em;
@@ -101,7 +103,7 @@
         margin-bottom: 15px;
         position: relative;
         font-size: 16px;
-        color: #777;
+        color: rgb(101, 101, 101);
         cursor: pointer;
         display: flex;
         align-items: center;

@@ -34,7 +34,7 @@
         margin: 1em 0 0 0;
         font-weight: 400;
       }
-      color: #777;
+      color: rgb(101, 101, 101);
       font-size: 1em;
       letter-spacing: 0.03em;
       line-height: 1.5;
@@ -85,7 +85,7 @@
       align-self: center;
     }
     &:hover {
-      color: #777;
+      color: rgb(101, 101, 101);
     }
   }
   display: flex;
@@ -99,7 +99,7 @@
     font-weight: 500;
     margin-right: 10px;
     &:hover {
-      color: #777;
+      color: rgb(101, 101, 101);
     }
   }
 }

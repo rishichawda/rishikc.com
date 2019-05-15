@@ -5,12 +5,12 @@ import './index.scss';
 export default () => (
   <section className="container project-section hidden">
     <h2>open source projects</h2>
-    <p>Some of my recent open source projects. You can take a look at all of them <a href="https://www.github.com/rishichawda">here</a>.</p>
+    <p>Some of my recent open source projects. You can take a look at all of them <a aria-label="Link to Github Profile" href="https://www.github.com/rishichawda">here</a>.</p>
     <div className="inner-container">
-      <OutboundLink href="https://github.com/rishichawda/markdown-magic-build-badge">
+      <OutboundLink aria-label='Github repository link for markdown-magic-build-badge plugin' href="https://github.com/rishichawda/markdown-magic-build-badge">
         <article className="card lang-js hidden">
           <div className="repo-title">
-            <h4>markdown-magic-build-badge</h4>
+            <h3>markdown-magic-build-badge</h3>
           </div>
           <div className="badges">
               <img alt="version-badge" src="https://img.shields.io/npm/v/markdown-magic-branch-badge/latest.svg?style=flat-square" />
@@ -22,10 +22,10 @@ export default () => (
           </div>
         </article>
       </OutboundLink>
-      <OutboundLink href="https://github.com/rishichawda/react-lite-components">
+      <OutboundLink aria-label='Github repository link for react-lite-components' href="https://github.com/rishichawda/react-lite-components">
         <article className="card lang-js hidden">
           <div className="repo-title">
-            <h4>react-lite-components</h4>
+            <h3>react-lite-components</h3>
           </div>
           <div className="badges">
               <img alt="version-badge" src="https://img.shields.io/npm/v/react-lite-components/latest.svg?style=flat-square" />
@@ -37,13 +37,13 @@ export default () => (
           </div>
         </article>
       </OutboundLink>
-      <OutboundLink href="https://github.com/rishichawda/bgcreate">
+      <OutboundLink aria-label='Github repository link for bg-create' href="https://github.com/rishichawda/bgcreate">
         <article className="card lang-js hidden">
           <div className="repo-title">
-            <h4>bgcreate</h4>
+            <h3>bgcreate</h3>
           </div>
           <div className="badges">
-            <OutboundLink href="https://bgcreate.netlify.com">
+            <OutboundLink aria-label='link to bg-create webpage' href="https://bgcreate.netlify.com">
               <img alt="version-badge" src="https://img.shields.io/website-up-down-green-red/https/shields.io.svg?label=click here to visit&style=flat-square" />
             </OutboundLink>
           </div>
@@ -54,13 +54,13 @@ export default () => (
           </div>
         </article>
       </OutboundLink>
-      <OutboundLink href="https://github.com/rishichawda/simple-typeracer">
+      <OutboundLink aria-label='Github repository link for simple-typeracer' href="https://github.com/rishichawda/simple-typeracer">
         <article className="card lang-js hidden">
           <div className="repo-title">
-            <h4>Typeracer</h4>
+            <h3>Typeracer</h3>
           </div>
           <div className="badges">
-            <OutboundLink href="https://typerace.now.sh">
+            <OutboundLink aria-label='link to simple-typeracer webpage' href="https://typerace.now.sh">
               <img alt="version-badge" src="https://img.shields.io/website-up-down-green-red/https/shields.io.svg?label=click here to visit&style=flat-square" />
             </OutboundLink>
           </div>
@@ -71,10 +71,10 @@ export default () => (
           </div>
         </article>
       </OutboundLink>
-      <OutboundLink href="https://github.com/rishichawda/calendar-app">
+      <OutboundLink aria-label='Github repository link to calendar electron app' href="https://github.com/rishichawda/calendar-app">
         <article className="card lang-js hidden">
           <div className="repo-title">
-            <h4>Minimal Cal</h4>
+            <h3>Minimal Cal</h3>
           </div>
           <div className="badges">
             <OutboundLink href="">
