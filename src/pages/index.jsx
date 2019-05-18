@@ -16,7 +16,7 @@ const pageMeta = {
   desc:
     "Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects.",
   keywords:
-    "web development, web developer bangalore, web development services, native app development, websites, progressive web apps, app developer, developer in bangalore, bengaluru area india, freelancing projects, freelance development, freelancing services, mobile apps development, android development, ios app development"
+    "web,developer,react,development,app development,websites,design,progressive,web apps,bangalore,bengaluru area india,freelancing,freelance development,freelancing services,mobile,application,android,app developer,ios,mobile apps development"
 };
 
 class App extends React.Component {

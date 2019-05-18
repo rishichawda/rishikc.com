@@ -1,7 +1,7 @@
 ---
 title: Architecting React Applications - What I learned from my experience as a Web developer
 date: "2019-04-11T22:12:03.284Z"
-keywords: "react application architecture, web development with reactjs, reactjs web development best practices, react application structure, reactjs web development, directory structure for react project, react application configuration"
+keywords: "React,application,architecture,web development,reactjs,best,practices,react application,directory,structure,components,reactjs web development,react project,configuration,web,applications"
 description: Like any other web application, React applications also require close attention to their architecture. Introduction of Hooks might have shown us new ways of abstractions in our React applications but what about so many applications that are still using older versions of React?
 path: "/articles/architecting-react-applications/"
 ---

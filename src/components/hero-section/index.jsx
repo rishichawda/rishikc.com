@@ -35,10 +35,10 @@ const onClickProfileUrl = (url) => {
   }
 }
 
-const renderOption = (item) => (
+const renderOption = (item, label) => (
   <li onClick={() => onClickProfileUrl(item.url)}>
     <item.icon />
-    <span>LinkedIn</span>
+    <span>{label}</span>
   </li>
 )
 
@@ -57,7 +57,7 @@ export default ({ heroImage }) => (
           loves working on freelancing and open source projects.
         </p>
         <ul>
-          {Object.keys(links).map(item => renderOption(links[item]))}
+          {Object.keys(links).map(item => renderOption(links[item], item))}
         </ul>
       </div>
     </div>
