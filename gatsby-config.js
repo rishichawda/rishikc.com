@@ -29,6 +29,7 @@ module.exports = {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
+          "gatsby-remark-embed-gist",
           {
             resolve: `gatsby-remark-images`,
             options: {
