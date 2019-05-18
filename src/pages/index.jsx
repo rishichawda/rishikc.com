@@ -8,7 +8,7 @@ import "./index.scss";
 import Navbar from "../components/navbar";
 import { fadeInOnView } from "../utils";
 import Layout from "../components/layout";
-import Timeline from '../components/timeline';
+import Timeline from "../components/timeline";
 
 const pageMeta = {
   title:

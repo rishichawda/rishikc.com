@@ -1,13 +1,16 @@
 .article-template {
   height: 100%;
   padding: 20px 10px;
+
   .article-banner {
     margin-bottom: 50px;
+
     img {
       width: 100%;
       height: auto;
     }
   }
+
   .back-link {
     justify-content: space-around;
     display: flex;
@@ -16,46 +19,56 @@
     font-family: 'Open Sans';
     font-weight: 600;
     margin-top: 2.9em;
+
     @media only screen and (max-width: 610px) {
       flex-direction: column;
     }
+
     hr {
       display: none;
       height: 2px;
       background: black;
       width: 50%;
+
       @media only screen and (max-width: 610px) {
         display: block;
       }
     }
+
     a {
       text-decoration: none;
       color: #222;
       display: flex;
       margin: 2% 0;
+
       svg {
         align-self: center;
       }
+
       &:hover {
-        color: #777;
+        color: rgb(101, 101, 101);
       }
     }
+
     display: flex;
     flex-direction: row;
     align-items: center;
     cursor: pointer;
     margin-bottom: 20px;
+
     p {
       color: #222;
       font-size: 1.1em;
       margin-bottom: 18px;
       font-weight: 500;
       margin-right: 10px;
+
       &:hover {
-        color: #777;
+        color: rgb(101, 101, 101);
       }
     }
   }
+
   .post-links {
     width: 92%;
     max-width: 992px;
@@ -67,17 +80,21 @@
     font-size: 1.1em;
     font-family: 'Open Sans';
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+
     a {
       text-decoration: none;
       color: #222;
       margin: 1.1em 0;
       display: flex;
+
       svg {
         align-self: center;
       }
+
       &:hover {
-        color: #777;
+        color: rgb(101, 101, 101);
       }
+
       cursor: pointer;
     }
   }
@@ -105,34 +122,43 @@
     font-style: italic;
   }
 
-  h1, h2 {
+  h1,
+  h2 {
     font-weight: 500;
   }
-  h3, h4 {
+
+  h3,
+  h4 {
     font-weight: 600;
   }
+
   a.gatsby-resp-image-link {
     margin: 0 auto 61px auto;
   }
+
   hr {
     border-color: #d6d6da;
     margin: 3.8em 0;
     border-width: 0.5px;
   }
+
   p {
     color: #222;
     font-size: 1.1em;
     line-height: 1.91em;
     margin-bottom: 18px;
     font-weight: 400;
+
     a {
       color: #222;
       font-weight: 400;
     }
+
     strong {
       font-weight: 600;
     }
   }
+
   pre {
     font-size: 1.24em;
     line-height: 1.6em;
@@ -145,12 +171,14 @@
     background: rgba(0, 0, 0, .05);
     padding: 1em 2em;
     width: 100%;
+
     code {
       background-color: transparent;
       font-size: 1em;
       line-height: 1.6em;
     }
   }
+
   code {
     background: rgba(0, 0, 0, .05);
     border-radius: 2px;

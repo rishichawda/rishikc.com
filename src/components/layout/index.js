@@ -21,6 +21,7 @@ const Layout = ({ children, pageTitle, pageDesription, keywords }) => (
       <title>{pageTitle}</title>
       <meta name="description" content={pageDesription} />
       {keywords && <meta name="keywords" content={keywords} />}
+      <meta name="theme-color" content="#766dff" />
     </Helmet>
     {children}
   </>
