@@ -170,15 +170,17 @@
     display: flex;
     overflow: scroll;
     font-weight: 300;
-    margin: 1.6em 0;
+    margin: 1.6em auto;
     box-sizing: border-box;
-    background: rgba(0, 0, 0, .05);
+    background: #272822;
     padding: 1em 2em;
     width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.88) 0px 0px 16px 0px;
+    border-radius: 5px;
 
     code {
       background-color: transparent;
-      font-size: 1em;
+      font-size: 0.70em;
       line-height: 1.6em;
     }
   }

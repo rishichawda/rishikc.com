@@ -33,7 +33,7 @@ Let's get started! ✊
 
 First of all, you’ll need to eject your native app if you’re using [create-react-native-app](https://github.com/react-community/create-react-native-app) for your project ( You might have already done this if you’ve built your application before reading this article ). This is important since you don’t have access to configurations until you eject, as the build folder is where we have to make changes. If you haven’t, you can simply do this by :
 
-```
+```bash
 npm run eject
 ```
 
@@ -47,14 +47,14 @@ Now, navigate to the `android / app` folder from your project root directory whe
 
 Here, you’ll find your default build configurations already setup, find the line which looks like this :
 
-```
+```groovy
 def enableProguardInReleaseBuilds = false
 def enableSeparateBuildPerCPUArchitecture = false
 ```
 
 and change their value to `true` like this :
 
-```
+```groovy
 def enableProguardInReleaseBuilds = true
 def enableSeparateBuildPerCPUArchitecture = true
 ```
@@ -68,13 +68,13 @@ As you can see, these variables are being used to enable or disable two build co
 * One for generating separate .apks for different device architectures,
 
 
-```
-. . .
+```groovy
+...
 splits {
     abi {
       reset()
       enable enableSeparateBuildPerCPUArchitecture
-      . . .
+...
 ```
 
 *Don’t worry about having to handle different .apks for each architecture — Google takes care of distributing it to the users! And separating the builds according to architecture removes unnecessary code from your file which is not required on the device it is running.*
@@ -82,25 +82,25 @@ splits {
 * Another one for compressing the Java bytecode generated while building, as in,
 
 
-```
-. . .
+```groovy
+...
 buildTypes {
     release {
         minifyEnabled enableProguardInReleaseBuilds
-        . . .
+...
 ```
 
 Phew, that was pretty easy! But wait, we’re not done yet! There’s one little thing we need to do.
 
 Now let’s add this line right below the `minifyEnabled` configuration :
 
-```
-. . .
+```groovy
+...
 buildTypes {
     release {
         minifyEnabled enableProguardInReleaseBuilds
         shrinkResources true; /* <-- Add this line */
-        . . .
+...
 ```
 
 And we’re done! Now build your app again and check the `output` directory. You’ll find two different `.apks` of your app which are specified in the configuration by default, i.e., for `armebi` and `x86` architectures.

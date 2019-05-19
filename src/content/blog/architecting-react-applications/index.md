@@ -73,7 +73,7 @@ So, here comes the interesting part. Atleast I think so. This is something that 
 
 To start with, let's assume our web application contains a home page, a profile page for the users and just for the sake of not having just two pages in the example, a third page that we will call -- the other page. So the directory structure would look something like this : 
 
-```jsx
+```js
 -- src
 ----- components
 ----- config
@@ -116,7 +116,7 @@ But.. you might wonder.. what is the point of doing that?
 
  You can also go ahead and add another directory to the `src` -- called `layouts` ( or maybe add it to the `components` directory, whichever feels more appropriate to you ) which contains a layout file which is global to the application, or even have multiple layouts ; each associated with certain parts of the application. For example, let's assume our application also has a fancy navbar and a decent footer which goes into all of our pages. Instead of having them shoved inside our `components` directory and then repeatedly used inside each page - we can have a layout file that contains the navbar and the footer and renders the `children` that are passed to it, like so :
 
- ```
+ ```jsx
 
 <Layout>
   <div>
@@ -138,7 +138,7 @@ But.. you might wonder.. what is the point of doing that?
 And in our Layout file, we can have something similar to this :
 
 
-```
+```jsx
 const Layout = ({ children }) => (
   <>
     <Navbar />

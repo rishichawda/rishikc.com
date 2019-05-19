@@ -45,10 +45,9 @@ module.exports = {
           {
             resolve: `gatsby-remark-prismjs`,
             options: {
-              classPrefix: "lang-js",
+              classPrefix: "language-",
               inlineCodeMarker: null,
-              noInlineHighlight: false,
-              showLineNumbers: true
+              noInlineHighlight: true
             }
           },
           `gatsby-remark-copy-linked-files`,

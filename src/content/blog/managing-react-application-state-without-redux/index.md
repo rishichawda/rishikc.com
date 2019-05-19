@@ -60,7 +60,7 @@ Our `reducer.js` might look like this :
 
 With those two arguments, we can initialise our reducer and state as :
 
-```
+```javascript
 const [ state, dispatch ] = React.useReducer(reducer, initialState);
 ```
 
