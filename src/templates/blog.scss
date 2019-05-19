@@ -113,6 +113,7 @@
 
   .gist {
     margin: 34px auto;
+    user-select: text;
   }
 
   blockquote {
@@ -152,6 +153,12 @@
     line-height: 1.91em;
     margin-bottom: 18px;
     font-weight: 300;
+
+    img {
+      width: 100%;
+      height: auto;
+      margin: 16px auto;
+    }
 
     a {
       color: #222;

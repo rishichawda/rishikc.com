@@ -79,11 +79,11 @@ const globalState = useGlobalState(() => {
 
 But, where do we initialise our state? Well, this needs to be done inside the root component since Hooks can only be called / used inside a functional component. Let's add this to our `App.js` file and use the classic example of making a simple counter.
 
-`gist:rishichawda/d657633383f24f524bf61bfc85fee73f#App.js`
+`gist:rishichawda/853c751bb5c27eee52b0f504c39ac7e2#App.js`
 
 This gives us something like this : 
 
-![insert reducer demo gif here]()
+![globalstate redux hook](./demo-with-globalstate-redux-hook.gif)
 
 But still we can't use the state inside our `ChildComponent` since it has no idea of this state. So how are we going to do this?
 
@@ -97,17 +97,17 @@ Here's were our `React.useContext` hook comes into play along with a little HOC 
 
 Update the `App.js` file to this :
 
-`gist:rishichawda/d8eb055eb0023814b63ba64373a6d68f#App.js`
+`gist:rishichawda/d72f29069327409c98f37760da1d36f1#App.js`
 
 And our `ChildComponent.js` like this :
 
-`gist:rishichawda/fe38ee6f2aead69b76c7ee03a862717b#ChildComponent.js`
+`gist:rishichawda/aa53ee31f2e967a2adb4d9c401cddc16#ChildComponent.js`
 
 So what does `useContext` hook do? Well, it's similar to using `context.Consumer` tag which allowed us to access context value and subscribe to its changes. With `useContext` hook, we no longer use the `context.Consumer` in our component. We pass the context object to it, which then returns the value from the current context. Whenever the context data changes, the component is re-rendered with the new values.
 
 Let's see if this works.
 
-![demo with useContext in action]()
+![globalstate redux hook with provider](./demo-with-globalstate-redux-hook-provider.gif)
 
 Great! But there's one thing. Now we need to call `useContext` in every component! Let's get rid of this. We're going to write a small HOC which exposes an API similar to the `connect` HOC from `react-redux`.
 
@@ -119,17 +119,62 @@ Now, our `redux.js` should look like this :
 
 The `connect` HOC here takes our component and uses the context to get all the props that are required by the component as defined in the `mapStateToProps` function in the `connect` call. We can update our `ChildComponent.js` now, to something like this :
 
-`gist:rishichawda/70a4c0cb370aaa36234d4726ace4d671#ChildComponent.js`
+`gist:rishichawda/e67e17c52c94505a664a18ccb8005537#ChildComponent.js`
 
 Let's check if this works.
 
-![demo with both the buttons]()
+![globalstate redux hook with connect hoc](./demo-with-connect-redux-hoc.gif)
 
-Incase you're wondering, you can have different counters for both of them and it'll work just fine! You just need to initialise the state with both the counters, dispatch actions from their respective buttons and use the respective values from the state to display.
+Incase you're wondering, you can have different counters for both of them and it'll work just fine! You just need to initialise the state with both the counters, dispatch actions from their respective buttons and use the respective values from the state to display. Like so :
 
-And we're done implementing a small redux-like application state management in our react application! All within just 40 lines on code! Isn't that great?
+```jsx
+// In App.js, initialise counters like this
+const globalState = useGlobalState({ count: 0, anothercount: 1 }, reducer);
 
-You can checkout the complete example in [this github repository](). Please leave a star or comment here if you liked this article!
+/**
+ * In ChildComponent.js, update the `mapState` and `mapDispatch` methods
+ * to get and update `anothercount` value from state.
+ */
+const mapState = ({ anothercount }) => ({ // Get the `anothercount` value from state.
+  count: anothercount,
+});
+
+const mapDispatch = (dispatch) => ({
+  // Update the dispatch to trigger `countincrement` action.
+  updateCounter: () => dispatch({ type: 'countincrement' })
+});
+
+export default connect(mapState, mapDispatch)(ChildComponent);
+
+/** 
+ * Finally, update our reducer to handle `countincrement` action,
+ * which updates the `anothercount` value in our state.
+ */
+export default (state, action) => {
+
+  switch (action.type) {
+    case 'increment':
+      return {
+        ...state,
+        count: state.count + 1,
+      };
+      case 'countincrement':
+      return {
+        ...state,
+        anothercount: state.anothercount + 1,
+      };
+    default:
+      return state;
+  }
+}
+
+```
+
+Oh, and one more thing! Don't forget to wrap your components with `React.memo` if they're **not** connected to state. This will prevent unnecessary re-renders when the state udpates!
+
+And we're done implementing a small redux-like application state management in our react application! All within just 40 lines on code! ✨
+
+You can check out the complete example in [this github repository](https://github.com/rishichawda/globalstate-hook-example). Please leave a star on the repository or comment here if you liked this article!
 
 <br />
 
