@@ -6,8 +6,6 @@ const GlobalStyle = createGlobalStyle`
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
   * {
     box-sizing: border-box;
   }

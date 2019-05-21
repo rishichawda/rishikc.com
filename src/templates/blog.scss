@@ -111,6 +111,11 @@
   user-select: none;
   font-family: 'Open Sans';
 
+  .gist {
+    margin: 34px auto;
+    user-select: text;
+  }
+
   blockquote {
     border-width: 0 0 0 5px;
     border-color: #e8e8e8;
@@ -143,11 +148,17 @@
   }
 
   p {
-    color: #222;
+    color: black;
     font-size: 1.1em;
     line-height: 1.91em;
     margin-bottom: 18px;
-    font-weight: 400;
+    font-weight: 300;
+
+    img {
+      width: 100%;
+      height: auto;
+      margin: 16px auto;
+    }
 
     a {
       color: #222;
@@ -166,15 +177,17 @@
     display: flex;
     overflow: scroll;
     font-weight: 300;
-    margin: 1.6em 0;
+    margin: 1.6em auto;
     box-sizing: border-box;
-    background: rgba(0, 0, 0, .05);
+    background: #272822;
     padding: 1em 2em;
     width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.88) 0px 0px 16px 0px;
+    border-radius: 5px;
 
     code {
       background-color: transparent;
-      font-size: 1em;
+      font-size: 0.70em;
       line-height: 1.6em;
     }
   }

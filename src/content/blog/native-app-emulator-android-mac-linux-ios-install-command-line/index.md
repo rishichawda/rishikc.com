@@ -42,7 +42,7 @@ Okay enough with the memes, let’s quickly set up Android Studio’s emulator f
 First you’ll need to install [JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). Windows and linux users can directly visit the link and download it after accepting the license.
 For Mac users, I recommend installing via [Homebrew](https://brew.sh/) :
 
-```
+```bash
 brew tap caskroom/versions
 brew cask install java8
 ```
@@ -59,13 +59,13 @@ Windows and linux users can directly [download the command line tools](https://d
 
 Mac users can install it by running:
 
-```
+```bash
 brew cask install android-sdk
 ```
 
 **Note for Mac users:** If you run into an error like this while installing android SDK :
 
-```
+```bash
 Exception in thread "main" java.lang.NoClassDefFoundError: javax/xml/bind/annotation/XmlSchema 
 at com.android.repository.api.SchemaModule$SchemaModuleVersion.<init>(SchemaModule.java:156)
 at com.android.repository.api.SchemaModule.<init>(SchemaModule.java:75)
@@ -75,7 +75,7 @@ at com.android.sdklib.tool.SdkManagerCli.main (SdkManagerCli.java:117)
 
 Then you simply need to run the below command and try installing android-sdk again :
 
-```
+```bash
 touch ~/.android/repositories.cfg
 ```
 
@@ -83,7 +83,7 @@ After installing, make sure you have added `android-sdk` to your system path.
 
 For Mac and Linux users, you need to add the following line to your `.bashrc` or `.zshrc` :
 
-```
+```bash
 export ANDROID_HOME=/path/to/android-sdk
 ```
 
@@ -107,31 +107,31 @@ Now we can go ahead and set-up platform and build tools to help us in creating a
 
 To do this, open your terminal and run the following command :
 
-```
+```bash
 sdkmanager "platforms;android-23" "build-tools;23.0.1" "add-ons;addon-google_apis-google-23"
 ```
 
 Once we have downloaded the above packages, run the following command to list all the tools available :
 
-```
+```bash
 sdkmanager --list
 ```
 
 This will fetch the complete list of the available packages on remote that you can download to your system. You can download packages from the list by running :
 
-```
+```bash
 sdkmanager "sdk-path-for-package"
 ```
 
 _**Note:** sdk-path is the string in the leftmost column of the generated list. And it must be wrapped in quotes while running the above command. For example, let’s say we want to create a virtual device which requires **Google APIs Intel x86 Atom System Image** package, we can install the package by running:_
 
-```
+```bash
 sdkmanager "system-images;android-23;google_apis;x86"
 ```
 
 You can download the packages that you need from the list and if you look closely, you’ll find android emulator package there too! But don’t worry I won’t make you go through the long list in your terminal, here’s the command you need to run in order to download the android emulator package :
 
-```
+```bash
 sdkmanager "emulator"
 ```
 
@@ -143,13 +143,13 @@ That’s it! We’ve downloaded the android emulator and we’re ready to set-up
 
 Let’s create an android virtual device with the help of ***Google APIs Intel x86 Atom System Image*** we downloaded through the previous command, which was :
 
-```
+```bash
 sdkmanager "system-images;android-23;google_apis;x86"
 ```
 
 Now to create a virtual device, run the following command :
 
-```
+```bash
 avdmanager create avd --force --name myTestDevice --abi google_apis/x86 --package 'system-images;android-23;google_apis;x86' --device "myTestDevice"
 ```
 
@@ -157,7 +157,7 @@ This will create a virtual device named *myTestDevice* using the *Intel x86 Atom
 
 To check if your device was created, you can run :
 
-```
+```bash
 emulator -list-avds
 ```
 
@@ -167,7 +167,7 @@ This will list all the virtual devices present in your system.
 
 If you followed all the instructions properly, you can see your device listed as well and you must be able to start your virtual device by running :
 
-```
+```bash
 emulator -avd myTestDevice
 ```
 
