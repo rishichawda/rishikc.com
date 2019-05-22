@@ -2,6 +2,8 @@
 title: Managing React application state - without using Redux!
 date: "2019-05-19T22:12:03.284Z"
 brief: Redux has always been a developer's first choice for managing react application state. In this article, we will discuss about managing global state of a react application without using our most loved library for the purpose.
+description: In this article, we are going to explore a new way of managing react application state by using hooks. We'll try to leverage the React.useContext and React.useReducer hooks to manage our application state without using redux.
+keywords: "react,redux,application,state,dispatch,management,hooks,api,React,useContext,useReducer,context,reducer,components"
 path: "/articles/managing-react-application-state-without-redux/"
 ---
 
