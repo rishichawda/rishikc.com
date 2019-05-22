@@ -15,7 +15,7 @@ const links = {
     icon: FaGithub,
   },
   "Medium Blogs": {
-    url: "https://medium.com/@rishiikc",
+    url: "https://medium.com/@rishii.kumar.chawda",
     icon: FaMedium,
   },
   Instagram: {

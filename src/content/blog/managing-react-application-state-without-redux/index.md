@@ -2,6 +2,8 @@
 title: Managing React application state - without using Redux!
 date: "2019-05-19T22:12:03.284Z"
 brief: Redux has always been a developer's first choice for managing react application state. In this article, we will discuss about managing global state of a react application without using our most loved library for the purpose.
+description: In this article, we are going to explore a new way of managing react application state by using hooks. We'll try to leverage the React.useContext and React.useReducer hooks to manage our application state without using redux.
+keywords: "react,redux,application,state,dispatch,management,hooks,api,React,useContext,useReducer,context,reducer,components"
 path: "/articles/managing-react-application-state-without-redux/"
 ---
 
@@ -87,7 +89,7 @@ This gives us something like this :
 
 But still we can't use the state inside our `ChildComponent` since it has no idea of this state. So how are we going to do this?
 
-This is a slightly interesting step now. We're going to use to good ol' `createContext` API for that. Let's update our `redux.js` to give us a way to pass the state to our child(ren) component(s), like so :
+This is a slightly interesting step now. We're going to use the `createContext` API for that. Let's update our `redux.js` to give us a way to pass the state to our child(ren) component(s), like so :
 
 `gist:rishichawda/73a4ca3292565b3cd96c7b860ad69c85#redux.js`
 
