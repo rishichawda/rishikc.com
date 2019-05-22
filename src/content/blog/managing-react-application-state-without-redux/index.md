@@ -87,7 +87,7 @@ This gives us something like this :
 
 But still we can't use the state inside our `ChildComponent` since it has no idea of this state. So how are we going to do this?
 
-This is a slightly interesting step now. We're going to use to good ol' `createContext` API for that. Let's update our `redux.js` to give us a way to pass the state to our child(ren) component(s), like so :
+This is a slightly interesting step now. We're going to use the `createContext` API for that. Let's update our `redux.js` to give us a way to pass the state to our child(ren) component(s), like so :
 
 `gist:rishichawda/73a4ca3292565b3cd96c7b860ad69c85#redux.js`
 

@@ -12,11 +12,11 @@ import Timeline from "../components/timeline";
 
 const pageMeta = {
   title:
-    "Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India",
+    "Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Design and development | Bangalore, India",
   desc:
     "Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects.",
   keywords:
-    "web,developer,react,development,app development,websites,design,progressive,web apps,bangalore,bengaluru area india,freelancing,freelance development,freelancing services,mobile,application,android,app developer,ios,mobile apps development"
+    "web,developer,react,development,app development,websites,design,progressive,web apps,bangalore,bengaluru area india,mobile,application,android,app developer,ios,mobile apps development"
 };
 
 class App extends React.Component {
