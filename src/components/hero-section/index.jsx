@@ -8,39 +8,39 @@ import "./index.scss";
 const links = {
   LinkedIn: {
     url: "https://www.linkedin.com/in/rkrishi",
-    icon: FaLinkedin,
+    icon: FaLinkedin
   },
   Github: {
     url: "https://github.com/rishichawda",
-    icon: FaGithub,
+    icon: FaGithub
   },
   "Medium Blogs": {
     url: "https://medium.com/@rishii.kumar.chawda",
-    icon: FaMedium,
+    icon: FaMedium
   },
   Instagram: {
     url: "https://www.instagram.com/rishi.py",
-    icon: FaInstagram,
+    icon: FaInstagram
   },
   Mail: {
     url: "",
-    icon: IoMdMail,
-  },
+    icon: IoMdMail
+  }
 };
 
-const onClickProfileUrl = (url) => {
+const onClickProfileUrl = url => {
   if (typeof window !== "undefined" && url) {
     window.gtag("event", url, { url });
     window.location.href = url;
   }
-}
+};
 
 const renderOption = (item, label) => (
   <li onClick={() => onClickProfileUrl(item.url)}>
     <item.icon />
     <span>{label}</span>
   </li>
-)
+);
 
 export default ({ heroImage }) => (
   <section className="hero-section">

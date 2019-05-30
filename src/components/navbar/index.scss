@@ -3,22 +3,37 @@
   margin: auto;
   display: flex;
   flex-direction: row;
-  height: 2em;
+  height: 4em;
   position: absolute;
   box-sizing: border-box;
+  min-height: fit-content;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  z-index: 2;
+  padding: 0 10px;
+  background: #fff;
+  box-shadow: 2px 0px 10px 1px rgba(0, 0, 0, 0.2);
+
+  .logo {
+    height: 70%;
+
+    img {
+      height: 100%;
+    }
+  }
 
   .navbar-links {
-    margin: auto;
     display: flex;
+    height: 100%;
     flex-direction: row;
 
     a {
       padding: 1em;
       text-decoration: none;
-      color: #fff;
+      color: #557dce;
       margin-right: 5px;
-      font-size: 1.25em;
-      font-weight: 500;
+      font-size: 1.1em;
       line-height: 1.4;
     }
   }

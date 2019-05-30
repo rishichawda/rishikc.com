@@ -32,9 +32,10 @@ export default class Articles extends React.Component {
             <h2>Blogs by Rishi Kumar Chawda</h2>
           </div>
           {posts.map(({ node: { id, excerpt, frontmatter } }) => (
+            <article className="hidden">
             <Link to={frontmatter.path} key={id}>
-              <article className="hidden">
                 <h4>{frontmatter.title}</h4>
+                  </Link>
                 <p>
                   {frontmatter.brief ||
                     excerpt.split(
@@ -50,7 +51,6 @@ export default class Articles extends React.Component {
                 </p>
                 <small>{frontmatter.date}</small>
               </article>
-            </Link>
           ))}
         </div>
       </Layout>
