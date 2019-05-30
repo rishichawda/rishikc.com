@@ -1,44 +1,50 @@
 .intro-card {
-  width: 80%;
   border-radius: 12px;
   position: relative;
-  bottom: -200px;
   background: #fff;
   padding: 30px;
-  box-shadow: 0 20px 80px 0 rgba(153, 153, 153, 0.3);
   margin-left: auto;
   margin-right: auto;
-  @media only screen and (max-width: 1120px) {
+  max-width: 1090px;
+
+  @media only screen and (max-width: 934px) {
     justify-content: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
-    bottom: -130px;
     color: rgb(119, 119, 119);
     font-family: poppins, sans-serif;
     font-size: 16px;
     font-weight: normal;
     line-height: 26px;
-    padding: 30px;
+    padding: 2% 3%;
     position: relative;
     text-align: left;
     height: fit-content;
   }
+
   .hero-image {
-    flex: 2;
+    -ms-flex: 1;
+    flex: 1;
     border-radius: 10px;
     overflow: hidden;
+    width: 90%;
+
+    @media only screen and (max-width: 1069px) {
+      width: 90%;
+    }
+
     img {
-      width: 100%;
-      height: auto;
+      width: auto;
+      height: 100%;
     }
   }
+
   .hero-intro {
-    -ms-flex: 1;
-    flex: 1 1;
     height: 100%;
     padding-left: 5%;
     flex-direction: column;
@@ -46,9 +52,12 @@
     line-height: 26px;
     font-size: 16px;
     font-weight: 400;
-    @media only screen and (max-width: 1120px) {
+
+    @media only screen and (max-width: 934px) {
+      width: 90%;
       padding-left: 0;
     }
+
     h1 {
       font-size: 14px;
       text-transform: uppercase;
@@ -59,6 +68,7 @@
       color: #222;
       line-height: 1.2;
     }
+
     h2 {
       font-size: 48px;
       text-transform: uppercase;
@@ -68,6 +78,7 @@
       margin-top: 0;
       font-family: PT Sans;
     }
+
     h3 {
       font-size: 16px;
       font-weight: 400;
@@ -77,6 +88,7 @@
       color: #222;
       line-height: 1.2;
     }
+
     p {
       max-width: 540px;
       font-family: "Open Sans", sans-serif;
@@ -87,18 +99,29 @@
       line-height: 1.5em;
       font-size: 1.025em;
     }
+
     ul {
       list-style: none;
       margin: 0;
       padding: 0;
       cursor: auto;
-      @media only screen and (max-width: 1120px) {
+
+      @media only screen and (max-width: 1094px) and (min-width: 934px) {
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        margin: auto;
+      }
+
+      @media only screen and (max-width: 934px) {
         display: flex;
         justify-content: space-between;
       }
+
       a {
         text-decoration: none;
       }
+
       li {
         margin-bottom: 15px;
         position: relative;
@@ -110,18 +133,22 @@
         float: left;
         clear: both;
         width: fit-content;
+
         span {
           font-family: "Open Sans", sans-serif;
           font-weight: 300;
           letter-spacing: 0.02em;
           line-height: 1.51em;
+
           &:hover {
             filter: drop-shadow(0px 0px 0.5px rgb(207, 207, 207));
           }
-          @media only screen and (max-width: 770px) {
+
+          @media only screen and (max-width: 1094px) {
             display: none;
           }
         }
+
         svg {
           margin-right: 0.5em;
           font-size: 1.5em;
@@ -134,7 +161,5 @@
 
 .hero-section {
   justify-items: center;
-  height: 100%;
   width: 100%;
-  background: linear-gradient(90deg, #766dff 0%, #88f3ff 100%);
 }

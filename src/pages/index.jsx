@@ -4,11 +4,10 @@ import About from "../components/about";
 import Projects from "../components/projects";
 import Blogs from "../components/blogs";
 import { graphql } from "gatsby";
-import "./index.scss";
-import Navbar from "../components/navbar";
 import { fadeInOnView } from "../utils";
 import Layout from "../components/layout";
 import Timeline from "../components/timeline";
+import "./index.scss";
 
 const pageMeta = {
   title:
@@ -36,7 +35,6 @@ class App extends React.Component {
         pageDesription={pageMeta.desc}
         keywords={pageMeta.keywords}
       >
-        <Navbar />
         <Hero heroImage={this.props.data.heroImage.childImageSharp} />
         <About />
         <Timeline />

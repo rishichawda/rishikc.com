@@ -5,6 +5,7 @@ import Disqus from "disqus-react";
 import Layout from "../components/layout";
 
 export default class BlogTemplate extends React.Component {
+
   render() {
     const { pageContext } = this.props;
     let { previous, next } = pageContext;

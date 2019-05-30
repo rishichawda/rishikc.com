@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { createGlobalStyle } from "styled-components";
 import Helmet from "react-helmet";
+import Navbar from "../navbar";
+import "./index.scss";
 
 const GlobalStyle = createGlobalStyle`
 body {
@@ -21,7 +23,8 @@ const Layout = ({ children, pageTitle, pageDesription, keywords }) => (
       {keywords && <meta name="keywords" content={keywords} />}
       <meta name="theme-color" content="#766dff" />
     </Helmet>
-    {children}
+    <Navbar />
+    <div className="wrapper">{children}</div>
   </>
 );
 
