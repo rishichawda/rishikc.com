@@ -116,6 +116,10 @@
     user-select: text;
   }
 
+  .gatsby-highlight {
+    user-select: text;
+  }
+
   blockquote {
     border-width: 0 0 0 5px;
     border-color: #e8e8e8;
@@ -179,7 +183,7 @@
     font-weight: 300;
     margin: 1.6em auto;
     box-sizing: border-box;
-    background: #272822;
+    background: #191a18;
     padding: 1em 2em;
     width: 100%;
     box-shadow: rgba(0, 0, 0, 0.88) 0px 0px 16px 0px;
