@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import { Link } from "gatsby";
-import "./index.scss";
-import icon from "../../images/favicon.png";
+import React, { Component } from 'react'
+import { Link } from 'gatsby'
+import './index.scss'
+import Headroom from 'react-headroom'
+import icon from '../../images/favicon.png'
 
 export default class Navbar extends Component {
   render() {
     return (
-      <div className="navbar">
+      <Headroom>
         <Link to="/" className="logo">
           <img src={icon} />
         </Link>
@@ -21,7 +22,7 @@ export default class Navbar extends Component {
             <div className="navlink">Reads</div>
           </Link>
         </div>
-      </div>
-    );
+      </Headroom>
+    )
   }
 }

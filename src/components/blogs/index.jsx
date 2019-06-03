@@ -1,16 +1,16 @@
-import React from "react";
-import { Link } from "gatsby";
+import React from 'react'
+import { Link } from 'gatsby'
 // import { FaArrowRight } from 'react-icons/fa'
-import "./index.scss";
+import './index.scss'
 
 export default class BlogSection extends React.Component {
   render() {
-    const { posts } = this.props;
+    const { posts } = this.props
     return (
       <section className="container blog-section hidden">
         <h2>blogs</h2>
         <p>
-          Take a look at all of my{" "}
+          Take a look at all of my{' '}
           <Link aria-label="Link to blog posts by Rishi Chawda" to="/articles">
             articles
           </Link>
@@ -18,11 +18,7 @@ export default class BlogSection extends React.Component {
         </p>
         <div className="inner-container">
           {posts.slice(0, 2).map(({ node: { id, excerpt, frontmatter } }) => (
-            <Link
-              to={frontmatter.path}
-              key={id}
-              aria-label={`Blog link to ${frontmatter.title}`}
-            >
+            <Link to={frontmatter.path} key={id} aria-label={`Blog link to ${frontmatter.title}`}>
               <article className="card hidden">
                 <div className="blog-title">
                   <h3>{frontmatter.title}</h3>
@@ -31,15 +27,9 @@ export default class BlogSection extends React.Component {
                   <p>
                     {frontmatter.brief ||
                       excerpt.split(
-                        `${frontmatter.title}${
-                          frontmatter.subtitle ? `${frontmatter.subtitle}` : ""
-                        }`
+                        `${frontmatter.title}${frontmatter.subtitle ? `${frontmatter.subtitle}` : ''}`
                       )[1] ||
-                      excerpt.split(
-                        `${frontmatter.title}${
-                          frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ""
-                        }`
-                      )[1]}
+                      excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ''}`)[1]}
                   </p>
                 </div>
               </article>
@@ -54,6 +44,6 @@ export default class BlogSection extends React.Component {
             </article>
           </Link> */}
       </section>
-    );
+    )
   }
 }

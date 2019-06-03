@@ -16,7 +16,7 @@
     display: flex;
     font-size: 1em;
     line-height: 1.91em;
-    font-family: 'Open Sans';
+    font-family: "Open Sans";
     font-weight: 600;
     margin-top: 2.9em;
 
@@ -78,7 +78,7 @@
     flex-direction: column;
     color: #484646;
     font-size: 1.1em;
-    font-family: 'Open Sans';
+    font-family: "Open Sans";
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
 
     a {
@@ -109,7 +109,7 @@
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
 
   .gist {
     margin: 34px auto;
@@ -191,16 +191,16 @@
 
     code {
       background-color: transparent;
-      font-size: 0.70em;
+      font-size: 0.7em;
       line-height: 1.6em;
     }
   }
 
   code {
-    background: rgba(0, 0, 0, .05);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 2px;
     padding: 2px 7px;
-    font-size: 1.1em;
+    font-size: 0.88em;
     line-height: 1.73em;
   }
 }

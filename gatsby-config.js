@@ -1,12 +1,12 @@
-require("dotenv").config({
-  path: `.env.${process.env.NODE_ENV}`
-});
+require('dotenv').config({
+  path: `.env.${process.env.NODE_ENV}`,
+})
 
 module.exports = {
   siteMetadata: {
-    title: "Rishi Kumar Chawda - Portfolio and Blog",
-    author: "Rishi Kumar Chawda",
-    siteUrl: `https://rishichawda.now.sh`
+    title: 'Rishi Kumar Chawda - Portfolio and Blog',
+    author: 'Rishi Kumar Chawda',
+    siteUrl: `https://rishichawda.now.sh`,
   },
   plugins: [
     `gatsby-plugin-sitemap`,
@@ -15,50 +15,50 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `images`,
-        path: `${__dirname}/src/images`
-      }
+        path: `${__dirname}/src/images`,
+      },
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: `${__dirname}/src/content/blog`,
-        name: `blog`
-      }
+        name: `blog`,
+      },
     },
     {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
-          "gatsby-remark-embed-gist",
+          'gatsby-remark-embed-gist',
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 1280
-            }
+              maxWidth: 1280,
+            },
           },
           {
             resolve: `gatsby-remark-responsive-iframe`,
             options: {
-              wrapperStyle: `margin-bottom: 1.0725rem`
-            }
+              wrapperStyle: `margin-bottom: 1.0725rem`,
+            },
           },
           {
             resolve: `gatsby-remark-prismjs`,
             options: {
-              classPrefix: "language-",
+              classPrefix: 'language-',
               inlineCodeMarker: null,
-              noInlineHighlight: true
-            }
+              noInlineHighlight: true,
+            },
           },
           `gatsby-remark-copy-linked-files`,
           {
             resolve: `gatsby-remark-smartypants`,
             config: {
-              dashes: "oldschool"
-            }
-          }
-        ]
-      }
+              dashes: 'oldschool',
+            },
+          },
+        ],
+      },
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
@@ -75,22 +75,20 @@ module.exports = {
         display: `standalone`,
         include_favicon: true,
         icon: `src/images/favicon.png`,
-        theme_color_in_head: false
-      }
+        theme_color_in_head: false,
+      },
     },
     {
       resolve: `gatsby-plugin-google-gtag`,
       options: {
-        trackingIds: [
-          process.env.GOOGLE_ANALYTICS_TRACKING_ID
-        ],
+        trackingIds: [process.env.GOOGLE_ANALYTICS_TRACKING_ID],
         gtagConfig: {
           anonymize_ip: true,
         },
         pluginConfig: {
           head: true,
-        }
-      }
+        },
+      },
     },
     {
       resolve: `gatsby-plugin-nprogress`,
@@ -102,6 +100,6 @@ module.exports = {
         minimum: 0.1,
       },
     },
-    `gatsby-plugin-offline`
-  ]
-};
+    `gatsby-plugin-offline`,
+  ],
+}

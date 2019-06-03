@@ -1,47 +1,48 @@
-import React from "react";
-import Hero from "../components/hero-section";
-import About from "../components/about";
-import Projects from "../components/projects";
-import Blogs from "../components/blogs";
-import { graphql } from "gatsby";
-import { fadeInOnView } from "../utils";
-import Layout from "../components/layout";
-import Timeline from "../components/timeline";
-import "./index.scss";
+import React from 'react'
+import { graphql } from 'gatsby'
+import Hero from '../components/hero-section'
+import About from '../components/about'
+import Projects from '../components/projects'
+import Blogs from '../components/blogs'
+import { fadeInOnView } from '../utils'
+import Layout from '../components/layout'
+import Timeline from '../components/timeline'
+import './index.scss'
 
 const pageMeta = {
   title:
-    "Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Design and development | Bangalore, India",
+    'Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Design and development | Bangalore, India',
   desc:
-    "Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects.",
+    'Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects.',
   keywords:
-    "web,developer,react,development,app development,websites,design,progressive,web apps,bangalore,bengaluru area india,mobile,application,android,app developer,ios,mobile apps development"
-};
+    'web,developer,react,development,app development,websites,design,progressive,web apps,bangalore,bengaluru area india,mobile,application,android,app developer,ios,mobile apps development',
+}
 
 class App extends React.Component {
   componentDidMount() {
-    fadeInOnView.init("fade-in-up-element");
+    fadeInOnView.init('fade-in-up-element')
   }
 
-  componentWillUnMount() {
-    fadeInOnView.unload();
+  componentWillUnmount() {
+    fadeInOnView.unload()
   }
 
   render() {
-    const { edges } = this.props.data.allMarkdownRemark;
+    const {
+      data: {
+        heroImage,
+        allMarkdownRemark: { edges },
+      },
+    } = this.props
     return (
-      <Layout
-        pageTitle={pageMeta.title}
-        pageDesription={pageMeta.desc}
-        keywords={pageMeta.keywords}
-      >
-        <Hero heroImage={this.props.data.heroImage.childImageSharp} />
+      <Layout pageTitle={pageMeta.title} pageDesription={pageMeta.desc} keywords={pageMeta.keywords}>
+        <Hero heroImage={heroImage.childImageSharp} />
         <About />
         <Timeline />
         <Blogs posts={edges} />
         <Projects />
       </Layout>
-    );
+    )
   }
 }
 
@@ -70,6 +71,6 @@ export const pageQuery = graphql`
       }
     }
   }
-`;
+`
 
-export default App;
+export default App

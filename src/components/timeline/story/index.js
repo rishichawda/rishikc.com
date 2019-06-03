@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 const Story = ({ position, data: { title, desc, time } }) => (
   <li>
@@ -10,6 +10,6 @@ const Story = ({ position, data: { title, desc, time } }) => (
       </div>
     </div>
   </li>
-);
+)
 
-export default Story;
+export default Story

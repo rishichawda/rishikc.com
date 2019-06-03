@@ -1,8 +1,7 @@
-import React, { Component } from "react";
-import { createGlobalStyle } from "styled-components";
-import Helmet from "react-helmet";
-import Navbar from "../navbar";
-import "./index.scss";
+import React, { Component } from 'react'
+import { createGlobalStyle } from 'styled-components'
+import Helmet from 'react-helmet'
+import Navbar from '../navbar'
 
 const GlobalStyle = createGlobalStyle`
 body {
@@ -12,7 +11,7 @@ body {
     box-sizing: border-box;
   }
 }
-`;
+`
 const Layout = ({ children, pageTitle, pageDesription, keywords }) => (
   <>
     <GlobalStyle />
@@ -24,8 +23,8 @@ const Layout = ({ children, pageTitle, pageDesription, keywords }) => (
       <meta name="theme-color" content="#766dff" />
     </Helmet>
     <Navbar />
-    <div className="wrapper">{children}</div>
+    {children}
   </>
-);
+)
 
-export default Layout;
+export default Layout

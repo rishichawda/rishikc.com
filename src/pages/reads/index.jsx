@@ -1,26 +1,26 @@
-import React from "react";
-import Helmet from "react-helmet";
-import "./index.scss";
-import { IoIosReturnRight } from "react-icons/io";
-import { Link } from "gatsby";
-import quotes from "../../content/reads/quotes";
-import { fadeInOnView } from "../../utils";
-import Layout from "../../components/layout";
+import React from 'react'
+import Helmet from 'react-helmet'
+import './index.scss'
+import { IoIosReturnRight } from 'react-icons/io'
+import { Link } from 'gatsby'
+import quotes from '../../content/reads/quotes'
+import { fadeInOnView } from '../../utils'
+import Layout from '../../components/layout'
 
 const pageMeta = {
   title:
-    "Reads | Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India",
+    'Reads | Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India',
   desc:
-    "Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects."
-};
+    'Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects.',
+}
 
 export default class Reads extends React.Component {
   componentDidMount() {
-    fadeInOnView.init("fade-in-element");
+    fadeInOnView.init('fade-in-element')
   }
 
-  componentWillUnMount() {
-    fadeInOnView.unload();
+  componentWillUnmount() {
+    fadeInOnView.unload()
   }
 
   render() {
@@ -34,12 +34,12 @@ export default class Reads extends React.Component {
             {quotes.map((quote, index) => (
               <li key={`${quote.info}${index}`} className="quote hidden">
                 {`“${quote.quote}”`}
-                <p>{quote.info || ""}</p>
+                <p>{quote.info || ''}</p>
               </li>
             ))}
           </ul>
         </div>
       </Layout>
-    );
+    )
   }
 }

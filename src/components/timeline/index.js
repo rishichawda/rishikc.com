@@ -1,8 +1,8 @@
-import React from "react";
-import "./index.scss";
-import Story from "./story";
+import React from 'react'
+import './index.scss'
+import Story from './story'
 
-import { data } from "./data.json";
+import { data } from './data.json'
 
 class Timeline extends React.Component {
   render() {
@@ -10,12 +10,12 @@ class Timeline extends React.Component {
       <section className="timeline-section">
         <ul className="timeline">
           {data.map((item, index) => (
-            <Story data={item} position={index % 2 === 0 ? "l" : "r"} />
+            <Story data={item} position={index % 2 === 0 ? 'l' : 'r'} />
           ))}
         </ul>
       </section>
-    );
+    )
   }
 }
 
-export default Timeline;
+export default Timeline
