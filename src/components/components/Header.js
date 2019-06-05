@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useSpring, config, animated } from 'react-spring'
-import PropTypes from 'prop-types'
 import { colors } from '../../../tailwind'
 
 const Wrapper = styled.header`
@@ -38,7 +37,7 @@ const Subtitle = styled(animated.p)`
   color: #a8b8e1;
 `
 
-const Header = ({ children, title, html }) => {
+const Header = ({ children, title }) => {
   const titleProps = useSpring({
     from: { opacity: 0, transform: 'translate3d(0, -30px, 0)' },
     to: { opacity: 1, transform: 'translate3d(0, 0, 0)' },
@@ -53,24 +52,9 @@ const Header = ({ children, title, html }) => {
           </animated.h1>
         )}
         {children && <Subtitle style={subProps}>{children}</Subtitle>}
-        {/* {html && <animated.div style={contentProps} dangerouslySetInnerHTML={{ __html: html }} />} */}
       </Text>
     </Wrapper>
   )
 }
 
 export default Header
-
-Header.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.bool, PropTypes.node]),
-  html: PropTypes.oneOfType([PropTypes.bool, PropTypes.node]),
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.bool]),
-  big: PropTypes.bool,
-}
-
-Header.defaultProps = {
-  big: false,
-  title: false,
-  children: false,
-  html: false,
-}

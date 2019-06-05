@@ -1,5 +1,4 @@
 import React from 'react'
-import Img from 'gatsby-image'
 import { FaLinkedin, FaGithub, FaMedium, FaInstagram } from 'react-icons/fa'
 import { IoMdMail } from 'react-icons/io'
 import './index.scss'
