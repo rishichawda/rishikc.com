@@ -163,10 +163,11 @@ module.exports = {
   */
 
   screens: {
-    sm: '400px',
-    md: '600px',
-    lg: '900px',
-    xl: '1200px',
+    xs: '200px',
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+    xl: '1280px',
     xxl: '1600px',
   },
 
@@ -636,6 +637,8 @@ module.exports = {
     '4': '1rem',
     '6': '1.5rem',
     '8': '2rem',
+    negmd: '-43em',
+    negsm: '-38em',
   },
 
   /*

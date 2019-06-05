@@ -11,7 +11,7 @@
   text-align: center;
 
   & > img {
-    bottom: -5em;
+    bottom: -4.3em;
     cursor: pointer;
     position: absolute;
 
@@ -92,7 +92,6 @@
     }
 
     li {
-      font-size: 16px;
       color: #fff;
       cursor: pointer;
       display: flex;
@@ -100,24 +99,15 @@
       float: left;
       clear: both;
       width: fit-content;
-
-      span {
-        font-family: "Open Sans", sans-serif;
-        font-weight: 300;
-        letter-spacing: 0.02em;
-        line-height: 1.51em;
-
-        &:hover {
-          filter: drop-shadow(0px 0px 0.5px rgb(207, 207, 207));
-        }
-
-        @media only screen and (max-width: 1094px) {
-          display: none;
-        }
-      }
-
+      
       svg {
         font-size: 1.5em;
+        transform: scale(1);
+        will-change: transform;
+        &:hover {
+          transition: all 0.2s ease-in-out;
+          transform: scale(1.15)
+        }
         color: #fff;
       }
     }

@@ -24,7 +24,7 @@ opacity: ${props => props.opacity || '1'};
 `
 
 const Wrapper = styled.div`
-  ${tw`w-full xl:w-2/3`};
+  ${tw`w-full xl:w-5/6`};
 `
 const Divider = styled(ParallaxLayer)`
   ${tw`absolute w-full`};

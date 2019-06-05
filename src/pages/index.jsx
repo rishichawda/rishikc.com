@@ -40,17 +40,14 @@ class App extends React.Component {
     return (
       <>
         <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc} keywords={pageMeta.keywords} />
-        <Parallax id="homepage-parallax" pages={4}>
-          <HomePageLayout offset={0} speed={0.7} factor={0.75}>
+        <Parallax id="homepage-parallax" pages={3}>
+          <HomePageLayout offset={0} speed={1} factor={0.75}>
             <Hero heroImage={heroImage.childImageSharp} />
           </HomePageLayout>
-          <HomePageLayout offset={1} speed={0.7} factor={0.75}>
+          <HomePageLayout offset={1} speed={1} factor={0.5}>
             <About />
           </HomePageLayout>
-          <HomePageLayout offset={2} speed={0.7} factor={0.75}>
-            <Timeline />
-          </HomePageLayout>
-          <HomePageLayout offset={3} speed={0.7} factor={0.75}>
+          <HomePageLayout offset={2} speed={1} factor={0.5}>
             <Blogs posts={edges} />
           </HomePageLayout>
         </Parallax>
