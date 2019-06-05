@@ -16,8 +16,7 @@ const Wrapper = styled.header`
   overflow: hidden;
 `
 
-const Text = styled.div`
-  color: #fff;
+const TextWrapper = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -32,9 +31,15 @@ const Text = styled.div`
   align-items: center;
 `
 
+const Text = styled(animated.h1)`
+  color: #fff;
+  font-size: 2.5em;
+`
+
 const Subtitle = styled(animated.p)`
   max-width: 650px;
   color: #a8b8e1;
+  font-size: 1.33em;
 `
 
 const Header = ({ children, title }) => {
@@ -42,17 +47,22 @@ const Header = ({ children, title }) => {
     from: { opacity: 0, transform: 'translate3d(0, -30px, 0)' },
     to: { opacity: 1, transform: 'translate3d(0, 0, 0)' },
   })
-  const subProps = useSpring({ config: config.slow, delay: 400, from: { opacity: 0 }, to: { opacity: 1 } })
+  const subProps = useSpring({
+    config: config.slow,
+    delay: 400,
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  })
   return (
     <Wrapper>
-      <Text>
+      <TextWrapper>
         {title && (
-          <animated.h1 data-testid="header-title" style={titleProps}>
+          <Text data-testid="header-title" style={titleProps}>
             {title}
-          </animated.h1>
+          </Text>
         )}
         {children && <Subtitle style={subProps}>{children}</Subtitle>}
-      </Text>
+      </TextWrapper>
     </Wrapper>
   )
 }

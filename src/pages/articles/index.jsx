@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, graphql } from 'gatsby'
-import Helmet from 'react-helmet'
+import styled from 'styled-components'
 import './index.scss'
 import { fadeInOnView } from '../../utils'
 
@@ -16,43 +16,33 @@ const pageMeta = {
     'Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects.',
 }
 
-export default class Articles extends React.Component {
-  // componentDidMount() {
-  //   fadeInOnView.init('zoom-in-element')
-  // }
-
-  // componentWillUnmount() {
-  //   fadeInOnView.unload()
-  // }
-
-  render() {
-    const { edges: posts } = this.props.data.allMarkdownRemark
-    return (
-      <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
-        <Header big title="Blogs">
-          Some of my articles..
-        </Header>
-        <div className="blog-main">
-          <div className="blog-main-header">{/* <h2>Blogs by Rishi Kumar Chawda</h2> */}</div>
-          <div className="blog-main container">
-            {posts.map(({ node: { id, excerpt, frontmatter } }) => (
-              <article>
-                <Link to={frontmatter.path} key={id}>
-                  <h4>{frontmatter.title}</h4>
-                </Link>
-                <p>
-                  {frontmatter.brief ||
-                    excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? `${frontmatter.subtitle}` : ''}`)[1] ||
-                    excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ''}`)[1]}
-                </p>
-                <small>{frontmatter.date}</small>
-              </article>
-            ))}
-          </div>
+export default function Articles({ data }) {
+  const { edges: posts } = data.allMarkdownRemark
+  return (
+    <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
+      <Header big title="Blogs">
+        Some of my articles..
+      </Header>
+      <div className="blog-main">
+        <div className="blog-main-header">{/* <h2>Blogs by Rishi Kumar Chawda</h2> */}</div>
+        <div className="blog-main container">
+          {posts.map(({ node: { id, excerpt, frontmatter } }) => (
+            <article>
+              <Link to={frontmatter.path} key={id}>
+                <h4>{frontmatter.title}</h4>
+              </Link>
+              <p>
+                {frontmatter.brief ||
+                  excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? `${frontmatter.subtitle}` : ''}`)[1] ||
+                  excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ''}`)[1]}
+              </p>
+              <small>{frontmatter.date}</small>
+            </article>
+          ))}
         </div>
-      </Layout>
-    )
-  }
+      </div>
+    </Layout>
+  )
 }
 
 export const pageQuery = graphql`

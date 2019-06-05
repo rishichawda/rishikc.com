@@ -17,7 +17,7 @@ export default class Reads extends React.Component {
     return (
       <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
         <Header big title="Quotes">
-          Some of my favourite quotes from various places like books, articles and tweets too!
+          Some of my favourite quotes from various sources like books, articles and tweets too!
         </Header>
         <div className="quotes-main">
           <div className="quotes-main container">
