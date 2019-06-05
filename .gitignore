@@ -5,3 +5,4 @@ public
 .cache
 .DS_Store
 .env.*
+*.log

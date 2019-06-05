@@ -51,32 +51,32 @@ const HomePageLayout = ({ children, offset, factor, speed }) => (
   <>
     <Divider bg={colors.bg} speed={0.2} offset={offset}>
       <UpDownWide>
-        <MagIcon src={smartphone} opacity={0.7} width={34} left="14%" top="9%" />
-        <RotatingIcon src={pencil} opacity={0.5} width={25} left="80%" top="25%" />
+        <MagIcon src={smartphone} alt="mobile-app" opacity={0.7} width={34} left="14%" top="9%" />
+        <RotatingIcon src={pencil} alt="web-design" opacity={0.5} width={25} left="80%" top="25%" />
       </UpDownWide>
-      <Icon src={glasses} opacity={0.43} width={25} left="20%" top="15%" />
-      <MagIcon src={web} opacity={0.4} width={38} left="11%" top="115%" />
-      <TiltedIcon tilt="-70deg" src={blog} opacity={0.7} width={37} left="82%" top="99%" />Î
-      <TiltedIcon src={smartphone} opacity={0.88} width={37} left="54%" top="89%" />Î
-      <RotatingIcon src={code} opacity={0.2} width={38} left="65%" top="110%" />
+      <Icon src={glasses} alt="developer" opacity={0.43} width={25} left="20%" top="15%" />
+      <MagIcon src={web} alt="web-development" opacity={0.4} width={38} left="11%" top="115%" />
+      <TiltedIcon tilt="-70deg" src={blog} alt="blog" opacity={0.7} width={37} left="82%" top="99%" />Î
+      <TiltedIcon src={smartphone} alt="mobile-app" opacity={0.88} width={37} left="54%" top="89%" />Î
+      <RotatingIcon src={code} alt="programming" opacity={0.2} width={38} left="65%" top="110%" />
     </Divider>
     <Divider bg={colors.bg} factor={factor} speed={0.2} offset={offset}>
       <UpDown>
-        <MagIcon src={web} opacity={0.7} width={38} left="79%" top="79%" />
-        <MagIcon src={analysis} opacity={0.7} width={25} left="20%" top="79%" />
-        <RotatingIcon src={pencil} time="66.4s" opacity={0.5} width={34} left="7%" top="47%" />
-        <Icon src={glasses} opacity={0.43} width={29} left="11%" top="95%" />
-        <MagIcon src={analysis} opacity={0.7} width={29} left="90%" top="47%" />
-        <RotatingIcon src={code} opacity={0.2} width={29} left="40%" top="45%" />
+        <MagIcon src={web} alt="web-development" opacity={0.7} width={38} left="79%" top="79%" />
+        <MagIcon src={analysis} alt="analytics" opacity={0.7} width={25} left="20%" top="79%" />
+        <RotatingIcon src={pencil} alt="web-design" time="66.4s" opacity={0.5} width={34} left="7%" top="47%" />
+        <Icon src={glasses} alt="developer" opacity={0.43} width={29} left="11%" top="95%" />
+        <MagIcon src={analysis} alt="analytics" opacity={0.7} width={29} left="90%" top="47%" />
+        <RotatingIcon src={code} alt="programming" opacity={0.2} width={29} left="40%" top="45%" />
       </UpDown>
       <UpDownWide>
-        <MagIcon src={smartphone} opacity={0.7} width={34} left="29%" top="9%" />
-        <RotatingIcon src={pencil} opacity={0.5} width={25} left="70%" top="25%" />
-        <RotatingIcon src={creativity} opacity={0.7} width={43} left="29%" top="101%" />
+        <MagIcon src={smartphone} alt="mobile-app" opacity={0.7} width={34} left="29%" top="9%" />
+        <RotatingIcon src={pencil} alt="web-design" opacity={0.5} width={25} left="70%" top="25%" />
+        <RotatingIcon src={creativity} alt="creativity" opacity={0.7} width={43} left="29%" top="101%" />
       </UpDownWide>
-      <Icon src={glasses} opacity={0.43} width={25} left="60%" top="15%" />
-      <TiltedIcon src={smartphone} opacity={0.7} width={34} left="98.3%" top="89%" />
-      <MagIcon src={creativity} opacity={0.43} width={43} left="89%" top="10%" />
+      <Icon src={glasses} alt="developer" opacity={0.43} width={25} left="60%" top="15%" />
+      <TiltedIcon src={smartphone} alt="mobile-app" opacity={0.7} width={34} left="98.3%" top="89%" />
+      <MagIcon src={creativity} alt="creativity" opacity={0.43} width={43} left="89%" top="10%" />
     </Divider>
     <Content factor={factor} speed={speed} offset={offset}>
       <Wrapper>{children}</Wrapper>

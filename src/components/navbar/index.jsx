@@ -93,7 +93,7 @@ export default function Navbar({ bg, color }) {
   return (
     <Styled color={color} bg={bg} parent={resolveParent} disableInlineStyles calcHeightOnResize>
       <Link to="/" className="logo">
-        <img src={bg === '#fff' ? icondark : icon} />
+        <img alt="navbar-logo" src={bg === '#fff' ? icondark : icon} />
       </Link>
       <div className="navbar-links">
         <Link to="/">
