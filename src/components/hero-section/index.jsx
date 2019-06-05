@@ -3,6 +3,7 @@ import Img from 'gatsby-image'
 import { FaLinkedin, FaGithub, FaMedium, FaInstagram } from 'react-icons/fa'
 import { IoMdMail } from 'react-icons/io'
 import './index.scss'
+import downArrow from '../../images/down-arrow.svg'
 
 const links = {
   LinkedIn: {
@@ -34,31 +35,26 @@ const onClickProfileUrl = url => {
   }
 }
 
-const renderOption = (item, label) => (
+const renderOption = item => (
   <li onClick={() => onClickProfileUrl(item.url)}>
     <item.icon />
-    <span>{label}</span>
   </li>
 )
 
-export default function Hero({ heroImage }) {
+export default function Hero() {
   return (
     <section className="hero-section">
-      <div className="container intro-card">
-        <div className="hero-image">
-          <Img sizes={heroImage.fluid} alt="hero-img" />
-        </div>
-        <div role="main" aria-labelledby="Intro" className="hero-intro">
-          <h1>Hello, I am</h1>
-          <h2 id="Intro">Rishi Kumar Chawda</h2>
-          <h3>Web and Mobile App developer</h3>
-          <p>
-            A programmer with a passion for product design and development who loves working on freelancing and open
-            source projects.
-          </p>
-          <ul>{Object.keys(links).map(item => renderOption(links[item], item))}</ul>
-        </div>
+      <div role="main" aria-labelledby="Intro" className="hero-intro">
+        <h1>Hello,</h1>
+        <h2 id="Intro">I'm, Rishi</h2>
+        <h3>Web and Mobile App developer</h3>
+        <p>
+          A programmer with a passion for product design and development who loves working on freelancing and open
+          source projects.
+        </p>
+        <ul>{Object.keys(links).map(item => renderOption(links[item]))}</ul>
       </div>
+      <img alt="scroll-button" className="bounce" src={downArrow} width="30px" height="auto" />
     </section>
   )
 }
