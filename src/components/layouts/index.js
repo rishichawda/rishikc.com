@@ -7,14 +7,15 @@ const GlobalStyle = createGlobalStyle`
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
+  background-color: ${props => props.bg || '#fff'}
   * {
     box-sizing: border-box;
   }
 }
 `
-const Layout = ({ children, pageTitle, pageDesription, keywords }) => (
+const Layout = ({ children, pageTitle, pageDesription, keywords, bg, color }) => (
   <>
-    <GlobalStyle />
+    <GlobalStyle bg={bg} />
     <Helmet>
       <html lang="en" />
       <title>{pageTitle}</title>
@@ -22,7 +23,7 @@ const Layout = ({ children, pageTitle, pageDesription, keywords }) => (
       {keywords && <meta name="keywords" content={keywords} />}
       <meta name="theme-color" content="#766dff" />
     </Helmet>
-    <Navbar />
+    <Navbar bg={bg} color={color} />
     {children}
   </>
 )

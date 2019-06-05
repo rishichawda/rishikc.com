@@ -4,8 +4,10 @@ import Helmet from 'react-helmet'
 import './index.scss'
 import { fadeInOnView } from '../../utils'
 
-import Layout from '../../components/layout'
+import Layout from '../../components/layouts'
+import Header from '../../components/components/Header'
 // import { IoIosReturnRight } from 'react-icons/io'
+import { colors } from '../../../tailwind'
 
 const pageMeta = {
   title:
@@ -15,35 +17,38 @@ const pageMeta = {
 }
 
 export default class Articles extends React.Component {
-  componentDidMount() {
-    fadeInOnView.init('zoom-in-element')
-  }
+  // componentDidMount() {
+  //   fadeInOnView.init('zoom-in-element')
+  // }
 
-  componentWillUnmount() {
-    fadeInOnView.unload()
-  }
+  // componentWillUnmount() {
+  //   fadeInOnView.unload()
+  // }
 
   render() {
     const { edges: posts } = this.props.data.allMarkdownRemark
     return (
-      <Layout pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
-        <div className="blog-main container">
-          <div className="blog-main-header">
-            <h2>Blogs by Rishi Kumar Chawda</h2>
+      <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
+        <Header big title="Blogs">
+          Some of my articles..
+        </Header>
+        <div className="blog-main">
+          <div className="blog-main-header">{/* <h2>Blogs by Rishi Kumar Chawda</h2> */}</div>
+          <div className="blog-main container">
+            {posts.map(({ node: { id, excerpt, frontmatter } }) => (
+              <article>
+                <Link to={frontmatter.path} key={id}>
+                  <h4>{frontmatter.title}</h4>
+                </Link>
+                <p>
+                  {frontmatter.brief ||
+                    excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? `${frontmatter.subtitle}` : ''}`)[1] ||
+                    excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ''}`)[1]}
+                </p>
+                <small>{frontmatter.date}</small>
+              </article>
+            ))}
           </div>
-          {posts.map(({ node: { id, excerpt, frontmatter } }) => (
-            <article className="hidden">
-              <Link to={frontmatter.path} key={id}>
-                <h4>{frontmatter.title}</h4>
-              </Link>
-              <p>
-                {frontmatter.brief ||
-                  excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? `${frontmatter.subtitle}` : ''}`)[1] ||
-                  excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ''}`)[1]}
-              </p>
-              <small>{frontmatter.date}</small>
-            </article>
-          ))}
         </div>
       </Layout>
     )

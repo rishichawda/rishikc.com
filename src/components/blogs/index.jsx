@@ -7,7 +7,7 @@ export default class BlogSection extends React.Component {
   render() {
     const { posts } = this.props
     return (
-      <section className="container blog-section hidden">
+      <section className="container blog-section">
         <h2>blogs</h2>
         <p>
           Take a look at all of my{' '}
@@ -19,7 +19,7 @@ export default class BlogSection extends React.Component {
         <div className="inner-container">
           {posts.slice(0, 2).map(({ node: { id, excerpt, frontmatter } }) => (
             <Link to={frontmatter.path} key={id} aria-label={`Blog link to ${frontmatter.title}`}>
-              <article className="card hidden">
+              <article className="card">
                 <div className="blog-title">
                   <h3>{frontmatter.title}</h3>
                 </div>

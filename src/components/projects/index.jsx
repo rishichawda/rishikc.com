@@ -4,7 +4,7 @@ import './index.scss'
 
 export default function Projects() {
   return (
-    <section className="container project-section hidden">
+    <section className="container project-section">
       <h2>open source projects</h2>
       <p>Some of my recent open source projects.</p>
       <p>
@@ -19,7 +19,7 @@ export default function Projects() {
           aria-label="Github repository link for markdown-magic-build-badge plugin"
           href="https://github.com/rishichawda/markdown-magic-build-badge"
         >
-          <article className="card lang-js hidden">
+          <article className="card lang-js">
             <div className="repo-title">
               <h3>markdown-magic-build-badge</h3>
             </div>
@@ -41,7 +41,7 @@ export default function Projects() {
           aria-label="Github repository link for react-lite-components"
           href="https://github.com/rishichawda/react-lite-components"
         >
-          <article className="card lang-js hidden">
+          <article className="card lang-js">
             <div className="repo-title">
               <h3>react-lite-components</h3>
             </div>
@@ -59,7 +59,7 @@ export default function Projects() {
           </article>
         </OutboundLink>
         <OutboundLink aria-label="Github repository link for bg-create" href="https://github.com/rishichawda/bgcreate">
-          <article className="card lang-js hidden">
+          <article className="card lang-js">
             <div className="repo-title">
               <h3>bgcreate</h3>
             </div>
@@ -83,7 +83,7 @@ export default function Projects() {
           aria-label="Github repository link for simple-typeracer"
           href="https://github.com/rishichawda/simple-typeracer"
         >
-          <article className="card lang-js hidden">
+          <article className="card lang-js">
             <div className="repo-title">
               <h3>Typeracer</h3>
             </div>
@@ -107,7 +107,7 @@ export default function Projects() {
           aria-label="Github repository link to calendar electron app"
           href="https://github.com/rishichawda/calendar-app"
         >
-          <article className="card lang-js hidden">
+          <article className="card lang-js">
             <div className="repo-title">
               <h3>Minimal Cal</h3>
             </div>

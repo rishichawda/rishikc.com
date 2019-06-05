@@ -1,60 +1,84 @@
-.headroom {
-  top: 0;
-  left: 0;
-  right: 0;
-  zindex: 1;
-  width: 100%;
-  margin: auto;
-  display: flex;
-  flex-direction: row;
-  height: 4em;
-  position: absolute;
-  box-sizing: border-box;
-  min-height: fit-content;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  z-index: 2;
-  padding: 0 10px;
-  background: #fff;
-}
-.headroom--unfixed {
-  position: relative;
-  transform: translateY(0);
-  box-shadow: 2px 0px 10px 1px rgba(0, 0, 0, 0.2);
-}
-.headroom--scrolled {
-  transition: transform 200ms ease-in-out;
-}
-.headroom--unpinned {
-  position: fixed;
-  transform: translateY(-100%);
-}
-.headroom--pinned {
-  position: fixed;
-  transform: translateY(0%);
-  box-shadow: 2px 0px 10px 1px rgba(0, 0, 0, 0.2);
-}
+// .headroom {
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   zindex: 1;
+//   width: 100%;
+//   margin: auto;
+//   display: flex;
+//   flex-direction: row;
+//   height: 5em;
+//   position: absolute;
+//   box-sizing: border-box;
+//   min-height: fit-content;
+//   justify-content: space-between;
+//   align-items: center;
+//   position: fixed;
+//   z-index: 2;
+//   padding: 0 10px;
+//   background-color: inherit;
 
-.logo {
-  height: 70%;
+//   .navbar-links {
+//     a {
+//       color: #fff;
+//     }
+//   }
+// }
 
-  img {
-    height: 100%;
-  }
-}
+// .headroom--unfixed {
+//   position: relative;
+//   transform: translateY(0);
+//   transition: transform 200ms ease-in-out;
 
-.navbar-links {
-  display: flex;
-  height: 100%;
-  flex-direction: row;
+//   .navbar-links {
+//     a {
+//       color: #fff;
+//     }
+//   }
+// }
 
-  a {
-    padding: 1em;
-    text-decoration: none;
-    color: #557dce;
-    margin-right: 5px;
-    font-size: 1.1em;
-    line-height: 1.4;
-  }
-}
+// .headroom--scrolled {
+//   transition: transform 200ms ease-in-out;
+// }
+
+// .headroom--unpinned {
+//   position: fixed;
+//   transform: translateY(-100%);
+//   transition: transform 200ms ease-in-out;
+
+//   .navbar-links {
+//     a {
+//       color: #fff;
+//     }
+//   }
+// }
+
+// .headroom--pinned {
+//   position: fixed;
+//   transform: translateY(0%);
+//   transition: transform 200ms ease-in-out;
+// }
+
+// .logo {
+//   height: 80%;
+
+//   img {
+//     height: 100%;
+//   }
+// }
+
+// .navbar-links {
+//   display: flex;
+//   height: 100%;
+//   flex-direction: row;
+//   align-items: center;
+
+//   a {
+//     padding: 1em;
+//     text-decoration: none;
+//     color: #557dce;
+//     margin-right: 5px;
+//     font-size: 1.1em;
+//     line-height: 1.4;
+//   }
+// }

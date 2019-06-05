@@ -1,13 +1,16 @@
 import React from 'react'
 import { graphql } from 'gatsby'
+import { Parallax } from 'react-spring/renderprops-addons'
 import Hero from '../components/hero-section'
 import About from '../components/about'
-import Projects from '../components/projects'
+// import Projects from '../components/projects'
 import Blogs from '../components/blogs'
 import { fadeInOnView } from '../utils'
-import Layout from '../components/layout'
+import Layout from '../components/layouts'
 import Timeline from '../components/timeline'
 import './index.scss'
+import HomePageLayout from '../components/layouts/homepage.layout'
+import { colors } from '../../tailwind'
 
 const pageMeta = {
   title:
@@ -35,13 +38,23 @@ class App extends React.Component {
       },
     } = this.props
     return (
-      <Layout pageTitle={pageMeta.title} pageDesription={pageMeta.desc} keywords={pageMeta.keywords}>
-        <Hero heroImage={heroImage.childImageSharp} />
-        <About />
-        <Timeline />
-        <Blogs posts={edges} />
-        <Projects />
-      </Layout>
+      <>
+        <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc} keywords={pageMeta.keywords} />
+        <Parallax id="homepage-parallax" pages={4}>
+          <HomePageLayout offset={0} speed={2}>
+            <Hero heroImage={heroImage.childImageSharp} />
+          </HomePageLayout>
+          <HomePageLayout offset={1} speed={2}>
+            <About />
+          </HomePageLayout>
+          <HomePageLayout offset={2} speed={2}>
+            <Timeline />
+          </HomePageLayout>
+          <HomePageLayout offset={3} speed={2}>
+            <Blogs posts={edges} />
+          </HomePageLayout>
+        </Parallax>
+      </>
     )
   }
 }

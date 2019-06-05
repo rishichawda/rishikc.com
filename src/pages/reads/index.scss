@@ -1,8 +1,11 @@
 .quotes-main {
   display: flex;
   flex-direction: column;
-  padding: 50px 20px;
-  width: 83%;
+  padding: 25px 20px;
+  &.container {
+    width: 83%;
+  }
+  background: #fff;
   color: #000;
   font-size: 1em;
   font-weight: 300;
@@ -77,7 +80,7 @@
 
   h2 {
     color: #000;
-    transition: color .2s ease-out;
+    transition: color 0.2s ease-out;
     font-size: 1em;
     font-weight: 400;
     line-height: 1.4;

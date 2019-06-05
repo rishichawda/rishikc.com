@@ -2,7 +2,7 @@ import React from 'react'
 import './blog.scss'
 import { Link, graphql } from 'gatsby'
 import Disqus from 'disqus-react'
-import Layout from '../components/layout'
+import Layout from '../components/layouts'
 
 export default class BlogTemplate extends React.Component {
   render() {

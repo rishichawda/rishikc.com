@@ -1,11 +1,9 @@
 import React from 'react'
-import Helmet from 'react-helmet'
 import './index.scss'
-import { IoIosReturnRight } from 'react-icons/io'
-import { Link } from 'gatsby'
 import quotes from '../../content/reads/quotes'
-import { fadeInOnView } from '../../utils'
-import Layout from '../../components/layout'
+import Layout from '../../components/layouts'
+import Header from '../../components/components/Header'
+import { colors } from '../../../tailwind'
 
 const pageMeta = {
   title:
@@ -15,29 +13,23 @@ const pageMeta = {
 }
 
 export default class Reads extends React.Component {
-  componentDidMount() {
-    fadeInOnView.init('fade-in-element')
-  }
-
-  componentWillUnmount() {
-    fadeInOnView.unload()
-  }
-
   render() {
     return (
-      <Layout pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
-        <div className="quotes-main container">
-          <div className="quotes-main-header">
-            <h2>Some of the snippets / quotes that I found interesting..</h2>
+      <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
+        <Header big title="Quotes">
+          Some of my favourite quotes from various places like books, articles and tweets too!
+        </Header>
+        <div className="quotes-main">
+          <div className="quotes-main container">
+            <ul>
+              {quotes.map((quote, index) => (
+                <li key={`${quote.info}${index}`} className="quote">
+                  {`“${quote.quote}”`}
+                  <p>{quote.info || ''}</p>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul>
-            {quotes.map((quote, index) => (
-              <li key={`${quote.info}${index}`} className="quote hidden">
-                {`“${quote.quote}”`}
-                <p>{quote.info || ''}</p>
-              </li>
-            ))}
-          </ul>
         </div>
       </Layout>
     )
