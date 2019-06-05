@@ -77,6 +77,6 @@ export const waveAnimation = length => css`
 export const rotateAnimation = length => css`
   animation: ${rotate} ${length} linear infinite;
 `
-export const titleRotateAnimation = length => css`
+export const tiltRotateAnimation = length => css`
   animation: ${tiltRotate} ${length} linear infinite;
 `

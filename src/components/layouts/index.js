@@ -10,6 +10,9 @@ body {
   background-color: ${props => props.bg || '#fff'}
   * {
     box-sizing: border-box;
+    &::-webkit-scrollbar { width: 0 !important };
+    overflow: -moz-scrollbars-none;
+    -ms-overflow-style: none;
   }
 }
 `
