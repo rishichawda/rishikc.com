@@ -8,23 +8,13 @@ import './index.scss'
 import { colors } from '../../tailwind'
 
 const pageMeta = {
-  title:
-    'Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Design and development | Bangalore, India',
-  desc:
-    'Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects.',
   keywords:
     'web,developer,react,development,app development,websites,design,progressive,web apps,bangalore,bengaluru area india,mobile,application,android,app developer,ios,mobile apps development',
 }
 
 const App = () => (
   <>
-    <Layout
-      disableNavbarHide
-      bg={colors.bg}
-      pageTitle={pageMeta.title}
-      pageDesription={pageMeta.desc}
-      keywords={pageMeta.keywords}
-    />
+    <Layout disableNavbarHide bg={colors.bg} keywords={pageMeta.keywords} />
     <Parallax id="homepage-parallax" pages={2}>
       <HomePageLayout offset={0} speed={1} factor={0.75}>
         <Hero />

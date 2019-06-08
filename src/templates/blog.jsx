@@ -26,6 +26,11 @@ export default function BlogTemplate({ pageContext, data, location }) {
       bg={colors.bg}
       pageDesription={data.markdownRemark.frontmatter.description}
       keywords={data.markdownRemark.frontmatter.keywords}
+      isArticle
+      articleData={{
+        readTime: data.markdownRemark.fields.readtime,
+        date: data.markdownRemark.frontmatter.date,
+      }}
     >
       <div role="article" className="article-template">
         <Header small title={data.markdownRemark.frontmatter.title}>

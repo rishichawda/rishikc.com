@@ -2,11 +2,11 @@ require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 
+const siteData = require('./config/site.config')
+
 module.exports = {
   siteMetadata: {
-    title: 'Rishi Kumar Chawda - Portfolio and Blog',
-    author: 'Rishi Kumar Chawda',
-    siteUrl: `https://rishichawda.now.sh`,
+    ...siteData,
   },
   plugins: [
     {
@@ -89,7 +89,7 @@ module.exports = {
         theme_color: `#3e4e88`,
         display: `standalone`,
         include_favicon: true,
-        icon: `src/images/favicon.png`,
+        icon: `static/favicon.png`,
         theme_color_in_head: true,
       },
     },

@@ -7,15 +7,13 @@ import { colors } from '../../../tailwind'
 
 const pageMeta = {
   title:
-    'Reads | Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India',
-  desc:
-    'Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects.',
+    'Reads | Rishi Kumar Chawda - Web and Mobile Applications Developer',
 }
 
 export default class Reads extends React.Component {
   render() {
     return (
-      <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
+      <Layout bg={colors.bg} pageTitle={pageMeta.title}>
         <Header title="Quotes">
           Some of my favourite quotes from various sources like books, articles and tweets too!
         </Header>

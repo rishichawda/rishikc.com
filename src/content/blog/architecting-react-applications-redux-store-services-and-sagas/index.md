@@ -1,6 +1,7 @@
 ---
 title: Architecting React Applications - Part II
 subtitle: Prettifying the complex codebase
+description: Like any other web application, React applications also require close attention to their architecture. Introduction of Hooks might have shown us new ways of abstractions in our React applications but what about so many applications that are still using older versions of React?
 date: "2019-05-11T22:12:03.284Z"
 path: "/articles/architecting-react-applications-redux-store-services-and-sagas/"
 banner: "content/blog/architecting-react-applications-redux-store-services-and-sagas/banner.jpg"

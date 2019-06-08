@@ -12,10 +12,8 @@ const ArticleItemContainer = styled.article`
 `
 
 const pageMeta = {
-  title:
-    'Blogs | Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India',
-  desc:
-    'Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects.',
+  title: 'Blogs | Rishi Kumar Chawda - Web and Mobile Applications Developer',
+  desc: 'Blogs written by Rishi Kumar Chawda.',
 }
 
 export default function Articles({ data }) {
@@ -25,7 +23,6 @@ export default function Articles({ data }) {
     <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
       <Header title="Blogs" />
       <div className="blog-main">
-        <div className="blog-main-header">{/* <h2>Blogs by Rishi Kumar Chawda</h2> */}</div>
         <div className="blog-main container">
           {posts.map(({ node: { id, excerpt, frontmatter, fields: { readtime } } }) => (
             <ArticleItemContainer>
