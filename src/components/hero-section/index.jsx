@@ -1,8 +1,6 @@
 import React from 'react'
-import { FaLinkedin, FaGithub, FaMedium, FaInstagram } from 'react-icons/fa'
-import { IoMdMail } from 'react-icons/io'
+import { FaLinkedin, FaGithub, FaMedium, FaInstagram, FaTwitter } from 'react-icons/fa'
 import './index.scss'
-import downArrow from 'assets/down-arrow.svg'
 
 const links = {
   LinkedIn: {
@@ -22,8 +20,8 @@ const links = {
     icon: FaInstagram,
   },
   Mail: {
-    url: '',
-    icon: IoMdMail,
+    url: 'https://www.twitter.com/rishiikc',
+    icon: FaTwitter,
   },
 }
 
@@ -53,7 +51,6 @@ export default function Hero() {
         </p>
         <ul>{Object.keys(links).map(item => renderOption(links[item]))}</ul>
       </div>
-      <img alt="scroll-button" className="bounce" src={downArrow} width="30px" height="auto" />
     </section>
   )
 }
