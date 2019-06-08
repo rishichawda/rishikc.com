@@ -2,7 +2,7 @@ import React from 'react'
 import { FaLinkedin, FaGithub, FaMedium, FaInstagram } from 'react-icons/fa'
 import { IoMdMail } from 'react-icons/io'
 import './index.scss'
-import downArrow from '../../images/down-arrow.svg'
+import downArrow from 'assets/down-arrow.svg'
 
 const links = {
   LinkedIn: {

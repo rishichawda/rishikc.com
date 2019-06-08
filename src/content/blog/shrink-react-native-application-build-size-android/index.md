@@ -4,13 +4,10 @@ date: "2018-09-20T22:12:03.284Z"
 keywords: "react native application build, react native android application, descrease android application build size, reduce application build size, react native build configuration, react native android build gradle, react native development"
 description: To reduce your react native application size for android, we'll need to configure the build file to generate compressed bundle for your react native app and then split it into multiple bundles for all architectures so that it can be made more lightweight.
 path: "/articles/shrink-react-native-application-build-size-android/"
+banner: "content/blog/shrink-react-native-application-build-size-android/rn_logo_medium.png"
 ---
 
-
-![banner](./rn_logo_medium.png)
-
-# Shrink your React Native application size dramatically!
-
+<br/>
 <br/>
 
 So you made a cool and awesome looking [React Native](https://facebook.github.io/react-native/) app and now you’re ready to build it and maybe publish it to the store —

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import tw from 'tailwind.macro'
-import niceImage from '../../images/1456505540091_2.png'
+import niceImage from 'assets/1456505540091_2.png'
 
 const AboutSection = styled.div`
   ${tw`flex xs:flex-col md:flex-col lg:flex-row justify-between items-center`}

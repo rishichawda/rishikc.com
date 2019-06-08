@@ -5,7 +5,7 @@ import { colors } from '../../../tailwind'
 
 const Wrapper = styled.header`
   background: ${colors.bg};
-  height: 560px;
+  height: ${props => props.small ? '430px' : '560px'};
   @media (max-width: 900px) {
     height: 600px;
   }
@@ -33,16 +33,18 @@ const TextWrapper = styled.div`
 
 const Text = styled(animated.h1)`
   color: #fff;
-  font-size: 2.5em;
+  font-size: 2em;
+  font-weight: 400;
 `
 
 const Subtitle = styled(animated.p)`
   max-width: 650px;
   color: #a8b8e1;
   font-size: 1.33em;
+  font-weight: 300;
 `
 
-const Header = ({ children, title }) => {
+const Header = ({ children, title, small }) => {
   const titleProps = useSpring({
     from: { opacity: 0, transform: 'translate3d(0, -30px, 0)' },
     to: { opacity: 1, transform: 'translate3d(0, 0, 0)' },
@@ -54,7 +56,7 @@ const Header = ({ children, title }) => {
     to: { opacity: 1 },
   })
   return (
-    <Wrapper>
+    <Wrapper small={small}>
       <TextWrapper>
         {title && (
           <Text data-testid="header-title" style={titleProps}>

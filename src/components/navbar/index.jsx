@@ -3,8 +3,7 @@ import { Link } from 'gatsby'
 import './index.scss'
 import styled from 'styled-components'
 import Headroom from 'react-headroom'
-import icon from '../../images/navbar-logo.png'
-import icondark from '../../images/favicon.png'
+import icon from 'assets/navbar-logo.png'
 import { colors } from '../../../tailwind'
 
 const Styled = styled(Headroom)`
@@ -28,7 +27,6 @@ const Styled = styled(Headroom)`
     z-index: 2;
     padding: 0 10px;
     background-color: inherit;
-    ${props => (props.shadow ? 'box-shadow: 0 2px 4px 0 rgba(0,0,0,0.10);' : '')}
   }
 
   .headroom--unfixed {
@@ -75,13 +73,14 @@ const Styled = styled(Headroom)`
       text-decoration: none;
       color: ${props => props.color || '#fff'};
       margin-right: 5px;
-      font-size: 1.1em;
+      font-size: 1.24em;
       line-height: 1.4;
+      font-family: gudea;
     }
   }
 `
 
-export default function Navbar({ bg, color }) {
+export default function Navbar({ bg, color, disableNavbarHide }) {
   const resolveParent = () => {
     const parent = document.getElementById('homepage-parallax')
     if (parent) {
@@ -91,9 +90,16 @@ export default function Navbar({ bg, color }) {
   }
 
   return (
-    <Styled color={color} bg={bg} parent={resolveParent} disableInlineStyles calcHeightOnResize>
+    <Styled
+      disable={disableNavbarHide}
+      color={color}
+      bg={bg}
+      parent={resolveParent}
+      disableInlineStyles
+      calcHeightOnResize
+    >
       <Link to="/" className="logo">
-        <img alt="navbar-logo" src={bg === '#fff' ? icondark : icon} />
+        <img alt="navbar-logo" src={icon} />
       </Link>
       <div className="navbar-links">
         <Link to="/">

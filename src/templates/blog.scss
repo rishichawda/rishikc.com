@@ -1,15 +1,7 @@
 .article-template {
   height: 100%;
-  padding: 20px 10px;
-
-  .article-banner {
-    margin-bottom: 50px;
-
-    img {
-      width: 100%;
-      height: auto;
-    }
-  }
+  width: 100vw;
+  background-color: #fff;
 
   .back-link {
     justify-content: space-around;
@@ -104,6 +96,7 @@
   width: 97%;
   max-width: 992px;
   margin: auto;
+  margin-top: 2em;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
@@ -142,7 +135,7 @@
   }
 
   a.gatsby-resp-image-link {
-    margin: 0 auto 61px auto;
+    margin: 34px auto 34px auto;
   }
 
   hr {
@@ -152,11 +145,11 @@
   }
 
   p {
-    color: black;
+    color: rgb(61, 61, 61);
     font-size: 1.1em;
     line-height: 1.91em;
     margin-bottom: 18px;
-    font-weight: 300;
+    font-weight: 400;
 
     img {
       width: 100%;
@@ -178,19 +171,18 @@
     font-size: 1.24em;
     line-height: 1.6em;
     font-family: monospace, sans-serif;
-    display: flex;
     overflow: scroll;
+    display: flex;
     font-weight: 300;
-    margin: 1.6em auto;
+    margin: 2.5em auto;
     box-sizing: border-box;
     background: #191a18;
-    padding: 1em 2em;
-    width: 100%;
     box-shadow: rgba(0, 0, 0, 0.88) 0px 0px 16px 0px;
     border-radius: 5px;
 
     code {
       background-color: transparent;
+      height: 100%;
       font-size: 0.7em;
       line-height: 1.6em;
     }

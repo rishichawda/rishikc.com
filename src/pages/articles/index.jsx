@@ -2,12 +2,18 @@ import React from 'react'
 import { Link, graphql } from 'gatsby'
 import styled from 'styled-components'
 import './index.scss'
-import { fadeInOnView } from '../../utils'
-
-import Layout from '../../components/layouts'
-import Header from '../../components/components/Header'
-// import { IoIosReturnRight } from 'react-icons/io'
+import tw from 'tailwind.macro'
+import Layout from 'components/layouts'
+import Header from 'components/components/Header'
 import { colors } from '../../../tailwind'
+
+const ArticleImageContainer = styled.article`
+  ${tw`rounded overflow-hidden shadow-lg`}
+`
+
+const ArticleItemContainer = styled.article`
+  ${tw`flex flex-row sm:flex-col lg:flex-row`}
+`
 
 const pageMeta = {
   title:
@@ -18,26 +24,23 @@ const pageMeta = {
 
 export default function Articles({ data }) {
   const { edges: posts } = data.allMarkdownRemark
+  console.log({ data })
   return (
     <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
-      <Header big title="Blogs">
-        Some of my articles..
-      </Header>
+      <Header title="Blogs" />
       <div className="blog-main">
         <div className="blog-main-header">{/* <h2>Blogs by Rishi Kumar Chawda</h2> */}</div>
         <div className="blog-main container">
           {posts.map(({ node: { id, excerpt, frontmatter } }) => (
-            <article>
-              <Link to={frontmatter.path} key={id}>
-                <h4>{frontmatter.title}</h4>
-              </Link>
-              <p>
-                {frontmatter.brief ||
-                  excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? `${frontmatter.subtitle}` : ''}`)[1] ||
-                  excerpt.split(`${frontmatter.title}${frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ''}`)[1]}
-              </p>
-              <small>{frontmatter.date}</small>
-            </article>
+            <ArticleItemContainer>
+              <div className="article">
+                <Link to={frontmatter.path} key={id}>
+                  <h4>{frontmatter.title}</h4>
+                </Link>
+                <p>{frontmatter.brief || excerpt}</p>
+                <small>{frontmatter.date}</small>
+              </div>
+            </ArticleItemContainer>
           ))}
         </div>
       </div>
@@ -51,13 +54,14 @@ export const pageQuery = graphql`
       edges {
         node {
           id
-          excerpt(pruneLength: 430)
+          excerpt(pruneLength: 340)
           frontmatter {
             path
             date(formatString: "MMMM DD, YYYY")
             title
             subtitle
             brief
+            banner
           }
         }
       }

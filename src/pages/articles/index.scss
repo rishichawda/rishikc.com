@@ -68,7 +68,7 @@
     text-decoration: none;
   }
 
-  article {
+  .article {
     margin: 15px 0;
     padding: 20px 0;
     display: flex;
@@ -84,8 +84,8 @@
     will-change: transform;
 
     h4 {
-      color: #222;
-      color: #557dce;
+      // color: #222;
+      color: #1a2c5bc9;
       -webkit-transition: color 0.2s ease-out;
       -moz-transition: color 0.2s ease-out;
       -o-transition: color 0.2s ease-out;
@@ -93,8 +93,9 @@
       margin: 0;
       margin-bottom: 20px;
       font-size: 1.51em;
-      font-weight: 500;
+      font-weight: 600;
       line-height: 1.4;
+      font-family: 'Open Sans', sans-serif;
     }
 
     p {
@@ -103,7 +104,8 @@
       margin-bottom: 18px;
       font-weight: 300;
       letter-spacing: 0.02em;
-      line-height: 1.5em;
+      line-height: 1.9em;
+      font-family: 'Open Sans', sans-serif;
     }
 
     small {

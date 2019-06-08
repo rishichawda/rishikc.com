@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { createGlobalStyle } from 'styled-components'
 import Helmet from 'react-helmet'
 import Navbar from '../navbar'
@@ -16,7 +16,8 @@ body {
   }
 }
 `
-const Layout = ({ children, pageTitle, pageDesription, keywords, bg, color }) => (
+
+const Layout = ({ children, pageTitle, pageDesription, keywords, bg, color, disableNavbarHide }) => (
   <>
     <GlobalStyle bg={bg} />
     <Helmet>
@@ -26,7 +27,7 @@ const Layout = ({ children, pageTitle, pageDesription, keywords, bg, color }) =>
       {keywords && <meta name="keywords" content={keywords} />}
       <meta name="theme-color" content="#766dff" />
     </Helmet>
-    <Navbar bg={bg} color={color} />
+    <Navbar disableNavbarHide={disableNavbarHide} bg={bg} color={color} />
     {children}
   </>
 )

@@ -9,6 +9,21 @@ module.exports = {
     siteUrl: `https://rishichawda.now.sh`,
   },
   plugins: [
+    {
+      resolve: 'gatsby-plugin-module-resolver',
+      options: {
+        root: './src',
+        aliases: {
+          components: './components',
+          elements: './components/components',
+          content: './content',
+          pages: './pages',
+          templates: './templates',
+          utils: './utils',
+          assets: './images',
+        },
+      },
+    },
     `gatsby-plugin-sitemap`,
     `gatsby-plugin-react-helmet`,
     {
