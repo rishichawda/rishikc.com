@@ -7,10 +7,6 @@ import Layout from 'components/layouts'
 import Header from 'components/components/Header'
 import { colors } from '../../../tailwind'
 
-const ArticleImageContainer = styled.article`
-  ${tw`rounded overflow-hidden shadow-lg`}
-`
-
 const ArticleItemContainer = styled.article`
   ${tw`flex flex-row sm:flex-col lg:flex-row`}
 `
@@ -31,14 +27,20 @@ export default function Articles({ data }) {
       <div className="blog-main">
         <div className="blog-main-header">{/* <h2>Blogs by Rishi Kumar Chawda</h2> */}</div>
         <div className="blog-main container">
-          {posts.map(({ node: { id, excerpt, frontmatter } }) => (
+          {posts.map(({ node: { id, excerpt, frontmatter, fields: { readtime } } }) => (
             <ArticleItemContainer>
               <div className="article">
                 <Link to={frontmatter.path} key={id}>
                   <h4>{frontmatter.title}</h4>
                 </Link>
                 <p>{frontmatter.brief || excerpt}</p>
-                <small>{frontmatter.date}</small>
+                <small>
+                  {frontmatter.date}
+                  &nbsp;&nbsp;
+                  {' · '}
+                  &nbsp;&nbsp;
+                  {readtime}
+                </small>
               </div>
             </ArticleItemContainer>
           ))}
@@ -62,6 +64,9 @@ export const pageQuery = graphql`
             subtitle
             brief
             banner
+          }
+          fields {
+            readtime
           }
         }
       }

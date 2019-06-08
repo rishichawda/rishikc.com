@@ -104,6 +104,13 @@
   user-select: none;
   font-family: "Open Sans";
 
+  small {
+    display: inline-block;
+    color: rgb(101, 101, 101);
+    font-size: 0.83em;
+    margin-bottom: 2em;
+  }
+
   .gist {
     margin: 34px auto;
     user-select: text;

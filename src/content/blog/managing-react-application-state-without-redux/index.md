@@ -8,9 +8,6 @@ path: "/articles/managing-react-application-state-without-redux/"
 banner: "content/blog/managing-react-application-state-without-redux/banner.jpg"
 ---
 
-<br/>
-<br />
-
 ***Disclaimer:*** *This solution is best suited for small scale projects and its main motive is to explore the new APIs react provides rather than trying to replace any traditional solutions.*
 
 <br/>

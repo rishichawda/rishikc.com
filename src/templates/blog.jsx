@@ -22,17 +22,25 @@ export default function BlogTemplate({ pageContext, data, location }) {
     <Layout
       pageTitle={`${disqusConfig.title}${
         data.markdownRemark.frontmatter.subtitle ? ` - ${data.markdownRemark.frontmatter.subtitle}` : ''
-        }`}
+      }`}
       bg={colors.bg}
       pageDesription={data.markdownRemark.frontmatter.description}
       keywords={data.markdownRemark.frontmatter.keywords}
     >
       <div role="article" className="article-template">
-        <Header small title={data.markdownRemark.frontmatter.title}>{data.markdownRemark.frontmatter.subtitle || ''}</Header>
+        <Header small title={data.markdownRemark.frontmatter.title}>
+          {data.markdownRemark.frontmatter.subtitle || ''}
+        </Header>
         <div
           className="article-content"
           dangerouslySetInnerHTML={{
-            __html: data.markdownRemark.html,
+            __html: `<small>
+            ${data.markdownRemark.frontmatter.date}
+            &nbsp;
+             · 
+            &nbsp;
+            ${data.markdownRemark.fields.readtime}
+          </small>${data.markdownRemark.html}`,
           }}
         />
         <div className="post-links container">
@@ -77,6 +85,9 @@ export const pageQuery = graphql`
         description
         subtitle
         keywords
+      }
+      fields {
+        readtime
       }
     }
     allMarkdownRemark(sort: { order: DESC, fields: [frontmatter___date] }) {

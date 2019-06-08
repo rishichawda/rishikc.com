@@ -6,9 +6,6 @@ path: "/articles/architecting-react-applications-redux-store-services-and-sagas/
 banner: "content/blog/architecting-react-applications-redux-store-services-and-sagas/banner.jpg"
 ---
 
-<br />
-<br/>
-
 This is a continuation of my previous article - [Architecting React Applications](/articles/architecting-react-applications/) - where I wrote about a simple way to architect almost any React application into a really modular structure. In this article, I am going to write about a relatively complex codebase with things such as application state management, etc. 
 
 We will continue to build upon the same directory structure so that we can also determine whether our previously prepared codebase scales well in more complex scenarios rather than just having a few pages or components. We'll follow the same steps, .i.e, take a look at the directory and then briefly go through the parts one by one.

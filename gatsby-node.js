@@ -1,6 +1,16 @@
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
+const { words } = require('./src/utils/words')
+
+const WPM = 250
+
+function getReadTime(text) {
+  const minutes = words(text).length / WPM
+  const displayed = Math.ceil(minutes.toFixed(2))
+  return `${displayed} min read`
+}
+
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
 
@@ -52,6 +62,11 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 
   if (node.internal.type === `MarkdownRemark`) {
     const value = createFilePath({ node, getNode })
+    createNodeField({
+      name: 'readtime',
+      node,
+      value: getReadTime(node.rawMarkdownBody),
+    })
     createNodeField({
       name: `slug`,
       node,

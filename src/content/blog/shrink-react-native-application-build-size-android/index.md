@@ -7,9 +7,6 @@ path: "/articles/shrink-react-native-application-build-size-android/"
 banner: "content/blog/shrink-react-native-application-build-size-android/rn_logo_medium.png"
 ---
 
-<br/>
-<br/>
-
 So you made a cool and awesome looking [React Native](https://facebook.github.io/react-native/) app and now you’re ready to build it and maybe publish it to the store —
 
 But worried about it if the users would want to install it given its build size? Or maybe you just want to keep it light weight and not take too much memory unnecessarily when it can be packed into a smaller size?

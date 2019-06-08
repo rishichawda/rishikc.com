@@ -8,9 +8,6 @@ path: "/articles/architecting-react-applications/"
 banner: "content/blog/architecting-react-applications/banner.jpg"
 ---
 
-<br />
-<br/>
-
 React has always been popular for its short learning curve and easy to use APIs. But if you have been working with this [popular javascript library](https://reactjs.org/) for a while now, you might agree with me on this one as well -- If you don't pay attention to it's structure it will soon become an unmaintainable mess. 
 
 Before joining my first job, I had some experience as a freelancer but didn't know much about best practices and architecture apart from what I had come across either online or while development. And even as a freelancer I didn't have experience with such large scale applications that we had to work with later in the job. This is when I started paying more attention to architecture. In the start, things used to get a little confusing sometimes - mostly because I was a bit more conscious about my code than before - which was obvious as I was part of a team now and not a solo freelancer.

@@ -8,9 +8,6 @@ path: "/articles/native-app-emulator-android-mac-linux-ios-install-command-line/
 banner: "content/blog/native-app-emulator-android-mac-linux-ios-install-command-line/rn_logo_medium.png"
 ---
 
-<br/>
-<br />
-
 So let me ask you first —
 
 How many of you have installed Android Studio only to use the emulator for your native app? Oh, and don’t forget the way your system struggles when you try to run it!
