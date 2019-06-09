@@ -2,6 +2,7 @@ require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 
+const { colors } = require('./tailwind')
 const siteData = require('./config/site.config')
 
 module.exports = {
@@ -85,8 +86,8 @@ module.exports = {
         name: `Rishi Kumar Chawda - Portfolio and Blog`,
         short_name: `Rishi Kumar Chawda`,
         start_url: `/`,
-        background_color: `#3e4e88`,
-        theme_color: `#3e4e88`,
+        background_color: colors.bg,
+        theme_color: colors.bg,
         display: `standalone`,
         include_favicon: true,
         icon: `static/favicon.png`,
@@ -109,10 +110,10 @@ module.exports = {
       resolve: `gatsby-plugin-nprogress`,
       options: {
         // Setting a color is optional.
-        color: `#766dff`,
+        color: `#7971ea`,
         // Disable the loading spinner.
         showSpinner: false,
-        minimum: 0.1,
+        minimum: 0.2,
       },
     },
     `gatsby-plugin-offline`,

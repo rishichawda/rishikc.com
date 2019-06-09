@@ -1,11 +1,11 @@
 {
-  "name": "rishichawda.now.sh",
+  "name": "www.rishikc.com",
   "private": true,
   "description": "Personal website and blog",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "rishichawda",
-    "url": "https://rishichawda.now.sh"
+    "url": "https://www.rishikc.com"
   },
   "dependencies": {
     "autoprefixer": "^9.4.6",
