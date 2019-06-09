@@ -1,12 +1,15 @@
 import React from 'react'
-import './blog.scss'
+import PropTypes from 'prop-types'
 import { Link, graphql } from 'gatsby'
 import Disqus from 'disqus-react'
+
 import Layout from 'components/layouts'
 import Header from 'elements/Header'
-import { colors } from '../../tailwind'
 
-export default function BlogTemplate({ pageContext, data, location }) {
+import { colors } from '../../tailwind'
+import './blog.scss'
+
+function BlogTemplate({ pageContext, data, location }) {
   let { previous, next } = pageContext
   const disqusShortname = process.env.DISQUS_NAME
   const disqusConfig = {
@@ -31,6 +34,7 @@ export default function BlogTemplate({ pageContext, data, location }) {
         readTime: data.markdownRemark.fields.readtime,
         date: data.markdownRemark.frontmatter.date,
       }}
+      withFooter
     >
       <div role="article" className="article-template">
         <Header small title={data.markdownRemark.frontmatter.title}>
@@ -107,3 +111,11 @@ export const pageQuery = graphql`
     }
   }
 `
+
+BlogTemplate.propTypes = {
+  pageContext: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  data: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  location: PropTypes.oneOfType([PropTypes.object]).isRequired,
+}
+
+export default BlogTemplate

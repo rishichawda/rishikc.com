@@ -1,11 +1,14 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link, graphql } from 'gatsby'
 import styled from 'styled-components'
-import './index.scss'
 import tw from 'tailwind.macro'
+
 import Layout from 'components/layouts'
 import Header from 'components/components/Header'
+
 import { colors } from '../../../tailwind'
+import './index.scss'
 
 const ArticleItemContainer = styled.article`
   ${tw`flex flex-row sm:flex-col lg:flex-row`}
@@ -16,11 +19,11 @@ const pageMeta = {
   desc: 'Blogs written by Rishi Kumar Chawda.',
 }
 
-export default function Articles({ data }) {
+function Articles({ data }) {
   const { edges: posts } = data.allMarkdownRemark
   console.log({ data })
   return (
-    <Layout bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
+    <Layout withFooter bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
       <Header title="Blogs" />
       <div className="blog-main">
         <div className="blog-main container">
@@ -70,3 +73,9 @@ export const pageQuery = graphql`
     }
   }
 `
+
+Articles.propTypes = {
+  data: PropTypes.oneOfType([PropTypes.object]).isRequired,
+}
+
+export default Articles

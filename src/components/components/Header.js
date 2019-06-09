@@ -1,11 +1,13 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useSpring, config, animated } from 'react-spring'
+
 import { colors } from '../../../tailwind'
 
 const Wrapper = styled.header`
   background: ${colors.bg};
-  height: ${props => props.small ? '430px' : '560px'};
+  height: ${props => (props.small ? '430px' : '560px')};
   @media (max-width: 900px) {
     height: 600px;
   }
@@ -67,6 +69,18 @@ const Header = ({ children, title, small }) => {
       </TextWrapper>
     </Wrapper>
   )
+}
+
+Header.propTypes = {
+  children: PropTypes.node,
+  title: PropTypes.string,
+  small: PropTypes.bool,
+}
+
+Header.defaultProps = {
+  children: null,
+  title: '',
+  small: false,
 }
 
 export default Header

@@ -33,7 +33,7 @@ const onClickProfileUrl = url => {
 }
 
 const renderOption = item => (
-  <li onClick={() => onClickProfileUrl(item.url)}>
+  <li role="menuitem" onKeyPress={() => onClickProfileUrl(item.url)} onClick={() => onClickProfileUrl(item.url)}>
     <item.icon />
   </li>
 )

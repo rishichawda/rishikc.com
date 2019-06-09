@@ -1,10 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'gatsby'
-import './index.scss'
 import styled from 'styled-components'
 import Headroom from 'react-headroom'
+
 import icon from 'assets/navbar-logo.png'
+
 import { colors } from '../../../tailwind'
+import './index.scss'
 
 const Styled = styled(Headroom)`
   background-color: ${props => props.bg || colors.bg};
@@ -26,7 +29,7 @@ const Styled = styled(Headroom)`
     position: fixed;
     z-index: 2;
     padding: 0 10px;
-    background-color: inherit;
+    background-color: ${props => props.bg || colors.bg};
   }
 
   .headroom--unfixed {
@@ -80,7 +83,7 @@ const Styled = styled(Headroom)`
   }
 `
 
-export default function Navbar({ bg, color, disableNavbarHide }) {
+function Navbar({ bg, color, disableNavbarHide }) {
   const resolveParent = () => {
     const parent = document.getElementById('homepage-parallax')
     if (parent) {
@@ -115,3 +118,17 @@ export default function Navbar({ bg, color, disableNavbarHide }) {
     </Styled>
   )
 }
+
+Navbar.propTypes = {
+  bg: PropTypes.string,
+  color: PropTypes.string,
+  disableNavbarHide: PropTypes.bool,
+}
+
+Navbar.defaultProps = {
+  bg: undefined,
+  color: undefined,
+  disableNavbarHide: false,
+}
+
+export default Navbar

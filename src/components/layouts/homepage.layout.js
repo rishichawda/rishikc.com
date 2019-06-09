@@ -87,6 +87,8 @@ const HomePageLayout = ({ children, offset, factor, speed }) => (
 HomePageLayout.propTypes = {
   children: PropTypes.node.isRequired,
   offset: PropTypes.number.isRequired,
+  factor: PropTypes.number.isRequired,
+  speed: PropTypes.number.isRequired,
 }
 
 export default HomePageLayout
