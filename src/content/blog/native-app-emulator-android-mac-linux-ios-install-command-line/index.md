@@ -1,20 +1,12 @@
 ---
-title: Android Emulator for React Native in Mac, Linux and Windows - The right way to get it working
-subtitle: — And save yourself a lot of space!
+title: Android Emulator for React Native in Mac, Linux and Windows
+subtitle: Without installing Android Studio
 date: "2019-01-12T22:12:03.284Z"
 keywords: "install android emulator, install android emulator mac, android emulator linux system, install emulator command line, install android emulator windows, android studio emulator installation, install command line emulator"
 description: Let's quickly install Android emulator in Mac, Linux and Windows - all from command line. We'll do a minimal installation with android sdk, required tools and ofcourse - the emulator! Then we'll setup a virtual device and test run to check if it was properly installed and use it in a better way.
 path: "/articles/native-app-emulator-android-mac-linux-ios-install-command-line/"
+banner: "content/blog/native-app-emulator-android-mac-linux-ios-install-command-line/rn_logo_medium.png"
 ---
-
-
-![banner](./rn_logo_medium.png)
-
-# Android Emulator for React Native in Mac, Linux and Windows - The right way to get it working
-
-## — And save yourself a lot of space!
-
-<br />
 
 So let me ask you first —
 

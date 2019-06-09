@@ -1,18 +1,12 @@
 ---
-title: Architecting React Applications - What I learned from my experience as a Web developer
+title: Architecting React Applications
+subtitle: What I learned from my experience as a Web developer
 date: "2019-04-11T22:12:03.284Z"
 keywords: "React,application,architecture,web development,reactjs,best,practices,react application,directory,structure,components,reactjs web development,react project,configuration,web,applications"
 description: Like any other web application, React applications also require close attention to their architecture. Introduction of Hooks might have shown us new ways of abstractions in our React applications but what about so many applications that are still using older versions of React?
 path: "/articles/architecting-react-applications/"
+banner: "content/blog/architecting-react-applications/banner.jpg"
 ---
-
-
-![banner](./banner.jpg)
-
-# Architecting React Applications - What I learned from my experience as a Web developer
-
-
-<br />
 
 React has always been popular for its short learning curve and easy to use APIs. But if you have been working with this [popular javascript library](https://reactjs.org/) for a while now, you might agree with me on this one as well -- If you don't pay attention to it's structure it will soon become an unmaintainable mess. 
 
@@ -103,8 +97,6 @@ But.. you might wonder.. what is the point of doing that?
  You just go ahead and delete the directory and remove its reference from where it was attached to / used in the web application. *And voila, it's done!* 💁🏻‍♂️
  
  Nothing breaks in your app just because a bunch of code was deleted! Everything is independent of each other's existence even if they were binded together at some point! A lot less to work with and worry about, isn't it? And yeah, this principle can be applied to almost any application / software and not just some react application.
- 
-<br/>
 
  ![welcome](./welcome.jpg)
 

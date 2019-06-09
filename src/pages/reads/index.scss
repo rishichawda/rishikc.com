@@ -1,8 +1,12 @@
 .quotes-main {
   display: flex;
+  width: 100%;
   flex-direction: column;
-  padding: 50px 20px;
-  width: 83%;
+  padding: 25px 20px;
+  &.container {
+    width: 83%;
+  }
+  background: #fff;
   color: #000;
   font-size: 1em;
   font-weight: 300;
@@ -13,11 +17,6 @@
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
-
-  @media only screen and (max-width: 610px) {
-    width: 92%;
-  }
-
   ul {
     padding: 0;
     display: grid;
@@ -77,7 +76,7 @@
 
   h2 {
     color: #000;
-    transition: color .2s ease-out;
+    transition: color 0.2s ease-out;
     font-size: 1em;
     font-weight: 400;
     line-height: 1.4;
@@ -118,36 +117,4 @@
       color: rgb(101, 101, 101);
     }
   }
-}
-
-@keyframes fade-in {
-  from {
-    -webkit-transform: scale(0.83, 0.83);
-    -moz-transform: scale(0.83, 0.83);
-    -o-transform: scale(0.83, 0.83);
-    transform: scale(0.83, 0.83);
-  }
-
-  to {
-    -webkit-transform: scale(1, 1);
-    -moz-transform: scale(1, 1);
-    -o-transform: scale(1, 1);
-    transform: scale(1, 1);
-  }
-}
-
-.fade-in-element {
-  opacity: 0;
-  -webkit-animation: fade-in 0.7s;
-  -moz-animation: fade-in 0.7s;
-  -o-animation: fade-in 0.7s;
-  animation: fade-in 0.7s;
-  -webkit-transition: opacity 0.7s ease-in;
-  -moz-transition: opacity 0.7s ease-in;
-  -o-transition: opacity 0.7s ease-in;
-  transition: opacity 0.7s ease-in;
-}
-
-.hidden {
-  opacity: 0;
 }

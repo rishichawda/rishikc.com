@@ -1,61 +1,53 @@
-import React from "react";
-import { Link } from "gatsby";
-import Helmet from "react-helmet";
-import "./index.scss";
-import { fadeInOnView } from "../../utils";
-import { graphql } from "gatsby";
-import Layout from "../../components/layout";
-// import { IoIosReturnRight } from 'react-icons/io'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Link, graphql } from 'gatsby'
+import styled from 'styled-components'
+import tw from 'tailwind.macro'
+
+import Layout from 'components/layouts'
+import Header from 'components/components/Header'
+
+import { colors } from '../../../tailwind'
+import './index.scss'
+
+const ArticleItemContainer = styled.article`
+  ${tw`flex flex-row sm:flex-col lg:flex-row`}
+`
 
 const pageMeta = {
-  title:
-    "Blogs | Rishi Kumar Chawda - Developer, Freelancer | Web and Native Mobile Apps development | Freelance development services | Design and development | Bangalore, India",
-  desc:
-    "Bangalore, India based developer. Experienced with web development, progressive web apps, native apps for Android and iOS. Loves working on freelancing web and mobile app development. Interested in open source projects."
-};
+  title: 'Blogs | Rishi Kumar Chawda - Web and Mobile Applications Developer',
+  desc: 'Blogs written by Rishi Kumar Chawda.',
+}
 
-export default class Articles extends React.Component {
-  componentDidMount() {
-    fadeInOnView.init("zoom-in-element");
-  }
-
-  componentWillUnMount() {
-    fadeInOnView.unload();
-  }
-
-  render() {
-    const { edges: posts } = this.props.data.allMarkdownRemark;
-    return (
-      <Layout pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
-        <div className="blog-main container">
-          <div className="blog-main-header">
-            <h2>Blogs by Rishi Kumar Chawda</h2>
-          </div>
-          {posts.map(({ node: { id, excerpt, frontmatter } }) => (
-            <article className="hidden">
-            <Link to={frontmatter.path} key={id}>
-                <h4>{frontmatter.title}</h4>
-                  </Link>
-                <p>
-                  {frontmatter.brief ||
-                    excerpt.split(
-                      `${frontmatter.title}${
-                        frontmatter.subtitle ? `${frontmatter.subtitle}` : ""
-                      }`
-                    )[1] ||
-                    excerpt.split(
-                      `${frontmatter.title}${
-                        frontmatter.subtitle ? ` ${frontmatter.subtitle}` : ""
-                      }`
-                    )[1]}
-                </p>
-                <small>{frontmatter.date}</small>
-              </article>
+function Articles({ data }) {
+  const { edges: posts } = data.allMarkdownRemark
+  console.log({ data })
+  return (
+    <Layout withFooter bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
+      <Header title="Blogs" />
+      <div className="blog-main">
+        <div role="main" className="blog-main container">
+          {posts.map(({ node: { id, excerpt, frontmatter, fields: { readtime } } }) => (
+            <ArticleItemContainer role="article">
+              <div className="article">
+                <Link to={frontmatter.path} key={id}>
+                  <h1>{frontmatter.title}</h1>
+                </Link>
+                <p>{frontmatter.brief || excerpt}</p>
+                <small>
+                  {frontmatter.date}
+                  &nbsp;&nbsp;
+                  {' · '}
+                  &nbsp;&nbsp;
+                  {readtime}
+                </small>
+              </div>
+            </ArticleItemContainer>
           ))}
         </div>
-      </Layout>
-    );
-  }
+      </div>
+    </Layout>
+  )
 }
 
 export const pageQuery = graphql`
@@ -64,16 +56,26 @@ export const pageQuery = graphql`
       edges {
         node {
           id
-          excerpt(pruneLength: 430)
+          excerpt(pruneLength: 340)
           frontmatter {
             path
             date(formatString: "MMMM DD, YYYY")
             title
             subtitle
             brief
+            banner
+          }
+          fields {
+            readtime
           }
         }
       }
     }
   }
-`;
+`
+
+Articles.propTypes = {
+  data: PropTypes.oneOfType([PropTypes.object]).isRequired,
+}
+
+export default Articles
