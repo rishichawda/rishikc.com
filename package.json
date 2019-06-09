@@ -61,7 +61,7 @@
     "lint": "eslint . --ext .js,.jsx --fix",
     "test:lhs": "mocha ./tests/lighthouse/lighthouse.test.js",
     "test:lhs:server": "server-test serve :9000 test:lhs",
-    "generate:lhs:badges": "lighthouse-badges --urls http://localhost:9000 -o test_results -b flat-square",
+    "generate:lhs:badges": "lighthouse-badges --urls https://rishikc.com -o test_results -b flat-square",
     "update:lhs:badges": "server-test serve :9000 generate:lhs:badges"
   },
   "devDependencies": {

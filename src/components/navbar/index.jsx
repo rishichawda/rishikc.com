@@ -3,32 +3,29 @@ import PropTypes from 'prop-types'
 import { Link } from 'gatsby'
 import styled from 'styled-components'
 import Headroom from 'react-headroom'
+import tw from 'tailwind.macro'
 
 import icon from 'assets/navbar-logo.png'
+import compressedIcon from 'assets/navbar-logo.webp'
 
 import { colors } from '../../../tailwind'
 import './index.scss'
 
+const Nav = styled.nav`
+  ${tw`flex flex-row items-center h-full w-full absolute inset-0 justify-between`}
+  padding: 0 10px;
+`
+
 const Styled = styled(Headroom)`
   background-color: ${props => props.bg || colors.bg};
   .headroom {
-    top: 0;
-    left: 0;
-    right: 0;
-    zindex: 1;
-    width: 100%;
+    ${tw`flex flex-row items-center h-full w-full fixed inset-0`}
     margin: auto;
-    display: flex;
-    flex-direction: row;
     height: 4em;
-    position: absolute;
     box-sizing: border-box;
     min-height: fit-content;
-    justify-content: space-between;
-    align-items: center;
     position: fixed;
     z-index: 2;
-    padding: 0 10px;
     background-color: ${props => props.bg || colors.bg};
   }
 
@@ -101,20 +98,26 @@ function Navbar({ bg, color, disableNavbarHide }) {
       disableInlineStyles
       calcHeightOnResize
     >
-      <Link to="/" className="logo">
-        <img alt="navbar-logo" src={icon} />
-      </Link>
-      <div className="navbar-links">
-        <Link to="/">
-          <div className="navlink">Home</div>
+      <Nav>
+        <Link to="/" className="logo">
+          <picture>
+            <source srcSet={compressedIcon} type="image/webp" />
+            <source srcSet={icon} type="image/png" />
+            <img alt="logo" src={icon} />
+          </picture>
         </Link>
-        <Link to="/articles">
-          <div className="navlink">Blogs</div>
-        </Link>
-        <Link to="/reads">
-          <div className="navlink">Reads</div>
-        </Link>
-      </div>
+        <div className="navbar-links">
+          <Link to="/">
+            <div className="navlink">Home</div>
+          </Link>
+          <Link to="/articles">
+            <div className="navlink">Blogs</div>
+          </Link>
+          <Link to="/reads">
+            <div className="navlink">Reads</div>
+          </Link>
+        </div>
+      </Nav>
     </Styled>
   )
 }

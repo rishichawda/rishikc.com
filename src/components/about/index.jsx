@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import tw from 'tailwind.macro'
-import niceImage from 'assets/1456505540091_2.png'
+import niceImage from 'assets/1456505540091.png'
+import nicelyCompressedImage from 'assets/1456505540091.webp'
 
 const AboutSection = styled.div`
   ${tw`flex xs:flex-col md:flex-col lg:flex-row justify-between items-center`}
@@ -40,7 +41,9 @@ const BottomText = styled(ContentText)`
 `
 
 const Wrapper = styled.section`
-  ${tw`w-5/6 mx-auto sm:mt-negsm md:mt-negmd`}
+  ${tw`w-5/6 mx-auto py-32`}
+  min-height: fit-content;
+  margin-top: 10em;
 `
 
 export default function About() {
@@ -48,7 +51,11 @@ export default function About() {
     <Wrapper>
       <Header id="about-me">About me</Header>
       <AboutSection>
-        <NiceImage src={niceImage} alt="rishikumarchawda" />
+        <picture>
+          <source srcSet={nicelyCompressedImage} type="image/webp" />
+          <source srcSet={niceImage} type="image/png" />
+          <NiceImage alt="rishikumarchawda" src={niceImage} />
+        </picture>
         <AboutText role="main" aria-labelledby="about-me about-me">
           <ContentText>
             I'm a web and mobile apps developer. Born in the 90s', when tech had started becoming popular among young

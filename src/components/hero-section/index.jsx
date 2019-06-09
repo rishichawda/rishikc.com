@@ -1,5 +1,7 @@
 import React from 'react'
 import { FaLinkedin, FaGithub, FaMedium, FaInstagram, FaTwitter } from 'react-icons/fa'
+
+import downArrow from '../../images/down-arrow.svg'
 import './index.scss'
 
 const links = {
@@ -38,6 +40,11 @@ const renderOption = item => (
   </li>
 )
 
+const scrollToSection = () => {
+  const section = document.getElementById('about-me')
+  section.scrollIntoView({ behavior: 'smooth' })
+}
+
 export default function Hero() {
   return (
     <section className="hero-section">
@@ -49,8 +56,11 @@ export default function Hero() {
           A programmer with a passion for product design and development who loves working on freelancing and open
           source projects.
         </p>
-        <ul>{Object.keys(links).map(item => renderOption(links[item]))}</ul>
+        <ul role="menu">{Object.keys(links).map(item => renderOption(links[item]))}</ul>
       </div>
+      <button onClick={scrollToSection} className="bounce" onKeyPress={scrollToSection} type="button">
+        <img alt="scroll-button" src={downArrow} width="30px" height="auto" />
+      </button>
     </section>
   )
 }

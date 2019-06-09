@@ -26,12 +26,12 @@ function Articles({ data }) {
     <Layout withFooter bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
       <Header title="Blogs" />
       <div className="blog-main">
-        <div className="blog-main container">
+        <div role="main" className="blog-main container">
           {posts.map(({ node: { id, excerpt, frontmatter, fields: { readtime } } }) => (
-            <ArticleItemContainer>
+            <ArticleItemContainer role="article">
               <div className="article">
                 <Link to={frontmatter.path} key={id}>
-                  <h4>{frontmatter.title}</h4>
+                  <h1>{frontmatter.title}</h1>
                 </Link>
                 <p>{frontmatter.brief || excerpt}</p>
                 <small>

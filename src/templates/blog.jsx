@@ -60,7 +60,7 @@ function BlogTemplate({ pageContext, data, location }) {
             }
             rel="prev"
           >
-            <li>{otherArticles[0].frontmatter.title}</li>
+            <span>{otherArticles[0].frontmatter.title}</span>
           </Link>
           <Link
             to={
@@ -68,7 +68,7 @@ function BlogTemplate({ pageContext, data, location }) {
             }
             rel="next"
           >
-            <li>{otherArticles[1].frontmatter.title}</li>
+            <span>{otherArticles[1].frontmatter.title}</span>
           </Link>
         </div>
         <Disqus.DiscussionEmbed shortname={disqusShortname} config={disqusConfig} />

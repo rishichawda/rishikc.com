@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import tw from 'tailwind.macro'
 import { colors } from '../../../tailwind'
 
-const Wrapper = styled.header`
+const Wrapper = styled.footer`
 ${tw`flex flex-row items-center justify-center`}
   background: ${colors.bg};
   width: 100vw;

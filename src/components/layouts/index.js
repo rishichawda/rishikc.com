@@ -34,11 +34,11 @@ const Layout = ({
   articleData,
   withFooter,
 }) => (
-  <StaticQuery
-    query={query}
-    render={({ site }) => (
-      <>
-        <GlobalStyle bg={bg} />
+  <>
+    <GlobalStyle bg={bg} />
+    <StaticQuery
+      query={query}
+      render={({ site }) => (
         <Helmet>
           <html lang="en" />
           <title>{pageTitle || site.config.siteTitle}</title>
@@ -56,12 +56,12 @@ const Layout = ({
           {isArticle && <meta name="twitter:data1" value={articleData.readTime} />}
           {isArticle && <meta name="article:published_time" content={articleData.date} />}
         </Helmet>
-        <Navbar disableNavbarHide={disableNavbarHide} bg={bg} color={color} />
-        {children}
-        {withFooter ? <Footer /> : null}
-      </>
-    )}
-  />
+      )}
+    />
+    <Navbar disableNavbarHide={disableNavbarHide} bg={bg} color={color} />
+    {children}
+    {withFooter ? <Footer /> : null}
+  </>
 )
 
 const query = graphql`
