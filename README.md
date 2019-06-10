@@ -1,4 +1,4 @@
-![](https://img.shields.io/david/rishichawda/rishichawda.github.io.svg?style=flat-square) [![](https://img.shields.io/website-up-down-green-red/https/shields.io.svg?label=website&style=flat-square)](https://rishichawda.now.sh)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/3f760dce-eb64-494a-be39-d5cf9f8ff517/deploy-status)](https://app.netlify.com/sites/rishikc/deploys)
 
 #### Personal website made with GatsbyJS.
 
