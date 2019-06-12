@@ -56,7 +56,6 @@
     "develop": "gatsby develop",
     "start": "npm run develop",
     "serve": "gatsby build && gatsby serve",
-    "now-build": "npm run build",
     "format": "prettier \"**/*.{md,mdx,yml} \" --write",
     "lint": "eslint . --ext .js,.jsx --fix",
     "test:lhs": "mocha ./tests/lighthouse/lighthouse.test.js",
@@ -92,7 +91,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rishichawda/rishichawda.now.sh"
+    "url": "https://github.com/rishichawda/website"
   },
   "husky": {
     "hooks": {
