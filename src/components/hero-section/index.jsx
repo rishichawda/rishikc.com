@@ -29,8 +29,10 @@ const links = {
 
 const onClickProfileUrl = url => {
   if (typeof window !== 'undefined' && url) {
-    window.gtag('event', url, { url })
-    window.location.href = url
+    if (window.gtag) {
+      window.gtag('event', url, { url })
+    }
+    window.open(url, '_newtab')
   }
 }
 
@@ -39,11 +41,6 @@ const renderOption = item => (
     <item.icon />
   </li>
 )
-
-const scrollToSection = () => {
-  const section = document.getElementById('about-me')
-  section.scrollIntoView({ behavior: 'smooth' })
-}
 
 export default function Hero() {
   return (
@@ -58,9 +55,6 @@ export default function Hero() {
         </p>
         <ul role="menu">{Object.keys(links).map(item => renderOption(links[item]))}</ul>
       </div>
-      <button onClick={scrollToSection} className="bounce" onKeyPress={scrollToSection} type="button">
-        <img alt="scroll-button" src={downArrow} width="30px" height="auto" />
-      </button>
     </section>
   )
 }
