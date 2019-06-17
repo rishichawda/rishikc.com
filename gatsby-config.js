@@ -74,6 +74,13 @@ module.exports = {
               dashes: 'oldschool',
             },
           },
+          {
+            resolve: 'gatsby-remark-external-links',
+            options: {
+              target: '_blank',
+              rel: 'nofollow',
+            },
+          },
         ],
       },
     },
@@ -115,10 +122,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-nprogress`,
       options: {
-        // Setting a color is optional.
-        color: `#7971ea`,
-        // Disable the loading spinner.
-        showSpinner: false,
+        color: `#7fffd4`,
+        showSpinner: true,
         minimum: 0.2,
       },
     },
