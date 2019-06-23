@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { useSpring, config, animated } from 'react-spring'
 
 import { colors } from '../../../tailwind'
+import './header.scss'
 
 const Wrapper = styled.header`
   background: ${colors.bg};
@@ -33,43 +33,31 @@ const TextWrapper = styled.div`
   align-items: center;
 `
 
-const Text = styled(animated.h1)`
+const Text = styled.h1`
   color: #fff;
   font-size: 2em;
   font-weight: 400;
 `
 
-const Subtitle = styled(animated.p)`
+const Subtitle = styled.p`
   max-width: 650px;
   color: #a8b8e1;
   font-size: 1.33em;
   font-weight: 300;
 `
 
-const Header = ({ children, title, small }) => {
-  const titleProps = useSpring({
-    from: { opacity: 0, transform: 'translate3d(0, -30px, 0)' },
-    to: { opacity: 1, transform: 'translate3d(0, 0, 0)' },
-  })
-  const subProps = useSpring({
-    config: config.slow,
-    delay: 400,
-    from: { opacity: 0 },
-    to: { opacity: 1 },
-  })
-  return (
-    <Wrapper small={small}>
-      <TextWrapper>
-        {title && (
-          <Text data-testid="header-title" style={titleProps}>
-            {title}
-          </Text>
-        )}
-        {children && <Subtitle style={subProps}>{children}</Subtitle>}
-      </TextWrapper>
-    </Wrapper>
-  )
-}
+const Header = ({ children, title, small }) => (
+  <Wrapper small={small}>
+    <TextWrapper>
+      {title && (
+        <Text className="title" data-testid="header-title">
+          {title}
+        </Text>
+      )}
+      {children && <Subtitle className="subtitle">{children}</Subtitle>}
+    </TextWrapper>
+  </Wrapper>
+)
 
 Header.propTypes = {
   children: PropTypes.node,

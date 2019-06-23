@@ -65,9 +65,7 @@ export default function About() {
           <ContentText>
             I design and develop websites, progressive web applications and hybrid mobile applications for Android and
             iOS. I also like working on search engine optimisation, analytics and online marketing. Most of my time is
-            spent on exploring open source, reading articles and programming. I design and develop websites, progressive
-            web applications and hybrid mobile applications for Android and iOS. I also like working on search engine
-            optimisation, analytics and online marketing.
+            spent on exploring open source, reading articles and programming.
           </ContentText>
           <ContentText>
             Currently I'm working with the team at{' '}
