@@ -10,6 +10,10 @@
   user-select: none;
 }
 
+#nprogress .bar {
+  height: 3.4px;
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;

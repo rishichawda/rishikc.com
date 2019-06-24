@@ -81,23 +81,8 @@ const Styled = styled(Headroom)`
 `
 
 function Navbar({ bg, color, disableNavbarHide }) {
-  const resolveParent = () => {
-    const parent = document.getElementById('homepage-parallax')
-    if (parent) {
-      return parent
-    }
-    return window
-  }
-
   return (
-    <Styled
-      disable={disableNavbarHide}
-      color={color}
-      bg={bg}
-      parent={resolveParent}
-      disableInlineStyles
-      calcHeightOnResize
-    >
+    <Styled disable={disableNavbarHide} color={color} bg={bg} disableInlineStyles calcHeightOnResize>
       <Nav>
         <Link to="/" className="logo">
           <picture>
@@ -113,8 +98,8 @@ function Navbar({ bg, color, disableNavbarHide }) {
           <Link to="/articles">
             <div className="navlink">Blogs</div>
           </Link>
-          <Link to="/reads">
-            <div className="navlink">Reads</div>
+          <Link to="/about">
+            <div className="navlink">About</div>
           </Link>
         </div>
       </Nav>

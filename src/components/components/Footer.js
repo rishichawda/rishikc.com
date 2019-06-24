@@ -17,6 +17,7 @@ const Content = styled.div`
   max-width: 1028px;
   padding: 1.6em 1em;
   font-weight: 300;
+  font-size: 0.83rem;
   font-family: Open Sans, sans-serif;
 `
 

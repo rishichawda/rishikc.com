@@ -13,6 +13,7 @@
     "disqus-react": "^1.0.5",
     "gatsby": "^2.7.1",
     "gatsby-image": "^2.1.2",
+    "gatsby-plugin-force-trailing-slashes": "^1.0.4",
     "gatsby-plugin-google-analytics": "^2.0.20",
     "gatsby-plugin-google-gtag": "^1.0.17",
     "gatsby-plugin-manifest": "^2.0.24",
@@ -26,6 +27,7 @@
     "gatsby-plugin-styled-components": "^3.0.7",
     "gatsby-remark-copy-linked-files": "^2.0.12",
     "gatsby-remark-embed-gist": "^1.1.7",
+    "gatsby-remark-external-links": "^0.0.4",
     "gatsby-remark-images": "^3.0.14",
     "gatsby-remark-prismjs": "^3.2.4",
     "gatsby-remark-responsive-iframe": "^2.0.9",
@@ -42,7 +44,6 @@
     "react-headroom": "^2.2.8",
     "react-helmet": "^5.2.1",
     "react-icons": "^3.3.0",
-    "react-spring": "^8.0.20",
     "styled-components": "^4.2.1",
     "typeface-gudea": "^0.0.61",
     "typeface-open-sans": "0.0.54",
@@ -56,7 +57,6 @@
     "develop": "gatsby develop",
     "start": "npm run develop",
     "serve": "gatsby build && gatsby serve",
-    "now-build": "npm run build",
     "format": "prettier \"**/*.{md,mdx,yml} \" --write",
     "lint": "eslint . --ext .js,.jsx --fix",
     "test:lhs": "mocha ./tests/lighthouse/lighthouse.test.js",
@@ -92,7 +92,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rishichawda/rishichawda.now.sh"
+    "url": "https://github.com/rishichawda/website"
   },
   "husky": {
     "hooks": {
