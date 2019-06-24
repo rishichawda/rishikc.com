@@ -17,6 +17,8 @@ body {
     &::-webkit-scrollbar { width: 0 !important };
     overflow: -moz-scrollbars-none;
     -ms-overflow-style: none;
+    text-rendering: optimizelegibility;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
 }
 `
