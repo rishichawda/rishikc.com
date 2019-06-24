@@ -3,12 +3,86 @@
   flex-direction: column;
   padding: 20px;
   background-color: #fff;
+  padding-bottom: 7rem;
+  & > div {
+    margin-top: 5rem;
+    &.container {
+      width: 90%;
+      @media only screen and (max-width: 1127px) {
+        width: 80%;
+      }
+      @media only screen and (max-width: 970px) {
+        width: 83%;
+      }
+      @media only screen and (max-width: 961px) {
+        width: 88%;
+      }
+      @media only screen and (max-width: 839px) {
+        width: 90%;
+      }
+      max-width: 1028px;
+      &.flex {
+        display: flex;
+      }
+    }
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    @media only screen and (max-width: 1127px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media only screen and (max-width: 821px) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    grid-auto-rows: minmax(100px, auto);
+    grid-column-gap: 3.4rem;
+    grid-row-gap: 5rem;
+
+    .card {
+      @media only screen and (max-width: 821px) {
+        margin-bottom: 5rem;
+        width: 380px;
+      }
+      @media only screen and (max-width: 506px) {
+        margin-bottom: 5rem;
+        width: 92%;
+      }
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+      transition: box-shadow 0.2s ease-in-out;
+      &:hover {
+        box-shadow: 0 1px 16px rgba(0, 0, 0, 0.2);
+      }
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .content {
+        width: 100%;
+        padding: 1rem 1.6rem;
+      }
+
+      .link {
+        color: #1a2c5bc9;
+        text-decoration: none;
+      }
+      svg {
+        margin-left: 0.34rem;
+        path {
+          fill: #1a2c5bc9;
+        }
+      }
+      img {
+        max-width: 100%;
+        max-height: 200px;
+      }
+    }
+  }
 }
 
 .repo-title {
-  a {
-    text-decoration: none;
-  }
+  margin-bottom: 1rem;
 
   h4 {
     color: #37474f;

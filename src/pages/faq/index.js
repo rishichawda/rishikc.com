@@ -13,8 +13,8 @@ const pageMeta = {
 
 const FAQ = () => (
   <Layout withFooter bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
-    <div className="blog-main">
-      <div role="main" className="blog-main container">
+    <div className="faq-main">
+      <div role="main" className="faq-main container">
         <h1>FAQs</h1>
         <h2 className="q">What's your stack?</h2>
         <p className="a">For web, React and Node. For mobile applications, React Native.</p>
