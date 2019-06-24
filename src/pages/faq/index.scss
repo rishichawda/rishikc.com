@@ -2,10 +2,12 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
+
   &.container {
     width: 90%;
     max-width: 1028px;
   }
+
   background-color: #fff;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -24,6 +26,7 @@
     font-size: 1.73rem;
     font-weight: 400;
     margin-top: 3.4rem;
+    line-height: 2rem;
     color: rgb(34, 36, 38);
   }
 
@@ -34,8 +37,11 @@
     line-height: 1.6em;
     margin: 0.5em 0;
 
-    li {
+    li,
+    p {
       margin: 0.5em 0;
+      font-weight: 400;
+      font-size: 1.1rem;
       line-height: 1.6em;
     }
   }
@@ -43,6 +49,8 @@
   a {
     text-decoration: none;
     color: #1a2c5bc9;
+
+    font-size: 1.1rem;
   }
 
   .bottom-text {

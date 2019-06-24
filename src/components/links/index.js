@@ -13,6 +13,7 @@ const Wrapper = styled.section`
   p,
   a {
     ${tw`text-white`}
+    font-size: 1.1rem;
   }
 `
 
@@ -24,8 +25,8 @@ const Title = styled.h1`
   ${tw`text-white`}
   font-size: 1.24em;
   font-weight: 300;
-  margin: auto;
-  margin-bottom: 2em;
+  line-height: 2.5rem;
+  margin: 0 auto;
 `
 
 const List = styled.ul`

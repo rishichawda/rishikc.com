@@ -35,7 +35,8 @@ const TextWrapper = styled.div`
 
 const Text = styled.h1`
   color: #fff;
-  font-size: 2em;
+  font-size: 2rem;
+  line-height: 2.9rem;
   font-weight: 400;
 `
 
@@ -43,6 +44,8 @@ const Subtitle = styled.p`
   max-width: 650px;
   color: #a8b8e1;
   font-size: 1.33em;
+  line-height: 2rem;
+  margin-top: 1.51rem;
   font-weight: 300;
 `
 

@@ -61,6 +61,7 @@
       .content {
         width: 100%;
         padding: 1rem 1.6rem;
+        font-size: 1.1rem;
       }
 
       .link {
@@ -101,9 +102,11 @@
 }
 
 .repo-description {
+  margin-top: 1rem;
   p {
     text-align: left;
     font-weight: 300;
     line-height: 2rem;
+    font-size: 1.1rem;
   }
 }
