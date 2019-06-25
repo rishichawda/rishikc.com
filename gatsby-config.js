@@ -128,5 +128,11 @@ module.exports = {
       },
     },
     `gatsby-plugin-offline`,
+    {
+      resolve: `gatsby-plugin-brotli`,
+      options: {
+        path: 'brotli',
+      },
+    },
   ],
 }
