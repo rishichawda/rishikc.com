@@ -93,7 +93,7 @@ const SectionHeader = styled.h1`
 
 // eslint-disable-next-line react/prop-types
 const CardItem = ({ data: { title, description, gitLink, color, image } }) => (
-  <div className="card" langColor={color}>
+  <div className="card">
     <img src={image} alt="project" />
     <div className="content">
       <div className="repo-title">
@@ -131,7 +131,7 @@ const App = () => (
     <div className="main">
       <div className="container">
         {data.map(item => (
-          <CardItem data={item} />
+          <CardItem key={item.title} data={item} />
         ))}
       </div>
       <div className="container flex">
@@ -139,7 +139,7 @@ const App = () => (
       </div>
       <div className="container">
         {dataPlates.map(item => (
-          <CardItem data={item} />
+          <CardItem key={item.title} data={item} />
         ))}
       </div>
     </div>
