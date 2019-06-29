@@ -29,17 +29,9 @@
 
     a {
       text-decoration: none;
-      color: #222;
+      color: #3e4e88;
       display: flex;
       margin: 2% 0;
-
-      svg {
-        align-self: center;
-      }
-
-      &:hover {
-        color: rgb(101, 101, 101);
-      }
     }
 
     display: flex;
