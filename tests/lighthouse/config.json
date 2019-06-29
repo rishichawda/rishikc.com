@@ -1,6 +1,14 @@
 {
   "extends": "lighthouse:full",
   "settings": {
+    "maxWaitForLoad": 35 * 1000,
+    "emulatedFormFactor": "desktop",
+    "throttling": {
+      "rttMs": 40,
+      "throughputKbps": 10 * 1024,
+      "cpuSlowdownMultiplier": 1
+    },
+    "skipAudits": ["uses-http2"],
     "onlyAudits": [
       "first-meaningful-paint",
       "speed-index-metric",
