@@ -64,29 +64,23 @@
   .post-links {
     width: 92%;
     max-width: 992px;
-    padding: 1em;
+    padding: 1rem;
     display: flex;
-    margin: 2em auto;
+    margin: 2rem auto;
     flex-direction: column;
     color: #484646;
-    font-size: 1.1em;
+    font-size: 1rem;
     font-family: "Open Sans";
+    background-color: #fff;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 0.43rem;
+    color: #576aaf;
 
     a {
       text-decoration: none;
-      color: #222;
-      margin: 1.1em 0;
+      margin: 1rem 0;
       display: flex;
-
-      svg {
-        align-self: center;
-      }
-
-      &:hover {
-        color: rgb(101, 101, 101);
-      }
-
+      color: #3e4e88;
       cursor: pointer;
     }
   }
@@ -143,6 +137,20 @@
 
   a.gatsby-resp-image-link {
     margin: 34px auto 34px auto;
+  }
+
+  &.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    font-weight: 900;
+    color: #3e4e88;
+    a.edit-url {
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: 400;
+      color: #3e4e88;
+    }
   }
 
   hr {
