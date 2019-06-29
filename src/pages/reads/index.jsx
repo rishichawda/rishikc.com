@@ -22,7 +22,7 @@ export default function Reads() {
           <ul>
             {quotes.map((quote, index) => (
               <li key={`${quote.info}${index + 1}`} className="quote">
-                {`“${quote.quote}”`}
+                <blockquote>{`“${quote.quote}”`}</blockquote>
                 <p>{quote.info || ''}</p>
               </li>
             ))}
