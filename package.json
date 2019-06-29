@@ -58,7 +58,7 @@
     "develop": "gatsby develop",
     "start": "npm run develop",
     "serve": "gatsby build && gatsby serve",
-    "format": "prettier \"**/*.{md,mdx,yml} \" --write",
+    "format": "prettier \"**/*.{md,mdx,yml,json} \" --write",
     "lint": "eslint . --ext .js,.jsx --fix",
     "test:lhs": "mocha ./tests/lighthouse/lighthouse.test.js",
     "test:lhs:server": "server-test serve :9000 test:lhs",
@@ -68,7 +68,7 @@
     "serve-and-run": "server-test serve :9000 cy:run",
     "test:cy": "cross-env CYPRESS_SUPPORT=y yarn serve-and-run",
     "test:cy:dev": "server-test develop:cypress :8000 cy:open",
-    "generate:lhs:badges": "lighthouse-badges --urls https://rishikc.com -o test_results -b flat-square",
+    "generate:lhs:badges": "lighthouse-badges --urls http://localhost:9000 -o test_results -b flat-square",
     "update:lhs:badges": "server-test serve :9000 generate:lhs:badges"
   },
   "devDependencies": {

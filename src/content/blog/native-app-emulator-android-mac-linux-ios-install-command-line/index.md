@@ -31,6 +31,7 @@ Okay enough with the memes, let’s quickly set up Android Studio’s emulator f
 <hr />
 
 ### Step 1: Install Java Development Kit 8.
+
 First you’ll need to install [JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). Windows and linux users can directly visit the link and download it after accepting the license.
 For Mac users, I recommend installing via [Homebrew](https://brew.sh/) :
 
@@ -58,7 +59,7 @@ brew cask install android-sdk
 **Note for Mac users:** If you run into an error like this while installing android SDK :
 
 ```bash
-Exception in thread "main" java.lang.NoClassDefFoundError: javax/xml/bind/annotation/XmlSchema 
+Exception in thread "main" java.lang.NoClassDefFoundError: javax/xml/bind/annotation/XmlSchema
 at com.android.repository.api.SchemaModule$SchemaModuleVersion.<init>(SchemaModule.java:156)
 at com.android.repository.api.SchemaModule.<init>(SchemaModule.java:75)
 at com.android.sdklib.repository.AndroidSdkHandler.<clinit>(AndroidSdkHandler.java:81)
@@ -85,7 +86,7 @@ export ANDROID_HOME=/path/to/android-sdk
 
 _Incase your system complains about not being able to find the command while trying to issue the next set of commands involving **sdkmanager** , **avdmanager** or **emulator** — you can navigate to the directory where it is present inside the android-sdk folder and run them as **./sdkmanager** , **./avdmanager** and **./emulator** respectively._
 
-*For those of you who are feeling lazy to find it yourself :*
+_For those of you who are feeling lazy to find it yourself :_
 
 _**sdkmanager** and **avdmanager** will be located inside **android-sdk/tools/bin** whereas **emulator** can be found inside **android-sdk/tools**._
 
@@ -133,7 +134,7 @@ That’s it! We’ve downloaded the android emulator and we’re ready to set-up
 
 ### Step 4: Create a new virtual device.
 
-Let’s create an android virtual device with the help of ***Google APIs Intel x86 Atom System Image*** we downloaded through the previous command, which was :
+Let’s create an android virtual device with the help of **_Google APIs Intel x86 Atom System Image_** we downloaded through the previous command, which was :
 
 ```bash
 sdkmanager "system-images;android-23;google_apis;x86"
@@ -145,7 +146,7 @@ Now to create a virtual device, run the following command :
 avdmanager create avd --force --name myTestDevice --abi google_apis/x86 --package 'system-images;android-23;google_apis;x86' --device "myTestDevice"
 ```
 
-This will create a virtual device named *myTestDevice* using the *Intel x86 Atom system image* we downloaded.
+This will create a virtual device named _myTestDevice_ using the _Intel x86 Atom system image_ we downloaded.
 
 To check if your device was created, you can run :
 
@@ -165,14 +166,13 @@ emulator -avd myTestDevice
 
 And now your android emulator will start with the device you just created! But this time in a better way just like you always deserved — without wasting your precious storage space! 🎉
 
-
 <br/>
 
-*Did you like this article? Or did I miss something? Is there something that you have that can be added to this article -- that can make it even better?*
+_Did you like this article? Or did I miss something? Is there something that you have that can be added to this article -- that can make it even better?_
 
-*Please leave a comment below or you can also contact me through my [social media profiles](/).*
+_Please leave a comment below or you can also contact me through my [social media profiles](/)._
 
-*Thank you for reading!* 😄
+_Thank you for reading!_ 😄
 
 <br/>
 

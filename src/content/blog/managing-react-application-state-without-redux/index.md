@@ -8,7 +8,7 @@ path: "/articles/managing-react-application-state-without-redux/"
 banner: "content/blog/managing-react-application-state-without-redux/banner.jpg"
 ---
 
-***Disclaimer:*** *This solution is best suited for small scale projects and its main motive is to explore the new APIs react provides rather than trying to replace any traditional solutions.*
+**_Disclaimer:_** _This solution is best suited for small scale projects and its main motive is to explore the new APIs react provides rather than trying to replace any traditional solutions._
 
 <br/>
 
@@ -16,13 +16,13 @@ So when was the last time you tried managing application state, without Redux? A
 
 I basically did it in two different ways ( which most of us, might have tried at some point as well ) :
 
-* Using localStorage and custom listeners.
+- Using localStorage and custom listeners.
 
-* Using the Context API.
+- Using the Context API.
 
 <br>
 
-**But** in this article, we're not going to discuss that. We're going to see another way of managing the state which is fairly new -- using ***Hooks***.
+**But** in this article, we're not going to discuss that. We're going to see another way of managing the state which is fairly new -- using **_Hooks_**.
 
 So, let's setup a react project and add a root component, like so :
 
@@ -34,13 +34,13 @@ And our `ChildComponent.js` as,
 
 First, let us break down the complete flow and decide what we need :
 
-* A state, *ofcourse*
+- A state, _ofcourse_
 
-* A way to mutate / update our state.
+- A way to mutate / update our state.
 
-* A way to sync the data from state to our components wherever required.
+- A way to sync the data from state to our components wherever required.
 
-* Do all of this while keeping the code clean. ( Very important )
+- Do all of this while keeping the code clean. ( Very important )
 
 Let's setup our state first. For this, I'm going to use the `useReducer` hook. For those who are not familiar with the `useReducer` hook -- it is similar to the basic `useState` hook but more suited for this case as it provides a dispatch method, the previous state while computing and updating state, etc. Basically, it will provide us a way which is similar to Redux's reducer and action flow. Let's set up our `useGlobalState` hook which will help us initialize our state and provide us a dispatch for updating it as well.
 
@@ -48,24 +48,24 @@ So our `redux.js` looks like this :
 
 `gist:rishichawda/d3ba7b0e4ae70052bf7ce4693fe3822e#redux.js`
 
-So what's going on here? Our custom hook here takes two arguments -- `initialState` for setting an initial state to our app and `reducer` is our reducer function which is going to be used for updating state depending on the actions. 
+So what's going on here? Our custom hook here takes two arguments -- `initialState` for setting an initial state to our app and `reducer` is our reducer function which is going to be used for updating state depending on the actions.
 
-Our `reducer.js` might look like this : 
+Our `reducer.js` might look like this :
 
 `gist:rishichawda/46865557e94f06f3f9dfcf845cfb6b37#reducer.js`
 
 With those two arguments, we can initialise our reducer and state as :
 
 ```javascript
-const [ state, dispatch ] = React.useReducer(reducer, initialState);
+const [state, dispatch] = React.useReducer(reducer, initialState);
 ```
 
-Since our `initialState` might, in some cases, require some computation and may not be just a static value -- we are going to use the third argument of `useReducer` to initialise our state from a function just incase we need to. So now we can initialise our state in two ways : 
+Since our `initialState` might, in some cases, require some computation and may not be just a static value -- we are going to use the third argument of `useReducer` to initialise our state from a function just incase we need to. So now we can initialise our state in two ways :
 
 ```javascript
 const globalState = useGlobalState(intialState, reducer);
- 
- // OR
+
+// OR
 
 const globalState = useGlobalState(() => {
   // Do stuff here.
@@ -77,7 +77,7 @@ But, where do we initialise our state? Well, this needs to be done inside the ro
 
 `gist:rishichawda/853c751bb5c27eee52b0f504c39ac7e2#App.js`
 
-This gives us something like this : 
+This gives us something like this :
 
 ![globalstate redux hook](./demo-with-globalstate-redux-hook.gif)
 
@@ -111,7 +111,7 @@ Now, our `redux.js` should look like this :
 
 `gist:rishichawda/c1d8e05b553a518629346d73140f8a75#redux.js`
 
-***Note :*** *As you can see, we are just spreading the props over the component here. The ideal way is to use `hoist-non-react-statics` package to copy all non-react static methods to the new component. Please use that way since it is better than just passing the props. Complete explanation can be found in the [React Documentation for Higher Order Components](https://reactjs.org/docs/higher-order-components.html#static-methods-must-be-copied-over).*
+**_Note :_** _As you can see, we are just spreading the props over the component here. The ideal way is to use `hoist-non-react-statics` package to copy all non-react static methods to the new component. Please use that way since it is better than just passing the props. Complete explanation can be found in the [React Documentation for Higher Order Components](https://reactjs.org/docs/higher-order-components.html#static-methods-must-be-copied-over)._
 
 The `connect` HOC here takes our component and uses the context to get all the props that are required by the component as defined in the `mapStateToProps` function in the `connect` call. We can update our `ChildComponent.js` now, to something like this :
 
@@ -142,7 +142,7 @@ const mapDispatch = (dispatch) => ({
 
 export default connect(mapState, mapDispatch)(ChildComponent);
 
-/** 
+/**
  * Finally, update our reducer to handle `countincrement` action,
  * which updates the `anothercount` value in our state.
  */
@@ -174,9 +174,9 @@ You can check out the complete example in [this github repository](https://githu
 
 <br />
 
-*If you have any suggestions or ideas you can also contact me through my [social media profiles](/).*
+_If you have any suggestions or ideas you can also contact me through my [social media profiles](/)._
 
-*Thank you for reading!* 😄
+_Thank you for reading!_ 😄
 
 <br/>
 
