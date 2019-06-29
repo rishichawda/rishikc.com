@@ -21,6 +21,8 @@ function BlogTemplate({ pageContext, data, location }) {
   previous = previous || posts[0].node
   next = next || posts[posts.length - 1].node
   const otherArticles = [previous, next]
+  const editUrl = `https://github.com/rishichawda/website/edit/react-site/src/content/blog${data.markdownRemark.fields.slug}index.md`
+  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${data.markdownRemark.frontmatter.title}&url=${location.href}&original_referer=${location.href}`
   return (
     <Layout
       pageTitle={`${disqusConfig.title}${
@@ -52,6 +54,15 @@ function BlogTemplate({ pageContext, data, location }) {
           </small>${data.markdownRemark.html}`,
           }}
         />
+        <div className="article-content container">
+          <a className="edit-url" href={twitterShareUrl} target="_newtab">
+            Share on Twitter
+          </a>
+          {' • '}
+          <a className="edit-url" href={editUrl} target="_newtab">
+            Edit post on GitHub
+          </a>
+        </div>
         <div className="post-links container">
           <h4>Other articles :</h4>
           <Link
@@ -96,6 +107,7 @@ export const pageQuery = graphql`
         keywords
       }
       fields {
+        slug
         readtime
       }
     }

@@ -21,7 +21,6 @@ const pageMeta = {
 
 function Articles({ data }) {
   const { edges: posts } = data.allMarkdownRemark
-  console.log({ data })
   return (
     <Layout withFooter bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
       <Header title="Blogs" />
