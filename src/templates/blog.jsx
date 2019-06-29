@@ -11,7 +11,7 @@ import './blog.scss'
 
 function BlogTemplate({ pageContext, data, location }) {
   let { previous, next } = pageContext
-  const disqusShortname = process.env.DISQUS_NAME
+  const disqusShortname = process.env.GATSBY_DISQUS_NAME
   const disqusConfig = {
     url: location.href,
     identifier: data.markdownRemark.id,
