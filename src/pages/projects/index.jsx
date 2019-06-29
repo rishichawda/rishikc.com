@@ -17,7 +17,7 @@ const data = [
   {
     title: 'Simple typeracer',
     description:
-      'Simple typeracer implementation in javascript ( ReactJS and Node ). Generates random texts with the help of Sentencer. Made with a clean and minimalistic ui.',
+      'Simple typeracer implementation in javascript (ReactJS and Node). Generates random texts with the help of Sentencer. Made with a clean and minimalistic ui.',
     gitLink: 'https://github.com/rishichawda/simple-typeracer',
     image: 'https://raw.githubusercontent.com/rishichawda/simple-typeracer/master/.github/screenshot.png',
   },

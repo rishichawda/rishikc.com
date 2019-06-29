@@ -57,6 +57,13 @@ const Layout = ({
           {isArticle && <meta name="twitter:label1" value="Reading Time" />}
           {isArticle && <meta name="twitter:data1" value={articleData.readTime} />}
           {isArticle && <meta name="article:published_time" content={articleData.date} />}
+          {isArticle && (
+            <link
+              key="gist-embeded-b3b573358bfc66d89e1e95dbf8319c09"
+              rel="stylesheet"
+              href="https://github.githubassets.com/assets/gist-embed-b3b573358bfc66d89e1e95dbf8319c09.css"
+            />
+          )}
         </Helmet>
       )}
     />

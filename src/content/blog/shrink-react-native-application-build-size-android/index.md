@@ -17,9 +17,9 @@ Or you’re just one of us who are paranoid about build sizes? Don’t worry, we
 
 In this article, we will cover the following two things:
 
-* Compress our react native application size - by compressing the java bytecode that is generated while building our app and also asking it to try and shrink all the resources that are bundled with the application.
+- Compress our react native application size - by compressing the java bytecode that is generated while building our app and also asking it to try and shrink all the resources that are bundled with the application.
 
-* Splitting our application bundle into multiple `apk`s to remove unnecessary code which is not required by the device which is going to run it - because a lot of code is bundled with the universal apk that is device specific - meaning that we don't need a lot of code in the device we're going to install it in.
+- Splitting our application bundle into multiple `apk`s to remove unnecessary code which is not required by the device which is going to run it - because a lot of code is bundled with the universal apk that is device specific - meaning that we don't need a lot of code in the device we're going to install it in.
 
 <hr />
 
@@ -59,8 +59,7 @@ So you might be wondering what it does. Well, if you scroll down a bit you’ll 
 
 As you can see, these variables are being used to enable or disable two build configurations —
 
-* One for generating separate .apks for different device architectures,
-
+- One for generating separate .apks for different device architectures,
 
 ```groovy
 ...
@@ -71,10 +70,9 @@ splits {
 ...
 ```
 
-*Don’t worry about having to handle different .apks for each architecture — Google takes care of distributing it to the users! And separating the builds according to architecture removes unnecessary code from your file which is not required on the device it is running.*
+_Don’t worry about having to handle different .apks for each architecture — Google takes care of distributing it to the users! And separating the builds according to architecture removes unnecessary code from your file which is not required on the device it is running._
 
-* Another one for compressing the Java bytecode generated while building, as in,
-
+- Another one for compressing the Java bytecode generated while building, as in,
 
 ```groovy
 ...
@@ -105,14 +103,13 @@ That’s all! Now you’ve setup your build configuration to shrink your code al
 
 Thanks for reading! You can check out more resources on [how to reduce the application build size](https://developer.android.com/studio/build/shrink-code).
 
-
 <br/>
 
-*Did you like this article? Or did I miss something? Is there something that you have that can be added to this article -- that can make it even better?*
+_Did you like this article? Or did I miss something? Is there something that you have that can be added to this article -- that can make it even better?_
 
-*Please leave a comment below or you can also contact me through my [social media profiles](/).*
+_Please leave a comment below or you can also contact me through my [social media profiles](/)._
 
-*Thank you for reading!* 😄
+_Thank you for reading!_ 😄
 
 <br/>
 

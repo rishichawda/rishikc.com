@@ -46,7 +46,13 @@ module.exports = {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [
-          'gatsby-remark-embed-gist',
+          {
+            resolve: 'gatsby-remark-embed-gist',
+            options: {
+              username: 'rishichawda',
+              includeDefaultCss: false,
+            },
+          },
           {
             resolve: `gatsby-remark-images`,
             options: {
