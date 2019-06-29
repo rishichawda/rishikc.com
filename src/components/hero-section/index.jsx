@@ -36,8 +36,13 @@ const onClickProfileUrl = url => {
   }
 }
 
-const renderOption = item => (
-  <li role="menuitem" onKeyPress={() => onClickProfileUrl(item.url)} onClick={() => onClickProfileUrl(item.url)}>
+const renderOption = (item, key) => (
+  <li
+    role="menuitem"
+    key={key}
+    onKeyPress={() => onClickProfileUrl(item.url)}
+    onClick={() => onClickProfileUrl(item.url)}
+  >
     <item.icon />
   </li>
 )
@@ -53,7 +58,7 @@ export default function Hero() {
           A programmer with a passion for product design and development who loves working on freelancing and open
           source projects.
         </p>
-        <ul role="menu">{Object.keys(links).map(item => renderOption(links[item]))}</ul>
+        <ul role="menu">{Object.keys(links).map(item => renderOption(links[item], item))}</ul>
       </div>
     </section>
   )

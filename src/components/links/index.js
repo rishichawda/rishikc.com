@@ -54,16 +54,16 @@ export default function Links() {
       <Section>
         <List>
           <ListItem>
-            <Link to="projects">Stuff that I'm working on or have worked on. 👨🏻‍💻</Link>
+            <Link to="/projects">Stuff that I'm working on or have worked on. 👨🏻‍💻</Link>
           </ListItem>
           <ListItem>
-            <Link to="faq">Common questions regarding stack, tools and other things. ❔❕</Link>
+            <Link to="/faq">Common questions regarding stack, tools and other things. ❔❕</Link>
           </ListItem>
           <ListItem>
-            <Link to="articles">I write blogs! ✍🏻</Link>
+            <Link to="/articles">I write blogs! ✍🏻</Link>
           </ListItem>
           <ListItem>
-            <Link to="reads">A bunch of quotes and snippets that I read and liked. 📚</Link>
+            <Link to="/reads">A bunch of quotes and snippets that I read and liked. 📚</Link>
           </ListItem>
         </List>
       </Section>

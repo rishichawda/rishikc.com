@@ -27,7 +27,7 @@ function Articles({ data }) {
       <div className="blog-main">
         <div role="main" className="blog-main container">
           {posts.map(({ node: { id, excerpt, frontmatter, fields: { readtime } } }) => (
-            <ArticleItemContainer role="article">
+            <ArticleItemContainer key={id} role="article">
               <div className="article">
                 <Link to={frontmatter.path} key={id}>
                   <h1>{frontmatter.title}</h1>
