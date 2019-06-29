@@ -12,15 +12,21 @@ jobs:
       # install npm dependencies and cypress binary
       - run:
           name: Install dependencies
-          command: npm ci
-      - run: npm run cy:verify
+          command: yarn install --frozen-lockfile
+      - run: yarn cy:verify
       # save npm dependencies and cypress binary
       - save_cache:
           key: cache-{{ checksum "package.json" }}
           paths:
             - ~/.npm
             - ~/.cache
-      - run: npm run serve-and-run
+      - run:
+          name: Run tests
+          command: yarn test:cy
+      - store_artifacts:
+          path: cypress/videos
+      - store_artifacts:
+          path: cypress/screenshots
 
 workflows:
   version: 2
