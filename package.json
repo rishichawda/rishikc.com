@@ -63,6 +63,7 @@
     "test:lhs": "mocha ./tests/lighthouse/lighthouse.test.js",
     "test:lhs:server": "server-test serve :9000 test:lhs",
     "develop:cypress": "cross-env CYPRESS_SUPPORT=y yarn develop",
+    "cy:verify": "cypress verify",
     "cy:open": "cypress open",
     "cy:run": "cross-env CYPRESS_baseUrl=http://localhost:9000 cypress run",
     "serve-and-run": "server-test serve :9000 cy:run",
