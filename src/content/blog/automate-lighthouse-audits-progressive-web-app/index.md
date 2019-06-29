@@ -2,7 +2,7 @@
 title: Automate lighthouse audits for your Progressive Web App
 subtitle: Testing with Mocha and Chai
 date: "2019-06-29T22:12:03.284Z"
-keywords: "progressive web application, pwa, test, lighthouse, audits, mocha, chai,best practices, performance, accessibility,web development,configuration,web,applications"
+keywords: "progressive web application,pwa,test,chrome,lighthouse,audits,mocha,chai,best practices,performance, accessibility,tests,web development,configuration,web,application"
 brief: We all know how important and helpful the insights are from lighthouse audits when we're developing our web applications. But the way most of us check is manually through Chrome devtools or the lighthouse extension, which in my opinion, is not very productive.
 description: Automate your lighthouse audits with Mocha and chai instead of manually performing the audits on your progressive web application every time. Run all the tests programmatically in your continuous integration / deployment environments or on your local system.
 path: "/articles/automate-lighthouse-audits-progressive-web-app/"
@@ -16,7 +16,7 @@ For those of us who don't know, there are mainly four ways of auditing our web a
 
 - Command line
 
-- [NPM module](https://www.npmjs.com/package/lighthouse)
+- NPM module
   ( which we are going to use in a while )
 
 - [PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/)
