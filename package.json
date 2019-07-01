@@ -94,7 +94,7 @@
     "husky": "^2.3.0",
     "lighthouse": "^5.1.0",
     "lighthouse-badges": "^1.0.19",
-    "lint-staged": "^8.1.7",
+    "lint-staged": "^9.0.0",
     "mocha": "^6.1.4",
     "prettier": "^1.17.1",
     "start-server-and-test": "^1.9.1",
