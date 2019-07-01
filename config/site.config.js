@@ -5,7 +5,7 @@ const meta = {
   siteHeadline: 'Web and Mobile applications Developer',
   siteTitleAlt: 'Rishi Kumar Chawda',
   siteShortName: 'Rishi Chawda',
-  siteUrl: 'https://www.rishikc.com',
+  siteUrl: 'https://rishikc.com',
 }
 
 const social = {
