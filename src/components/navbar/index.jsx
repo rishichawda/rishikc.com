@@ -73,9 +73,9 @@ const Styled = styled(Headroom)`
       text-decoration: none;
       color: ${props => props.color || '#fff'};
       margin-right: 5px;
-      font-size: 1.24em;
+      font-size: 1.19em;
       line-height: 1.4;
-      font-family: gudea;
+      font-family: PT Sans;
     }
   }
 `

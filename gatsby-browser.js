@@ -9,9 +9,7 @@
 // Detect service worker updates and reload page.
 require('typeface-pt-sans')
 require('typeface-roboto')
-require('typeface-poppins')
 require('typeface-open-sans')
-require('typeface-gudea')
 require('./src/pages/index.scss')
 require('./src/templates/night-owl.min.css')
 require('./node_modules/normalize.css/normalize.css')
