@@ -22,6 +22,7 @@ module.exports = {
           templates: './templates',
           utils: './utils',
           assets: './images',
+          static: '../static',
         },
       },
     },

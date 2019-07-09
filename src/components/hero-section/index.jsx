@@ -1,7 +1,6 @@
 import React from 'react'
 import { FaLinkedin, FaGithub, FaMedium, FaInstagram, FaTwitter } from 'react-icons/fa'
 
-import downArrow from '../../images/down-arrow.svg'
 import './index.scss'
 
 const links = {
