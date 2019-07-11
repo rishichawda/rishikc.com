@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaLinkedin, FaGithub, FaMedium, FaInstagram, FaTwitter } from 'react-icons/fa'
+import { FaLinkedin, FaDev, FaGithub, FaMedium, FaTwitter } from 'react-icons/fa'
 
 import './index.scss'
 
@@ -12,17 +12,17 @@ const links = {
     url: 'https://github.com/rishichawda',
     icon: FaGithub,
   },
+  Dev: {
+    url: 'https://dev.to/rishikc',
+    icon: FaDev,
+  },
+  Twitter: {
+    url: 'https://www.twitter.com/rishiikc',
+    icon: FaTwitter,
+  },
   'Medium Blogs': {
     url: 'https://medium.com/@rishii.kumar.chawda',
     icon: FaMedium,
-  },
-  Instagram: {
-    url: 'https://www.instagram.com/rishi.py',
-    icon: FaInstagram,
-  },
-  Mail: {
-    url: 'https://www.twitter.com/rishiikc',
-    icon: FaTwitter,
   },
 }
 
