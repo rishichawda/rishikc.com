@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@testing-library/cypress": "^4.0.4",
-    "autoprefixer": "^9.4.6",
+    "autoprefixer": "^9.6.1",
     "babel-plugin-styled-components": "^1.10.0",
     "disqus-react": "^1.0.5",
     "gatsby": "^2.7.1",
