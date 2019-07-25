@@ -40,7 +40,7 @@ const FAQ = () => (
             >
               Night Owl
             </a>{' '}
-            theme by Sarah Dasner
+            theme by Sarah Drasner
           </p>
           <p>
             <a target="_newtab" rel="nofollow" href="https://sourcefoundry.org/hack/">
