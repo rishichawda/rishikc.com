@@ -9,7 +9,6 @@ import icon from 'assets/navbar-logo.png'
 import compressedIcon from 'assets/navbar-logo.webp'
 
 import { colors } from '../../../tailwind'
-import './index.scss'
 
 const Nav = styled.nav`
   ${tw`flex flex-row items-center h-full w-full absolute inset-0 justify-between`}
@@ -27,12 +26,6 @@ const Styled = styled(Headroom)`
     position: fixed;
     z-index: 2;
     background-color: ${props => props.bg || colors.bg};
-  }
-
-  .headroom--unfixed {
-    position: relative;
-    transform: translateY(0);
-    transition: transform 200ms ease-in-out;
   }
 
   .headroom--scrolled {
@@ -98,14 +91,17 @@ function Navbar({ bg, color, disableNavbarHide }) {
           </picture>
         </Link>
         <div className="navbar-links">
-          <Link to="/">
+          {/* <Link to="/">
             <div className="navlink">Home</div>
+          </Link> */}
+          <Link to="/about">
+            <div className="navlink">About</div>
           </Link>
           <Link to="/articles">
             <div className="navlink">Blogs</div>
           </Link>
-          <Link to="/about">
-            <div className="navlink">About</div>
+          <Link to="/projects">
+            <div className="navlink">Projects</div>
           </Link>
         </div>
       </Nav>
