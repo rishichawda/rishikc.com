@@ -10,7 +10,7 @@ const pageMeta = {
 }
 
 const App = () => (
-  <Layout withFooter disableNavbarHide bg={colors.bg} keywords={pageMeta.keywords}>
+  <Layout withFooter bg={colors.bg} keywords={pageMeta.keywords}>
     <About />
     <Links />
   </Layout>
