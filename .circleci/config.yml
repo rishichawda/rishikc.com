@@ -12,7 +12,7 @@ jobs:
       # install npm dependencies and cypress binary
       - run:
           name: Install dependencies
-          command: yarn install --frozen-lockfile
+          command: yarn install --pure-lockfile
       - run: yarn cy:verify
       # save npm dependencies and cypress binary
       - save_cache:
