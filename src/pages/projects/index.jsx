@@ -29,7 +29,8 @@ const data = [
     description:
       '🎊 A plugin to update your branch badges to point to correct branch status. You can use it in a script, as a git hook or directly from the command line itself!',
     gitLink: 'https://github.com/rishichawda/markdown-magic-build-badge',
-    image: 'https://raw.githubusercontent.com/rishichawda/markdown-magic-build-badge/master/example/demo.gif',
+    image:
+      'https://raw.githubusercontent.com/rishichawda/markdown-magic-build-badge/master/example/demo.gif',
   },
   {
     title: 'Background generator',
@@ -83,7 +84,8 @@ const dataPlates = [
   },
   {
     title: 'Node backend boilerplate',
-    description: 'Minimal NodeJS boilerplate with authentication setup using Passport, JWT and bcrypt.',
+    description:
+      'Minimal NodeJS boilerplate with authentication setup using Passport, JWT and bcrypt.',
     gitLink: 'https://github.com/rishichawda/minimal-server-boilerplate',
     image: node,
   },
@@ -136,7 +138,9 @@ const App = () => (
         ))}
       </div>
       <div className="container flex">
-        <SectionHeader>Some boilerplates that I have open sourced and use in my projects : </SectionHeader>
+        <SectionHeader>
+          Some boilerplates that I have open sourced and use in my projects :{' '}
+        </SectionHeader>
       </div>
       <div className="container">
         {dataPlates.map(item => (

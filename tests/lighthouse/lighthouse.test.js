@@ -25,7 +25,7 @@ function launchChromeAndRunLighthouse(url, opts, conf = null) {
   })
 }
 
-const opts = {
+const options = {
   chromeFlags: ['--show-paint-rects'],
 }
 
@@ -33,7 +33,7 @@ describe('Lighthouse PWA Testing', function() {
   this.timeout(50000)
   let results
   before('run base test', done => {
-    launchChromeAndRunLighthouse(testUrl, opts).then(res => {
+    launchChromeAndRunLighthouse(testUrl, options).then(res => {
       results = Object.keys(res.categories).reduce((merged, category) => {
         merged[category] = res.categories[category].score
         return merged

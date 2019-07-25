@@ -82,7 +82,13 @@ const Styled = styled(Headroom)`
 
 function Navbar({ bg, color, disableNavbarHide }) {
   return (
-    <Styled disable={disableNavbarHide} color={color} bg={bg} disableInlineStyles calcHeightOnResize>
+    <Styled
+      disable={disableNavbarHide}
+      color={color}
+      bg={bg}
+      disableInlineStyles
+      calcHeightOnResize
+    >
       <Nav>
         <Link to="/" className="logo">
           <picture>

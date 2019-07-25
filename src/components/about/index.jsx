@@ -57,27 +57,29 @@ export default function About() {
         </picture>
         <AboutText>
           <ContentText>
-            I'm a web and mobile applications developer. I was born in the 90s' - when tech had started becoming popular
-            among young people, I spent most of my childhood playing video games. After graduating high school, I
-            enrolled for a Bachelors' in Computer Science and fell in love with programming during that time. Since
-            then, I've been programming in different languages.
+            I'm a web and mobile applications developer. I was born in the 90s' - when tech had
+            started becoming popular among young people, I spent most of my childhood playing video
+            games. After graduating high school, I enrolled for a Bachelors' in Computer Science and
+            fell in love with programming during that time. Since then, I've been programming in
+            different languages.
           </ContentText>
           <ContentText>
-            I design and develop websites, progressive web applications and hybrid mobile applications for Android and
-            iOS. I also like working on search engine optimisation, analytics and online marketing. Most of my time is
-            spent on exploring open source, reading articles and programming.
+            I design and develop websites, progressive web applications and hybrid mobile
+            applications for Android and iOS. I also like working on search engine optimisation,
+            analytics and online marketing. Most of my time is spent on exploring open source,
+            reading articles and programming.
           </ContentText>
           <ContentText>
             Currently I'm working with the team at{' '}
             <a href="https://www.codebrahma.com" target="_newtab" rel="nofollow">
               Codebrahma
             </a>
-            , where I develop Single page applications, Progressive web apps and hybrid mobile applications for iOS and
-            Android - and enjoy playing table tennis with the folks!
+            , where I develop Single page applications, Progressive web apps and hybrid mobile
+            applications for iOS and Android - and enjoy playing table tennis with the folks!
           </ContentText>
           <ContentText>
-            Apart from enjoying good food, traveling, music and art - I also write articles, read books, stalk nature
-            with my camera and occasionally sketch weird things.
+            Apart from enjoying good food, traveling, music and art - I also write articles, read
+            books, stalk nature with my camera and occasionally sketch weird things.
           </ContentText>
         </AboutText>
       </AboutSection>

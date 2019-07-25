@@ -54,8 +54,8 @@ export default function Hero() {
         <h2 id="Intro">I'm, Rishi</h2>
         <h3>Web and Mobile App developer</h3>
         <p>
-          A programmer with a passion for product design and development who loves working on freelancing and open
-          source projects.
+          A programmer with a passion for product design and development who loves working on
+          freelancing and open source projects.
         </p>
         <ul role="menu">{Object.keys(links).map(item => renderOption(links[item], item))}</ul>
       </div>

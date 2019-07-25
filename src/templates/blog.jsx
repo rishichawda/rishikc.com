@@ -26,7 +26,9 @@ function BlogTemplate({ pageContext, data, location }) {
   return (
     <Layout
       pageTitle={`${disqusConfig.title}${
-        data.markdownRemark.frontmatter.subtitle ? ` - ${data.markdownRemark.frontmatter.subtitle}` : ''
+        data.markdownRemark.frontmatter.subtitle
+          ? ` - ${data.markdownRemark.frontmatter.subtitle}`
+          : ''
       }`}
       bg={colors.bg}
       pageDesription={data.markdownRemark.frontmatter.description}
@@ -67,7 +69,9 @@ function BlogTemplate({ pageContext, data, location }) {
           <h4>Other articles :</h4>
           <Link
             to={
-              otherArticles[0].fields ? `/articles${otherArticles[0].fields.slug}` : otherArticles[0].frontmatter.path
+              otherArticles[0].fields
+                ? `/articles${otherArticles[0].fields.slug}`
+                : otherArticles[0].frontmatter.path
             }
             rel="prev"
           >
@@ -75,7 +79,9 @@ function BlogTemplate({ pageContext, data, location }) {
           </Link>
           <Link
             to={
-              otherArticles[1].fields ? `/articles${otherArticles[1].fields.slug}` : otherArticles[1].frontmatter.path
+              otherArticles[1].fields
+                ? `/articles${otherArticles[1].fields.slug}`
+                : otherArticles[1].frontmatter.path
             }
             rel="next"
           >

@@ -23,6 +23,24 @@ body {
 }
 `
 
+const query = graphql`
+  query SEO {
+    site {
+      buildTime(formatString: "YYYY-MM-DD")
+      config: siteMetadata {
+        siteTitle
+        siteTitleAlt
+        siteDescription
+        siteShortName
+        siteUrl
+        siteLogo
+        siteLogoSmall
+        twitter
+      }
+    }
+  }
+`
+
 const Layout = ({
   children,
   pageTitle,
@@ -50,7 +68,10 @@ const Layout = ({
           <meta name="twitter:card" content={banner ? 'summary_large_image' : 'summary'} />
           <meta name="twitter:creator" content={site.config.twitter} />
           <meta name="twitter:title" content={pageTitle || site.config.siteTitle} />
-          <meta name="twitter:description" content={pageDesription || site.config.siteDescription} />
+          <meta
+            name="twitter:description"
+            content={pageDesription || site.config.siteDescription}
+          />
           {banner && <meta name="twitter:image" content={banner} />}
           {banner && <meta name="twitter:image:width" content="700" />}
           {banner && <meta name="twitter:image:height" content="340" />}
@@ -72,24 +93,6 @@ const Layout = ({
     {withFooter ? <Footer /> : null}
   </>
 )
-
-const query = graphql`
-  query SEO {
-    site {
-      buildTime(formatString: "YYYY-MM-DD")
-      config: siteMetadata {
-        siteTitle
-        siteTitleAlt
-        siteDescription
-        siteShortName
-        siteUrl
-        siteLogo
-        siteLogoSmall
-        twitter
-      }
-    }
-  }
-`
 
 Layout.propTypes = {
   children: PropTypes.node,

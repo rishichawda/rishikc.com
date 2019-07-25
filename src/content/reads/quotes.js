@@ -3,7 +3,8 @@ export default [
     quote: 'The joy of discovery is one of the best things about being a software developer.',
   },
   {
-    quote: 'Of all the hardships a person had to face, none was more punishing than the simple act of waiting.',
+    quote:
+      'Of all the hardships a person had to face, none was more punishing than the simple act of waiting.',
     info: 'Khaled Hosseini, A Thousand Splendid Suns',
   },
   {
@@ -28,7 +29,8 @@ export default [
     info: 'John Updike, Rabbit at Rest ',
   },
   {
-    quote: 'The simple things are also the most extraordinary things, and only the wise can see them.',
+    quote:
+      'The simple things are also the most extraordinary things, and only the wise can see them.',
     info: 'Paulo Coelho, The Alchemist',
   },
   {
@@ -60,11 +62,13 @@ export default [
     info: 'Niklaus Wirth',
   },
   {
-    quote: 'Measuring programming progress by lines of code is like measuring aircraft building progress by weight.',
+    quote:
+      'Measuring programming progress by lines of code is like measuring aircraft building progress by weight.',
     info: 'Bill Gates',
   },
   {
-    quote: 'The main point is that the only person who knows what a successful life looks like for you, is you.',
+    quote:
+      'The main point is that the only person who knows what a successful life looks like for you, is you.',
   },
   {
     quote:
