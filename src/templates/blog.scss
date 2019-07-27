@@ -1,4 +1,5 @@
-.article-template {
+.article-template,
+.project-page-template {
   height: 100%;
   width: 100vw;
   background: rgb(250, 250, 250);
@@ -78,7 +79,8 @@
   }
 }
 
-.article-content {
+.article-content,
+.project-details {
   width: 97%;
   max-width: 992px;
   margin: auto;

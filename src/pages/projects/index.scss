@@ -71,6 +71,7 @@
 
       background-color: #fff;
       border-radius: 5px;
+      height: 100%;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -105,21 +106,22 @@
             color: #1a2c5bc9;
             text-decoration: none;
             display: flex;
+          }
 
-            svg {
-              font-size: 1.6rem;
+          svg {
+            font-size: 1.6rem;
 
-              &:hover {
-                transform: scale(1.1);
-                transition: 0.25s ease-in-out;
-                path {
-                  fill: #3e4e88;
-                }
-              }
+            &:hover {
+              transform: scale(1.1);
+              transition: 0.25s ease-in-out;
 
               path {
-                fill: #1a2c5bc9;
+                fill: #3e4e88;
               }
+            }
+
+            path {
+              fill: #1a2c5bc9;
             }
           }
         }
@@ -152,4 +154,10 @@
     letter-spacing: 0.025rem;
     color: rgb(61, 61, 61);
   }
+}
+
+a.project-link {
+  text-decoration: none;
+  box-shadow: none !important;
+  background: transparent;
 }

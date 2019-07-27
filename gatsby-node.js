@@ -14,11 +14,33 @@ function getReadTime(text) {
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
 
-  const blogPost = path.resolve(`./src/templates/blog.jsx`)
+  const blogPostTemplate = path.resolve(`./src/templates/blog.jsx`)
+  const projectPageTemplate = path.resolve(`./src/templates/project.jsx`)
   return graphql(
     `
       {
-        allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }, limit: 1000) {
+        blogs: allMarkdownRemark(
+          filter: { fileAbsolutePath: { glob: "**/content/blog/**/*.md" } }
+          sort: { fields: [frontmatter___date], order: DESC }
+          limit: 1000
+        ) {
+          edges {
+            node {
+              fields {
+                slug
+              }
+              frontmatter {
+                title
+                banner
+              }
+            }
+          }
+        }
+        projects: allMarkdownRemark(
+          filter: { fileAbsolutePath: { glob: "**/content/projects/**/*.md" } }
+          sort: { fields: [frontmatter___date], order: DESC }
+          limit: 1000
+        ) {
           edges {
             node {
               fields {
@@ -39,14 +61,28 @@ exports.createPages = ({ graphql, actions }) => {
     }
 
     // Create blog posts pages.
-    const posts = result.data.allMarkdownRemark.edges
+    const blogPosts = result.data.blogs.edges
+    const projectPages = result.data.projects.edges
 
-    posts.forEach((post, index) => {
-      const previous = index === posts.length - 1 ? null : posts[index + 1].node
-      const next = index === 0 ? null : posts[index - 1].node
+    blogPosts.forEach((post, index) => {
+      const previous = index === blogPosts.length - 1 ? null : blogPosts[index + 1].node
+      const next = index === 0 ? null : blogPosts[index - 1].node
       createPage({
         path: `articles${post.node.fields.slug}`,
-        component: blogPost,
+        component: blogPostTemplate,
+        context: {
+          slug: post.node.fields.slug,
+          previous,
+          next,
+        },
+      })
+    })
+    projectPages.forEach((post, index) => {
+      const previous = index === projectPages.length - 1 ? null : projectPages[index + 1].node
+      const next = index === 0 ? null : projectPages[index - 1].node
+      createPage({
+        path: `project${post.node.fields.slug}`,
+        component: projectPageTemplate,
         context: {
           slug: post.node.fields.slug,
           previous,

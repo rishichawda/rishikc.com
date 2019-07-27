@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'gatsby'
 import Layout from 'components/layouts'
 import styled from 'styled-components'
 import { OutboundLink } from 'gatsby-plugin-google-analytics'
@@ -18,11 +19,12 @@ import './index.scss'
 
 const data = [
   {
-    title: 'Simple typeracer',
+    title: 'What is your WPM',
     description:
       'Simple typeracer implementation in javascript (ReactJS and Node). Generates random texts with the help of Sentencer. Made with a clean and minimalistic ui.',
     gitLink: 'https://github.com/rishichawda/simple-typeracer',
     image: typewriter,
+    link: '/project/what-is-your-wpm',
   },
   {
     title: 'Markdown Magic build badge',
@@ -31,6 +33,7 @@ const data = [
     gitLink: 'https://github.com/rishichawda/markdown-magic-build-badge',
     image:
       'https://raw.githubusercontent.com/rishichawda/markdown-magic-build-badge/master/example/demo.gif',
+    link: '/project/markdown-magic-build-badge',
   },
   {
     title: 'Background generator',
@@ -38,6 +41,7 @@ const data = [
       '🎨 Create background images with particles or paint tool and download them to your local device. 💻 📱 ✨',
     gitLink: 'https://github.com/rishichawda/bgcreate',
     image: bgGen,
+    link: '/project/background-generator',
   },
   {
     title: 'Calendar widget',
@@ -45,6 +49,7 @@ const data = [
       'A cross platform reminder and notes application for Mac, Linux and Windows. Work in progress. 🚧  Made with ElectronJS and developed on random days of boredom.',
     gitLink: 'https://github.com/rishichawda/calendar-app',
     image: calendar,
+    link: '/project/calendar-widget',
   },
   {
     title: 'React Lite UI',
@@ -104,7 +109,7 @@ const SectionHeader = styled.h1`
 `
 
 // eslint-disable-next-line react/prop-types
-const CardItem = ({ data: { title, description, gitLink, color, image } }) => (
+const CardItem = ({ data: { title, description, gitLink, color, image, link } }) => (
   <div className="card">
     <img src={image} alt="project" />
     <div className="content">
@@ -112,9 +117,18 @@ const CardItem = ({ data: { title, description, gitLink, color, image } }) => (
         <div className="repo-title">
           <h4>{title}</h4>
         </div>
-        <OutboundLink className="link" href={gitLink} target="_newtab">
+        {gitLink && !link ? (
           <FaGithub />
-        </OutboundLink>
+        ) : (
+          <OutboundLink
+            onClick={e => e.stopPropagation()}
+            className="link"
+            href={gitLink}
+            target="_newtab"
+          >
+            <FaGithub />
+          </OutboundLink>
+        )}
       </div>
       <div className="repo-description">
         <p>{description}</p>
@@ -133,9 +147,21 @@ const App = () => (
     <Header small title="Projects" />
     <div className="main">
       <div className="container">
-        {data.map(item => (
-          <CardItem key={item.title} data={item} />
-        ))}
+        {data.map(item => {
+          const LinkEle = item.gitLink && !item.link ? OutboundLink : Link
+          return item.link || item.gitLink ? (
+            <LinkEle
+              className="project-link"
+              target={item.gitLink && !item.link ? '_newtab' : undefined}
+              href={item.link || item.gitLink}
+              to={item.link || item.gitLink}
+            >
+              <CardItem key={item.title} data={item} />
+            </LinkEle>
+          ) : (
+            <CardItem key={item.title} data={item} />
+          )
+        })}
       </div>
       <div className="container flex">
         <SectionHeader>

@@ -1,0 +1,38 @@
+.project-page-template {
+  height: 100%;
+  width: 100vw;
+  background: rgb(250, 250, 250);
+  padding-bottom: 2rem;
+
+  .project-details {
+    width: 90%;
+    max-width: 880px;
+    margin: auto;
+    margin-top: 4.3rem;
+
+    li {
+      color: rgb(61, 61, 61);
+      font-size: 1.1em;
+      line-height: 1.91em;
+      margin-bottom: 18px;
+      font-weight: 400;
+    }
+
+    img {
+      max-width: 50%;
+      margin: auto;
+    }
+  }
+}
+
+table {
+  border: 1px solid rgba(150, 150, 150, 0.247);
+
+  th,
+  td {
+    border: 1px solid rgba(150, 150, 150, 0.247);
+    padding: 0.5rem 1rem;
+    text-align: center;
+    line-height: 2rem;
+  }
+}
