@@ -18,7 +18,9 @@ const Project = ({ data }) => {
       withFooter
     >
       <div role="article" className="project-page-template">
-        <Header small title={frontmatter.title} />
+        <Header small title={frontmatter.title}>
+          {frontmatter.description || ''}
+        </Header>
         <div
           className="project-details"
           dangerouslySetInnerHTML={{
