@@ -71,7 +71,7 @@
     "update:lhs:badges": "server-test serve :9000 generate:lhs:badges"
   },
   "devDependencies": {
-    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.6.0",
     "babel-eslint": "^10.0.2",
     "babel-plugin-macros": "^2.6.0",
     "babel-polyfill": "^6.26.0",
