@@ -718,10 +718,10 @@
     core-js "^2.5.7"
     regenerator-runtime "^0.11.1"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5":
-  version "7.4.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.5.tgz#582bb531f5f9dc67d2fcb682979894f75e253f12"
-  integrity sha512-TuI4qpWZP6lGOGIuGWtp9sPluqYICmbk8T/1vpSysqJxRPkudh/ofFWyqdcMsDf2s7KvDL4/YHgKyvcS3g9CJQ==
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5", "@babel/runtime@^7.6.3":
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.6.3.tgz#935122c74c73d2240cafd32ddb5fc2a6cd35cf1f"
+  integrity sha512-kq6anf9JGjW8Nt5rYfEuGRaEAaH1mkv3Bbu6rYvLOpPh/RusSJXuKPEAoZ7L7gybZkchE8+NV5g9vKF4AGAtsA==
   dependencies:
     regenerator-runtime "^0.13.2"
 
@@ -6174,12 +6174,12 @@ gatsby-plugin-sitemap@^2.2.1:
     pify "^3.0.0"
     sitemap "^1.12.0"
 
-gatsby-plugin-styled-components@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-styled-components/-/gatsby-plugin-styled-components-3.1.0.tgz#ce837299807247cf2c4347bd51aaed4c58c195d9"
-  integrity sha512-VMaq82vU7WsfXj5kOxGJP7w9MOUUxT3mcs4NYZqHGvFU+2+oeO70SJ1WoeB5TSIFEKlNhGUiKTdL6NcMh54/nA==
+gatsby-plugin-styled-components@^3.1.11:
+  version "3.1.11"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-styled-components/-/gatsby-plugin-styled-components-3.1.11.tgz#8e249f9451e64cf8e882aad9f007e3a8741acfd4"
+  integrity sha512-10RgU3FcXNctDfFHpiAKQOmYBZlbeZSOfG1mqjWjz/BmYqkLoIaQfTwEMmBpH40DGf72pG2PUOGoDVDrikPKOA==
   dependencies:
-    "@babel/runtime" "^7.0.0"
+    "@babel/runtime" "^7.6.3"
 
 gatsby-react-router-scroll@^2.0.7:
   version "2.0.7"
