@@ -20,14 +20,14 @@ const data = [
   {
     title: 'Simple typeracer',
     description:
-      'Simple typeracer implementation in javascript (ReactJS and Node). Generates random texts with the help of Sentencer. Made with a clean and minimalistic ui.',
+      'A Simple typeracer implementation in javascript (ReactJS and Node). It generates random texts with the help of Sentencer and has a clean and minimalistic UI.',
     gitLink: 'https://github.com/rishichawda/simple-typeracer',
     image: typewriter,
   },
   {
     title: 'Markdown Magic build badge',
     description:
-      '🎊 A plugin to update your branch badges to point to correct branch status. You can use it in a script, as a git hook or directly from the command line itself!',
+      '🎊 A plugin to update branch badges to point to the correct branch status. You can use it in a script, as a git hook or directly from the command line itself!',
     gitLink: 'https://github.com/rishichawda/markdown-magic-build-badge',
     image:
       'https://raw.githubusercontent.com/rishichawda/markdown-magic-build-badge/master/example/demo.gif',
@@ -42,14 +42,14 @@ const data = [
   {
     title: 'Calendar widget',
     description:
-      'A cross platform reminder and notes application for Mac, Linux and Windows. Work in progress. 🚧  Made with ElectronJS and developed on random days of boredom.',
+      'A cross-platform reminder and notes application for Mac, Linux, and Windows. Work in progress. 🚧 Made with ElectronJS and developed on random days of boredom.',
     gitLink: 'https://github.com/rishichawda/calendar-app',
     image: calendar,
   },
   {
     title: 'React Lite UI',
     description:
-      'A set of themable, customizable and light-weight react components aimed at small bundle size and flexibility.',
+      'A set of theme-able, customizable, and light-weight react components aimed at small bundle size and flexibility.',
     gitLink: 'https://github.com/Codebrahma/react-lite-ui',
     image: ui,
   },
@@ -68,7 +68,7 @@ const data = [
   },
   {
     title: 'Weather App chrome extension',
-    description: 'Weather app integration into chrome extension.',
+    description: 'Weather app integration into a chrome extension.',
     gitLink: 'https://github.com/rishichawda/weatherapp-chrome-extension',
     image: weatherExt,
   },
@@ -78,14 +78,14 @@ const dataPlates = [
   {
     title: 'React boilerplate',
     description:
-      'Minimal react boilerplate with all the necessary things - lint hooks, module resolution, snapshot and dom testing, continuous integration, etc.',
+      'Minimal react boilerplate with all the necessary things - lint hooks, module resolution, snapshot, and dom testing, continuous integration, etc.',
     gitLink: 'https://github.com/rishichawda/minimal-react-boilerplate',
     image: react,
   },
   {
     title: 'Node backend boilerplate',
     description:
-      'Minimal NodeJS boilerplate with authentication setup using Passport, JWT and bcrypt.',
+      'Minimal NodeJS boilerplate with authentication setup using Passport, JWT, and bcrypt.',
     gitLink: 'https://github.com/rishichawda/minimal-server-boilerplate',
     image: node,
   },

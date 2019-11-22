@@ -8,21 +8,21 @@ path: "/articles/managing-react-application-state-without-redux/"
 banner: "content/blog/managing-react-application-state-without-redux/banner.jpg"
 ---
 
-**_Disclaimer:_** _This solution is best suited for small scale projects, and its main motive is to explore the new APIs React provides rather than trying to replace any traditional solutions._
+**_Disclaimer_**_: This solution is best suited for small scale projects, and its main motive is to explore the new APIs React provides rather than trying to replace any traditional solutions._
 
 <br/>
 
-So when was the last time you tried managing application state, without Redux? As far as I can remember, for me, it was probably during the time I had started learning and playing around with React. Although I had known about Redux at the time when I did try not using it, I just wanted to do it because I didn't want to add **three** dependencies to my react application just for managing a really small application state. Of course, when we talk about using redux, we are also going to use `react-redux` and middleware too!
+So when was the last time you tried managing application state, without Redux? As far as I can remember, for me, it was probably during the time I had started learning and playing around with React. Although I had known about Redux at the time when I did try not using it, I just wanted to do it because I didn’t want to add three dependencies to my react application just for managing a tiny application state. Of course, when we talk about using redux, we are also going to use `react-redux` and middleware too!
 
-I basically did it in two different ways ( which most of us, might have tried at some point as well ) :
+I did it in two different ways ( which most of us, might have tried at some point as well )
 
-- Using localStorage and custom listeners.
+- Using `localStorage` and custom listeners.
 
 - Using the Context API.
 
 <br>
 
-**But** in this article, we're not going to discuss that. We're going to see another way of managing the state, which is fairly new -- using **_Hooks_**.
+**_But_** in this article, we’re not going to discuss that. We’re going to see another way of managing the state, which is relatively new — using **_Hooks_**.
 
 So, let's set up a react project and add a root component, like so :
 
@@ -34,33 +34,33 @@ And our `ChildComponent.js` as,
 
 First, let us break down the complete flow and decide what we need :
 
-- A state, _ofcourse_
+- A state, _of course_
 
-- A way to mutate/update our state.
+- Update our state.
 
-- A way to sync the data from the state to our components wherever required.
+- Sync the data between the state and our components wherever required.
 
 - Do all of this while keeping the code clean. ( Very important )
 
-Let's set up our state first. For this, I'm going to use the `useReducer` hook. For those who are not familiar with the `useReducer` hook -- it is similar to the basic `useState` hook but more suited for this case as it provides a dispatch method, the previous state while computing and updating the state, etc. Basically, it will provide us a way that is similar to Redux's reducer and action flow. Let's set up our `useGlobalState` hook, which will help us initialize our state and provide us a dispatch for updating it as well.
+Let’s set up our state first. For this, I’m going to use the `useReducer` hook. For those who are not familiar with the `useReducer` hook — it is similar to the basic `useState` hook but more suited for this case as it provides a `dispatch` method, the previous state while computing and updating the state. It provides us a way that is similar to Redux’s reducer and action flow. Let’s set up our `useGlobalState` hook, which helps us initialize our state and provide us a dispatch for updating it as well.
 
 So our `redux.js` looks like this :
 
 `gist:rishichawda/d3ba7b0e4ae70052bf7ce4693fe3822e#redux.js`
 
-So what's going on here? Our custom hook here takes two arguments -- `initialState` for setting an initial state to our app and `reducer` is our reducer function, which is going to be used for updating state depending on the actions.
+So what’s going on here? Our custom hook here takes two arguments — `initialState` for setting an initial state to our app and `reducer` is our reducer function for updating state depending on the actions.
 
 Our `reducer.js` might look like this :
 
 `gist:rishichawda/46865557e94f06f3f9dfcf845cfb6b37#reducer.js`
 
-With those two arguments, we can initialise our reducer and state as :
+With those two arguments, we can initialize our reducer and state as :
 
 ```javascript
 const [state, dispatch] = React.useReducer(reducer, initialState);
 ```
 
-Since our `initialState` might, in some cases, require some computation and may not be just a static value -- we are going to use the third argument of `useReducer` to initialize our state from a function just in case we need to. So now we can initialize our state in two ways :
+Since our `initialState` might, in some cases, require some computation and may not be just a static value — we are going to use the third argument of `useReducer` to initialize our state from a function just in case we need to. So now we can initialize our state in two ways :
 
 ```javascript
 const globalState = useGlobalState(intialState, reducer);
@@ -73,7 +73,7 @@ const globalState = useGlobalState(() => {
 }, reducer);
 ```
 
-But where do we initialize our state? Well, this needs to be done inside the root component since Hooks can only be called/used inside a functional component. Let's add this to our `App.js` file and use the classic example of making a simple counter.
+But where do we initialize our state? Let’s add this to our `App.js` file and use the classic example of making a simple counter.
 
 `gist:rishichawda/853c751bb5c27eee52b0f504c39ac7e2#App.js`
 
@@ -81,15 +81,17 @@ This gives us something like this :
 
 ![globalstate redux hook](./demo-with-globalstate-redux-hook.gif)
 
-But still, we can't use the state inside our `ChildComponent` since it has no idea of this state. So how are we going to do this?
+But still, we can’t use the state inside our `ChildComponent` since it has no idea of this state. We’re going to use the `createContext` API for that.
 
-This is a slightly interesting step now. We're going to use the `createContext` API for that. Let's update our `redux.js` to give us a way to pass the state to our child(ren) component(s), like so :
+Let’s update our `redux.js` to give us a way to pass the state to our child(ren) component(s), like so : :
 
 `gist:rishichawda/73a4ca3292565b3cd96c7b860ad69c85#redux.js`
 
-I guess you can clearly see where this is going. We are going to use the `Provider` component in our root `App.js` and wrap our component with it. Additionally, we'll pass an initial state as the value for our 'provider'. This makes the values available in the DOM tree. But then you might wonder -- we need to wrap all our children who are going to use the state with `context.Consumer`, don't we? Well, no.
+I guess you can see where this is going. We are going to use the Provider component in our root `App.js` and wrap our component with it.
 
-Here's were our `React.useContext` hook comes into play along with a little HOC trick. And we're going to name it `connect` so it looks similar to redux! Also, it will be easier to understand if we can visualize it in the 'redux way'. But first, let's check if our current setup works.
+Additionally, we’ll pass an initial state as the value for our ‘provider.’ This makes the values available in the DOM tree. But then you might wonder — we need to wrap all our children who are going to use the state with `context.Consumer`, don’t we? Well, no.
+
+Here’s were our `React.useContext` hook comes into play along with a little HOC trick. And we’re going to name it `connect`, so it looks similar to redux! Also, it can be easier to understand if we can visualize it in the ‘redux way.’ But first, let’s check if our current setup works.
 
 Update the `App.js` file to this :
 
@@ -99,19 +101,19 @@ And our `ChildComponent.js` like this :
 
 `gist:rishichawda/aa53ee31f2e967a2adb4d9c401cddc16#ChildComponent.js`
 
-So what does `useContext` hook do? Well, it's similar to using `context.Consumer` tag which allowed us to access context value and subscribe to its changes. With `useContext` hook, we no longer use the `context.Consumer` in our component. We pass the context object to it, which then returns the value from the current context. Whenever the context data changes, the component is re-rendered with the new values.
+So what does `useContext` hook do? Well, it’s similar to using `context.Consumer` tag which allowed us to access context value and subscribe to its changes. With `useContext` hook, we no longer use the `context.Consumer` in our component. We pass the context object to it, which then returns the value from the current context. Whenever the context data changes, the component is re-rendered with the new values.
 
-Let's see if this works.
+Let’s see if this works.
 
 ![globalstate redux hook with provider](./demo-with-globalstate-redux-hook-provider.gif)
 
-Great! But there's one thing. Now we need to call `useContext` in every component! Let's get rid of this. We're going to write a small HOC which exposes an API similar to the `connect` HOC from `react-redux`.
+Great! But there’s one thing. Now we need to call `useContext` in every component! Let’s get rid of this. We’re going to write a small HOC which exposes an API similar to the `connect` HOC from `react-redux`.
 
 Now, our `redux.js` should look like this :
 
 `gist:rishichawda/c1d8e05b553a518629346d73140f8a75#redux.js`
 
-**_Note :_** _As you can see, we are just spreading the props over the component here. The ideal way is to use `hoist-non-react-statics` package to copy all non-react static methods to the new component. Please use that way since it is better than just passing the props. A complete explanation can be found in the [React Documentation for Higher Order Components](https://reactjs.org/docs/higher-order-components.html#static-methods-must-be-copied-over)._
+Note: As you can see, we are just spreading the props over the component here. The ideal way is to use the `hoist-non-react-statics` package to copy all non-react static methods to the new component. Please use that way since it is better than just passing the props. A complete explanation is in the [React Documentation for Higher-Order Components](https://reactjs.org/docs/higher-order-components.html#static-methods-must-be-copied-over).
 
 The `connect` HOC here takes our component and uses the context to get all the props that are required by the component as defined in the `mapStateToProps` function in the `connect` call. We can update our `ChildComponent.js` now, to something like this :
 
@@ -121,7 +123,7 @@ Let's check if this works.
 
 ![globalstate redux hook with connect hoc](./demo-with-connect-redux-hoc.gif)
 
-In case you're wondering, you can have different counters for both of them, and it'll work just fine! You just need to initialize the state with both the counters, dispatch actions from their respective buttons, and use the respective values from the state to display. Like so :
+In case you’re wondering, you can have different counters for both of them, and it’ll work just fine! You need to initialize the state with both the counters, dispatch actions from their respective buttons, and use the respective values from the state to display. Like so :
 
 ```jsx
 // In App.js, initialize counters like this
@@ -166,15 +168,15 @@ export default (state, action) => {
 
 ```
 
-Oh, and one more thing! Don't forget to wrap your components with `React.memo` if they're **not** connected to the state. This will prevent unnecessary re-renders when the state updates.
+Oh, and one more thing! Don’t forget to wrap your **_components_** with `React.memo` if they’re not connected to the state. This prevents unnecessary re-renders when the state updates.
 
-And we're done implementing a small redux-like application state management in our react application! All within just 40 lines of code! ✨
+And we’re done implementing a small redux-like application state management in our react application! All within just 40 lines of code! ✨
 
 You can check out the complete example in [this Github repository](https://github.com/rishichawda/globalstate-hook-example). Please leave a star on the repository or comment here if you liked this article!
 
 <br />
 
-_If you have any suggestions or ideas you can also contact me through my [social media profiles](/)._
+_If you have any suggestions or ideas, you can also contact me through my [social media profiles](/)._
 
 _Thank you for reading!_ 😄
 
