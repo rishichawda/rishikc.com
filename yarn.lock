@@ -718,10 +718,10 @@
     core-js "^2.5.7"
     regenerator-runtime "^0.11.1"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.7.2":
-  version "7.7.2"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.7.2.tgz#111a78002a5c25fc8e3361bedc9529c696b85a6a"
-  integrity sha512-JONRbXbTXc9WQE2mAZd1p0Z3DZ/6vaQIkgYMSTP3KjRCyd7rCZCcfhCyX+YjwcKxcZ82UrxbRD358bpExNgrjw==
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.4.2", "@babel/runtime@^7.4.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.4":
+  version "7.7.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.7.4.tgz#b23a856751e4bf099262f867767889c0e3fe175b"
+  integrity sha512-r24eVUUr0QqNZa+qrImUk8fn5SPhHq+IfYvIoIMg0do3GdK9sMdiLKP3GYVVaxpPKORgm8KRKaNTEhAjgIpLMw==
   dependencies:
     regenerator-runtime "^0.13.2"
 
@@ -6064,12 +6064,12 @@ gatsby-plugin-google-gtag@^1.0.17:
     "@babel/runtime" "^7.0.0"
     minimatch "^3.0.4"
 
-gatsby-plugin-layout@^1.1.13:
-  version "1.1.13"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-layout/-/gatsby-plugin-layout-1.1.13.tgz#334e2192c5a4e8e802706eadee99e5906528df1f"
-  integrity sha512-/UqHYq4/ODFXH/LHG1PoAJfRbZcE2EGN1ozf502P0W9/AvFBjnXbOr8aD7UXtgE0iO+jZtVr+I0uHbqQnBTmpA==
+gatsby-plugin-layout@^1.1.16:
+  version "1.1.16"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-layout/-/gatsby-plugin-layout-1.1.16.tgz#423833c271eaeb996cacb8ac567912173b9fbb3f"
+  integrity sha512-03Yph98OqY87Y/bEAtYkqd5LPRLKy01ft+CKHru8pfLJ+Z8O+IFSuE1Tt17bhrUGymViTS8gA1Qtjhj3Mn+2DA==
   dependencies:
-    "@babel/runtime" "^7.6.3"
+    "@babel/runtime" "^7.7.4"
 
 gatsby-plugin-manifest@^2.2.4:
   version "2.2.4"
