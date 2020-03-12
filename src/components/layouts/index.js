@@ -85,6 +85,11 @@ const Layout = ({
               href="https://github.githubassets.com/assets/gist-embed-b3b573358bfc66d89e1e95dbf8319c09.css"
             />
           )}
+          <script
+            data-ad-client={process.env.GATSBY_GOOGLE_AD_CLIENT}
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          />
         </Helmet>
       )}
     />
