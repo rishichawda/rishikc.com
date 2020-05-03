@@ -2,7 +2,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - master
+      - react-site
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
