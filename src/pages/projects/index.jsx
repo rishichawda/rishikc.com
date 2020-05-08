@@ -1,6 +1,5 @@
 import React from 'react'
 import Layout from 'components/layouts'
-import styled from 'styled-components'
 import { OutboundLink } from 'gatsby-plugin-google-analytics'
 import Header from 'elements/Header'
 import { FaGithub, FaTwitter } from 'react-icons/fa'
@@ -13,8 +12,6 @@ import calendar from 'static/calendar.svg'
 import bgGen from 'static/bg_gen.svg'
 import typewriter from 'static/typewriter.svg'
 import ui from 'static/ui.svg'
-import { colors } from '../../../tailwind'
-import './index.scss'
 
 const data = [
   {
@@ -97,12 +94,6 @@ const dataPlates = [
   },
 ]
 
-const SectionHeader = styled.h1`
-  font-size: 1.15rem;
-  line-height: 2rem;
-  font-weight: 400;
-`
-
 // eslint-disable-next-line react/prop-types
 const CardItem = ({ data: { title, description, gitLink, color, image } }) => (
   <div className="card">
@@ -129,18 +120,13 @@ const pageMeta = {
 }
 
 const App = () => (
-  <Layout withFooter disableNavbarHide bg={colors.bg} keywords={pageMeta.keywords}>
+  <Layout withFooter disableNavbarHide keywords={pageMeta.keywords}>
     <Header small title="Projects" />
     <div className="main">
       <div className="container">
         {data.map(item => (
           <CardItem key={item.title} data={item} />
         ))}
-      </div>
-      <div className="container flex">
-        <SectionHeader>
-          Some boilerplates that I have open sourced and use in my projects :{' '}
-        </SectionHeader>
       </div>
       <div className="container">
         {dataPlates.map(item => (

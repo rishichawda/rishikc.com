@@ -2,7 +2,6 @@ import React from 'react'
 import About from 'components/about'
 import Links from 'components/links'
 import Layout from 'components/layouts'
-import { colors } from '../../../tailwind'
 
 const pageMeta = {
   keywords:
@@ -10,7 +9,7 @@ const pageMeta = {
 }
 
 const App = () => (
-  <Layout withFooter bg={colors.bg} keywords={pageMeta.keywords}>
+  <Layout withFooter keywords={pageMeta.keywords}>
     <About />
     <Links />
   </Layout>

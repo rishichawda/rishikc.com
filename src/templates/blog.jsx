@@ -6,9 +6,6 @@ import Disqus from 'disqus-react'
 import Layout from 'components/layouts'
 import Header from 'elements/Header'
 
-import { colors } from '../../tailwind'
-import './blog.scss'
-
 function BlogTemplate({ pageContext, data, location }) {
   let { previous, next } = pageContext
   const disqusShortname = process.env.GATSBY_DISQUS_NAME
@@ -30,7 +27,6 @@ function BlogTemplate({ pageContext, data, location }) {
           ? ` - ${data.markdownRemark.frontmatter.subtitle}`
           : ''
       }`}
-      bg={colors.bg}
       pageDesription={data.markdownRemark.frontmatter.description}
       keywords={data.markdownRemark.frontmatter.keywords}
       isArticle

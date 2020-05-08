@@ -1,27 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { StaticQuery, graphql } from 'gatsby'
-import { createGlobalStyle } from 'styled-components'
 import Helmet from 'react-helmet'
 
 import Footer from 'elements/Footer'
 import Navbar from 'components/navbar'
 
-const GlobalStyle = createGlobalStyle`
-body {
-  margin: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: ${props => props.bg || '#fff'}
-  * {
-    box-sizing: border-box;
-    &::-webkit-scrollbar { width: 0 !important };
-    overflow: -moz-scrollbars-none;
-    -ms-overflow-style: none;
-    text-rendering: optimizelegibility;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  }
-}
-`
+// const GlobalStyle = createGlobalStyle`
+// body {
+//   margin: 0;
+//   font-family: 'Roboto', sans-serif;
+//   background-color: ${props => props.bg || '#fff'}
+//   * {
+//     box-sizing: border-box;
+//     &::-webkit-scrollbar { width: 0 !important };
+//     overflow: -moz-scrollbars-none;
+//     -ms-overflow-style: none;
+//     text-rendering: optimizelegibility;
+//     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+//   }
+// }
+// `
 
 const query = graphql`
   query SEO {
@@ -54,8 +53,8 @@ const Layout = ({
   articleData,
   withFooter,
 }) => (
-  <>
-    <GlobalStyle bg={bg} />
+  <div className="h-screen overflow-hidden">
+    {/* <GlobalStyle bg={bg} /> */}
     <StaticQuery
       query={query}
       render={({ site }) => (
@@ -90,13 +89,14 @@ const Layout = ({
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
           />
+          <body className="font-body" />
         </Helmet>
       )}
     />
     <Navbar disableNavbarHide={disableNavbarHide} bg={bg} color={color} />
     {children}
     {withFooter ? <Footer /> : null}
-  </>
+  </div>
 )
 
 Layout.propTypes = {

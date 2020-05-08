@@ -3,16 +3,13 @@ import { Link } from 'gatsby'
 
 import Layout from 'components/layouts'
 
-import { colors } from '../../../tailwind'
-import './index.scss'
-
 const pageMeta = {
   title: 'Blogs | Rishi Kumar Chawda - Web and Mobile Applications Developer',
   desc: 'Blogs written by Rishi Kumar Chawda.',
 }
 
 const FAQ = () => (
-  <Layout withFooter bg={colors.bg} pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
+  <Layout withFooter pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
     <div className="faq-main">
       <div role="main" className="faq-main container">
         <h1>FAQs</h1>

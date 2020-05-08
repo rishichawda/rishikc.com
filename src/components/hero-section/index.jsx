@@ -1,30 +1,8 @@
 import React from 'react'
-import { FaLinkedin, FaDev, FaGithub, FaMedium, FaTwitter } from 'react-icons/fa'
-
-import './index.scss'
-
-const links = {
-  LinkedIn: {
-    url: 'https://www.linkedin.com/in/rkrishi',
-    icon: FaLinkedin,
-  },
-  Github: {
-    url: 'https://github.com/rishichawda',
-    icon: FaGithub,
-  },
-  Dev: {
-    url: 'https://dev.to/rishikc',
-    icon: FaDev,
-  },
-  Twitter: {
-    url: 'https://www.twitter.com/rishiikc',
-    icon: FaTwitter,
-  },
-  'Medium Blogs': {
-    url: 'https://medium.com/@rishii.kumar.chawda',
-    icon: FaMedium,
-  },
-}
+import niceImage from 'assets/1456505540091.png'
+import nicelyCompressedImage from 'assets/1456505540091.webp'
+import { Link } from 'gatsby'
+import Typist from 'react-typist'
 
 const onClickProfileUrl = url => {
   if (typeof window !== 'undefined' && url) {
@@ -35,29 +13,37 @@ const onClickProfileUrl = url => {
   }
 }
 
-const renderOption = (item, key) => (
-  <li
-    role="menuitem"
-    key={key}
-    onKeyPress={() => onClickProfileUrl(item.url)}
-    onClick={() => onClickProfileUrl(item.url)}
-  >
-    <item.icon />
-  </li>
-)
-
 export default function Hero() {
   return (
-    <section className="hero-section">
-      <div role="main" aria-labelledby="Intro" className="hero-intro">
-        <h1>Hello,</h1>
-        <h2 id="Intro">I'm, Rishi</h2>
-        <h3>Web and Mobile App developer</h3>
-        <p>
-          A programmer with a passion for product design and development who loves working on
-          freelancing and open source projects.
-        </p>
-        <ul role="menu">{Object.keys(links).map(item => renderOption(links[item], item))}</ul>
+    <section className="container flex flex-col mx-auto h-full items-center p-2">
+      <div className="px-4 py-2 mt-32">
+        <picture className="rounded-full w-56 h-56">
+          <source srcSet={nicelyCompressedImage} type="image/webp" />
+          <source srcSet={niceImage} type="image/png" />
+          <img
+            className="shadow-xl rounded-full w-56 h-56"
+            alt="rishi_kumar_chawda"
+            src={niceImage}
+          />
+        </picture>
+      </div>
+      <div className="flex flex-col items-center">
+        <Typist
+          avgTypingDelay={79}
+          stdTypingDelay={38}
+          cursor={{ hideWhenDone: true }}
+          className="text-gray-700 text-center text-2xl px-4 py-2 mt-5 mb-40 font-light font-sans"
+        >
+          <span>Full Stack Web Developer</span>
+          <Typist.Backspace count={9} delay={500} />
+          <span>and Mobile Applications Developer</span>
+        </Typist>
+        <Link
+          className="mt-20 text-lg text-gray-400 hover:text-gray-700 hover:opacity-75 font-light"
+          to="/about"
+        >
+          Know more
+        </Link>
       </div>
     </section>
   )

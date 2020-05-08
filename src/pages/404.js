@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from 'gatsby'
 
-import './404.scss'
-
 const Page404 = () => (
   <div className="html404 body404">
     <div className="bubble" />
