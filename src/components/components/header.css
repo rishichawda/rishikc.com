@@ -1,0 +1,9 @@
+.article-list-header-container {
+  height: 550px;
+  background-color: #1a202c;
+}
+
+.article-list-header-container h1,
+.article-list-header-container h2 {
+  color: #e5e5e5;
+}

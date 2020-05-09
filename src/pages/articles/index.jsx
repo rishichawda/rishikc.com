@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, graphql } from 'gatsby'
-
+import Fade from 'react-reveal/Fade'
 import Layout from 'components/layouts'
 import Header from 'components/components/Header'
 
@@ -13,18 +13,19 @@ const pageMeta = {
 function Articles({ data }) {
   const { edges: posts } = data.allMarkdownRemark
   return (
-    <Layout withFooter pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
+    <Layout withFooter pageTitle={pageMeta.title} pageDescription={pageMeta.desc}>
       <Header title="Blogs" />
-      <div className="blog-main">
-        <div role="main" className="blog-main container">
-          {posts.map(({ node: { id, excerpt, frontmatter, fields: { readtime } } }) => (
-            // <ArticleItemContainer key={id} role="article">
-            <div className="article">
+      <main className="container max-w-screen-lg flex flex-col mx-auto p-6 pt-16 overflow-scroll">
+        {posts.map(({ node: { id, excerpt, frontmatter, fields: { readtime } } }) => (
+          <Fade bottom>
+            <div className="mb-12">
               <Link to={frontmatter.path} key={id}>
-                <h1>{frontmatter.title}</h1>
+                <h1 className="text-3xl font-normal text-gray-700">{frontmatter.title}</h1>
               </Link>
-              <p>{frontmatter.brief || excerpt}</p>
-              <small>
+              <p className="text-lg text-gray-400 leading-relaxed">
+                {frontmatter.brief || excerpt}
+              </p>
+              <small className="float-right mt-6 text-gray-500">
                 {frontmatter.date}
                 &nbsp;&nbsp;
                 {' · '}
@@ -32,10 +33,9 @@ function Articles({ data }) {
                 {readtime}
               </small>
             </div>
-            // </ArticleItemContainer>
-          ))}
-        </div>
-      </div>
+          </Fade>
+        ))}
+      </main>
     </Layout>
   )
 }

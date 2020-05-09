@@ -9,7 +9,7 @@ const pageMeta = {
 }
 
 const FAQ = () => (
-  <Layout withFooter pageTitle={pageMeta.title} pageDesription={pageMeta.desc}>
+  <Layout withFooter pageTitle={pageMeta.title} pageDescription={pageMeta.desc}>
     <div className="faq-main">
       <div role="main" className="faq-main container">
         <h1>FAQs</h1>

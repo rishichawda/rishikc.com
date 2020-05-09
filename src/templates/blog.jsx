@@ -27,7 +27,7 @@ function BlogTemplate({ pageContext, data, location }) {
           ? ` - ${data.markdownRemark.frontmatter.subtitle}`
           : ''
       }`}
-      pageDesription={data.markdownRemark.frontmatter.description}
+      pageDescription={data.markdownRemark.frontmatter.description}
       keywords={data.markdownRemark.frontmatter.keywords}
       isArticle
       articleData={{

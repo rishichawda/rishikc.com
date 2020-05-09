@@ -45,7 +45,7 @@ const query = graphql`
 const Layout = ({
   children,
   pageTitle,
-  pageDesription,
+  pageDescription,
   keywords,
   banner,
   bg,
@@ -58,12 +58,18 @@ const Layout = ({
   const [isDOMLoaded, setDOMLoadedState] = React.useState(false)
 
   React.useEffect(() => {
-    if (document.readyState === 'complete') {
-      setTimeout(() => {
-        setDOMLoadedState(true)
-      }, 2000)
+    window.onload = () => {
+      if (isDOMLoaded) return
+      if (document.readyState === 'complete') {
+        setTimeout(() => {
+          setDOMLoadedState(true)
+        }, 2000)
+      }
     }
-  })
+    if (document.readyState === 'complete') {
+      setDOMLoadedState(true)
+    }
+  }, [isDOMLoaded])
 
   if (!isDOMLoaded) {
     return (
@@ -82,7 +88,7 @@ const Layout = ({
           <Helmet>
             <html lang="en" />
             <title>{pageTitle || site.config.siteTitle}</title>
-            <meta name="description" content={pageDesription || site.config.siteDescription} />
+            <meta name="description" content={pageDescription || site.config.siteDescription} />
             {keywords && <meta name="keywords" content={keywords} />}
             <meta name="theme-color" content="#766dff" />
             <meta name="twitter:card" content={banner ? 'summary_large_image' : 'summary'} />
@@ -90,7 +96,7 @@ const Layout = ({
             <meta name="twitter:title" content={pageTitle || site.config.siteTitle} />
             <meta
               name="twitter:description"
-              content={pageDesription || site.config.siteDescription}
+              content={pageDescription || site.config.siteDescription}
             />
             {banner && <meta name="twitter:image" content={banner} />}
             {banner && <meta name="twitter:image:width" content="700" />}
@@ -124,7 +130,7 @@ const Layout = ({
 Layout.propTypes = {
   children: PropTypes.node,
   pageTitle: PropTypes.string,
-  pageDesription: PropTypes.string,
+  pageDescription: PropTypes.string,
   keywords: PropTypes.string,
   banner: PropTypes.number,
   bg: PropTypes.string,
@@ -138,7 +144,7 @@ Layout.propTypes = {
 Layout.defaultProps = {
   children: null,
   pageTitle: '',
-  pageDesription: '',
+  pageDescription: '',
   keywords: '',
   banner: undefined,
   bg: undefined,
