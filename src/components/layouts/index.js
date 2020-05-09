@@ -57,18 +57,13 @@ const Layout = ({
 }) => {
   const [isDOMLoaded, setDOMLoadedState] = React.useState(false)
 
-  useListener(
-    'readystatechange',
-    event => {
-      if (event.target.readyState === 'complete') {
-        setTimeout(() => {
-          setDOMLoadedState(true)
-        }, 2000)
-      }
-    },
-    null,
-    document
-  )
+  React.useEffect(() => {
+    if (document.readyState === 'complete') {
+      setTimeout(() => {
+        setDOMLoadedState(true)
+      }, 2000)
+    }
+  })
 
   if (!isDOMLoaded) {
     return (
