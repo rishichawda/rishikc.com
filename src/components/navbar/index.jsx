@@ -1,12 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Link } from 'gatsby'
-import Headroom from 'react-headroom'
-
 import icon from 'assets/favicon.png'
-import compressedIcon from 'assets/navbar-logo.webp'
-import GithubSVGIcon from '../icons/GithubIcon'
+import { Link } from 'gatsby'
+import PropTypes from 'prop-types'
+import React from 'react'
+import Headroom from 'react-headroom'
+import Fade from 'react-reveal/Fade'
 import DevSVGIcon from '../icons/DevCommunityIcon'
+import GithubSVGIcon from '../icons/GithubIcon'
 
 // const Styled = styled(Headroom)`
 //   .headroom {
@@ -69,30 +68,32 @@ function Navbar({ bg, color, disableNavbarHide }) {
       disableInlineStyles
       calcHeightOnResize
     >
-      <nav className="flex items-center justify-between flex-wrap px-5 py-3">
-        <div className="text-sm lg:flex-grow">
-          <Link to="/">
-            <img className="w-12 h-12" alt="logo" src={icon} />
-          </Link>
-        </div>
-        <ul className="flex items-center mr-6">
-          <li className="mr-8">
-            <Link className="text-xl text-gray-700 font-light" to="/articles">
-              Blogs
+      <Fade clear>
+        <nav className="flex items-center justify-between flex-wrap px-5 py-3">
+          <div className="text-sm lg:flex-grow">
+            <Link to="/">
+              <img className="w-12 h-12" alt="logo" src={icon} />
             </Link>
-          </li>
-          <li className="mr-8">
-            <Link className="text-gray-700" href="#">
-              <GithubSVGIcon className="w-8 h-8 fill-current" />
-            </Link>
-          </li>
-          <li>
-            <Link className="text-gray-700" href="#">
-              <DevSVGIcon className="w-8 h-8 fill-current" />
-            </Link>
-          </li>
-        </ul>
-      </nav>
+          </div>
+          <ul className="flex items-center mr-6">
+            <li className="mr-8">
+              <Link className="text-xl text-gray-700 font-light" to="/articles">
+                Blogs
+              </Link>
+            </li>
+            <li className="mr-8">
+              <Link className="text-gray-700" href="#">
+                <GithubSVGIcon className="w-8 h-8 fill-current" />
+              </Link>
+            </li>
+            <li>
+              <Link className="text-gray-700" href="#">
+                <DevSVGIcon className="w-8 h-8 fill-current" />
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </Fade>
     </Headroom>
   )
 }
