@@ -14,6 +14,8 @@ module.exports = {
     ...siteData,
   },
   plugins: [
+    `gatsby-plugin-typescript`,
+    `gatsby-plugin-tslint`,
     {
       resolve: 'gatsby-plugin-module-resolver',
       options: {

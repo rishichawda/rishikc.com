@@ -14,7 +14,7 @@ function getReadTime(text) {
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
 
-  const blogPost = path.resolve(`./src/templates/blog.jsx`)
+  const blogPost = path.resolve(`./src/templates/blog.tsx`)
   return graphql(
     `
       {
