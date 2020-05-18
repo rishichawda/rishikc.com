@@ -70,8 +70,8 @@ const SiteMetaData = (props: SiteMetaDataProps) => {
       keywords,
       banner,
       isArticle,
-      articleData
-    }
+      articleData,
+    },
   } = props;
   return (
     <Helmet>
@@ -133,6 +133,7 @@ interface LayoutProps extends Props<ReactNode> {
     date: string;
   };
   withFooter: boolean;
+  disableScroll: boolean;
 }
 
 const Layout = (props: LayoutProps) => {
@@ -147,7 +148,8 @@ const Layout = (props: LayoutProps) => {
     disableNavbarHide,
     isArticle,
     articleData,
-    withFooter
+    withFooter,
+    disableScroll,
   } = props;
   const [isDOMLoaded, setDOMLoadedState] = React.useState(false);
 
@@ -182,8 +184,12 @@ const Layout = (props: LayoutProps) => {
     articleData
   };
 
+  const layoutWrapperClasses = `h-screen${
+    disableScroll ? " overflow-hidden" : ""
+  }`;
+
   return (
-    <div className="h-screen overflow-hidden">
+    <div className={layoutWrapperClasses}>
       {/* <GlobalStyle bg={bg} /> */}
       <StaticQuery
         query={query}

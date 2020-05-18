@@ -1,7 +1,8 @@
-import React from 'react'
-import niceImage from 'assets/1456505540091.png'
-import nicelyCompressedImage from 'assets/1456505540091.webp'
+import React from "react";
 
-export default function About() {
-  return null
+const niceImage = require("assets/1456505540091.png");
+const nicelyCompressedImage = require("assets/1456505540091.webp");
+
+export default function About(props: React.Props<React.ReactElement>) {
+  return props.children;
 }

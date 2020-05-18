@@ -1,5 +1,9 @@
-import React from 'react'
+import React from "react";
 
-export default function Footer() {
-  return null
-}
+const Footer = ({
+  children
+}) => {
+  return null;
+};
+
+export default Footer;

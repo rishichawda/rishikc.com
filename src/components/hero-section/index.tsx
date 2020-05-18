@@ -2,8 +2,8 @@ import { Link } from "gatsby";
 import React from "react";
 import Typist from "react-typist";
 
-const niceImage = require("../../images/1456505540091.png");
-const nicelyCompressedImage = require("../../images/1456505540091.webp");
+const niceImage = require("assets/1456505540091.png");
+const nicelyCompressedImage = require("assets/1456505540091.webp");
 const Bounce = require("react-reveal/Bounce");
 const Fade = require("react-reveal/Fade");
 
