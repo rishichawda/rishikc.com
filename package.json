@@ -21,7 +21,7 @@
     "gatsby-plugin-offline": "^2.2.4",
     "gatsby-plugin-postcss": "^2.3.1",
     "gatsby-plugin-react-helmet": "^3.1.2",
-    "gatsby-plugin-sharp": "^2.2.9",
+    "gatsby-plugin-sharp": "^2.6.4",
     "gatsby-plugin-sitemap": "^2.2.1",
     "gatsby-plugin-tslint": "^0.0.2",
     "gatsby-plugin-typescript": "^2.4.2",
