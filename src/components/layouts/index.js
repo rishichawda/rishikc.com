@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { StaticQuery, graphql } from 'gatsby'
 import { createGlobalStyle } from 'styled-components'
 import Helmet from 'react-helmet'
+import Spinner from 'react-spinkit'
 
 import Footer from 'elements/Footer'
 import Navbar from 'components/navbar'
@@ -53,51 +54,77 @@ const Layout = ({
   isArticle,
   articleData,
   withFooter,
-}) => (
-  <>
-    <GlobalStyle bg={bg} />
-    <StaticQuery
-      query={query}
-      render={({ site }) => (
-        <Helmet>
-          <html lang="en" />
-          <title>{pageTitle || site.config.siteTitle}</title>
-          <meta name="description" content={pageDesription || site.config.siteDescription} />
-          {keywords && <meta name="keywords" content={keywords} />}
-          <meta name="theme-color" content="#766dff" />
-          <meta name="twitter:card" content={banner ? 'summary_large_image' : 'summary'} />
-          <meta name="twitter:creator" content={site.config.twitter} />
-          <meta name="twitter:title" content={pageTitle || site.config.siteTitle} />
-          <meta
-            name="twitter:description"
-            content={pageDesription || site.config.siteDescription}
-          />
-          {banner && <meta name="twitter:image" content={banner} />}
-          {banner && <meta name="twitter:image:width" content="700" />}
-          {banner && <meta name="twitter:image:height" content="340" />}
-          {isArticle && <meta name="twitter:label1" value="Reading Time" />}
-          {isArticle && <meta name="twitter:data1" value={articleData.readTime} />}
-          {isArticle && <meta name="article:published_time" content={articleData.date} />}
-          {isArticle && (
-            <link
-              key="gist-embeded-b3b573358bfc66d89e1e95dbf8319c09"
-              rel="stylesheet"
-              href="https://github.githubassets.com/assets/gist-embed-b3b573358bfc66d89e1e95dbf8319c09.css"
+  lightNavbar,
+}) => {
+  const [isDOMLoaded, setDOMLoadedState] = React.useState(false)
+
+  React.useEffect(() => {
+    window.onload = () => {
+      if (isDOMLoaded) return
+      if (document.readyState === 'complete') {
+        setTimeout(() => {
+          setDOMLoadedState(true)
+        }, 2000)
+      }
+    }
+    if (document.readyState === 'complete') {
+      setDOMLoadedState(true)
+    }
+  }, [isDOMLoaded])
+
+  if (!isDOMLoaded) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <Spinner name="ball-clip-rotate-multiple" />
+      </div>
+    )
+  }
+  return (
+    <>
+      <GlobalStyle bg={bg} />
+      <StaticQuery
+        query={query}
+        render={({ site }) => (
+          <Helmet>
+            <html lang="en" />
+            <title>{pageTitle || site.config.siteTitle}</title>
+            <meta name="description" content={pageDesription || site.config.siteDescription} />
+            {keywords && <meta name="keywords" content={keywords} />}
+            <meta name="theme-color" content="#766dff" />
+            <meta name="twitter:card" content={banner ? 'summary_large_image' : 'summary'} />
+            <meta name="twitter:creator" content={site.config.twitter} />
+            <meta name="twitter:title" content={pageTitle || site.config.siteTitle} />
+            <meta
+              name="twitter:description"
+              content={pageDesription || site.config.siteDescription}
             />
-          )}
-          <script
-            data-ad-client={process.env.GATSBY_GOOGLE_AD_CLIENT}
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-          />
-        </Helmet>
-      )}
-    />
-    <Navbar disableNavbarHide={disableNavbarHide} bg={bg} color={color} />
-    {children}
-    {withFooter ? <Footer /> : null}
-  </>
-)
+            {banner && <meta name="twitter:image" content={banner} />}
+            {banner && <meta name="twitter:image:width" content="700" />}
+            {banner && <meta name="twitter:image:height" content="340" />}
+            {isArticle && <meta name="twitter:label1" value="Reading Time" />}
+            {isArticle && <meta name="twitter:data1" value={articleData.readTime} />}
+            {isArticle && <meta name="article:published_time" content={articleData.date} />}
+            {isArticle && (
+              <link
+                key="gist-embeded-b3b573358bfc66d89e1e95dbf8319c09"
+                rel="stylesheet"
+                href="https://github.githubassets.com/assets/gist-embed-b3b573358bfc66d89e1e95dbf8319c09.css"
+              />
+            )}
+            <script
+              data-ad-client={process.env.GATSBY_GOOGLE_AD_CLIENT}
+              async
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+            />
+          </Helmet>
+        )}
+      />
+      <Navbar light={lightNavbar} disableNavbarHide={disableNavbarHide} bg={bg} color={color} />
+      {children}
+      {withFooter ? <Footer /> : null}
+    </>
+  )
+}
 
 Layout.propTypes = {
   children: PropTypes.node,

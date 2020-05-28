@@ -7,6 +7,7 @@ import tw from 'tailwind.macro'
 
 import icon from 'assets/navbar-logo.png'
 import compressedIcon from 'assets/navbar-logo.webp'
+import darkIcon from 'assets/favicon.png'
 
 import { colors } from '../../../tailwind'
 
@@ -73,35 +74,50 @@ const Styled = styled(Headroom)`
   }
 `
 
-function Navbar({ bg, color, disableNavbarHide }) {
+function Navbar({ bg, color, disableNavbarHide, light }) {
   return (
     <Styled
       disable={disableNavbarHide}
       color={color}
-      bg={bg}
+      bg={light ? 'transparent' : bg}
       disableInlineStyles
       calcHeightOnResize
     >
       <Nav>
         <Link to="/" className="logo">
           <picture>
-            <source srcSet={compressedIcon} type="image/webp" />
-            <source srcSet={icon} type="image/png" />
-            <img alt="logo" src={icon} />
+            <source srcSet={light ? darkIcon : compressedIcon} type="image/webp" />
+            <source srcSet={light ? darkIcon : icon} type="image/png" />
+            <img alt="logo" src={light ? icon : darkIcon} />
           </picture>
         </Link>
         <div className="navbar-links">
-          {/* <Link to="/">
-            <div className="navlink">Home</div>
-          </Link> */}
           <Link to="/about">
-            <div className="navlink">About</div>
+            <div
+              className={
+                light ? `text-gray-700 font-light font-sans` : `text-white font-light font-sans`
+              }
+            >
+              About
+            </div>
           </Link>
           <Link to="/articles">
-            <div className="navlink">Blogs</div>
+            <div
+              className={
+                light ? `text-gray-700 font-light font-sans` : `text-white font-light font-sans`
+              }
+            >
+              Blogs
+            </div>
           </Link>
           <Link to="/projects">
-            <div className="navlink">Projects</div>
+            <div
+              className={
+                light ? `text-gray-700 font-light font-sans` : `text-white font-light font-sans`
+              }
+            >
+              Projects
+            </div>
           </Link>
         </div>
       </Nav>
@@ -116,7 +132,7 @@ Navbar.propTypes = {
 }
 
 Navbar.defaultProps = {
-  bg: undefined,
+  bg: colors.bg,
   color: undefined,
   disableNavbarHide: false,
 }

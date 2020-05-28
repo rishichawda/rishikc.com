@@ -2,7 +2,11 @@ require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 
-const { colors } = require('./tailwind')
+const autoPrefixer = require(`autoprefixer`)
+const cssnano = require('cssnano')
+const tailwind = require('tailwindcss')
+
+const tailwindConfig = require('./tailwind')
 const siteData = require('./config/site.config')
 
 module.exports = {
@@ -95,6 +99,16 @@ module.exports = {
     `gatsby-plugin-sharp`,
     `gatsby-plugin-sass`,
     {
+      resolve: `gatsby-plugin-postcss`,
+      options: {
+        postCssPlugins: [
+          tailwind(tailwindConfig),
+          autoPrefixer,
+          ...(process.env.NODE_ENV === `production` ? [cssnano] : []),
+        ],
+      },
+    },
+    {
       resolve: `gatsby-plugin-styled-components`,
       options: {
         displayName: process.env.NODE_ENV !== 'production',
@@ -106,8 +120,8 @@ module.exports = {
         name: `Rishi Kumar Chawda - Portfolio and Blog`,
         short_name: `Rishi Kumar Chawda`,
         start_url: `/`,
-        background_color: colors.bg,
-        theme_color: colors.bg,
+        background_color: tailwindConfig.colors.bg,
+        theme_color: tailwindConfig.colors.bg,
         display: `standalone`,
         include_favicon: true,
         icon: `static/favicon.png`,

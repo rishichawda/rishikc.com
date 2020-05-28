@@ -10,6 +10,7 @@
 require('typeface-pt-sans')
 require('typeface-roboto')
 require('typeface-open-sans')
+require('./src/pages/index.css')
 require('./src/pages/index.scss')
 require('./src/templates/night-owl.min.css')
 require('./node_modules/normalize.css/normalize.css')
