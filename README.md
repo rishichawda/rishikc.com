@@ -1,7 +1,3 @@
-<a href="https://app.netlify.com/sites/rishikc/deploys">
-  <img src="https://api.netlify.com/api/v1/badges/888d05e7-a000-42ca-a661-a11ab41ccdce/deploy-status" alt="Netlify Status"/>
-</a>
-
 <br/>
 
 <br/>
@@ -23,8 +19,8 @@ Personal website and blog. Built with GatsbyJS.
   <a href="https://github.com/prettier/prettier">
     <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="code style: prettier"/>
   </a>
-  <a href="https://www.netlify.com">
-    <img src="https://img.shields.io/badge/deployed%20on-netlify-00c7b7.svg?style=flat-square" alt="deployed on:netlify"/>
+  <a href=".github/workflows/publish.yml">
+    <img src="https://github.com/rishichawda/rishikc.com/workflows/.github/workflows/publish.yml/badge.svg?branch=master" alt="deployed on:github"/>
   </a>
   <img alt="Blazing Fast" src="https://img.shields.io/badge/speed-blazing%20%F0%9F%94%A5-brightgreen.svg?style=flat-square">
 </p>
