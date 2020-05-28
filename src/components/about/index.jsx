@@ -18,9 +18,7 @@ const AboutText = styled.div`
   a {
     position: relative;
     ${tw`cursor-pointer`}
-    font-size: 1.1rem;
     text-decoration: none;
-    color: rgb(61, 61, 61);
     &::after {
       content: '';
       display: block;
@@ -50,12 +48,11 @@ const Header = styled.header`
 `
 
 const ContentText = styled.p`
+  ${tw`text-lg font-normal tracking-normal mb-2`}
   font-family: 'Open Sans', sans-serif;
-  font-size: 1.1em;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  line-height: 1.6em;
-`
+  line-height: 1.7;
+  color: rgb(61, 61, 61);
+`;
 
 const Wrapper = styled.section`
   ${tw`w-screen`}
@@ -95,7 +92,12 @@ export default function About() {
             </ContentText>
             <ContentText>
               Currently I'm working with the team at{' '}
-              <a href="https://github.com/codebrahma" target="_newtab" rel="nofollow">
+              <a
+                className="text-lg font-normal tracking-normal leading-normal"
+                href="https://github.com/codebrahma"
+                target="_newtab"
+                rel="nofollow"
+              >
                 Codebrahma
               </a>
               , where I develop Single page applications, Progressive web apps, and hybrid mobile

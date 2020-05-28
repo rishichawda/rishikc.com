@@ -12,14 +12,14 @@ const Wrapper = styled.section`
   background-color: rgb(250, 250, 250);
   color: rgb(61, 61, 61);
   p {
-    font-size: 1.1rem;
+    ${tw`text-lg font-normal tracking-normal leading-normal mb-2`}
     color: rgb(61, 61, 61);
     font-weight: 400;
   }
   a {
     position: relative;
+    ${tw`text-lg font-normal tracking-normal leading-normal mb-2`}
     ${tw`cursor-pointer`}
-    font-size: 1.1rem;
     text-decoration: none;
     color: rgb(61, 61, 61);
     &::after {
@@ -48,14 +48,13 @@ const Section = styled.div`
 
 const Title = styled.h1`
   color: rgb(25, 25, 25);
-  font-size: 1.24em;
-  font-weight: 400;
-  line-height: 2.5rem;
-  margin: 0 auto;
+  ${tw`text-lg font-normal tracking-normal leading-normal mb-2`}
   color: rgb(61, 61, 61);
 `
 
 const List = styled.ul`
+  list-style: disc;
+  list-style-position: inside;
   font-size: 1.1em;
   color: rgb(61, 61, 61);
 `
