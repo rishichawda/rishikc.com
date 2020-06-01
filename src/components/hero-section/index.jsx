@@ -3,6 +3,7 @@ import { FaLinkedin, FaDev, FaGithub, FaMedium, FaTwitter } from 'react-icons/fa
 import Typist from 'react-typist'
 import './index.scss'
 import { Link } from 'gatsby'
+import Spinner from 'react-spinkit'
 
 const niceImage = require('assets/1456505540091.png')
 const nicelyCompressedImage = require('assets/1456505540091.webp')
@@ -56,6 +57,7 @@ const renderOption = (item, key) => (
 const Hero = () => {
   const [isAnimationDone, setAnimationDone] = React.useState(false)
   const [shouldShowLink, setLinkVisibilityState] = React.useState(false)
+  const [isLoadComplete, setLoadComplete] = React.useState(false)
 
   const initiateTyping = () => {
     setTimeout(() => {
@@ -63,14 +65,24 @@ const Hero = () => {
     }, 1500)
   }
 
+  const onImageLoadComplete = () => {
+    setLoadComplete(true)
+  }
+
   const showMoreLink = () => {
     setLinkVisibilityState(true)
   }
+
   return (
     <section className="container flex flex-col mx-auto h-full items-center p-2">
-      <Fade delay={200} bottom onReveal={initiateTyping}>
+      {!isLoadComplete ? (
+        <div className="w-full h-screen absolute z-50 inset-0 flex items-center justify-center">
+          <Spinner name="ball-clip-rotate-multiple" />
+        </div>
+      ) : null}
+      <Fade when={isLoadComplete} delay={200} bottom onReveal={initiateTyping}>
         <div className="px-4 py-2 mt-32">
-          <picture className="rounded-full w-56 h-56">
+          <picture onLoad={onImageLoadComplete} className="rounded-full w-56 h-56">
             <source srcSet={nicelyCompressedImage} type="image/webp" />
             <source srcSet={niceImage} type="image/png" />
             <img
