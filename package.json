@@ -74,7 +74,7 @@
     "test:cy:dev": "server-test develop:cypress :8000 cy:open",
     "generate:lhs:badges": "lighthouse-badges --urls http://localhost:9000 -o test_results -b flat-square",
     "update:lhs:badges": "server-test serve :9000 generate:lhs:badges",
-    "deploy": "gh-pages -d public"
+    "deploy": "yarn build && gh-pages -d public"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.9.0",
