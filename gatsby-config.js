@@ -15,18 +15,18 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: 'gatsby-plugin-module-resolver',
+      resolve: "gatsby-plugin-module-resolver",
       options: {
-        root: './src',
+        root: "./src",
         aliases: {
-          components: './components',
-          elements: './components/components',
-          content: './content',
-          pages: './pages',
-          templates: './templates',
-          utils: './utils',
-          assets: './images',
-          static: '../static',
+          components: "./components",
+          elements: "./components/components",
+          content: "./content",
+          pages: "./pages",
+          templates: "./templates",
+          utils: "./utils",
+          assets: "./images",
+          static: "../static",
         },
       },
     },
@@ -52,9 +52,9 @@ module.exports = {
       options: {
         plugins: [
           {
-            resolve: 'gatsby-remark-embed-gist',
+            resolve: "gatsby-remark-embed-gist",
             options: {
-              username: 'rishichawda',
+              username: "rishichawda",
               includeDefaultCss: false,
             },
           },
@@ -73,7 +73,7 @@ module.exports = {
           {
             resolve: `gatsby-remark-prismjs`,
             options: {
-              classPrefix: 'language-',
+              classPrefix: "language-",
               inlineCodeMarker: null,
               noInlineHighlight: true,
             },
@@ -81,15 +81,14 @@ module.exports = {
           `gatsby-remark-copy-linked-files`,
           {
             resolve: `gatsby-remark-smartypants`,
-            config: {
-              dashes: 'oldschool',
+            options: {
+              dashes: "oldschool",
             },
           },
           {
-            resolve: 'gatsby-remark-external-links',
+            resolve: "gatsby-remark-external-links",
             options: {
-              target: '_blank',
-              rel: 'nofollow',
+              target: "_blank",
             },
           },
         ],
@@ -111,7 +110,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-styled-components`,
       options: {
-        displayName: process.env.NODE_ENV !== 'production',
+        displayName: process.env.NODE_ENV !== "production",
       },
     },
     {
@@ -150,4 +149,4 @@ module.exports = {
     },
     `gatsby-plugin-offline`,
   ],
-}
+};
