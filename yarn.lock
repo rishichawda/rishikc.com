@@ -7633,10 +7633,10 @@ gatsby-plugin-module-resolver@^1.0.3:
   resolved "https://registry.yarnpkg.com/gatsby-plugin-module-resolver/-/gatsby-plugin-module-resolver-1.0.3.tgz#d98d0b51b5b99aa40db3382f6b5c049ca3018f01"
   integrity sha512-MrE2JhDEiiZB6uLVJ0zpoZmHi36zkgGoNgBr9YQ4r6TUqayiNXU97NBhO87CRJQz8I4MaL6ZrOWjUdoHEXvndg==
 
-gatsby-plugin-nprogress@^2.0.10:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-nprogress/-/gatsby-plugin-nprogress-2.8.0.tgz#2a6eaecc1e346370b9f877ae05d13cbe14412358"
-  integrity sha512-fjyNI9ihCKuj8+mkR/aRbekXabjwQULpV2ekFLbO/yIITkdsfGxgkHVnz9//z2CkHTfaH3/RZeT5z+eIo4eJhQ==
+gatsby-plugin-nprogress@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-nprogress/-/gatsby-plugin-nprogress-2.10.0.tgz#93c3413bf23fda7db16bd84d1550c16438f0bd5e"
+  integrity sha512-V2sJ3qcE59ui0IFvkXnMRdp5PmF6vYAtaE/8v4as9i+lLCmeroP25pCZCdiSNFY8avbX1JLIFAshOw4Iw9y6vg==
   dependencies:
     "@babel/runtime" "^7.12.5"
     nprogress "^0.2.0"
