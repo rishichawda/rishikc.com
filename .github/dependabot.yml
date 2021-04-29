@@ -1,0 +1,63 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    time: "23:30"
+  open-pull-requests-limit: 10
+  labels:
+  - "\U0001F916 dependabot"
+  ignore:
+  - dependency-name: cypress
+    versions:
+    - 6.3.0
+    - 6.4.0
+    - 6.5.0
+    - 6.6.0
+    - 6.7.0
+    - 6.8.0
+    - 6.9.0
+  - dependency-name: eslint-config-prettier
+    versions:
+    - 7.2.0
+    - 8.0.0
+    - 8.1.0
+  - dependency-name: gatsby-transformer-remark
+    versions:
+    - 2.15.0
+    - 2.16.0
+  - dependency-name: gatsby-source-filesystem
+    versions:
+    - 2.10.0
+    - 2.11.0
+  - dependency-name: gatsby-remark-images
+    versions:
+    - 3.10.0
+    - 3.11.0
+  - dependency-name: gatsby-transformer-sharp
+    versions:
+    - 2.11.0
+    - 2.12.0
+  - dependency-name: gatsby-plugin-manifest
+    versions:
+    - 2.11.0
+    - 2.12.0
+  - dependency-name: gatsby-remark-copy-linked-files
+    versions:
+    - 2.9.0
+  - dependency-name: gatsby-remark-prismjs
+    versions:
+    - 3.12.0
+  - dependency-name: gatsby-plugin-google-analytics
+    versions:
+    - 2.10.0
+  - dependency-name: gatsby-plugin-styled-components
+    versions:
+    - 3.9.0
+  - dependency-name: gatsby-plugin-sitemap
+    versions:
+    - 2.11.0
+  - dependency-name: gatsby-plugin-nprogress
+    versions:
+    - 2.9.0
