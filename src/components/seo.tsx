@@ -5,28 +5,24 @@
  * See: https://www.gatsbyjs.com/docs/use-static-query/
  */
 
-import * as React from "react"
 import PropTypes from "prop-types"
+import getSiteMetadata from "query/getSiteMetadata"
+import * as React from "react"
 import { Helmet } from "react-helmet"
-import { useStaticQuery, graphql } from "gatsby"
 
-function SEO({ description, lang, meta, title }) {
-  const { site } = useStaticQuery(
-    graphql`
-      query {
-        site {
-          siteMetadata {
-            title
-            description
-            author
-          }
-        }
-      }
-    `
-  )
+type SEOProps = {
+  description: string,
+  lang: string,
+  meta: [],
+  title: string
+}
 
-  const metaDescription = description || site.siteMetadata.description
-  const defaultTitle = site.siteMetadata?.title
+function SEO({ description, lang, meta, title }: SEOProps) {
+  const siteMetadata = getSiteMetadata()
+
+  const metaDescription = description || siteMetadata.description
+  const metaTitle = siteMetadata.title || ''
+  const metaAuthor = siteMetadata.author || ''
 
   return (
     <Helmet
@@ -34,7 +30,7 @@ function SEO({ description, lang, meta, title }) {
         lang,
       }}
       title={title}
-      titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
+      titleTemplate={metaTitle ? `%s | ${metaTitle}` : undefined}
       meta={[
         {
           name: `description`,
@@ -58,7 +54,7 @@ function SEO({ description, lang, meta, title }) {
         },
         {
           name: `twitter:creator`,
-          content: site.siteMetadata?.author || ``,
+          content: metaAuthor,
         },
         {
           name: `twitter:title`,
