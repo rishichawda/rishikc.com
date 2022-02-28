@@ -4,4 +4,14 @@
  * See: https://www.gatsbyjs.com/docs/node-apis/
  */
 
-// You can delete this file if you're not using it
+const path = require('path')
+
+// Enable absolute imports from `src`.
+// See https://gatsbyjs.org/docs/add-custom-webpack-config#absolute-imports.
+exports.onCreateWebpackConfig = ({ stage, actions }) => {
+  actions.setWebpackConfig({
+    resolve: {
+      modules: [path.resolve(__dirname, "."), path.resolve(__dirname, "src"), "node_modules"],
+    },
+  })
+}
