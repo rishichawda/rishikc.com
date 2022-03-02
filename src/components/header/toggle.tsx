@@ -1,14 +1,13 @@
 import React from "react"
+import { ThemeToggler } from 'gatsby-plugin-dark-mode'
+
 import "./index.css"
 
-const ThemeToggleButton = () => {
-
-    const [theme, setTheme] = React.useState("light")
-
+const ThemeToggleButton = ({ onChange, theme }) => {
     const onButtonClick = () => {
-        setTheme(theme === "light" ? "dark" : "light")
+        let nextTheme = theme === "light" ? "dark" : "light"
+        onChange(nextTheme)
     }
-
     return (
         <div className="ml-5">
             <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="69.667" height="44" viewBox="0 0 69.667 44">
@@ -99,4 +98,10 @@ const ThemeToggleButton = () => {
     )
 }
 
-export default ThemeToggleButton
+const ThemeToggle = () => {
+    return <ThemeToggler>
+        {({ theme, toggleTheme }) => <ThemeToggleButton onChange={toggleTheme} theme={theme} />}
+    </ThemeToggler>
+}
+
+export default ThemeToggle

@@ -5,6 +5,7 @@ module.exports = {
     author: `Rishi Chawda`,
   },
   plugins: [
+    'gatsby-plugin-dark-mode',
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-image`,
     {
