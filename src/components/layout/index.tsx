@@ -13,11 +13,9 @@ import { CommonProps } from "types/components"
 import "./index.css"
 
 const Layout = ({ children }: CommonProps) => {
-  const siteMetadata = getSiteMetadata()
 
   return (
-    <div className="bg-blue h-screen flex-col flex">
-      <Header siteTitle={siteMetadata.title} />
+    <div className="flex-col flex">
       {children}
     </div>
   )
