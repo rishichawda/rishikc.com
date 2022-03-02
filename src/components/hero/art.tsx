@@ -3,8 +3,10 @@ import * as React from "react"
 const HeroSVG: React.FC = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
+      className="transition-all max-w-7xl w-full mx-4"
+      id="hero-art"
       xmlns="http://www.w3.org/2000/svg"
-      width="50%"
+      // width="50%"
       height="auto"
       viewBox="0 0 1087.542 657"
       {...props}
@@ -179,6 +181,8 @@ const HeroSVG: React.FC = (props: React.SVGProps<SVGSVGElement>) => {
           fill="#ccc"
         />
         <path
+          id="left-monitor"
+          className="transition-all"
           data-name="Path 153"
           d="M592.447 430.38h-176V328.421a4.04 4.04 0 014.036-4.036h167.928a4.04 4.04 0 014.036 4.036z"
           fill="#3f3d56"
@@ -200,6 +204,8 @@ const HeroSVG: React.FC = (props: React.SVGProps<SVGSVGElement>) => {
               fill="#ccc"
             />
             <path
+              id="right-monitor"
+              className="transition-all"
               data-name="Path 153"
               d="M942.447 430.38h-176V328.421a4.04 4.04 0 014.036-4.036h167.928a4.04 4.04 0 014.036 4.036z"
               fill="#3f3d56"
@@ -343,14 +349,20 @@ const HeroSVG: React.FC = (props: React.SVGProps<SVGSVGElement>) => {
         </g>
         <g fill="#fff">
           <path
+            id="orange-ring"
+            className="transition-all"
             data-name="Path 134"
             d="M48 96a48 48 0 1148-48 48 48 0 01-48 48zm0-94a46 46 0 1046 46A46 46 0 0048 2z"
-          />
+            />
           <path
+            id="green-ring"
+            className="transition-all"
             data-name="Path 135"
             d="M374 68a24 24 0 1124-24 24 24 0 01-24 24zm0-46a22 22 0 1022 22 22 22 0 00-22-22z"
-          />
+            />
           <path
+            id="blue-ring"
+            className="transition-all"
             data-name="Path 136"
             d="M543 185a27 27 0 1127-27 27 27 0 01-27 27zm0-52a25 25 0 1025 25 25 25 0 00-25-25z"
           />
@@ -367,6 +379,8 @@ const HeroSVG: React.FC = (props: React.SVGProps<SVGSVGElement>) => {
             fill="#65737e"
           />
           <path
+            id="laptop-screen"
+            className="transition-all"
             data-name="Path 157"
             d="M218.98 64.597a2.018 2.018 0 00-2 2.032v61.546a2.018 2.018 0 002 2.032h106.481a2.018 2.018 0 002-2.032V66.629a2.018 2.018 0 00-2-2.032z"
             fill="#3f3d56"
@@ -392,12 +406,14 @@ const HeroSVG: React.FC = (props: React.SVGProps<SVGSVGElement>) => {
           />
           <g data-name="Group 105">
             <path
+              className="keyboard transition-all"
               data-name="Path 158"
               d="M230.14 136.335a.7.7 0 00-.628.507l-4.449 12.193a1.07 1.07 0 00.046.834.671.671 0 00.582.4h93.557a.674.674 0 00.588-.413 1.071 1.071 0 00.03-.847l-3.836-12.192a.691.691 0 00-.618-.481z"
               fill="#2f2e41"
-            />
+              />
             <g transform="translate(-409.004 -293.26)" filter="url(#prefix__a)">
               <path
+              className="keyboard transition-all"
                 data-name="Path 195"
                 d="M721.693 431.5H640.45"
                 fill="none"
@@ -434,10 +450,12 @@ const HeroSVG: React.FC = (props: React.SVGProps<SVGSVGElement>) => {
             fill="rgba(238,238,238,0.47)"
           />
           <path
+            className="cup transition-all"
             d="M913.406 447.044a7.91 7.91 0 107.91 7.91 7.91 7.91 0 00-7.91-7.91zm0 12.777a4.867 4.867 0 114.868-4.867 4.867 4.867 0 01-4.868 4.867z"
             fill="#5f57de"
           />
           <path
+            className="cup transition-all"
             d="M882.984 440.96h30.422v30.109a3.963 3.963 0 01-3.963 3.963h-22.5a3.963 3.963 0 01-3.963-3.963z"
             fill="#6c63ff"
           />

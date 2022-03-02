@@ -1,14 +1,19 @@
-const { colors: defaultColors } = require('tailwindcss/defaultTheme')
+const { colors: defaultColors, colors } = require('tailwindcss/defaultTheme')
 
 module.exports = {
   purge: ["./src/**/*.{js,jsx,ts,tsx}"],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
-    colors: {
-      ...defaultColors,
-      blue: "#88c1df",
+    extend: {
+      colors: {
+        sky: {
+          400: "#38bdf8",
+        },
+        slate: {
+          900: "#0f172a"
+        }
+      }
     },
-    extend: {},
   },
   variants: {
     extend: {},
