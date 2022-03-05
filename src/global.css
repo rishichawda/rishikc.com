@@ -1,4 +1,24 @@
 /* ./src/styles/global.css */
 @tailwind base;
+
+@layer base {
+    h1 {
+        @apply text-5xl;
+    }
+
+    h2 {
+        @apply text-3xl;
+    }
+
+    h3 {
+        @apply text-2xl;
+    }
+
+    p,
+    a {
+        @apply font-normal antialiased;
+    }
+}
+
 @tailwind components;
 @tailwind utilities;

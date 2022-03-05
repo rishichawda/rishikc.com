@@ -5,10 +5,7 @@ import HeroSVG from './art'
 import "./index.css"
 
 const HeroAnimation = () => {
-    const siteMetadata = getSiteMetadata()
-
     return <div className="bg-sky-400 dark:bg-slate-900 flex flex-col items-center w-full h-screen">
-        <Header siteTitle={siteMetadata.title} />
         <HeroSVG />
     </div>
 }

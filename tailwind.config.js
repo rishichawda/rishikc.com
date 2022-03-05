@@ -5,14 +5,14 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {
-      colors: {
-        sky: {
-          400: "#38bdf8",
-        },
-        slate: {
-          900: "#0f172a"
-        }
-      }
+      // colors: {
+      //   sky: {
+      //     400: "#38bdf8",
+      //   },
+      //   slate: {
+      //     900: "#0f172a"
+      //   }
+      // }
     },
   },
   variants: {
