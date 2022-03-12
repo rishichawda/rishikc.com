@@ -29,7 +29,22 @@ module.exports = {
     },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    `gatsby-plugin-mdx`,
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-prismjs`,
+            options: {
+              classPrefix: "language-",
+              inlineCodeMarker: null,
+              noInlineHighlight: true,
+            },
+          },
+        ],
+      }
+    },
+    `gatsby-plugin-sass`,
     "gatsby-plugin-postcss",
     {
       resolve: `gatsby-plugin-manifest`,
@@ -51,7 +66,6 @@ module.exports = {
         }
       }
     },
-
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,

@@ -1,4 +1,4 @@
-const { screens } = require('tailwindcss/defaultTheme')
+const { screens, colors } = require('tailwindcss/defaultTheme')
 
 module.exports = {
   purge: ["./src/**/*.{js,jsx,ts,tsx}"],
@@ -9,6 +9,10 @@ module.exports = {
         'xs': '475px',
         ...screens,
       },
+      colors: {
+        'brand': '#3e4e88',
+        ...colors,
+      }
     },
   },
   variants: {
