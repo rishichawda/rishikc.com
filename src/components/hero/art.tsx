@@ -3,7 +3,7 @@ import * as React from "react"
 const HeroSVG: React.FC = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
-      className="transition-all max-w-7xl w-full mx-4"
+      className="transition-all w-full md:max-w-screen-sm lg:max-w-screen-md 2xl:max-w-screen-xl"
       id="hero-art"
       xmlns="http://www.w3.org/2000/svg"
       // width="50%"
