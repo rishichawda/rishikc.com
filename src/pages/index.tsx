@@ -27,7 +27,7 @@ const IndexPage = () => (
               Curious about science and mathematics, I spend an awful
               lot of time gathering knowledge that I don’t generally any
               use in day to day life. It’s good for geeking out though. :) </p>
-            <a className="text-sky-400 text-xl italic antialiased">Read more about me</a>
+            <a className="text-brand text-xl italic antialiased">Read more about me</a>
           </div>
           <div className="flex w-3/12 my-7">
             <HandsomeGuySVG className="w-full h-auto" />
@@ -44,7 +44,7 @@ const IndexPage = () => (
               </div>
             </div>
           </div>
-          <GatsbyLink to="articles" className="text-sky-400 text-xl italic antialiased">Browse the complete list</GatsbyLink>
+          <GatsbyLink to="articles" className="text-brand text-xl italic antialiased">Browse the complete list</GatsbyLink>
         </div>
         <div className="flex flex-col max-w-7xl mx-auto w-2/3 mb-28 justify-between">
           <h2 className="italic antialiased">Open source</h2>
@@ -57,12 +57,12 @@ const IndexPage = () => (
               </div>
             </div>
           </div>
-          <a className="text-sky-400 text-xl italic antialiased">See more projects on GitHub</a>
+          <a className="text-brand text-xl italic antialiased">See more projects on GitHub</a>
         </div>
         <div className="flex flex-col max-w-7xl mx-auto w-2/3 mb-28 justify-between">
           <div className="flex flex-row justify-between">
             <h2 className="italic antialiased">Gallery</h2>
-            <a className="text-sky-400 text-xl italic antialiased">View all photos</a>
+            <a className="text-brand text-xl italic antialiased">View all photos</a>
           </div>
           <div>
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">

@@ -6,7 +6,15 @@
   fill: #a6cad0;
 }
 
-#container, .patch, .star, .light, .dark, #button, #sun, #moon, #cloud {
+#container,
+.patch,
+.star,
+.light,
+.dark,
+#button,
+#sun,
+#moon,
+#cloud {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 0.25s;
@@ -20,15 +28,15 @@
   fill: #2b4360;
 }
 
-.light > #button {
+.light>#button {
   transform: translate(2.333px, 2.333px);
 }
 
-.dark > #button {
+.dark>#button {
   transform: translate(28px, 2.333px);
 }
 
-.light > #sun {
+.light>#sun {
   opacity: 1;
 }
 
@@ -58,4 +66,8 @@
 
 .dark .star {
   opacity: 1;
+}
+
+.light header {
+  background-color: rgb(62, 78, 136);
 }

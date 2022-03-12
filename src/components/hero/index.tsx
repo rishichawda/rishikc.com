@@ -5,7 +5,7 @@ import HeroSVG from './art'
 import "./index.css"
 
 const HeroAnimation = () => {
-    return <div className="bg-sky-400 dark:bg-slate-900 flex flex-col justify-center items-center w-full px-4 hero-main-height md:h-screen">
+    return <div className="bg-brand dark:bg-slate-900 flex flex-col justify-center items-center w-full px-4 hero-main-height md:h-screen">
         <HeroSVG />
     </div>
 }
