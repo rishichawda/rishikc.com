@@ -37,3 +37,7 @@ body.dark #hero-art .cup {
     fill: #211E50;
     fill-opacity: 1;
 }
+
+.hero-main-height {
+    min-height: 65vh;
+}
