@@ -31,6 +31,7 @@
     "gatsby-remark-smartypants": "^5.12.1",
     "gatsby-source-filesystem": "^4.9.0",
     "gatsby-source-git": "^1.1.0",
+    "gatsby-source-graphql": "^4.12.1",
     "gatsby-transformer-sharp": "^4.9.0",
     "gsap": "^3.9.1",
     "postcss": "^8.2.8",
