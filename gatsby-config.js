@@ -7,6 +7,7 @@ module.exports = {
     title: `Rishi`,
     description: `Personal Website / Portfolio`,
     author: `Rishi Chawda`,
+    siteUrl: 'https://rishikc.com',
   },
   plugins: [
     {
