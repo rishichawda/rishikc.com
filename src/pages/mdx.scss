@@ -8,7 +8,7 @@
         display: flex;
         font-size: 1em;
         line-height: 1.91em;
-        font-family: "Open Sans";
+    
         font-weight: 600;
         margin-top: 2.9em;
 
@@ -62,7 +62,7 @@
         flex-direction: column;
         color: #484646;
         font-size: 1rem;
-        font-family: "Open Sans";
+    
         background-color: #fff;
         box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
         border-radius: 0.43rem;
@@ -79,22 +79,15 @@
 }
 
 .article-content {
-    width: 97%;
-    max-width: 1280px;
-    margin: auto;
-    margin-top: 2em;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
-    font-family: "Open Sans";
-
-    small {
-        display: inline-block;
-        color: rgb(101, 101, 101);
-        font-size: 0.83em;
-        margin-bottom: 2em;
+    ul {
+      list-style-type: disc;
+      margin-left: 1rem;
+      padding-left: 1rem;
     }
 
     .gist {
@@ -104,6 +97,8 @@
 
     .gatsby-highlight {
         user-select: text;
+        margin-bottom: 2em;
+        margin-top: 1em;
     }
 
     blockquote {
@@ -118,14 +113,12 @@
     }
 
     h1,
-    h2 {
-        font-weight: 500;
-    }
-
+    h2,
     h3,
     h4 {
-        font-weight: 600;
-    }
+        font-weight: 500;
+        margin-bottom: 1em;
+      }
 
     a.gatsby-resp-image-link {
         margin: 34px auto 34px auto;
@@ -209,7 +202,7 @@
         font-weight: 300;
         box-sizing: border-box;
         background: #191a18;
-        box-shadow: rgba(0, 0, 0, 0.88) 0px 0px 10px 2px;
+        box-shadow: rgba(0, 0, 0, 0.30) 0px 0px 10px 2px;
         border-radius: 5px;
 
         code {
