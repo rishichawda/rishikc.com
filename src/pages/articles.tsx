@@ -17,7 +17,7 @@ const BlogPage = ({ data }) => {
               <GatsbyLink to={`/${node.slug}`}>
                 <div className="mb-2">
                     <h2 className="text-brand font-semibold mb-4 text-2xl">{node.frontmatter.title}</h2>
-                  <p className="article-preview font-normal leading-7 tracking-wide text-gray-500">{node.excerpt}</p>
+                  <p className="font-normal leading-7 tracking-wide text-gray-500">{node.excerpt}</p>
                 </div>
                   </GatsbyLink>
                 <div className="flex items-center text-sm text-gray-400 self-end">
@@ -55,7 +55,6 @@ query ArticleList {
     }
   }
 }
-
 `
 
 export default BlogPage
