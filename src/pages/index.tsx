@@ -16,7 +16,7 @@ const IndexPage = () => (
         <div className="flex flex-row max-w-7xl mx-auto mb-28 justify-between">
           <div className="flex flex-col w-8/12 justify-around">
             <h1 className="text-right italic antialiased">Hi, I'm Rishi.</h1>
-            <p className="text-right italic font-light antialiased">..and that above is my desk setup when I designed this page</p>
+            {/* <p className="text-right italic font-light antialiased">..and that above is my desk setup when I designed this page</p> */}
             <p className="leading-loose font-normal antialiased">Currently, I am a software engineer by profession and building
               awesome tools with the Chef team at Progress.
 
@@ -38,7 +38,7 @@ const IndexPage = () => (
           <div>
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
               <div className="px-4 py-6 sm:px-0">
-                <div className="flex flex-row items-center justify-center border-4 border-dashed bg-slate-400 opacity-10 border-gray-500 rounded-lg h-96">
+                <div className="flex flex-row items-center justify-center border-4 border-dashed bg-slate-400 border-gray-500 bg-opacity-20 border-opacity-40 opacity-40 rounded-lg h-96">
                   <p>Coming soon..</p>
                 </div>
               </div>
@@ -51,7 +51,7 @@ const IndexPage = () => (
           <div>
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
               <div className="px-4 py-6 sm:px-0">
-                <div className="flex flex-row items-center justify-center border-4 border-dashed bg-slate-400 opacity-10 border-gray-500 rounded-lg h-96">
+                <div className="flex flex-row items-center justify-center border-4 border-dashed bg-slate-400 border-gray-500 bg-opacity-20 border-opacity-40 opacity-40 rounded-lg h-96">
                   <p>Coming soon..</p>
                 </div>
               </div>
@@ -67,7 +67,7 @@ const IndexPage = () => (
           <div>
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
               <div className="px-4 py-6 sm:px-0">
-                <div className="flex flex-row items-center justify-center border-4 border-dashed bg-slate-400 opacity-10 border-gray-500 rounded-lg h-96">
+                <div className="flex flex-row items-center justify-center border-4 border-dashed bg-slate-400 border-gray-500 bg-opacity-20 border-opacity-40 opacity-40 rounded-lg h-96">
                   <p>Coming soon..</p>
                 </div>
               </div>
