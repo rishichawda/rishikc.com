@@ -5,6 +5,7 @@
  * See: https://www.gatsbyjs.com/docs/use-static-query/
  */
 
+import Footer from "components/footer"
 import Header from "components/header"
 import PropTypes from "prop-types"
 import getSiteMetadata from "query/getSiteMetadata"
@@ -19,6 +20,7 @@ const Layout = ({ children }: CommonProps) => {
     <div className="relative flex-col flex bg-slate-50 dark:bg-gray-800 dark:text-gray-50">
       <Header siteTitle={siteMetadata.title} />
       {children}
+      <Footer />
     </div>
   )
 }
