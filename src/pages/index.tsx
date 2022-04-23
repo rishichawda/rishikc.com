@@ -28,7 +28,7 @@ const IndexPage = ({ data }) => (
               Curious about science and mathematics, I spend an awful
               lot of time gathering knowledge that I don’t generally any
               use in day to day life. It’s good for geeking out though. :) </p>
-            <a className="text-brand text-xl italic antialiased">Read more about me</a>
+            <a className="text-brand dark:text-gray-400 text-xl italic antialiased">Read more about me</a>
           </div>
           <div className="flex w-3/12 my-7">
             <HandsomeGuySVG className="w-full h-auto" />
@@ -47,12 +47,12 @@ const IndexPage = ({ data }) => (
                           <GatsbyLink to={`/${node.slug}`}>
                             <div className="mb-2">
                               <div className="flex justify-between items-center mb-4">
-                              <h2 className="text-brand font-semibold text-2xl">{node.frontmatter.title}</h2>
+                              <h2 className="text-brand dark:text-gray-300 font-semibold text-2xl">{node.frontmatter.title}</h2>
                                 <div className="flex items-center text-sm text-gray-400">
                                   <p>{node.frontmatter.date}</p>
                                 </div>
                               </div>
-                              <p className="font-normal leading-7 tracking-wide text-gray-500">{node.excerpt}</p>
+                              <p className="font-normal leading-7 tracking-wide text-gray-500 dark:text-gray-400">{node.excerpt}</p>
                             </div>
                           </GatsbyLink>
                         </div>
@@ -63,7 +63,7 @@ const IndexPage = ({ data }) => (
               </div>
             </div>
           </div>
-          <GatsbyLink to="articles" className="text-brand text-xl italic antialiased">Browse the complete list</GatsbyLink>
+          <GatsbyLink to="articles" className="text-brand dark:text-gray-400 text-xl italic antialiased">Browse the complete list</GatsbyLink>
         </div>
         <div className="flex flex-col max-w-7xl mx-auto w-2/3 mb-28 justify-between">
           <h2 className="italic antialiased">Open source</h2>
@@ -78,12 +78,12 @@ const IndexPage = ({ data }) => (
               </div>
             </div>
           </div>
-          <a href="https://github.com/rishichawda" target="_blank" className="text-brand text-xl italic antialiased">See more projects on GitHub</a>
+          <a href="https://github.com/rishichawda" target="_blank" className="text-brand dark:text-gray-400 text-xl italic antialiased">See more projects on GitHub</a>
         </div>
         <div className="flex flex-col max-w-7xl mx-auto w-2/3 mb-28 justify-between">
           <div className="flex flex-row justify-between">
             <h2 className="italic antialiased">Gallery</h2>
-            <a className="text-brand text-xl italic antialiased">View all photos</a>
+            <a className="text-brand dark:text-gray-400 text-xl italic antialiased">View all photos</a>
           </div>
           <div>
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">

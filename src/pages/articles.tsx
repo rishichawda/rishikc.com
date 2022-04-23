@@ -16,7 +16,7 @@ const BlogPage = ({ data }) => {
               <div className="p-4 flex flex-col justify-between leading-normal">
               <GatsbyLink to={`/${node.slug}`}>
                 <div className="mb-2">
-                    <h2 className="text-brand font-semibold mb-4 text-2xl">{node.frontmatter.title}</h2>
+                    <h2 className="text-brand dark:text-gray-300 font-semibold mb-4 text-2xl">{node.frontmatter.title}</h2>
                   <p className="font-normal leading-7 tracking-wide text-gray-500">{node.excerpt}</p>
                 </div>
                   </GatsbyLink>
