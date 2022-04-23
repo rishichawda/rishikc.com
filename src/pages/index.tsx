@@ -6,8 +6,9 @@ import GatsbyLink from 'gatsby-link'
 import './index.css'
 import HandsomeGuySVG from "assets/handsome-guy.svg"
 import LinkModal from "components/links"
+import { graphql } from "gatsby"
 
-const IndexPage = () => (
+const IndexPage = ({ data }) => (
   <>
     <Layout>
       <SEO title="Home" />
@@ -17,7 +18,7 @@ const IndexPage = () => (
           <div className="flex flex-col w-8/12 justify-around">
             <h1 className="text-right italic antialiased">Hi, I'm Rishi.</h1>
             {/* <p className="text-right italic font-light antialiased">..and that above is my desk setup when I designed this page</p> */}
-            <p className="leading-loose font-normal antialiased">Currently, I am a software engineer by profession and building
+            <p className="font-normal leading-7 tracking-wide antialiased text-base">Currently, I am a software engineer by profession and building
               awesome tools with the Chef team at Progress.
 
               Apart from my work, I spend time reading books, painting or
@@ -38,8 +39,26 @@ const IndexPage = () => (
           <div>
             <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
               <div className="px-4 py-6 sm:px-0">
-                <div className="flex flex-row items-center justify-center border-4 border-dashed bg-slate-400 border-gray-500 bg-opacity-20 border-opacity-40 opacity-40 rounded-lg h-96">
-                  <p>Coming soon..</p>
+                <div className="flex flex-col max-w-7xl justify-between">
+                  {
+                    data.allMdx.nodes.map(node => (
+                      <article className="my-2" key={node.id}>
+                        <div className="p-2 px-0 flex flex-col justify-between leading-normal">
+                          <GatsbyLink to={`/${node.slug}`}>
+                            <div className="mb-2">
+                              <div className="flex justify-between items-center mb-4">
+                              <h2 className="text-brand font-semibold text-2xl">{node.frontmatter.title}</h2>
+                                <div className="flex items-center text-sm text-gray-400">
+                                  <p>{node.frontmatter.date}</p>
+                                </div>
+                              </div>
+                              <p className="font-normal leading-7 tracking-wide text-gray-500">{node.excerpt}</p>
+                            </div>
+                          </GatsbyLink>
+                        </div>
+                      </article>
+                    ))
+                  }
                 </div>
               </div>
             </div>
@@ -84,5 +103,22 @@ const IndexPage = () => (
     </Layout>
   </>
 )
+
+export const query = graphql`
+query LatestArticles {
+  allMdx(limit: 2, sort: {fields: frontmatter___date, order: DESC}) {
+    nodes {
+      slug
+      id
+      excerpt(pruneLength: 340)
+      frontmatter {
+        subtitle
+        date(formatString: "Do MMMM, YYYY")
+        title
+      }
+    }
+  }
+}
+`
 
 export default IndexPage
