@@ -13,16 +13,14 @@ const BlogPage = ({ data }) => {
         {
           data.allMdx.nodes.map(node => (
             <article className="my-7" key={node.id}>
-              <div className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" title="Woman holding a mug">
-              </div>
               <div className="p-4 flex flex-col justify-between leading-normal">
+              <GatsbyLink to={`/${node.slug}`}>
                 <div className="mb-2">
-                  <GatsbyLink to={`/${node.slug}`} className=" font-bold text-xl mb-2">
-                    <h2>{node.frontmatter.title}</h2>
-                  </GatsbyLink>
-                  <p>{node.excerpt}</p>
+                    <h2 className="text-brand font-semibold mb-4 text-2xl">{node.frontmatter.title}</h2>
+                  <p className="article-preview font-normal leading-7 tracking-wide text-gray-500">{node.excerpt}</p>
                 </div>
-                <div className="flex items-center text-sm">
+                  </GatsbyLink>
+                <div className="flex items-center text-sm text-gray-400 self-end">
                   <p>{node.frontmatter.date}</p>
                   &nbsp;&nbsp;
                   {" · "}
@@ -46,7 +44,7 @@ query ArticleList {
     nodes {
       slug
       id
-      excerpt
+      excerpt(pruneLength: 340)
       frontmatter {
         subtitle
         date(formatString: "Do MMMM, YYYY")
