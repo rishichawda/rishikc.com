@@ -3,7 +3,7 @@ import React from 'react'
 function RepoCard({ repository }) {
   return (
     <a className="inline-flex items-stretch" href={repository.url} target="_blank">
-      <div className="relative bg-white py-4 px-5 shadow-md ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg overflow-hidden">
+      <div className="relative bg-white dark:bg-gray-700 py-4 px-5 shadow-md ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:rounded-lg overflow-hidden">
         <div className="w-full h-1 flex absolute top-0 left-0">
           {repository.languages.edges.map((node) => {
             let percentage = `${Math.round((node.size / repository.languages.totalSize) * 100)}%`
