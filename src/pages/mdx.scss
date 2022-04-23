@@ -1,3 +1,15 @@
+.dark { 
+ .article-content {
+    p {
+                  @apply text-gray-400;
+    }
+
+    a, a:not(.gatsby-resp-image-link) {
+      @apply text-gray-300;
+    }
+  }
+}
+
 .article-template {
     height: 100%;
     width: 100vw;
