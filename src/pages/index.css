@@ -8,3 +8,10 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
+
+.article-preview {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
