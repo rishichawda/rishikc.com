@@ -15,7 +15,7 @@ const IndexPage = ({ data }) => (
       <HeroAnimation />
       <div className="flex flex-col w-full py-44">
         {/* intro section */}
-        <div className="flex md:flex-row flex-col-reverse max-w-screen-2xl mx-auto px-7 mb-28 justify-between">
+        <div className="flex md:flex-row flex-col-reverse max-w-screen-2xl mx-auto px-4 mb-28 justify-between">
           <div className="flex flex-col lg:w-8/12 justify-around">
             <h1 className="text-right italic antialiased">Hi, I'm Rishi.</h1>
             {/* <p className="text-right italic font-light antialiased">..and that above is my desk setup when I designed this page</p> */}
@@ -34,7 +34,7 @@ const IndexPage = ({ data }) => (
           </div>
         </div>
         {/* blog preview section */}
-        <div className="flex flex-col max-w-screen-2xl mx-auto px-7 mb-28 justify-between">
+        <div className="flex flex-col max-w-screen-2xl mx-auto px-4 mb-28 justify-between">
           <h2 className="italic antialiased">Some of my writings</h2>
             <div className="mx-auto py-4">
               <div className="flex flex-col justify-between">
@@ -50,7 +50,7 @@ const IndexPage = ({ data }) => (
                                 <p>{node.frontmatter.date}</p>
                               </div>
                             </div>
-                            <p className="font-normal leading-7 tracking-wide text-gray-500 dark:text-gray-400">{node.excerpt}</p>
+                            <p className="article-preview font-normal leading-7 tracking-wide text-gray-500 dark:text-gray-400">{node.excerpt}</p>
                           </div>
                         </GatsbyLink>
                       </div>
@@ -62,7 +62,7 @@ const IndexPage = ({ data }) => (
           <GatsbyLink to="articles" className="text-brand dark:text-gray-400 text-xl italic antialiased">Browse the complete list</GatsbyLink>
         </div>
         {/* popular repo preview section */}
-        <div className="flex flex-col max-w-screen-2xl mx-auto px-7 mb-28 justify-between">
+        <div className="flex flex-col max-w-screen-2xl mx-auto px-4 mb-28 justify-between">
           <h2 className="italic antialiased">Open source</h2>
             <div className="mx-auto py-6">
               <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-4 auto-cols-min gap-y-5">
@@ -76,7 +76,7 @@ const IndexPage = ({ data }) => (
           <a href="https://github.com/rishichawda" target="_blank" className="text-brand dark:text-gray-400 text-xl italic antialiased">See more projects on GitHub</a>
         </div>
         {/* gallery preview section */}
-        <div className="flex flex-col max-w-screen-2xl mx-auto px-7 w-full mb-28 justify-between">
+        <div className="flex flex-col max-w-screen-2xl mx-auto px-4 w-full mb-28 justify-between">
           <div className="flex flex-row justify-between">
             <h2 className="italic antialiased">Gallery</h2>
             <a className="text-brand dark:text-gray-400 text-xl italic antialiased">View all photos</a>

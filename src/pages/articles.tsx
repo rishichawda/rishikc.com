@@ -9,7 +9,7 @@ const BlogPage = ({ data }) => {
       <div className="bg-brand dark:bg-slate-900 flex flex-col justify-center items-center w-full height-55 mb-7">
         <h1 className="text-gray-50">Articles</h1>
       </div>
-      <div className="flex flex-col max-w-7xl mx-auto mb-28 justify-between">
+      <div className="flex flex-col max-w-screen-2xl mx-auto mb-28 justify-between">
         {
           data.allMdx.nodes.map(node => (
             <article className="my-7" key={node.id}>
