@@ -17,7 +17,7 @@ const IndexPage = ({ data }) => (
         {/* intro section */}
         <div className="flex md:flex-row flex-col-reverse max-w-screen-2xl mx-auto px-4 mb-28 justify-between">
           <div className="flex flex-col lg:w-8/12 justify-around">
-            <h1 className="text-right italic antialiased">Hi, I'm Rishi.</h1>
+            <h1 className="text-4xl md:text-right italic antialiased">Hi, I'm Rishi.</h1>
             {/* <p className="text-right italic font-light antialiased">..and that above is my desk setup when I designed this page</p> */}
             <p className="font-normal leading-7 tracking-wide antialiased text-lg my-7">Currently, I am a software engineer by profession and building
               awesome tools with the Chef team at Progress.<br /><br />
