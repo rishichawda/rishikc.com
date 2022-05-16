@@ -66,11 +66,11 @@ function SEO({ description, lang, meta, title }: SEOProps) {
         },
       ].concat(meta)}
     >
-      <script
+      {/* <script
         data-ad-client={process.env.GATSBY_GOOGLE_AD_CLIENT}
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-      />
+      /> */}
 </Helmet>
   )
 }
