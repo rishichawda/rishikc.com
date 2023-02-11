@@ -83,11 +83,11 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `Rishi's Portfolio Site - rishikc.com`,
+        short_name: `Rishi`,
         start_url: `/`,
-        background_color: `#88c1df`,
-        theme_color: `#88c1df`,
+        background_color: `#3e4e88`,
+        theme_color: `#3e4e88`,
         display: `minimal-ui`,
         icon: `assets/handsome-guy.svg`, // This path is relative to the root of the site.
       },
