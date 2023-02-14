@@ -46,7 +46,7 @@ const Header = ({ siteTitle }: HeaderProps) => {
         </GatsbyLink>
         <div className="flex flex-row items-center justify-between">
           <div className="hidden md:flex flex-row">
-            {Links.map((item) => <item.IconComponent className="w-full h-5 2xl:h-7 ml-5 cursor-pointer" onClick={() => onClickProfileUrl(item.url)} />)}
+            {Links.map((item) => <item.IconComponent key={item.url} className="w-full h-5 2xl:h-7 ml-5 cursor-pointer" onClick={() => onClickProfileUrl(item.url)} />)}
           </div>
           <ThemeToggleButton />
         </div>
