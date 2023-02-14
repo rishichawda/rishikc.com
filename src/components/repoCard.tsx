@@ -9,7 +9,7 @@ function RepoCard({ repository }) {
             let percentage = `${Math.round((node.size / repository.languages.totalSize) * 100)}%`
             return (
               <dfn key={node.node.name} className="h-full" title={`${node.node.name}, ${percentage}`} style={{ backgroundColor: node.node.color, minWidth: percentage }}>
-                <div className="h-full w-full" style={{ backgroundColor: node.node.color }}>{console.log(node)}</div>
+                <div className="h-full w-full" style={{ backgroundColor: node.node.color }}></div>
               </dfn>
             )
           })}
