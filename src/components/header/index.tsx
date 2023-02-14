@@ -22,7 +22,6 @@ const Links = [
   { IconComponent: TwitterIcon, url: 'https://twitter.com/rishiikc' },
   { IconComponent: DevIcon, url: 'https://dev.to/rishikc' },
   { IconComponent: DribbbleIcon, url: 'https://www.dribbble.com/rishikc' },
-  // { IconComponent: SOIcon, url: 'https://www.linkedin.com/in/rkrishi' },
   { IconComponent: MediumIcon, url: 'https://medium.com/@rishii.kumar.chawda' },
 ]
 
