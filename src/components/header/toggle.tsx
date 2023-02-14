@@ -9,7 +9,7 @@ const ThemeToggleButton = ({ onChange, theme }) => {
     onChange(nextTheme)
   }
   return (
-    <div className="ml-5">
+    <div onClick={onButtonClick} className="ml-5">
       <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="69.667" height="44" viewBox="0 0 69.667 44">
         <defs>
           <filter id="moon" x="28.5" y="2.833" width="36.333" height="36.333" filterUnits="userSpaceOnUse">
@@ -54,7 +54,7 @@ const ThemeToggleButton = ({ onChange, theme }) => {
             <rect id="container" data-name="container" width="60.667" height="35" rx="17.5" transform="translate(3.5 3.5)" fill="#83cbd8" />
           </g>
           {/* button */}
-          <g id="button" onClick={onButtonClick} transform="translate(2.333 2.333)">
+          <g id="button" transform="translate(2.333 2.333)">
             <g id="sun" data-name="sun">
               <g transform="matrix(1, 0, 0, 1, -5.83, -5.83)" filter="url(#sun-outer)">
                 <circle id="sun-outer-2" data-name="sun-outer" cx="15.167" cy="15.167" r="15.167" transform="translate(5.83 5.83)" fill="#f8e664" />
