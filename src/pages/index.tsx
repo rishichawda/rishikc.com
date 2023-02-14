@@ -27,7 +27,7 @@ const IndexPage = ({ data }) => (
               Curious about science and mathematics, I spend an awful
               lot of time gathering knowledge that I don’t generally any
               use in day to day life. It’s good for geeking out though. :) </p>
-            <a className="text-brand dark:text-gray-400 text-xl italic antialiased">Read more about me</a>
+            {/* <a className="text-brand dark:text-gray-400 text-xl italic antialiased">Read more about me</a> */}
           </div>
           <div className="flex md:w-3/12 my-7">
             <HandsomeGuySVG className="w-full h-auto" />
