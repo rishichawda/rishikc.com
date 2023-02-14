@@ -1,6 +1,6 @@
 import React from 'react'
 
-function RepoCard({ repository }) {
+function Card({ repository }) {
   return (
     <a className="inline-flex w-full items-stretch" href={repository.url} target="_blank">
       <div className="relative w-full bg-white dark:bg-gray-700 py-4 px-5 shadow-md ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg rounded-lg overflow-hidden">
@@ -27,4 +27,4 @@ function RepoCard({ repository }) {
   )
 }
 
-export default RepoCard
+export default Card
