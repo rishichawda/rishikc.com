@@ -1,7 +1,0 @@
-{
-  "baseUrl": "http://localhost:8000/",
-  "chromeWebSecurity": false,
-  "viewportHeight": 900,
-  "viewportWidth": 1440,
-  "video": false
-}
