@@ -18,6 +18,12 @@ module.exports = {
         branch: `main`
       }
     },
+    {
+      resolve: `gatsby-source-instagram`,
+      options: {
+        username: process.env.INSTAGRAM_USER_ID,
+      },
+    },
     'gatsby-plugin-dark-mode',
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-sitemap`,
@@ -129,6 +135,13 @@ module.exports = {
         headers: {
           Authorization: `bearer ${process.env.GITHUB_TOKEN}`,
         }
+      },
+    },
+    {
+      resolve: `gatsby-plugin-remote-images`,
+      options: {
+        nodeType: 'InstaNode',
+        imagePath: 'original',
       },
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality

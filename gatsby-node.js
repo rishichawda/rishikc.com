@@ -15,3 +15,16 @@ exports.onCreateWebpackConfig = ({ stage, actions }) => {
     },
   })
 }
+
+// graphql gets scared with null value filters (see gatsby docs)
+// so this is a nice workaround.
+exports.onCreateNode = ({ node, actions, getNode }) => {
+  const { createNodeField } = actions
+  if (node.internal.type === 'InstaNode') {
+    createNodeField({
+      node,
+      name: 'visibility',
+      value: !!(node.caption && node.localFile___NODE),
+    })
+  }
+}
