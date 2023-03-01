@@ -1,0 +1,43 @@
+body.dark #hero-art {
+    fill-opacity: 0.1;
+}
+
+body.dark #hero-art #orange-ring {
+    fill-opacity: 1;
+    fill: #E27A1E;
+}
+
+body.dark #hero-art #green-ring {
+    fill-opacity: 1;
+    fill: #739E65;
+}
+
+body.dark #hero-art #blue-ring {
+    fill-opacity: 1;
+    fill: #6C63FF;
+}
+
+body.dark #hero-art #left-monitor {
+    fill-opacity: 1;
+}
+
+body.dark #hero-art #right-monitor {
+    fill-opacity: 1;
+}
+
+body.dark #hero-art #laptop-screen {
+    fill-opacity: 1;
+}
+
+body.dark #hero-art .keyboard {
+    fill-opacity: 1;
+}
+
+body.dark #hero-art .cup {
+    fill: #211E50;
+    fill-opacity: 1;
+}
+
+.hero-main-height {
+    min-height: 65vh;
+}

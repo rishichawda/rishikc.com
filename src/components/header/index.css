@@ -1,0 +1,73 @@
+.star {
+  fill: #def8ff;
+}
+
+.patch {
+  fill: #a6cad0;
+}
+
+#container,
+.patch,
+.star,
+.light,
+.dark,
+#button,
+#sun,
+#moon,
+#cloud {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.25s;
+}
+
+.light #container {
+  fill: #83cbd8;
+}
+
+.dark #container {
+  fill: #2b4360;
+}
+
+.light>#button {
+  transform: translate(2.333px, 2.333px);
+}
+
+.dark>#button {
+  transform: translate(28px, 2.333px);
+}
+
+.light>#sun {
+  opacity: 1;
+}
+
+.dark #sun {
+  opacity: 0;
+}
+
+.light #moon {
+  opacity: 0;
+}
+
+.dark #moon {
+  opacity: 1;
+}
+
+.light #cloud {
+  opacity: 1;
+}
+
+.dark #cloud {
+  opacity: 0;
+}
+
+.light .star {
+  opacity: 0;
+}
+
+.dark .star {
+  opacity: 1;
+}
+
+.light header {
+  background-color: rgb(62, 78, 136);
+}
