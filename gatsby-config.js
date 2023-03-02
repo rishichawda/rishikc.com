@@ -95,7 +95,7 @@ module.exports = {
         background_color: `#3e4e88`,
         theme_color: `#3e4e88`,
         display: `minimal-ui`,
-        icon: `assets/handsome-guy.svg`, // This path is relative to the root of the site.
+        icon: `assets/handsome-guy.webp`, // This path is relative to the root of the site.
       },
     },
     {

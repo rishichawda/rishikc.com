@@ -3,11 +3,11 @@ import HeroAnimation from "components/hero"
 import Layout from "components/layout"
 import SEO from "components/seo"
 import './index.css'
-import HandsomeGuySVG from "assets/handsome-guy.svg"
 import Gallery from "components/gallery"
 import RandomQuote from "components/quote"
 import Github from "components/github"
 import ArticlePreview from "components/articlePreview"
+import { StaticImage } from "gatsby-plugin-image"
 
 const IndexPage = () => (
   <>
@@ -31,7 +31,7 @@ const IndexPage = () => (
             {/* <a className="text-brand dark:text-gray-400 text-xl italic antialiased">Read more about me</a> */}
           </div>
           <div className="flex md:w-3/12 my-7">
-            <HandsomeGuySVG className="w-full h-auto" />
+            <StaticImage src="../../assets/handsome-guy.webp" alt="handsome" className="w-full h-auto" />
           </div>
         </div>
         {/* blog preview section */}
