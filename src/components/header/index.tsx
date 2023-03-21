@@ -27,7 +27,7 @@ const Links = [
 
 const Header = ({ siteTitle }: HeaderProps) => {
   return (
-    <header className="absolute flex bg-sky-400 dark:bg-slate-900 2xl:h-28 xl:h-24 h-20 w-full">
+    <header className="absolute z-50 flex bg-sky-400 dark:bg-slate-900 2xl:h-28 xl:h-24 h-20 w-full">
       <div className="flex flex-row items-center justify-between xl:max-w-4xl 2xl:max-w-7xl w-full h-full mx-auto px-2">
         <GatsbyLink to="/" className="p-2">
           <Logo id="brand-logo" className="2xl:h-14 xl:h-10 h-10 max-h-full w-auto" />
