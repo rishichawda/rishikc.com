@@ -27,10 +27,10 @@ const Links = [
 
 const Header = ({ siteTitle }: HeaderProps) => {
   return (
-    <header className="absolute flex bg-sky-400 dark:bg-slate-900 2xl:h-28 h-20 w-full">
+    <header className="absolute flex bg-sky-400 dark:bg-slate-900 2xl:h-28 xl:h-24 h-20 w-full">
       <div className="flex flex-row items-center justify-between xl:max-w-4xl 2xl:max-w-7xl w-full h-full mx-auto px-2">
         <GatsbyLink to="/" className="p-2">
-          <Logo id="brand-logo" className="max-h-full w-auto" />
+          <Logo id="brand-logo" className="2xl:h-14 xl:h-10 h-10 max-h-full w-auto" />
           {/* <svg xmlns="http://www.w3.org/2000/svg" width="120" height="82" viewBox="0 0 120 82"> */}
             {/* <text id="Rishi" transform="translate(0 62)" fill="#fdfdfd" font-size="65" font-family="Caveat-SemiBold, Caveat" font-weight="600"><tspan x="0" y="0">Rishi</tspan></text> */}
           {/* </svg> */}
