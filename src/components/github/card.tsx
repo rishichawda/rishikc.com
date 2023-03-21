@@ -1,9 +1,10 @@
 import React from 'react'
+import './index.css'
 
 function Card({ repository }) {
   return (
     <a className="inline-flex w-full items-stretch" href={repository.url} target="_blank">
-      <div className="relative w-full bg-white dark:bg-gray-700 py-4 px-5 shadow-md ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg rounded-lg overflow-hidden">
+      <div className="github-repo-card relative w-full bg-white dark:bg-gray-700 py-4 px-5 shadow-md ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg rounded-lg overflow-hidden">
         <div className="w-full h-1 flex absolute top-0 left-0">
           {repository.languages.edges.map((node) => {
             let percentage = `${Math.round((node.size / repository.languages.totalSize) * 100)}%`

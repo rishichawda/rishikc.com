@@ -15,3 +15,29 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
 }
+
+.article-list-item {
+  will-change: transform;
+  transition: transform 0.2s ease-in-out;
+}
+
+.article-list-item:hover {
+  transform: scale(1.01);
+}
+
+.hero-section-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
+}
+
+.hero-section-bottom svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 133px;
+}
