@@ -71,3 +71,27 @@
 .light header {
   background-color: rgb(62, 78, 136);
 }
+
+#brand-logo > path {
+  /*
+    TODO: I made the svg from text, which is made with a fill and not strokes.
+    If it feels like, i can regenerate logo with stroke and animate the path.
+    Looks nice either way.
+  */
+  fill: transparent;
+  stroke: white;
+  stroke-width: 1;
+  stroke-dasharray: 683px;
+  stroke-dashoffset: 683px;
+  animation: logoAnimation ease 5s forwards;
+}
+
+@keyframes logoAnimation {
+  20% {
+    fill: white;
+  }
+  100% {
+    fill: white;
+    stroke-dashoffset: 0;
+  }
+}
