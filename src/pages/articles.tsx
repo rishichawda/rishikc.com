@@ -12,7 +12,7 @@ const BlogPage = ({ data }) => {
       <div className="flex flex-col max-w-screen-2xl mx-auto mb-28 justify-between">
         {
           data.allMdx.nodes.map(node => (
-            <article className="my-7" key={node.id}>
+            <article className="article-list-item my-7" key={node.id}>
               <div className="p-4 flex flex-col justify-between leading-normal">
               <GatsbyLink to={`/${node.slug}`}>
                 <div className="mb-2">

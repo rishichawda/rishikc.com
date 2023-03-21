@@ -26,7 +26,7 @@ const ArticlePreview = () => {
         <div className="flex flex-col justify-between">
           {
             data.allMdx.nodes.map(node => (
-              <article className="my-2" key={node.id}>
+              <article className="article-list-item my-2" key={node.id}>
                 <div className="p-2 px-0 flex flex-col justify-between leading-normal">
                   <GatsbyLink to={`/${node.slug}`}>
                     <div className="mb-2">
