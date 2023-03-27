@@ -1,5 +1,6 @@
 import * as React from "react"
 import type { PageProps } from "gatsby"
+import { SEO } from "../components/seo"
 
 const IndexPage: React.FC<PageProps> = () => {
   return (
@@ -8,5 +9,7 @@ const IndexPage: React.FC<PageProps> = () => {
     </main>
   )
 }
+
+export const Head = () => <SEO />
 
 export default IndexPage

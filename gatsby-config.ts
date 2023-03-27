@@ -1,10 +1,8 @@
+import siteMetadata from "./static/metadata"
 import type { GatsbyConfig } from "gatsby";
 
 const config: GatsbyConfig = {
-  siteMetadata: {
-    title: `rishikc.com`,
-    siteUrl: `https://www.yourdomain.tld`
-  },
+  siteMetadata: siteMetadata,
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
   // Learn more at: https://gatsby.dev/graphql-typegen
@@ -17,7 +15,7 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        "icon": "assets/handsome-guy.webp"
+        "icon": "static/assets/handsome-guy.webp"
       }
     },
     "gatsby-plugin-mdx",
@@ -27,7 +25,7 @@ const config: GatsbyConfig = {
       resolve: 'gatsby-source-filesystem',
       options: {
         "name": "images",
-        "path": "assets"
+        "path": "static/assets"
       },
       __key: "images"
     },
