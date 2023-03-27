@@ -36,7 +36,22 @@ const config: GatsbyConfig = {
         "path": "src/pages/"
       },
       __key: "pages"
-    }
+    },
+    {
+      resolve: `gatsby-plugin-google-gtag`,
+      options: {
+        trackingIds: [
+          process.env.GATSBY_GOOGLE_ANALYTICS_TRACKING_ID,
+          process.env.GATSBY_GOOGLE_AD_CLIENT
+        ],
+        gtagConfig: {
+          anonymize_ip: true,
+        },
+        pluginConfig: {
+          respectDNT: true,
+        },
+      },
+    },
   ]
 };
 
