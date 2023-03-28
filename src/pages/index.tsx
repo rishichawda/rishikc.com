@@ -1,12 +1,15 @@
 import * as React from "react"
-import type { PageProps } from "gatsby"
+import { Link, PageProps } from "gatsby"
 import { SEO } from "../components/seo"
 
 const IndexPage: React.FC<PageProps> = () => {
   return (
-    <main>
-      Main page
-    </main>
+    <div>
+      <Link to="/articles">Articles</Link>
+      <div>
+        Main page
+      </div>
+    </div>
   )
 }
 

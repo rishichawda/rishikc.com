@@ -1,6 +1,10 @@
 import siteMetadata from "./static/metadata"
 import type { GatsbyConfig } from "gatsby";
 
+require("dotenv").config({
+  path: `.env.${process.env.NODE_ENV}`,
+})
+
 const config: GatsbyConfig = {
   siteMetadata: siteMetadata,
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
@@ -8,6 +12,14 @@ const config: GatsbyConfig = {
   // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
   plugins: [
+    {
+      resolve: `gatsby-source-git`,
+      options: {
+        name: `content`,
+        remote: process.env.CONTENT_URI,
+        branch: `main`
+      }
+    },
     "gatsby-plugin-sass",
     "gatsby-plugin-google-gtag",
     "gatsby-plugin-image",
@@ -18,7 +30,6 @@ const config: GatsbyConfig = {
         "icon": "static/assets/handsome-guy.webp"
       }
     },
-    "gatsby-plugin-mdx",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
     {
@@ -33,7 +44,7 @@ const config: GatsbyConfig = {
       resolve: 'gatsby-source-filesystem',
       options: {
         "name": "pages",
-        "path": "src/pages/"
+        "path": "src/pages"
       },
       __key: "pages"
     },
@@ -51,6 +62,51 @@ const config: GatsbyConfig = {
           respectDNT: true,
         },
       },
+    },
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        gatsbyRemarkPlugins: [
+          {
+            resolve: 'gatsby-source-filesystem',
+            options: {
+              "name": "pages",
+              "path": "src/pages"
+            },
+          },
+          {
+            resolve: "gatsby-remark-embed-gist",
+            options: {
+              username: "rishichawda",
+            },
+          },
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 1280,
+            },
+          },
+          {
+            resolve: `gatsby-remark-responsive-iframe`,
+            options: {
+              wrapperStyle: `margin-bottom: 1.0725rem`,
+            },
+          },
+          `gatsby-remark-copy-linked-files`,
+          {
+            resolve: `gatsby-remark-smartypants`,
+            options: {
+              dashes: "oldschool",
+            },
+          },
+          {
+            resolve: "gatsby-remark-external-links",
+            options: {
+              target: "_blank",
+            },
+          },
+        ],
+      }
     },
   ]
 };
