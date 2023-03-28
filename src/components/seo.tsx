@@ -2,7 +2,7 @@ import React, { ComponentProps, ComponentPropsWithoutRef } from "react"
 import { SiteMetadata } from "../../static/metadata"
 import { useSiteMetadata } from "../hooks/use-site-metadata"
 
-export const SEO = ({ title, description, pathname, children }: SeoProps) => {
+const SEO = ({ title, description, pathname, children }: SeoProps) => {
   const defaultSiteMetadata = useSiteMetadata() as SiteMetadata
 
   const seo = {
@@ -31,9 +31,11 @@ export const SEO = ({ title, description, pathname, children }: SeoProps) => {
   )
 }
 
-interface SeoProps {
+type SeoProps = {
   title?: string;
   description?: string;
   pathname?: string;
   children?: React.ReactNode;
 }
+
+export default SEO

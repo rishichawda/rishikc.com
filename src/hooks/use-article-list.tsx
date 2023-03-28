@@ -1,14 +1,17 @@
 import { graphql, useStaticQuery } from "gatsby"
 
-interface QueryData {
-  allMdx: {
-    nodes: Queries.Mdx[]
-  }
+type QueryData = {
+  allMdx: Queries.MdxConnection;
+  localSearchArticles: Queries.LocalSearchArticles
 }
 
 export const useArticleList = () => {
   const data = useStaticQuery<QueryData>(graphql`
     query {
+      localSearchArticles {
+        index
+        store
+      }
       allMdx(sort: {frontmatter: {date: DESC}}) {
         nodes {
           id
@@ -30,5 +33,6 @@ export const useArticleList = () => {
     }
   `)
 
-  return data.allMdx.nodes
+  const results: [readonly Queries.Mdx[], Queries.LocalSearchArticles] = [data.allMdx.nodes, data.localSearchArticles] 
+  return results
 }

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { PageProps } from "gatsby"
-import { SEO } from "../components/seo"
+import SEO from "../components/seo"
 
 const NotFoundPage: React.FC<PageProps> = () => (
   <section>

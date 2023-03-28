@@ -1,10 +1,6 @@
 import { graphql, Link, useStaticQuery } from 'gatsby'
 import * as React from 'react'
 
-interface ArticleProps {
-  children: React.ReactNode
-}
-
 const Article: React.FC<ArticleProps> = ({ children }) => {
   const data = useStaticQuery(graphql`
     query ($id: String) {
@@ -20,7 +16,6 @@ const Article: React.FC<ArticleProps> = ({ children }) => {
           hero_image
           date(formatString: "MMMM D, YYYY")
         }
-        body
       }
     }
   `)
@@ -33,6 +28,10 @@ const Article: React.FC<ArticleProps> = ({ children }) => {
       <section itemProp="articleBody">{children}</section>
     </div>
   )
+}
+
+type ArticleProps = {
+  children: React.ReactNode
 }
 
 export default Article
