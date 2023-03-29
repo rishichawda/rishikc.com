@@ -28,6 +28,7 @@
     "deploy": "yarn build && gh-pages -d public"
   },
   "dependencies": {
+    "@fontsource/raleway": "^4.5.12",
     "@mdx-js/react": "^2.3.0",
     "gatsby": "^5.8.0",
     "gatsby-plugin-google-gtag": "^5.8.0",
