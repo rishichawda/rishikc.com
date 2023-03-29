@@ -105,6 +105,12 @@ const config: GatsbyConfig = {
               target: "_blank",
             },
           },
+          {
+            resolve: `gatsby-remark-prismjs`,
+            options: {
+              noInlineHighlight: true,
+            }
+          },
         ],
       }
     },

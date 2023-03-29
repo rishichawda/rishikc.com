@@ -1,5 +1,7 @@
 import { graphql, Link, useStaticQuery } from 'gatsby'
 import * as React from 'react'
+import "prismjs/themes/prism-tomorrow.css"
+import Layout from '../components/layout'
 
 const Article: React.FC<ArticleProps> = ({ children }) => {
   const data = useStaticQuery(graphql`
@@ -20,13 +22,17 @@ const Article: React.FC<ArticleProps> = ({ children }) => {
     }
   `)
   return (
-    <div>
-      <Link to="/articles">Back to list</Link>
-      <h1>
-        {data.mdx.frontmatter.title}
-      </h1>
-      <section itemProp="articleBody">{children}</section>
-    </div>
+    <Layout>
+      <div className="root-container">
+        <Link to="/articles">Back to list</Link>
+        <main className="main-container">
+          <h1>
+            {data.mdx.frontmatter.title}
+          </h1>
+          <section itemProp="articleBody">{children}</section>
+        </main>
+      </div>
+    </Layout>
   )
 }
 
