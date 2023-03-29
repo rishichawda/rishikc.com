@@ -124,7 +124,7 @@ const config: GatsbyConfig = {
             allMdx {
               nodes {
                 id
-                excerpt(pruneLength: 340)
+                excerpt(pruneLength: 520)
                 frontmatter {
                   title
                 }

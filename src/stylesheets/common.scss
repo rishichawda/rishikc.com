@@ -1,11 +1,10 @@
 @import "mixins.scss";
+@import "colors.scss";
 
 body {
   font-family: "Raleway", sans-serif;
   background-color: #fafbfc;
 }
-
-$link-highlight-color: #576cbc;
 
 .root-container {
   max-width: 1330px;
@@ -14,7 +13,7 @@ $link-highlight-color: #576cbc;
 
 * {
   &::selection {
-    background-color: #98aaf082;
+    background-color: $selection-color;
   }
 }
 

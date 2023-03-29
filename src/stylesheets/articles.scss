@@ -1,4 +1,4 @@
-@import "mixins.scss";
+@import "colors.scss";
 
 main.main-container {
   .article-list-header {
@@ -9,9 +9,64 @@ main.main-container {
     padding: 11px 5px;
   }
   section {
-    ul.article-list {
+    .article-list {
       list-style: none;
       padding-inline: 0;
+      &-item {
+        padding: 5px 11px;
+        margin-bottom: 15px;
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+        &-title {
+          line-height: initial;
+          width: 100%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: space-between;
+          &-info {
+            display: inline-flex;
+            align-items: center;
+            strong {
+              font-size: x-large;
+            }
+          }
+        }
+        &-details {
+          line-height: 1.8;
+          margin-top: 0;
+          -webkit-box-orient: vertical;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          overflow: hidden;
+        }
+        a {
+          position: relative;
+          &::before {
+            content: "";
+            position: absolute;
+            width: 3px;
+            height: 0;
+            left: -11px;
+            top: -5px;
+            background-color: $link-highlight-color;
+            transition: all 0.2s ease-in-out;
+            transform: translateY(50%);
+            will-change: height opacity;
+            opacity: 0;
+          }
+          &:hover {
+            &::before {
+              transform: translateY(0);
+              opacity: 1;
+              height: 100%;
+            }
+          }
+          &::after {
+            display: none;
+          }
+        }
+      }
     }
   }
 }

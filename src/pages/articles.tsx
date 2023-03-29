@@ -1,7 +1,8 @@
 import * as React from "react"
+import { Link } from "gatsby";
+import { useFlexSearch } from "react-use-flexsearch";
 import SEO from "../components/seo";
 import { useArticleList } from "../hooks/use-article-list";
-import { useFlexSearch } from "react-use-flexsearch";
 import Search from "../components/articles/search";
 import Layout from "../components/layout";
 import "../stylesheets/articles.scss"
@@ -37,7 +38,7 @@ const Articles: React.FC = () => {
       <div className="root-container">
         <main className="main-container">
           <div className="article-list-header">
-            <h2>Blog posts</h2>
+            <h1>Blog posts</h1>
             <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           </div>
           <section>
@@ -45,11 +46,20 @@ const Articles: React.FC = () => {
               {
                 results.length ?
                   results.map((node: Queries.Mdx) => (
-                    <li role="listitem" key={node.id}>
-                      <h3>{node.frontmatter?.title}</h3>
-                      <p>{node.fields?.timeToRead?.text}</p>
-                      <p>{node.excerpt}</p>
-                      <a href={node.fields?.slug!}>go to article</a>
+                    <li className="article-list-item" role="listitem" key={node.id}>
+                      <Link to={node.fields?.slug!}>
+                        <span className="article-list-item-title">
+                          <h2>{node.frontmatter?.title}</h2>
+                          <span className="article-list-item-title-info">
+                            <span>{node.frontmatter?.date}</span>
+                            &nbsp;&nbsp;
+                            <strong>·</strong>
+                            &nbsp;&nbsp;
+                            <span>{node.fields?.timeToRead?.text}</span>
+                          </span>
+                        </span>
+                        <p className="article-list-item-details">{node.excerpt}</p>
+                      </Link>
                     </li>
                   )) : <p>Uh-oh! No results for the search.</p>
               }

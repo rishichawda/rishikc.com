@@ -21,7 +21,7 @@ export const useArticleList = () => {
               text
             }
           }
-          excerpt(pruneLength: 340)
+          excerpt(pruneLength: 520)
           frontmatter {
             subtitle
             date(formatString: "Do MMMM, YYYY")
