@@ -1,0 +1,17 @@
+@import "mixins.scss";
+
+main.main-container {
+  .article-list-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 5px;
+  }
+  section {
+    ul.article-list {
+      list-style: none;
+      padding-inline: 0;
+    }
+  }
+}

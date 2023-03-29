@@ -4,6 +4,7 @@ import { useArticleList } from "../hooks/use-article-list";
 import { useFlexSearch } from "react-use-flexsearch";
 import Search from "../components/articles/search";
 import Layout from "../components/layout";
+import "../stylesheets/articles.scss"
 
 const Articles: React.FC = () => {
   const [articles, search] = useArticleList()
@@ -35,22 +36,24 @@ const Articles: React.FC = () => {
     <Layout>
       <div className="root-container">
         <main className="main-container">
-        <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <section>
-          <h1>Articles</h1>
-          <ul>
-            {
-              results.length ?
-                results.map((node: Queries.Mdx) => (
-                  <li key={node.id}>
-                    <h3>{node.frontmatter?.title}</h3>
-                    <p>{node.fields?.timeToRead?.text}</p>
-                    <p>{node.excerpt}</p>
-                    <a href={node.fields?.slug!}>go to article</a>
-                  </li>
-                )) : <p>Uh-oh! No results for the search.</p>
-            }
-          </ul>
+          <div className="article-list-header">
+            <h2>Blog posts</h2>
+            <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          </div>
+          <section>
+            <ul className="article-list" role="list">
+              {
+                results.length ?
+                  results.map((node: Queries.Mdx) => (
+                    <li role="listitem" key={node.id}>
+                      <h3>{node.frontmatter?.title}</h3>
+                      <p>{node.fields?.timeToRead?.text}</p>
+                      <p>{node.excerpt}</p>
+                      <a href={node.fields?.slug!}>go to article</a>
+                    </li>
+                  )) : <p>Uh-oh! No results for the search.</p>
+              }
+            </ul>
           </section>
         </main>
       </div>

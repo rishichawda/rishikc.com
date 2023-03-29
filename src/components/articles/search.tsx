@@ -9,6 +9,7 @@ const Search: React.FC<SearchProps> = ({ searchQuery, setSearchQuery }) => {
 
   return (
     <form
+      id="articles-search-bar"
       action="javascript:void(0);"
       method="get"
       autoComplete="off"
@@ -22,7 +23,6 @@ const Search: React.FC<SearchProps> = ({ searchQuery, setSearchQuery }) => {
         value={searchQuery}
         onInput={onInputChange}
         type="text"
-        id="articles-search-bar"
         placeholder="Type to search.."
         name="articles-search-bar"
       />
