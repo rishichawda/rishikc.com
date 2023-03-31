@@ -1,0 +1,7 @@
+@import "../../stylesheets/mixins.scss";
+
+footer {
+  @include dev-random-highlight;
+  padding: 20px 5px;
+  text-align: center;
+}

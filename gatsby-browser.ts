@@ -1,1 +1,1 @@
-import "@fontsource/raleway"
+import "@fontsource/montserrat"

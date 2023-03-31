@@ -2,6 +2,7 @@ import { graphql, Link, useStaticQuery } from 'gatsby'
 import * as React from 'react'
 import "prismjs/themes/prism-tomorrow.css"
 import Layout from '../components/layout'
+import "../stylesheets/mdx.scss"
 
 const Article: React.FC<ArticleProps> = ({ children }) => {
   const data = useStaticQuery(graphql`

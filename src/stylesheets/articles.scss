@@ -14,12 +14,8 @@ main.main-container {
       padding-inline: 0;
       &-item {
         padding: 5px 11px;
-        margin-bottom: 15px;
-        &:last-of-type {
-          margin-bottom: 0;
-        }
+        margin-top: 55px;
         &-title {
-          line-height: initial;
           width: 100%;
           display: inline-flex;
           align-items: center;
@@ -33,7 +29,6 @@ main.main-container {
           }
         }
         &-details {
-          line-height: 1.8;
           margin-top: 0;
           -webkit-box-orient: vertical;
           display: -webkit-box;

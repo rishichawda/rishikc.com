@@ -2,7 +2,7 @@
 @import "colors.scss";
 
 body {
-  font-family: "Raleway", sans-serif;
+  font-family: "Montserrat", sans-serif;
   background-color: #fafbfc;
 }
 
@@ -23,10 +23,11 @@ main.main-container {
   padding: 20px 12px;
 }
 
+
 p,
 a {
-  line-height: 1.6;
   color: inherit;
+  line-height: 2;
 }
 
 a {
