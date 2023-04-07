@@ -1,11 +1,6 @@
 @import "../../stylesheets/mixins.scss";
 
 .navigation-bar {
-  a {
-    &::after {
-      display: none;
-    }
-  }
   @include dev-random-highlight;
   display: flex;
   flex-direction: row;

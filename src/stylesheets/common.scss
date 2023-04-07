@@ -1,8 +1,7 @@
-@import "mixins.scss";
 @import "colors.scss";
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   background-color: #fafbfc;
 }
 
@@ -27,10 +26,6 @@ main.main-container {
 p,
 a {
   color: inherit;
-  line-height: 2;
-}
-
-a {
-  @include link-with-hover-transition;
+  line-height: 2.2;
   text-decoration: none;
 }

@@ -20,12 +20,12 @@ main.main-container {
           display: inline-flex;
           align-items: center;
           justify-content: space-between;
+          h2 {
+            font-weight: 400;
+          }
           &-info {
             display: inline-flex;
             align-items: center;
-            strong {
-              font-size: x-large;
-            }
           }
         }
         &-details {
@@ -56,9 +56,6 @@ main.main-container {
               opacity: 1;
               height: 100%;
             }
-          }
-          &::after {
-            display: none;
           }
         }
       }

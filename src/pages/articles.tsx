@@ -16,17 +16,22 @@ const Articles: React.FC = () => {
   const results = React.useMemo(() => {
     if (searchQuery.length) {
       return data.map((x: FlattenedArticleNode) => ({
-        id: x.id,
-        fields: {
-          slug: x.slug,
-          timeToRead: {
-            text: x.timeToRead
+        node: {
+          id: x.id,
+          fields: {
+            slug: x.slug,
+            timeToRead: {
+              text: x.timeToRead
+            },
           },
-        },
-        frontmatter: {
-          title: x.title,
-        },
-        excerpt: x.excerpt,
+          frontmatter: {
+            title: x.title,
+            subtitle: x.subtitle,
+            date: x.date,
+            banner: x.banner
+          },
+          excerpt: x.excerpt,
+        }
       }))
     } else {
       return articles
@@ -45,7 +50,7 @@ const Articles: React.FC = () => {
             <ul className="article-list" role="list">
               {
                 results.length ?
-                  results.map((node: Queries.Mdx) => (
+                  results.map(({ node }: { node: Queries.Mdx }) => (
                     <li className="article-list-item" role="listitem" key={node.id}>
                       <Link to={node.fields?.slug!}>
                         <span className="article-list-item-title">
@@ -78,7 +83,10 @@ type FlattenedArticleNode = {
   excerpt: string;
   slug: string;
   title: string;
+  subtitle: string;
   timeToRead: string;
+  date: Queries.MdxFrontmatter_dateArgs;
+  banner: string;
 }
 
 export default Articles

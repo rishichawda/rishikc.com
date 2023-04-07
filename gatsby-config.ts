@@ -122,16 +122,21 @@ const config: GatsbyConfig = {
         query: `
           {
             allMdx {
-              nodes {
-                id
-                excerpt(pruneLength: 520)
-                frontmatter {
-                  title
-                }
-                fields {
-                  slug
-                  timeToRead {
-                    text
+              edges {
+                node {
+                  id
+                  excerpt(pruneLength: 520)
+                  frontmatter {
+                    title
+                    subtitle
+                    banner
+                    date(formatString: "MMMM D, YYYY")
+                  }
+                  fields {
+                    slug
+                    timeToRead {
+                      text
+                    }
                   }
                 }
               }
@@ -140,14 +145,17 @@ const config: GatsbyConfig = {
         `,
         ref: 'id',
         index: ['title', 'excerpt'],
-        store: ['id', 'slug', 'title', 'excerpt', 'timeToRead'],
+        store: ['id', 'excerpt', 'title', 'subtitle', 'banner', 'date', 'slug', 'timeToRead'],
         normalizer: ({ data }: { data: { allMdx: Queries.MdxConnection } }) =>
-          data.allMdx.nodes.map((node: Queries.Mdx) => ({
-            id: node.id,
-            slug: node.fields?.slug,
-            title: node.frontmatter?.title,
-            excerpt: node.excerpt,
-            timeToRead: node.fields?.timeToRead?.text
+          data.allMdx.edges.map((edge: Queries.MdxEdge) => ({
+            id: edge.node.id,
+            excerpt: edge.node.excerpt,
+            title: edge.node.frontmatter?.title,
+            subtitle: edge.node.frontmatter?.subtitle,
+            banner: edge.node.frontmatter?.banner,
+            date: edge.node.frontmatter?.date,
+            slug: edge.node.fields?.slug,
+            timeToRead: edge.node.fields?.timeToRead?.text,
           })),
       },
     },

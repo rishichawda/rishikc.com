@@ -1,3 +1,5 @@
+@import "colors.scss";
+
 @mixin dev-random-highlight {
   $red: random(255);
   $blue: random(255);

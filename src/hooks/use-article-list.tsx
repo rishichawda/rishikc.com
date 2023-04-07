@@ -12,27 +12,29 @@ export const useArticleList = () => {
         index
         store
       }
-      allMdx(sort: {frontmatter: {date: DESC}}) {
-        nodes {
-          id
-          fields {
-            slug
-            timeToRead {
-              text
+      allMdx {
+        edges {
+          node {
+            id
+            excerpt(pruneLength: 340)
+            frontmatter {
+              title
+              subtitle
+              banner
+              date(formatString: "MMMM D, YYYY")
             }
-          }
-          excerpt(pruneLength: 520)
-          frontmatter {
-            subtitle
-            date(formatString: "Do MMMM, YYYY")
-            hero_image
-            title
+            fields {
+              slug
+              timeToRead {
+                text
+              }
+            }
           }
         }
       }
     }
   `)
 
-  const results: [readonly Queries.Mdx[], Queries.LocalSearchArticles] = [data.allMdx.nodes, data.localSearchArticles] 
+  const results: [readonly Queries.MdxEdge[], Queries.LocalSearchArticles] = [data.allMdx.edges, data.localSearchArticles]
   return results
 }
