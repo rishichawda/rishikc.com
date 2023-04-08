@@ -1,4 +1,5 @@
 @import "colors.scss";
+@import "mixins.scss";
 
 main.main-container {
   .article-list-header {
@@ -12,22 +13,58 @@ main.main-container {
     .article-list {
       list-style: none;
       padding-inline: 0;
+      /*
+      min-height to viewport height is to avoid any
+      stagger/jerky UI. remove it and see for yourself.
+      this makes it look good + lighthouse reports happy.
+      */
+      min-height: 100vh;
+      & > .hide-item {
+        animation: fade-out 1s forwards;
+      }
+      & > .show-item {
+        animation: fade-in 1s forwards;
+      }
       &-item {
         padding: 5px 11px;
         margin-top: 55px;
-        &-title {
-          width: 100%;
-          display: inline-flex;
+        &-header {
+          display: flex;
+          flex-direction: row;
           align-items: center;
           justify-content: space-between;
-          h2 {
-            font-weight: 400;
+          &-content {
+            display: flex;
+            flex-direction: column;
+            &-title {
+              width: 100%;
+              display: inline-flex;
+              font-weight: 400;
+              margin: 0;
+            }
+
+            &-tags {
+              display: inline-flex;
+              margin-bottom: 10px;
+              & > small {
+                margin-right: 5px;
+                padding: 0px 10px;
+                border-radius: 5px;
+                background-color: $selection-color;
+                z-index: 10;
+                &:last-of-type {
+                  margin-right: 0;
+                }
+              }
+            }
           }
           &-info {
             display: inline-flex;
             align-items: center;
+            align-self: start;
           }
         }
+
         &-details {
           margin-top: 0;
           -webkit-box-orient: vertical;
@@ -60,5 +97,66 @@ main.main-container {
         }
       }
     }
+  }
+}
+
+.article-list-search-info-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 70%;
+  &>span {
+    padding: 10px 2.5px;
+  }
+  p {
+    margin: 0;
+    & > small {
+      cursor: pointer;
+      font-style: italic;
+      color: $link-highlight-color;
+    }
+  }
+  &-item {
+    cursor: pointer;
+    padding: 7px 10px;
+    border-radius: 5px;
+    background-color: $selection-color;
+    z-index: 10;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    max-height: 0;
+  }
+
+  100% {
+    opacity: 1;
+    overflow: hidden;
+    padding: 5px 11px;
+    margin-top: 55px;
+    max-height: fit-content;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+    overflow: hidden;
+    padding: 5px 11px;
+    margin-top: 55px;
+    max-height: fit-content;
+  }
+
+  to {
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    max-height: 0;
   }
 }

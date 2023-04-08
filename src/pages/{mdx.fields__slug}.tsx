@@ -3,12 +3,8 @@ import * as React from 'react'
 import "prismjs/themes/prism-tomorrow.css"
 import Layout from '../components/layout'
 import "../stylesheets/mdx.scss"
-import { useArticleData } from '../hooks/use-article-data'
 
 const Article: React.FC<ArticleProps> = (props) => {
-  // const data = useArticleData()
-
-  console.log({ props })
   return (
     <Layout>
       <div className="root-container">
@@ -16,14 +12,19 @@ const Article: React.FC<ArticleProps> = (props) => {
           <Link className="back-navigation-link" to="/articles">
             &#171;&nbsp;Go back to main list
           </Link>
-          <div className="article-info">
-            <h1 className="article-info-title">
-              {props.data.mdx.frontmatter?.title}
-            </h1>
-            <h2 className="article-info-subtitle">{props.data.mdx.frontmatter?.subtitle}</h2>
-            <span className="article-info-time">
+          <div className="article-header">
+            <div className="article-header-content">
+              <h1 className="article-header-content-title">{props.data.mdx.frontmatter?.title}</h1>
+              <h2 className="article-header-content-subtitle">{props.data.mdx.frontmatter?.subtitle}</h2>
+              <span className="article-header-content-tags">
+                {props.data.mdx.frontmatter?.tags?.map((tag) => <span><small>{tag}</small></span>)}
+              </span>
+            </div>
+            <span className="article-header-time">
               <span>{props.data.mdx.frontmatter?.date}</span>
-              &nbsp;&nbsp;&#8212;&nbsp;&nbsp;
+              &nbsp;&nbsp;
+              <strong>·</strong>
+              &nbsp;&nbsp;
               <span>{props.data.mdx.fields?.timeToRead?.text}</span>
             </span>
           </div>
@@ -54,6 +55,7 @@ export const query = graphql`
           subtitle
           hero_image
           date(formatString: "MMMM D, YYYY")
+          tags
         }
       }
     }

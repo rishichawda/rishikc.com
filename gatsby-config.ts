@@ -131,6 +131,7 @@ const config: GatsbyConfig = {
                     subtitle
                     banner
                     date(formatString: "MMMM D, YYYY")
+                    tags
                   }
                   fields {
                     slug
@@ -144,8 +145,8 @@ const config: GatsbyConfig = {
           }
         `,
         ref: 'id',
-        index: ['title', 'excerpt'],
-        store: ['id', 'excerpt', 'title', 'subtitle', 'banner', 'date', 'slug', 'timeToRead'],
+        index: ['title', 'excerpt', 'tags'],
+        store: ['id', 'excerpt', 'title', 'subtitle', 'banner', 'date', 'tags', 'slug', 'timeToRead'],
         normalizer: ({ data }: { data: { allMdx: Queries.MdxConnection } }) =>
           data.allMdx.edges.map((edge: Queries.MdxEdge) => ({
             id: edge.node.id,
@@ -154,6 +155,7 @@ const config: GatsbyConfig = {
             subtitle: edge.node.frontmatter?.subtitle,
             banner: edge.node.frontmatter?.banner,
             date: edge.node.frontmatter?.date,
+            tags: edge.node.frontmatter?.tags,
             slug: edge.node.fields?.slug,
             timeToRead: edge.node.fields?.timeToRead?.text,
           })),

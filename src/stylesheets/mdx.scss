@@ -3,7 +3,7 @@
 section[itemprop="articleBody"] {
   display: flex;
   flex-direction: column;
-  padding: 5em 0;
+  padding: 2em 0;
 
   pre[class*="language-"] {
     max-width: 90%;
@@ -69,23 +69,51 @@ section[itemprop="articleBody"] {
 
 .back-navigation-link {
   margin-bottom: 1em;
+  color: $link-highlight-color;
 }
 
-.article-info {
+.article-header {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 1em;
-  margin: 2em auto;
+  flex-direction: row;
+  align-items: start;
+  justify-content: space-between;
+  margin: 2.5em 0 2em 0;
+  &-content {
+    display: flex;
+    flex-direction: column;
 
-  &-title {
-    margin: 0em;
+    &-title {
+      width: 100%;
+      display: inline-flex;
+      font-weight: 400;
+      margin: 0;
+      margin-bottom: 0.25em;
+    }
+
+    &-subtitle {
+      margin: 0;
+    }
+
+    &-tags {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      max-width: 70%;
+      margin-top: 1em;
+      & > span {
+        padding: 10px 2.5px;
+        & > small {
+          padding: 7px 10px;
+          border-radius: 5px;
+          background-color: $selection-color;
+          z-index: 10;
+        }
+      }
+    }
   }
-  
-  &-subtitle {
-    margin: 0.5em;
-    margin-bottom: 2em; 
-    text-transform: lowercase;
+  &-info {
+    display: inline-flex;
+    align-items: center;
+    align-self: start;
   }
 }
