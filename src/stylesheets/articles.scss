@@ -105,6 +105,9 @@ main.main-container {
   max-width: 70%;
   & > span {
     padding: 15px 2.5px;
+    & > small {
+      cursor: pointer;
+    }
   }
   p {
     margin: 0;

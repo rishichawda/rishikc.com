@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Link } from "gatsby";
 import { useFlexSearch } from "react-use-flexsearch";
+import { motion, AnimatePresence } from "framer-motion"
 import SEO from "../components/seo";
 import { filterByTags, transformFlexSearchData, useArticleList } from "../hooks/use-article-list";
 import Search from "../components/articles/search";
@@ -8,6 +9,28 @@ import Layout from "../components/layout";
 import "../stylesheets/articles.scss"
 import { useTags } from "../hooks/use-tags";
 import Tag from "../components/tag";
+
+const variantA = {
+  initial: {},
+  animate: {
+    transition: {
+      staggerChildren: 0.05,
+    }
+  },
+  exit: {}
+};
+
+const variantB = {
+  initial: {
+    opacity: 0
+  },
+  animate: {
+    opacity: 1,
+  },
+  exit: {
+    opacity: 0
+  }
+};
 
 const Articles: React.FC = () => {
   const [articles, search] = useArticleList()
@@ -25,6 +48,14 @@ const Articles: React.FC = () => {
       return [...articles]
     }
   }, [searchQuery, data])
+
+  const filteredResults = React.useMemo(() => {
+    if (selectedTags.length) {
+      return filterByTags(results, selectedTags)
+    } else {
+      return results
+    }
+  }, [selectedTags, results])
 
 
   const toggleTags = React.useCallback((e: React.MouseEvent) => {
@@ -90,33 +121,41 @@ const Articles: React.FC = () => {
             </span>
           </div>
           <section>
-            <ul className="article-list" role="list">
-              {
-                results.length ?
-                  results.map(({ node }: { node: Queries.Mdx }) => (
-                    <li className={`article-list-item${node.frontmatter?.tags?.some((t) => selectedTags.includes(t!)) || !selectedTags.length ? " show-item" : " hide-item"}`} role="listitem" key={node.id}>
-                      <Link to={node.fields?.slug!}>
-                        <div className="article-list-item-header">
-                          <div className="article-list-item-header-content">
-                            <h2 className="article-list-item-header-content-title">{node.frontmatter?.title}</h2>
-                            <span className="article-list-item-header-content-tags">
-                              {node.frontmatter?.tags?.map((tag) => <Tag onClick={(e) => { onTagClick(e, tag!) }}>{tag}</Tag>)}
+            <AnimatePresence>
+              <motion.ul
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={variantA}
+                className="article-list"
+                role="list">
+                {
+                  filteredResults.length ?
+                    filteredResults.map(({ node }: { node: Queries.Mdx }) => (
+                      <motion.li variants={variantB} layout className="article-list-item" role="listitem" key={node.id}>
+                        <Link to={node.fields?.slug!}>
+                          <div className="article-list-item-header">
+                            <div className="article-list-item-header-content">
+                              <h2 className="article-list-item-header-content-title">{node.frontmatter?.title}</h2>
+                              <span className="article-list-item-header-content-tags">
+                                {node.frontmatter?.tags?.map((tag) => <Tag onClick={(e) => { onTagClick(e, tag!) }}>{tag}</Tag>)}
+                              </span>
+                            </div>
+                            <span className="article-list-item-header-info">
+                              <span>{node.frontmatter?.date}</span>
+                              &nbsp;&nbsp;
+                              <strong>·</strong>
+                              &nbsp;&nbsp;
+                              <span>{node.fields?.timeToRead?.text}</span>
                             </span>
                           </div>
-                          <span className="article-list-item-header-info">
-                            <span>{node.frontmatter?.date}</span>
-                            &nbsp;&nbsp;
-                            <strong>·</strong>
-                            &nbsp;&nbsp;
-                            <span>{node.fields?.timeToRead?.text}</span>
-                          </span>
-                        </div>
-                        <p className="article-list-item-details">{node.excerpt}</p>
-                      </Link>
-                    </li>
-                  )) : <p>Uh-oh! No results for the search.</p>
-              }
-            </ul>
+                          <p className="article-list-item-details">{node.excerpt}</p>
+                        </Link>
+                      </motion.li>
+                    )) : <p>Uh-oh! No results for the search.</p>
+                }
+              </motion.ul>
+            </AnimatePresence>
           </section>
         </main>
       </div>

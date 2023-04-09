@@ -54,10 +54,10 @@ export const useArticleList = () => {
 
 export const filterByTags = (data: any[], tags: string[]) => {
   return data.filter((edge) => {
-    let matches = edge.node.frontmatter.tags.filter((t: string) => tags.includes(t))
-    if (matches.length) {
-      return true
-    }
+    return edge.node
+      .frontmatter
+      .tags
+      .some((t: string) => tags.includes(t))
   })
 }
 

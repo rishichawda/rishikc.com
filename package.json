@@ -30,6 +30,7 @@
   "dependencies": {
     "@fontsource/montserrat": "^4.5.14",
     "@mdx-js/react": "^2.3.0",
+    "framer-motion": "^10.11.2",
     "gatsby": "^5.8.0",
     "gatsby-plugin-google-gtag": "^5.8.0",
     "gatsby-plugin-image": "^3.8.0",
