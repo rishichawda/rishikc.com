@@ -11,16 +11,14 @@ const Article: React.FC<ArticleProps> = (props) => {
       <div className="root-container">
         <main className="main-container">
           <Link className="back-navigation-link" to="/articles">
-            &#171;&nbsp;Go back to main list
+            &#171;&nbsp;go back to main list
           </Link>
           <div className="article-header">
-            <div className="article-header-content">
-              <h1 className="article-header-content-title">{props.data.mdx.frontmatter?.title}</h1>
-              <h2 className="article-header-content-subtitle">{props.data.mdx.frontmatter?.subtitle}</h2>
-              <span className="article-header-content-tags">
-                {props.data.mdx.frontmatter?.tags?.map((tag) => <span><Tag>{tag}</Tag></span>)}
-              </span>
-            </div>
+            <h1 className="article-header-title">{props.data.mdx.frontmatter?.title}</h1>
+            <h2 className="article-header-subtitle">{props.data.mdx.frontmatter?.subtitle}</h2>
+            <span className="article-header-tags">
+              {props.data.mdx.frontmatter?.tags?.map((tag) => <span><Tag>{tag}</Tag></span>)}
+            </span>
             <span className="article-header-time">
               <span>{props.data.mdx.frontmatter?.date}</span>
               &nbsp;&nbsp;
