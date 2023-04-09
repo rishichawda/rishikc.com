@@ -78,13 +78,14 @@ const Articles: React.FC = () => {
 
   const renderTags = React.useCallback(() => {
     let st = allTags.filter((t) => selectedTags.includes(t.split("(")[0].trim()))
-    const data = showAllTags ? allTags : [...new Set(st.concat(...topTags))]
+    let at = showAllTags ? allTags : topTags
+    const data = [...new Set(st.concat(...at))]
     return data.map((tag: string) => {
       const trimmedTag = tag
         .split("(")[0]
         .trim()
       return (
-        <span>
+        <motion.span key={tag} layout>
           <Tag key={tag} onClick={(e) => onTagClick(e, trimmedTag)}>
             {tag}
             &nbsp;&nbsp;
@@ -94,7 +95,7 @@ const Articles: React.FC = () => {
                 : null
             }
           </Tag>
-        </span>
+        </motion.span>
       )
     })
   }, [showAllTags, selectedTags])
@@ -108,7 +109,8 @@ const Articles: React.FC = () => {
             <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           </div>
           <div className="article-list-search-info">
-            <span className="article-list-search-info-tags">
+            <AnimatePresence>
+            <motion.span className="article-list-search-info-tags">
               <p>
                 Popular tags
                 &nbsp;
@@ -118,7 +120,8 @@ const Articles: React.FC = () => {
                 &nbsp;:&nbsp;
               </p>
               {renderTags()}
-            </span>
+              </motion.span>
+            </AnimatePresence>
           </div>
           <section>
             <AnimatePresence>
