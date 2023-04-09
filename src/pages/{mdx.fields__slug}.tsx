@@ -3,6 +3,7 @@ import * as React from 'react'
 import "prismjs/themes/prism-tomorrow.css"
 import Layout from '../components/layout'
 import "../stylesheets/mdx.scss"
+import Tag from '../components/tag'
 
 const Article: React.FC<ArticleProps> = (props) => {
   return (
@@ -17,7 +18,7 @@ const Article: React.FC<ArticleProps> = (props) => {
               <h1 className="article-header-content-title">{props.data.mdx.frontmatter?.title}</h1>
               <h2 className="article-header-content-subtitle">{props.data.mdx.frontmatter?.subtitle}</h2>
               <span className="article-header-content-tags">
-                {props.data.mdx.frontmatter?.tags?.map((tag) => <span><small>{tag}</small></span>)}
+                {props.data.mdx.frontmatter?.tags?.map((tag) => <span><Tag>{tag}</Tag></span>)}
               </span>
             </div>
             <span className="article-header-time">

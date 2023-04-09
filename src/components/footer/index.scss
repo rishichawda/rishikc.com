@@ -2,6 +2,7 @@
 
 footer {
   @include dev-random-highlight;
-  padding: 20px 5px;
+  padding: var(--space-s-m);
+  font-size: var(--step-1);
   text-align: center;
 }

@@ -1,4 +1,5 @@
 @import "colors.scss";
+@import "scales.scss";
 
 body {
   font-family: 'Montserrat', sans-serif;
@@ -16,16 +17,8 @@ body {
   }
 }
 
-main.main-container {
-  display: flex;
-  flex-direction: column;
-  padding: 20px 12px;
-}
-
-
 p,
 a {
   color: inherit;
-  line-height: 2.2;
   text-decoration: none;
 }

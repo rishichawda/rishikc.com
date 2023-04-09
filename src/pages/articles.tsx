@@ -7,6 +7,7 @@ import Search from "../components/articles/search";
 import Layout from "../components/layout";
 import "../stylesheets/articles.scss"
 import { useTags } from "../hooks/use-tags";
+import Tag from "../components/tag";
 
 const Articles: React.FC = () => {
   const [articles, search] = useArticleList()
@@ -53,7 +54,7 @@ const Articles: React.FC = () => {
         .trim()
       return (
         <span>
-          <small className="article-list-search-info-tags-item" key={tag} onClick={(e) => onTagClick(e, trimmedTag)}>
+          <Tag key={tag} onClick={(e) => onTagClick(e, trimmedTag)}>
             {tag}
             &nbsp;&nbsp;
             {
@@ -61,7 +62,7 @@ const Articles: React.FC = () => {
                 ? <strong>x</strong>
                 : null
             }
-          </small>
+          </Tag>
         </span>
       )
     })
@@ -99,11 +100,7 @@ const Articles: React.FC = () => {
                           <div className="article-list-item-header-content">
                             <h2 className="article-list-item-header-content-title">{node.frontmatter?.title}</h2>
                             <span className="article-list-item-header-content-tags">
-                              {node.frontmatter?.tags?.map((tag) => <small onClick={(e: React.MouseEvent) => {
-                                e.stopPropagation()
-                                e.preventDefault()
-                                setFilter(tag!)
-                              }}>{tag}</small>)}
+                              {node.frontmatter?.tags?.map((tag) => <Tag onClick={(e) => { onTagClick(e, tag!) }}>{tag}</Tag>)}
                             </span>
                           </div>
                           <span className="article-list-item-header-info">

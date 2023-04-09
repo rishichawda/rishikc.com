@@ -7,9 +7,10 @@ main.main-container {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 11px 5px;
   }
+
   section {
+    margin-top: var(--space-s-m);
     .article-list {
       list-style: none;
       padding-inline: 0;
@@ -19,77 +20,74 @@ main.main-container {
       this makes it look good + lighthouse reports happy.
       */
       min-height: 100vh;
-      & > .hide-item {
-        animation: fade-out 1s forwards;
-      }
-      & > .show-item {
-        animation: fade-in 1s forwards;
-      }
+
       &-item {
-        padding: 5px 11px;
-        margin-top: 55px;
+        padding: var(--space-3xs-2xs) var(--space-2xs-s);
+        margin-bottom: var(--space-xs-m);
+
         &-header {
           display: flex;
           flex-direction: row;
           align-items: center;
           justify-content: space-between;
+
           &-content {
             display: flex;
             flex-direction: column;
+
             &-title {
+              font-size: var(--step-3);
+              margin: var(--space-2xs-xs) 0 !important;
+              margin-top: 0 !important;
               width: 100%;
               display: inline-flex;
               font-weight: 400;
-              margin: 0;
             }
 
             &-tags {
               display: inline-flex;
-              margin-bottom: 10px;
-              & > small {
-                margin-right: 5px;
-                padding: 0px 10px;
-                border-radius: 5px;
-                background-color: $selection-color;
-                z-index: 10;
-                &:last-of-type {
-                  margin-right: 0;
-                }
-              }
+              margin-bottom: var(--space-s);
             }
           }
+
           &-info {
             display: inline-flex;
             align-items: center;
             align-self: start;
+            font-size: var(--step-0);
           }
         }
 
         &-details {
+          font-size: var(--step-1);
+          line-height: 1.9;
           margin-top: 0;
-          -webkit-box-orient: vertical;
           display: -webkit-box;
+          -webkit-box-orient: vertical;
           -webkit-line-clamp: 3;
           overflow: hidden;
         }
+
         a {
           position: relative;
+
           &::before {
             content: "";
             position: absolute;
             width: 3px;
             height: 0;
             left: -11px;
-            top: -5px;
+            top: 50%;
+            transform: translateY(-50%);
             background-color: $link-highlight-color;
             transition: all 0.2s ease-in-out;
-            transform: translateY(50%);
             will-change: height opacity;
             opacity: 0;
           }
+
           &:hover {
             &::before {
-              transform: translateY(0);
+              transform: translateY(-50%);
               opacity: 1;
               height: 100%;
             }
@@ -105,8 +103,8 @@ main.main-container {
   flex-wrap: wrap;
   align-items: center;
   max-width: 70%;
-  &>span {
-    padding: 10px 2.5px;
+  & > span {
+    padding: 15px 2.5px;
   }
   p {
     margin: 0;
@@ -116,12 +114,16 @@ main.main-container {
       color: $link-highlight-color;
     }
   }
-  &-item {
-    cursor: pointer;
-    padding: 7px 10px;
-    border-radius: 5px;
-    background-color: $selection-color;
-    z-index: 10;
+}
+
+// List animation
+.article-list {
+  & > .hide-item {
+    animation: fade-out 0.6s forwards;
+  }
+
+  & > .show-item {
+    animation: fade-in 0.6s forwards;
   }
 }
 
@@ -137,8 +139,8 @@ main.main-container {
   100% {
     opacity: 1;
     overflow: hidden;
-    padding: 5px 11px;
-    margin-top: 55px;
+    padding: var(--space-3xs-2xs) var(--space-2xs-s);
+    margin-bottom: var(--space-xs-m);
     max-height: fit-content;
   }
 }
@@ -147,8 +149,8 @@ main.main-container {
   from {
     opacity: 1;
     overflow: hidden;
-    padding: 5px 11px;
-    margin-top: 55px;
+    padding: var(--space-3xs-2xs) var(--space-2xs-s);
+    margin-bottom: var(--space-xs-m);
     max-height: fit-content;
   }
 

@@ -3,35 +3,46 @@
 section[itemprop="articleBody"] {
   display: flex;
   flex-direction: column;
-  padding: 2em 0;
+  padding: var(--space-s-m) 0;
+  font-size: var(--step-1);
+  line-height: 1.9;
 
   pre[class*="language-"] {
     max-width: 90%;
     font-family: monospace, sans-serif;
-    border-radius: 10px;
-    margin: 40px auto;
+    border-radius: var(--space-3xs);
+    margin: var(--space-m-l) auto;
     background-color: #151323;
-    font-size: 0.9em;
+    font-size: var(--step-0);
     box-shadow: rgba($color: #151323, $alpha: 0.5) 1px 1px 11px 5px;
   }
 
   code:not([class*="language-"]) {
     background-color: rgba(197, 197, 226, 0.338);
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: var(--space-3xs) var(--space-2xs);
+    border-radius: var(--space-3xs);
     margin: 0px 2px;
     font-family: monospace, sans-serif;
+    font-size: var(--step-0);
+  }
+
+  h2 {
+    font-size: var(--step-3);
+
+    code:not([class*="language-"]) {
+      font-size: var(--step-2);
+    }
   }
 
   img {
-    margin: 40px auto;
-    width: 90%;
+    margin: var(--space-m-l) auto;
+    width: 80%;
     height: auto;
   }
 
   a.gatsby-resp-image-link {
-    margin: 40px auto;
-    width: 90%;
+    margin: var(--space-m-l) auto;
+    width: 80%;
   }
 
   a:not(.gatsby-resp-image-link) {
@@ -40,18 +51,18 @@ section[itemprop="articleBody"] {
 
   p,
   ul {
-    margin: 0.5em 0;
+    margin: var(--space-2xs-xs) 0;
   }
 
   div.gist[id^="gist"] {
     max-width: 90%;
-    margin: 40px auto;
+    margin: var(--space-m-l) auto;
   }
 
   hr {
     border-color: #d6d6da;
-    margin: 3.8em 0;
-    border-width: 0.5px;
+    margin: var(--space-l) 0;
+    border-width: 1px;
   }
 
   blockquote {
@@ -59,16 +70,16 @@ section[itemprop="articleBody"] {
     border-color: #d1d0d0;
     display: flex;
     border-style: solid;
-    padding: 0 5%;
-    margin: 4.3% 3.4%;
-    font-size: 1.1em;
+    padding: 0 var(--space-l-xl);
+    margin: var(--space-l-xl) var(--space-m-l);
+    font-size: var(--step-1);
     font-style: italic;
     background-color: rgba(230, 230, 230, 0.338);
   }
 }
 
 .back-navigation-link {
-  margin-bottom: 1em;
+  margin-bottom: var(--space-m-l);
   color: $link-highlight-color;
 }
 
@@ -102,12 +113,6 @@ section[itemprop="articleBody"] {
       margin-top: 1em;
       & > span {
         padding: 10px 2.5px;
-        & > small {
-          padding: 7px 10px;
-          border-radius: 5px;
-          background-color: $selection-color;
-          z-index: 10;
-        }
       }
     }
   }
