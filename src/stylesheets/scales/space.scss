@@ -1,17 +1,5 @@
 :root {
   // =============================================================
-  // Type scales
-  // =============================================================
-  --step--2: clamp(0.52rem, calc(0.52rem + 0.00vw), 0.52rem);
-  --step--1: clamp(0.63rem, calc(0.62rem + 0.04vw), 0.65rem);
-  --step-0: clamp(0.75rem, calc(0.73rem + 0.10vw), 0.81rem);
-  --step-1: clamp(0.90rem, calc(0.86rem + 0.18vw), 1.02rem);
-  --step-2: clamp(1.08rem, calc(1.02rem + 0.30vw), 1.27rem);
-  --step-3: clamp(1.30rem, calc(1.20rem + 0.46vw), 1.59rem);
-  --step-4: clamp(1.56rem, calc(1.42rem + 0.68vw), 1.98rem);
-  --step-5: clamp(1.87rem, calc(1.67rem + 0.97vw), 2.48rem);
-
-  // =============================================================
   // Space pairs
   // =============================================================
   --space-3xs: clamp(0.31rem, calc(0.31rem + 0vw), 0.31rem);

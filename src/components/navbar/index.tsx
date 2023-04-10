@@ -1,7 +1,9 @@
-import { Link } from "gatsby";
-import React from "react";
-import { useSiteMetadata } from "../../hooks/use-site-metadata";
-import "./index.scss"
+import './index.scss';
+
+import { Link } from 'gatsby';
+import React from 'react';
+
+import { useSiteMetadata } from '../../hooks/use-site-metadata';
 
 const Navbar = () => {
   const siteMetadata = useSiteMetadata()

@@ -1,6 +1,7 @@
-import React, { ComponentProps, ComponentPropsWithoutRef } from "react"
-import { SiteMetadata } from "../../static/metadata"
-import { useSiteMetadata } from "../hooks/use-site-metadata"
+import React from 'react';
+
+import { SiteMetadata } from '../../static/metadata';
+import { useSiteMetadata } from '../hooks/use-site-metadata';
 
 const SEO = ({ title, description, pathname, children }: SeoProps) => {
   const defaultSiteMetadata = useSiteMetadata() as SiteMetadata

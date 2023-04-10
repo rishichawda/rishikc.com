@@ -8,11 +8,13 @@
   justify-content: space-between;
   padding-left: var(--space-2xs-s);
   padding-right: var(--space-2xs-s);
+
   .brand {
     text-decoration: none;
     font-size: var(--step-1);
     padding: var(--space-3xs-2xs);
   }
+
   ul {
     display: flex;
     flex-direction: row;
@@ -20,10 +22,12 @@
     justify-content: space-between;
     list-style: none;
     padding: var(--space-3xs-2xs);
+
     li {
       font-size: var(--step-1);
       padding: var(--space-3xs-2xs) var(--space-2xs-s);
       margin-right: var(--space-2xs);
+
       &:last-of-type {
         margin-right: 0;
       }

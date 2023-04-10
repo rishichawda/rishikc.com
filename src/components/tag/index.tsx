@@ -1,5 +1,6 @@
-import React, { MouseEventHandler, ReactNode } from 'react'
-import "./index.scss"
+import './index.scss';
+
+import React, { MouseEventHandler, ReactNode } from 'react';
 
 const Tag: React.FC<TagProps> = ({ children, ...rest }) => {
   return (

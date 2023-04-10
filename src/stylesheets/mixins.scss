@@ -10,6 +10,7 @@
 
 @mixin link-with-hover-transition {
   position: relative;
+
   &::after {
     content: "";
     padding: 2px;
@@ -23,6 +24,7 @@
     left: -2px;
     transition: height 0.2s linear;
   }
+
   &:hover {
     &::after {
       height: 110%;
