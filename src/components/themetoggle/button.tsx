@@ -14,8 +14,8 @@ const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({ onChange, theme }
   }
 
   return (
-    <div onClick={onClick} className="ml-2">
-      <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="69.667" height="44" viewBox="0 0 69.667 44">
+    <div id="theme-toggle-button" onClick={onClick} className="ml-2 cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 69.667 44">
         <defs>
           <filter id="moon" x="28.5" y="2.833" width="36.333" height="36.333" filterUnits="userSpaceOnUse">
             <feOffset input="SourceAlpha" />
