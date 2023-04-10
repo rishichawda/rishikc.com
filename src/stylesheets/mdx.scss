@@ -53,6 +53,12 @@ section[itemprop="articleBody"] {
     margin: var(--space-2xs-xs) 0;
   }
 
+  ul {
+    list-style-type: disc;
+    padding-left: var(--space-xs-m);
+    margin-top: 0;
+  }
+
   div.gist[id^="gist"] {
     max-width: 90%;
     margin: var(--space-m-l) auto;
@@ -97,9 +103,11 @@ section[itemprop="articleBody"] {
     font-weight: 400;
     margin: 0;
     margin-bottom: 0.25em;
+    font-size: var(--step-4);
   }
-
+  
   &-subtitle {
+    font-size: var(--step-2);
     margin: 0;
   }
 

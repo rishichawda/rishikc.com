@@ -85,7 +85,7 @@ const Articles: React.FC = () => {
       <div className="root-container">
         <main className="main-container">
           <div className="article-list-header">
-            <h1>Blog posts</h1>
+            <h1 className="article-list-header-title">Blog posts</h1>
             <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           </div>
           <div className="article-list-search-info">
