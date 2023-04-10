@@ -84,17 +84,17 @@ const Articles: React.FC = () => {
     <Layout>
       <div className="root-container">
         <main className="main-container">
-          <div className="article-list-header">
-            <h1 className="article-list-header-title">Blog posts</h1>
+          <div className="flex flex-col sm:flex-row items-center justify-between article-list-header">
+            <h1 className="mb-3 sm:m-0 article-list-header-title">Blog posts</h1>
             <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           </div>
           <div className="article-list-search-info">
             <AnimatePresence>
-              <motion.span className="article-list-search-info-tags">
-                <p>
+              <motion.span className="flex flex-wrap items-center w-full sm:w-2/3 article-list-search-info-tags">
+                <p className="m-0">
                   Popular tags
                   &nbsp;
-                  <small onClick={toggleTags}>
+                  <small className="italic cursor-pointer" onClick={toggleTags}>
                     (show all)
                   </small>
                   &nbsp;:&nbsp;

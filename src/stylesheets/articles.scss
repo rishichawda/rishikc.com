@@ -3,12 +3,8 @@
 
 main.main-container {
   .article-list-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
     margin-bottom: var(--space-s);
-    
+
     &-title {
       font-size: var(--step-4);
     }
@@ -20,11 +16,6 @@ main.main-container {
 }
 
 .article-list-search-info-tags {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  max-width: 70%;
-
   & > span {
     padding: var(--space-3xs) 2.5px;
 
@@ -33,13 +24,7 @@ main.main-container {
     }
   }
 
-  p {
-    margin: 0;
-
-    & > small {
-      cursor: pointer;
-      font-style: italic;
-      color: $link-highlight-color;
-    }
+  p > small {
+    color: $link-highlight-color;
   }
 }

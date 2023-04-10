@@ -12,13 +12,9 @@
 
   &-item {
     padding: var(--space-3xs-2xs) var(--space-2xs-s);
-    margin-bottom: var(--space-xs-m);
+    margin-bottom: var(--space-m);
 
     &-header {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
 
       &-content {
         display: flex;
@@ -35,7 +31,7 @@
 
         &-tags {
           display: inline-flex;
-          margin-bottom: var(--space-s);
+          margin-bottom: var(--space-xs-s);
         }
       }
 
@@ -50,7 +46,7 @@
     &-details {
       font-size: var(--step-1);
       line-height: 1.9;
-      margin-top: 0;
+      margin-top: var(--space-s);
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;

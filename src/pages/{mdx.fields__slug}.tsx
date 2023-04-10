@@ -15,10 +15,10 @@ const Article: React.FC<ArticleProps> = (props) => {
           <Link className="back-navigation-link" to="/articles">
             &#171;&nbsp;go back to main list
           </Link>
-          <div className="article-header">
-            <h1 className="article-header-title">{props.data.mdx.frontmatter?.title}</h1>
-            <h2 className="article-header-subtitle">{props.data.mdx.frontmatter?.subtitle}</h2>
-            <span className="article-header-tags">
+          <div className="flex flex-col items-center sm:items-start article-header">
+            <h1 className="text-center sm:text-left article-header-title">{props.data.mdx.frontmatter?.title}</h1>
+            <h2 className="text-center sm:text-left article-header-subtitle">{props.data.mdx.frontmatter?.subtitle}</h2>
+            <span className="flex flex-wrap items-center justify-center article-header-tags">
               {props.data.mdx.frontmatter?.tags?.map((tag) => <span><Tag>{tag}</Tag></span>)}
             </span>
             <span className="article-header-time">
@@ -29,7 +29,7 @@ const Article: React.FC<ArticleProps> = (props) => {
               <span>{props.data.mdx.fields?.timeToRead?.text}</span>
             </span>
           </div>
-          <section itemProp="articleBody">{props.children}</section>
+          <section className="flex flex-col" itemProp="articleBody">{props.children}</section>
         </main>
       </div>
     </Layout>

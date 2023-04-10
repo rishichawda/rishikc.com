@@ -1,8 +1,6 @@
 @import "mixins.scss";
 
 section[itemprop="articleBody"] {
-  display: flex;
-  flex-direction: column;
   font-size: var(--step-1);
   line-height: 1.9;
 
@@ -89,35 +87,26 @@ section[itemprop="articleBody"] {
 }
 
 .article-header {
-  display: flex;
-  flex-direction: row;
-  align-items: start;
-  justify-content: space-between;
   margin: var(--space-s-m) 0 0 0;
-  display: flex;
-  flex-direction: column;
 
   &-title {
     width: 100%;
-    display: inline-flex;
     font-weight: 400;
     margin: 0;
     margin-bottom: 0.25em;
     font-size: var(--step-4);
   }
-  
+
   &-subtitle {
+    width: 100%;
     font-size: var(--step-2);
     margin: 0;
   }
 
   &-tags {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
     margin: var(--space-xs-s) 0 var(--space-m-l) 0;
     & > span {
-      padding: 10px 2.5px;
+      padding: var(--space-3xs) 2.5px;
     }
   }
 
