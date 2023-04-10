@@ -1,6 +1,6 @@
-main.main-container {
+.main-container {
   display: flex;
   flex-direction: column;
-  font-size: var(--step-1);
-  padding: var(--space-s-m) var(--space-xs-s);
+  padding: var(--space-l-xl) var(--space-xs-l);
+  min-height: 100vh;
 }

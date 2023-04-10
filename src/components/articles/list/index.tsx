@@ -55,7 +55,7 @@ const ArticlesList = (props: ArticlesListProps) => {
                         {node.frontmatter?.tags?.map((tag) => <Tag onClick={(e) => { props.onTagClick(e, tag!) }}>{tag}</Tag>)}
                       </span>
                     </div>
-                    <span className="whitespace-nowrap article-list-item-header-info">
+                    <span className="dark:bg-slate-600 whitespace-nowrap article-list-item-header-info">
                       <span>{node.frontmatter?.date}</span>
                       &nbsp;&nbsp;
                       <strong>·</strong>

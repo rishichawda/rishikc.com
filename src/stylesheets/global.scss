@@ -8,15 +8,24 @@ body {
   background-color: #fafbfc;
 }
 
-.root-container {
-  max-width: 1330px;
-  margin: auto;
-}
-
 * {
   &::selection {
     background-color: $selection-color;
   }
+}
+
+body.light {
+  @apply bg-gray-50;
+  @apply text-slate-800;
+}
+
+body.dark {
+  @apply bg-slate-800;
+}
+
+.root-container {
+  max-width: 1330px;
+  margin: auto;
 }
 
 p,

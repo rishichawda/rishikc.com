@@ -20,6 +20,7 @@ const config: GatsbyConfig = {
         branch: `main`
       }
     },
+    `gatsby-plugin-dark-mode`,
     "gatsby-plugin-sass",
     'gatsby-plugin-postcss',
     "gatsby-plugin-google-gtag",

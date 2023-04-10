@@ -11,7 +11,7 @@ const Article: React.FC<ArticleProps> = (props) => {
   return (
     <Layout>
       <div className="root-container">
-        <main className="main-container">
+        <main className="bg-gray-100 dark:bg-slate-700 dark:text-gray-200 article-content-page-container">
           <Link className="back-navigation-link" to="/articles">
             &#171;&nbsp;go back to main list
           </Link>

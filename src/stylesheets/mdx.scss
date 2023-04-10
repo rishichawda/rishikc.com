@@ -1,5 +1,11 @@
 @import "mixins.scss";
 
+main.article-content-page-container {
+  padding: var(--space-l-xl) var(--space-xs-l) !important;
+  border-radius: var(--space-xs-s);
+  margin: var(--space-m-xl) var(--space-xs);
+}
+
 section[itemprop="articleBody"] {
   font-size: var(--step-1);
   line-height: 1.9;
@@ -87,7 +93,7 @@ section[itemprop="articleBody"] {
 }
 
 .article-header {
-  margin: var(--space-s-m) 0 0 0;
+  margin: var(--space-xl-2xl) 0 var(--space-m-l) 0;
 
   &-title {
     width: 100%;
@@ -105,7 +111,8 @@ section[itemprop="articleBody"] {
 
   &-tags {
     margin: var(--space-xs-s) 0 var(--space-m-l) 0;
-    & > span {
+
+    &>span {
       padding: var(--space-3xs) 2.5px;
     }
   }

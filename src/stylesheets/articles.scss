@@ -1,7 +1,11 @@
 @import "colors.scss";
 @import "mixins.scss";
 
-main.main-container {
+main.article-page-container {
+  padding: var(--space-l-xl) var(--space-xs-l) !important;
+  border-radius: var(--space-xs-s);
+  margin: var(--space-m-xl) var(--space-xs);
+
   .article-list-header {
     margin-bottom: var(--space-s);
 
@@ -11,20 +15,20 @@ main.main-container {
   }
 
   section {
-    margin-top: var(--space-s-m);
+    margin-top: var(--space-xl-2xl);
   }
 }
 
 .article-list-search-info-tags {
-  & > span {
+  &>span {
     padding: var(--space-3xs) 2.5px;
 
-    & > small {
+    &>small {
       cursor: pointer;
     }
   }
 
-  p > small {
+  p>small {
     color: $link-highlight-color;
   }
 }
