@@ -48,7 +48,11 @@ section[itemprop="articleBody"] {
     width: 80%;
   }
 
-  h1,h2,h3,h4,h5 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
     a.autolink-header-icon {
       display: inline-flex;
       align-items: center;
@@ -127,5 +131,11 @@ section[itemprop="articleBody"] {
 
   &-time {
     font-size: var(--step-0);
+  }
+}
+
+body.dark {
+  a.autolink-header-icon {
+    @apply fill-gray-200;
   }
 }

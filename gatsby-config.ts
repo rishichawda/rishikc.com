@@ -119,6 +119,12 @@ const config: GatsbyConfig = {
               noInlineHighlight: true,
             }
           },
+          {
+            resolve: `gatsby-plugin-canonical-urls`,
+            options: {
+              siteUrl: siteMetadata.siteUrl,
+            },
+          },
         ],
       }
     },
