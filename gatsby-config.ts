@@ -108,6 +108,12 @@ const config: GatsbyConfig = {
             },
           },
           {
+            resolve: `gatsby-remark-autolink-headers`,
+            options: {
+              className: "autolink-header-icon"
+            }
+          },
+          {
             resolve: `gatsby-remark-prismjs`,
             options: {
               noInlineHighlight: true,

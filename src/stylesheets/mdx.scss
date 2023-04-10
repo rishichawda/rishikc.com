@@ -48,7 +48,15 @@ section[itemprop="articleBody"] {
     width: 80%;
   }
 
-  a:not(.gatsby-resp-image-link) {
+  h1,h2,h3,h4,h5 {
+    a.autolink-header-icon {
+      display: inline-flex;
+      align-items: center;
+      height: 100%;
+    }
+  }
+
+  a:not(.gatsby-resp-image-link):not(.autolink-header-icon.before[href^="#"]) {
     @include link-with-hover-transition;
   }
 
