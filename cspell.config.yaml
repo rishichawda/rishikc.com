@@ -11,6 +11,7 @@ words:
   - prismjs
   - rishiikc
   - rishikc
+  - tailwindcss
   - Typegen
 ignoreWords: []
 import: []

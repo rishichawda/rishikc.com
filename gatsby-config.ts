@@ -21,6 +21,7 @@ const config: GatsbyConfig = {
       }
     },
     "gatsby-plugin-sass",
+    'gatsby-plugin-postcss',
     "gatsby-plugin-google-gtag",
     "gatsby-plugin-image",
     "gatsby-plugin-sitemap",
