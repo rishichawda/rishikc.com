@@ -2,9 +2,7 @@
 @import "mixins.scss";
 
 main.article-page-container {
-  padding: var(--space-l-xl) var(--space-xs-l) !important;
-  border-radius: var(--space-xs-s);
-  margin: var(--space-m-xl) var(--space-xs);
+  @include rounded-container;
 
   .article-list-header {
     margin-bottom: var(--space-s);

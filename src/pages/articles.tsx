@@ -83,7 +83,7 @@ const Articles: React.FC = () => {
   return (
     <Layout>
       <div className="root-container">
-        <main className="bg-gray-100 dark:bg-slate-700 dark:text-gray-200 article-page-container">
+        <main className="article-page-container">
           <div className="flex flex-col sm:flex-row items-center justify-between article-list-header">
             <h1 className="mb-3 sm:m-0 article-list-header-title">Blog posts</h1>
             <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
