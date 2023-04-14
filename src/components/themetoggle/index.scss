@@ -34,15 +34,15 @@
   fill: #2b4360;
 }
 
-.light>#button {
+.light > #button {
   transform: translate(2.333px, 2.333px);
 }
 
-.dark>#button {
+.dark > #button {
   transform: translate(28px, 2.333px);
 }
 
-.light>#sun {
+.light > #sun {
   opacity: 1;
 }
 

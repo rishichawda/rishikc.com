@@ -1,8 +1,8 @@
-import { PageProps } from 'gatsby';
-import * as React from 'react';
+import { PageProps } from "gatsby";
+import * as React from "react";
 
-import Layout from '../components/layout';
-import SEO from '../components/seo';
+import Layout from "../components/layout";
+import SEO from "../components/seo";
 
 const NotFoundPage: React.FC<PageProps> = () => (
   <Layout>
@@ -14,8 +14,8 @@ const NotFoundPage: React.FC<PageProps> = () => (
       </main>
     </div>
   </Layout>
-)
+);
 
-export const Head = () => <SEO title="Oops! Page Not found!" />
+export const Head = () => <SEO title="Oops! Page Not found!" />;
 
-export default NotFoundPage
+export default NotFoundPage;

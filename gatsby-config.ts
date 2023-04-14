@@ -1,4 +1,5 @@
-import siteMetadata from "./static/metadata"
+import siteMetadata from './static/metadata';
+
 import type { GatsbyConfig } from "gatsby";
 
 require("dotenv").config({

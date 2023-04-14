@@ -99,7 +99,6 @@ section[itemprop="articleBody"] {
 
 .back-navigation-link {
   margin-bottom: var(--space-xs-s);
-  color: $link-highlight-color;
 }
 
 .article-header {
@@ -122,7 +121,7 @@ section[itemprop="articleBody"] {
   &-tags {
     margin: var(--space-xs-s) 0 var(--space-m-l) 0;
 
-    &>span {
+    & > span {
       padding: var(--space-3xs) 2.5px;
     }
   }

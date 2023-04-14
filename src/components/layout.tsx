@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import Footer from './footer';
-import Navbar from './navbar';
+import Footer from "./footer";
+import Navbar from "./navbar";
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
@@ -10,11 +10,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {children}
       <Footer />
     </div>
-  )
-}
+  );
+};
 
 type LayoutProps = {
   children: React.ReactNode;
-}
+};
 
-export default Layout
+export default Layout;

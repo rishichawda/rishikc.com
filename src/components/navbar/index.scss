@@ -1,7 +1,7 @@
 @import "../../stylesheets/mixins.scss";
 @import "../../stylesheets/colors.scss";
 
-body.dark nav.navigation-bar>div>.brand>svg {
+body.dark nav.navigation-bar > div > .brand > svg {
   @apply fill-slate-100;
 }
 
@@ -10,7 +10,7 @@ body.dark nav.navigation-bar>div>.brand>svg {
   flex-direction: row;
   padding: var(--space-xs-s) var(--space-2xs-xs);
 
-  &>div {
+  & > div {
     width: 100%;
     max-width: 1700px;
   }
@@ -33,7 +33,7 @@ body.dark nav.navigation-bar>div>.brand>svg {
     justify-content: space-between;
     list-style: none;
     padding: var(--space-3xs-2xs) 0;
-    
+
     li {
       font-size: var(--step-1);
       padding: var(--space-3xs-2xs) var(--space-3xs);

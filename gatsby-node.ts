@@ -31,7 +31,7 @@ exports.sourceNodes = ({
 }) => {
   const allMdxNodes = getNodesByType(`Mdx`)
   const data: GlobalMetadata = { mdx: { tags: { all: [], top: [] } } }
-  let allTags: {[key:string]: number} = {}
+  let allTags: { [key: string]: number } = {}
   allMdxNodes.forEach((node: any) => {
     node.frontmatter.tags.map((tag: string) => {
       if (allTags[tag]) {
@@ -42,7 +42,7 @@ exports.sourceNodes = ({
     })
   })
   data.mdx.tags.all = Object.keys(allTags).map((key) => `${key} (${allTags[key]})`)
-  data.mdx.tags.top = Object.keys(allTags).sort((a, b) => allTags[b] - allTags[a]).slice(0,3)
+  data.mdx.tags.top = Object.keys(allTags).sort((a, b) => allTags[b] - allTags[a]).slice(0, 3)
   actions.createNode({
     id: createNodeId('GlobalMetadata'),
     parent: null,

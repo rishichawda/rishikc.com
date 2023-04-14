@@ -18,15 +18,7 @@ main.article-page-container {
 }
 
 .article-list-search-info-tags {
-  &>span {
+  & > span {
     padding: var(--space-3xs) 2.5px;
-
-    &>small {
-      cursor: pointer;
-    }
-  }
-
-  p>small {
-    color: $link-highlight-color;
   }
 }

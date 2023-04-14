@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import { SiteMetadata } from '../../static/metadata';
-import { useSiteMetadata } from '../hooks/use-site-metadata';
+import { SiteMetadata } from "../../static/metadata";
+import { useSiteMetadata } from "../hooks/use-site-metadata";
 
 const SEO = ({ title, description, pathname, children }: SeoProps) => {
-  const defaultSiteMetadata = useSiteMetadata() as SiteMetadata
+  const defaultSiteMetadata = useSiteMetadata() as SiteMetadata;
 
   const seo = {
     title: title || defaultSiteMetadata.title,
     description: description || defaultSiteMetadata.description,
     image: `${defaultSiteMetadata.siteUrl}${defaultSiteMetadata.image}`,
     url: `${defaultSiteMetadata.siteUrl}${pathname || ``}`,
-  }
+  };
 
   return (
     <>
@@ -25,18 +25,21 @@ const SEO = ({ title, description, pathname, children }: SeoProps) => {
       <meta name="twitter:url" content={seo.url} />
       <meta name="twitter:description" content={seo.description} />
       <meta name="twitter:card" content={defaultSiteMetadata.twitter.card} />
-      <meta name="twitter:creator" content={defaultSiteMetadata.twitter.creator} />
+      <meta
+        name="twitter:creator"
+        content={defaultSiteMetadata.twitter.creator}
+      />
       <meta name="twitter:image" content={seo.image} />
       {children}
     </>
-  )
-}
+  );
+};
 
 type SeoProps = {
   title?: string;
   description?: string;
   pathname?: string;
   children?: React.ReactNode;
-}
+};
 
-export default SEO
+export default SEO;

@@ -1,0 +1,32 @@
+.gallery-preview-container {
+  #gallery-preview {
+    h2 {
+      font-size: var(--step-2);
+    }
+  }
+
+  .gallery-preview-list {
+    &:hover .instagram-gallery-image-wrapper {
+      opacity: 0.5;
+      filter: blur(2px);
+    }
+
+    .instagram-gallery-image-wrapper {
+      border-radius: var(--space-2xs);
+      overflow: hidden;
+      transition: all 0.2s ease-in-out;
+
+      img {
+        max-width: 170px;
+        height: auto;
+      }
+
+      &:hover {
+        opacity: 1;
+        filter: none;
+        transform: scale(1.2);
+        z-index: 10;
+      }
+    }
+  }
+}

@@ -1,40 +1,36 @@
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql, useStaticQuery } from "gatsby";
 
 type QueryData = {
-  globalMetadata: Queries.GlobalMetadata
-}
+  globalMetadata: Queries.GlobalMetadata;
+};
 
 export const useTags = () => {
   const data = useStaticQuery<QueryData>(graphql`
-  query {
-    globalMetadata {
-      data {
-        mdx {
-          tags {
-            all
-            top
+    query {
+      globalMetadata {
+        data {
+          mdx {
+            tags {
+              all
+              top
+            }
           }
         }
       }
     }
-  }
-`)
-  
-  console.log({ data })
-  
-  const allTags = (data.globalMetadata?.data?.mdx?.tags?.all || []) as string[]
-  const topTags = (data.globalMetadata?.data?.mdx?.tags?.top || []) as string[]
-  const topTagsWithCount = allTags
-    .filter((tag) =>
-      topTags
-        .join(" ")
-        .includes(
-          tag
-            .split("(")[0]
-            .trim()
-      )
-    )
+  `);
 
-  const allTagsData: [readonly string[], readonly string[]] = [allTags, topTagsWithCount]
-  return allTagsData
-}
+  console.log({ data });
+
+  const allTags = (data.globalMetadata?.data?.mdx?.tags?.all || []) as string[];
+  const topTags = (data.globalMetadata?.data?.mdx?.tags?.top || []) as string[];
+  const topTagsWithCount = allTags.filter((tag) =>
+    topTags.join(" ").includes(tag.split("(")[0].trim())
+  );
+
+  const allTagsData: [readonly string[], readonly string[]] = [
+    allTags,
+    topTagsWithCount,
+  ];
+  return allTagsData;
+};

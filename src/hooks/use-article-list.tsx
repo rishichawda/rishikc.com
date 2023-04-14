@@ -1,9 +1,9 @@
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql, useStaticQuery } from "gatsby";
 
 type QueryData = {
   allMdx: Queries.MdxConnection;
-  localSearchArticles: Queries.LocalSearchArticles
-}
+  localSearchArticles: Queries.LocalSearchArticles;
+};
 
 type FlattenedArticleNode = {
   id: string;
@@ -15,7 +15,7 @@ type FlattenedArticleNode = {
   date: Queries.MdxFrontmatter_dateArgs;
   tags: string[];
   banner: string;
-}
+};
 
 export const useArticleList = () => {
   const data = useStaticQuery<QueryData>(graphql`
@@ -46,29 +46,31 @@ export const useArticleList = () => {
         }
       }
     }
-  `)
+  `);
 
-  const results: [readonly Queries.MdxEdge[], Queries.LocalSearchArticles] = [data.allMdx.edges, data.localSearchArticles]
-  return results
-}
+  const results: [readonly Queries.MdxEdge[], Queries.LocalSearchArticles] = [
+    data.allMdx.edges,
+    data.localSearchArticles,
+  ];
+  return results;
+};
 
 export const filterByTags = (data: any[], tags: string[]) => {
   return data.filter((edge) => {
-    return edge.node
-      .frontmatter
-      .tags
-      .some((t: string) => tags.includes(t))
-  })
-}
+    return edge.node.frontmatter.tags.some((t: string) => tags.includes(t));
+  });
+};
 
-export const transformFlexSearchData = (data: FlattenedArticleNode[]): Queries.MdxEdge[] => {
+export const transformFlexSearchData = (
+  data: FlattenedArticleNode[]
+): Queries.MdxEdge[] => {
   return data.map((x: FlattenedArticleNode) => ({
     node: {
       id: x.id,
       fields: {
         slug: x.slug,
         timeToRead: {
-          text: x.timeToRead
+          text: x.timeToRead,
         },
       },
       frontmatter: {
@@ -76,9 +78,9 @@ export const transformFlexSearchData = (data: FlattenedArticleNode[]): Queries.M
         subtitle: x.subtitle,
         date: x.date,
         banner: x.banner,
-        tags: x.tags
+        tags: x.tags,
       },
       excerpt: x.excerpt,
     },
-  })) as unknown as Queries.MdxEdge[]
-}
+  })) as unknown as Queries.MdxEdge[];
+};

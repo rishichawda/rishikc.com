@@ -1,14 +1,14 @@
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql, useStaticQuery } from "gatsby";
 
 export const useArticleData = () => {
   const data = useStaticQuery<{ mdx: Queries.Mdx }>(graphql`
     query ($id: String) {
-      mdx(id: {eq: $id}) {
+      mdx(id: { eq: $id }) {
         fields {
-            timeToRead {
-              text
-            }
+          timeToRead {
+            text
           }
+        }
         frontmatter {
           title
           subtitle
@@ -17,7 +17,7 @@ export const useArticleData = () => {
         }
       }
     }
-  `)
+  `);
 
-  return data.mdx
-}
+  return data.mdx;
+};
