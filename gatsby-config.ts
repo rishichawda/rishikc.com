@@ -32,6 +32,12 @@ const config: GatsbyConfig = {
         }
       },
     },
+    {
+      resolve: `gatsby-source-instagram`,
+      options: {
+        username: process.env.INSTAGRAM_USER_ID,
+      },
+    },
     `gatsby-plugin-dark-mode`,
     "gatsby-plugin-sass",
     'gatsby-plugin-postcss',
@@ -61,6 +67,13 @@ const config: GatsbyConfig = {
         "path": "src/pages"
       },
       __key: "pages"
+    },
+    {
+      resolve: `gatsby-plugin-remote-images`,
+      options: {
+        nodeType: 'InstaNode',
+        imagePath: 'original',
+      },
     },
     {
       resolve: `gatsby-plugin-google-gtag`,

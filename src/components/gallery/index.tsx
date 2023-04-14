@@ -1,8 +1,11 @@
 import React from "react";
 
+import useInstagramNodes from "../../hooks/use-insta-nodes";
 import Card from "./card";
 
 const Gallery = () => {
+  const data = useInstagramNodes();
+
   return (
     <div className="flex flex-col w-full mx-auto px-4 mb-28 justify-between gallery-preview-container">
       <div
@@ -21,11 +24,9 @@ const Gallery = () => {
       </div>
       <div className="flex mx-auto">
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 grid-flow-row gap-2 auto-cols-min gallery-preview-list">
-          {Array(12)
-            .fill(0)
-            .map(() => {
-              return <Card />;
-            })}
+          {data.map((edge) => {
+            return <Card data={edge} />;
+          })}
         </div>
       </div>
     </div>
