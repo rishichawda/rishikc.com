@@ -136,3 +136,13 @@ body.dark {
     @apply fill-gray-200;
   }
 }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0.45em;
+  transform-origin: 0%;
+  @apply bg-brand-700;
+}

@@ -6,8 +6,10 @@ import * as React from "react";
 
 import Layout from "../components/layout";
 import Tag from "../components/tag";
+import { motion, useScroll } from "framer-motion";
 
 const Article: React.FC<ArticleProps> = (props) => {
+  const { scrollYProgress } = useScroll();
   return (
     <Layout>
       <div className="root-container">
@@ -40,6 +42,10 @@ const Article: React.FC<ArticleProps> = (props) => {
               <span>{props.data.mdx.fields?.timeToRead?.text}</span>
             </span>
           </div>
+          <motion.div
+            className="progress-bar"
+            style={{ scaleX: scrollYProgress }}
+          />
           <section className="flex flex-col" itemProp="articleBody">
             {props.children}
           </section>
