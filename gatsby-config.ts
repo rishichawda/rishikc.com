@@ -21,6 +21,17 @@ const config: GatsbyConfig = {
         branch: `main`
       }
     },
+    {
+      resolve: 'gatsby-source-graphql',
+      options: {
+        typeName: 'GitHub',
+        fieldName: 'github',
+        url: 'https://api.github.com/graphql',
+        headers: {
+          Authorization: `bearer ${process.env.GITHUB_TOKEN}`,
+        }
+      },
+    },
     `gatsby-plugin-dark-mode`,
     "gatsby-plugin-sass",
     'gatsby-plugin-postcss',

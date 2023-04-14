@@ -14,6 +14,12 @@
   }
 
   &-item {
+    will-change: transform;
+    transition: transform 0.2s ease-in-out;
+    &:hover {
+      transform: scale(0.98);
+    }
+
     & > div {
       border-radius: var(--space-2xs-xs);
     }
