@@ -12,13 +12,16 @@
     }
 
     .instagram-gallery-image-wrapper {
-      border-radius: var(--space-3xs-2xs);
       overflow: hidden;
+      border-radius: var(--space-3xs-2xs);
       transition: all 0.2s ease-in-out;
 
-      img {
-        max-width: 170px;
-        height: auto;
+      .gatsby-image wrapper {
+        overflow: hidden;
+        img {
+          max-width: 170px;
+          height: auto;
+        }
       }
 
       &:hover {

@@ -8,6 +8,13 @@ exports.onCreateNode = ({
   getNode
 }) => {
   const { createNodeField } = actions
+  if (node.internal.type === 'InstaNode') {
+    createNodeField({
+      node,
+      name: 'visibility',
+      value: !!(node.caption && node.localFile___NODE),
+    })
+  }
   if (node.internal.type === `Mdx`) {
     const value = createFilePath({ node, getNode })
     createNodeField({

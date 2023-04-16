@@ -11,6 +11,9 @@ const config: GatsbyConfig = {
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
   // Learn more at: https://gatsby.dev/graphql-typegen
+  flags: {
+    DEV_SSR: true
+  },
   graphqlTypegen: true,
   plugins: [
     {
@@ -32,10 +35,15 @@ const config: GatsbyConfig = {
         }
       },
     },
+    {
+      resolve: `gatsby-source-instagram`,
+      options: {
+        username: process.env.INSTAGRAM_USER_ID,
+      },
+    },
     `gatsby-plugin-dark-mode`,
     "gatsby-plugin-sass",
     'gatsby-plugin-postcss',
-    "gatsby-plugin-google-gtag",
     "gatsby-plugin-image",
     "gatsby-plugin-sitemap",
     {
@@ -63,11 +71,17 @@ const config: GatsbyConfig = {
       __key: "pages"
     },
     {
+      resolve: `gatsby-plugin-remote-images`,
+      options: {
+        nodeType: 'InstaNode',
+        imagePath: 'original',
+      },
+    },
+    {
       resolve: `gatsby-plugin-google-gtag`,
       options: {
         trackingIds: [
           process.env.GATSBY_GOOGLE_ANALYTICS_TRACKING_ID,
-          process.env.GATSBY_GOOGLE_AD_CLIENT
         ],
         gtagConfig: {
           anonymize_ip: true,

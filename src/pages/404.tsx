@@ -16,6 +16,6 @@ const NotFoundPage: React.FC<PageProps> = () => (
   </Layout>
 );
 
-export const Head = () => <SEO title="Oops! Page Not found!" />;
+export const Head = () => <SEO title="404: Not Found" />;
 
 export default NotFoundPage;
