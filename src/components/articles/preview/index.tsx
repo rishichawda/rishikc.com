@@ -35,7 +35,7 @@ const ArticlePreview = () => {
       <div className="mx-auto py-4">
         <ul className="grid grid-cols-1 md:grid-cols-2 grid-flow-row gap-4 article-preview-list">
           {data.allMdx.nodes.map((node: Queries.Mdx) => (
-            <ArticlePreviewCard data={node} />
+            <ArticlePreviewCard key={data.id} data={node} />
           ))}
         </ul>
       </div>
