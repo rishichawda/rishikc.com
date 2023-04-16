@@ -11,6 +11,9 @@ const config: GatsbyConfig = {
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
   // Learn more at: https://gatsby.dev/graphql-typegen
+  flags: {
+    DEV_SSR: true
+  },
   graphqlTypegen: true,
   plugins: [
     {
@@ -80,7 +83,6 @@ const config: GatsbyConfig = {
       options: {
         trackingIds: [
           process.env.GATSBY_GOOGLE_ANALYTICS_TRACKING_ID,
-          process.env.GATSBY_GOOGLE_AD_CLIENT
         ],
         gtagConfig: {
           anonymize_ip: true,
