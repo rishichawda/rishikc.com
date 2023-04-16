@@ -1,8 +1,0 @@
-.github-repo-card {
-  will-change: transform;
-  transition: transform 0.2s ease-in-out;
-}
-
-.github-repo-card:hover {
-  transform: scale(0.97);
-}

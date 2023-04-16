@@ -1,0 +1,46 @@
+@import "../../stylesheets/mixins.scss";
+@import "../../stylesheets/colors.scss";
+
+body.dark nav.navigation-bar > div > .brand > svg {
+  @apply fill-slate-100;
+}
+
+.navigation-bar {
+  display: flex;
+  flex-direction: row;
+  padding: var(--space-xs-s) var(--space-2xs-xs);
+
+  & > div {
+    width: 100%;
+    max-width: 1700px;
+  }
+
+  .brand {
+    text-decoration: none;
+    font-size: var(--step-1);
+    padding: var(--space-3xs-2xs);
+
+    svg {
+      height: var(--step-5);
+      fill: $link-highlight-color;
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    padding: var(--space-3xs-2xs) 0;
+
+    li {
+      font-size: var(--step-1);
+      padding: var(--space-3xs-2xs) var(--space-3xs);
+      margin-right: var(--space-xs);
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+}

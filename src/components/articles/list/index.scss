@@ -1,0 +1,84 @@
+@import "../../../stylesheets/colors.scss";
+
+.article-list {
+  list-style: none;
+  padding-inline: 0;
+  /*
+      min-height to viewport height is to avoid any
+      stagger/jerky UI. remove it and see for yourself.
+      this makes it look good + lighthouse reports happy.
+      */
+  min-height: 100vh;
+
+  &-item {
+    padding: var(--space-3xs-2xs) var(--space-2xs-s);
+    margin-bottom: var(--space-l);
+
+    &-header {
+      &-content {
+        display: flex;
+        flex-direction: column;
+
+        &-title {
+          font-size: var(--step-3);
+          padding-right: var(--space-m);
+          margin: var(--space-2xs-xs) 0 !important;
+          margin-top: 0 !important;
+          width: 100%;
+          display: inline-flex;
+          font-weight: 400;
+        }
+
+        &-tags {
+          display: inline-flex;
+          margin-bottom: var(--space-xs);
+        }
+      }
+
+      &-info {
+        display: inline-flex;
+        align-items: center;
+        align-self: start;
+        font-size: var(--step-0);
+        padding: 1px var(--space-2xs);
+        border-radius: var(--space-3xs);
+      }
+    }
+
+    &-details {
+      font-size: var(--step-1);
+      line-height: 1.9;
+      margin-top: var(--space-2xs);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+    }
+
+    a {
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 3px;
+        height: 0;
+        left: -11px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: $link-highlight-color;
+        transition: all 0.2s ease-in-out;
+        will-change: height opacity;
+        opacity: 0;
+      }
+
+      &:hover {
+        &::before {
+          transform: translateY(-50%);
+          opacity: 1;
+          height: 100%;
+        }
+      }
+    }
+  }
+}

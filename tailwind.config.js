@@ -1,22 +1,31 @@
-const { screens, colors } = require('tailwindcss/defaultTheme')
+/** @type {import('tailwindcss').Config} */
+
+const { colors } = require('tailwindcss/defaultTheme')
 
 module.exports = {
-  purge: ["./src/**/*.{js,jsx,ts,tsx}"],
-  darkMode: 'class', // or 'media' or 'class'
+  content: [
+    "./src/pages/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+  ],
   theme: {
     extend: {
-      screens: {
-        'xs': '475px',
-        ...screens,
-      },
       colors: {
-        'brand': '#3e4e88',
+        brand: {
+          900: '#576cbc',
+          800: '#687bc3',
+          700: '#7989c9',
+          600: '#8998d0',
+          500: '#9aa7d7',
+          400: '#abb6de',
+          300: '#bcc4e4',
+          200: '#cdd3eb',
+          100: '#dde2f2',
+        },
         ...colors,
       }
     },
   },
-  variants: {
-    extend: {},
-  },
   plugins: [],
+  darkMode: "class",
 }
+

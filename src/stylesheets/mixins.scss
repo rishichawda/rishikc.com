@@ -1,0 +1,42 @@
+@import "colors.scss";
+
+@mixin dev-random-highlight {
+  $red: random(255);
+  $blue: random(255);
+  $green: random(255);
+  border: 1px solid rgb($red, $blue, $green);
+  background-color: rgb($red, $blue, $green, 0.5);
+}
+
+@mixin link-with-hover-transition {
+  position: relative;
+
+  &::after {
+    content: "";
+    padding: 2px;
+    display: block;
+    height: 5%;
+    width: 100%;
+    background: $link-highlight-color;
+    opacity: 0.25;
+    position: absolute;
+    bottom: -10%;
+    left: 0;
+    transition: height 0.2s linear;
+  }
+
+  &:hover {
+    &::after {
+      height: 110%;
+    }
+  }
+}
+
+@mixin rounded-container {
+  @apply bg-gray-100;
+  @apply dark:bg-slate-700;
+  @apply dark:text-gray-200;
+  padding: var(--space-l-xl) var(--space-xs-l) !important;
+  border-radius: var(--space-2xs-xs);
+  margin: var(--space-m-xl) var(--space-xs);
+}

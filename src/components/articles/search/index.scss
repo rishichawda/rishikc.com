@@ -1,0 +1,22 @@
+.hide {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#articles-search-bar {
+  max-width: 100%;
+  min-width: 40%;
+  border-radius: var(--space-2xs);
+  padding: 2px;
+
+  input {
+    font-size: var(--step-0);
+    padding: var(--space-3xs-2xs);
+    border-radius: var(--space-3xs);
+    border: none;
+    width: fill-available;
+    outline: none;
+  }
+}

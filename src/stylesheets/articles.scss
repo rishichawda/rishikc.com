@@ -1,0 +1,24 @@
+@import "colors.scss";
+@import "mixins.scss";
+
+main.article-page-container {
+  @include rounded-container;
+
+  .article-list-header {
+    margin-bottom: var(--space-s);
+
+    &-title {
+      font-size: var(--step-4);
+    }
+  }
+
+  section {
+    margin-top: var(--space-xl-2xl);
+  }
+}
+
+.article-list-search-info-tags {
+  & > span {
+    padding: var(--space-3xs) 2.5px;
+  }
+}

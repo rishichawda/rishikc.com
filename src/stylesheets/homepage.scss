@@ -1,0 +1,29 @@
+@import "mixins.scss";
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-l-xl) var(--space-xs-l);
+  min-height: 100vh;
+  border-radius: var(--space-xs-s);
+  margin: var(--space-m-xl) var(--space-xs);
+  @include rounded-container;
+}
+
+.about {
+  margin-bottom: var(--space-2xl-3xl);
+
+  h1 {
+    font-size: var(--step-4);
+    margin-bottom: var(--space-m-l);
+  }
+
+  p {
+    font-size: var(--step-1);
+    line-height: 1.9;
+
+    a {
+      @include link-with-hover-transition;
+    }
+  }
+}

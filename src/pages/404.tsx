@@ -1,13 +1,21 @@
-import * as React from "react"
-import Layout from "components/layout"
-import SEO from "components/seo"
+import { PageProps } from "gatsby";
+import * as React from "react";
 
-const NotFoundPage = () => (
+import Layout from "../components/layout";
+import SEO from "../components/seo";
+
+const NotFoundPage: React.FC<PageProps> = () => (
   <Layout>
-    <SEO title="404: Not found" />
-    <h1>404: Not Found</h1>
-    <p>You just hit a route that doesn&#39;t exist... the sadness.</p>
+    <div className="root-container">
+      <main className="main-container">
+        <section>
+          <h1>404: Not Found</h1>
+        </section>
+      </main>
+    </div>
   </Layout>
-)
+);
 
-export default NotFoundPage
+export const Head = () => <SEO title="404: Not Found" />;
+
+export default NotFoundPage;
