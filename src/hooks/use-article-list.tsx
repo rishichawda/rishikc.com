@@ -24,7 +24,7 @@ export const useArticleList = () => {
         index
         store
       }
-      allMdx {
+      allMdx(sort: { frontmatter: { date: DESC } }) {
         edges {
           node {
             id
