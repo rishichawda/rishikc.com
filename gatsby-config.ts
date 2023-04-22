@@ -170,7 +170,7 @@ const config: GatsbyConfig = {
                   frontmatter {
                     title
                     subtitle
-                    banner
+                    hero_image
                     date(formatString: "MMMM D, YYYY")
                     tags
                   }
@@ -187,14 +187,14 @@ const config: GatsbyConfig = {
         `,
         ref: 'id',
         index: ['title', 'excerpt', 'tags'],
-        store: ['id', 'excerpt', 'title', 'subtitle', 'banner', 'date', 'tags', 'slug', 'timeToRead'],
+        store: ['id', 'excerpt', 'title', 'subtitle', 'hero_image', 'date', 'tags', 'slug', 'timeToRead'],
         normalizer: ({ data }: { data: { allMdx: Queries.MdxConnection } }) =>
           data.allMdx.edges.map((edge: Queries.MdxEdge) => ({
             id: edge.node.id,
             excerpt: edge.node.excerpt,
             title: edge.node.frontmatter?.title,
             subtitle: edge.node.frontmatter?.subtitle,
-            banner: edge.node.frontmatter?.banner,
+            hero_image: edge.node.frontmatter?.hero_image,
             date: edge.node.frontmatter?.date,
             tags: edge.node.frontmatter?.tags,
             slug: edge.node.fields?.slug,
