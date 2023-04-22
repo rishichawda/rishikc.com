@@ -32,7 +32,10 @@ const Footer = () => {
             </a>
           </div>
           <div className="px-5 py-2">
-            <a href="#" className="text-base leading-6 hover:text-brand-800">
+            <a
+              href="/contact"
+              className="text-base leading-6 hover:text-brand-800"
+            >
               Contact
             </a>
           </div>
