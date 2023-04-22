@@ -7,7 +7,10 @@ const Github = () => {
   const data = useGitRepositoryInfo();
 
   return (
-    <div className="flex flex-col max-w-screen-2xl mx-auto mb-28 justify-between items-start github-repositories-preview">
+    <div
+      id="articles-preview"
+      className="flex flex-col max-w-screen-2xl mx-auto mb-28 justify-between items-start github-repositories-preview"
+    >
       <h2 className="antialiased github-repositories-preview-header">
         Popular OSS repositories
       </h2>

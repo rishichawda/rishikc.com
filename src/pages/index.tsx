@@ -15,7 +15,10 @@ const IndexPage: React.FC<PageProps> = () => {
     <Layout>
       <div className="root-container">
         <main className="main-container">
-          <div className="flex lg:flex-row flex-col-reverse items-center max-w-screen-2xl mx-auto mb-28 justify-between about">
+          <div
+            id="about"
+            className="flex lg:flex-row flex-col-reverse items-center max-w-screen-2xl mx-auto mb-28 justify-between about"
+          >
             <div className="flex flex-col lg:w-2/3 justify-around">
               <h1 className="lg:text-right antialiased">Hi, I'm Rishi.</h1>
               <p className="antialiased text-lg">
