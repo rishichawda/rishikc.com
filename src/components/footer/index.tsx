@@ -41,7 +41,11 @@ const Footer = () => {
           </div>
         </nav>
         <div className="flex justify-center mt-8 space-x-6">
-          <a href="#" className="text-gray-400 hover:text-gray-500">
+          <a
+            href="https://www.linkedin.com/in/rkrishi/"
+            target="_blank"
+            className="text-gray-400 hover:text-gray-500"
+          >
             <span className="sr-only">LinkedIn</span>
             <svg
               className="w-5 h-5"
