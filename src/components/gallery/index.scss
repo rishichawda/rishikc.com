@@ -6,6 +6,12 @@
   }
 
   .gallery-preview-list {
+    @media (max-width: 640px) {
+      grid-auto-rows: 0px;
+      overflow: hidden;
+      grid-template-rows: auto auto auto;
+    }
+
     &:hover .instagram-gallery-image-wrapper {
       opacity: 0.5;
       filter: blur(2px);
