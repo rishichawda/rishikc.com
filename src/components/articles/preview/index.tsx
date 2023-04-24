@@ -8,7 +8,7 @@ import ArticlePreviewCard from "./card";
 const ArticlePreview = () => {
   const data = useStaticQuery(graphql`
     query ArticlePreviewData {
-      allMdx: allMdx(limit: 2, sort: { frontmatter: { date: DESC } }) {
+      allMdx: allMdx(limit: 3, sort: { frontmatter: { date: DESC } }) {
         nodes {
           fields {
             slug
@@ -17,7 +17,7 @@ const ArticlePreview = () => {
             }
           }
           id
-          excerpt(pruneLength: 140)
+          excerpt
           frontmatter {
             subtitle
             date(formatString: "Do MMMM, YYYY")
@@ -33,7 +33,7 @@ const ArticlePreview = () => {
         Some of my writings&nbsp;.&nbsp;.
       </h2>
       <div className="mx-auto py-4">
-        <ul className="grid grid-cols-1 md:grid-cols-2 grid-flow-row gap-4 article-preview-list">
+        <ul className="grid grid-cols-1 sm:grid-rows-1 md:grid-cols-3 grid-flow-row article-preview-list">
           {data.allMdx.nodes.map((node: Queries.Mdx) => (
             <ArticlePreviewCard key={data.id} data={node} />
           ))}
