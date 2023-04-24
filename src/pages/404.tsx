@@ -20,11 +20,14 @@ const NotFoundPage: React.FC<PageProps> = () => (
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <a
               href="/"
-              className="rounded-md bg-brand-900 hover:bg-brand-800 px-3.5 py-2.5"
+              className="rounded-md bg-brand-900 hover:bg-brand-800 text-gray-200 px-3.5 py-2.5"
             >
               Go back home
             </a>
-            <a href="/contact" className="text-sm font-semibold">
+            <a
+              href="/contact"
+              className="text-sm font-semibold text-gray-500 dark:text-gray-300"
+            >
               Contact me <span aria-hidden="true">&rarr;</span>
             </a>
           </div>
