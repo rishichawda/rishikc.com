@@ -104,6 +104,13 @@ section[itemprop="articleBody"] {
 .article-header {
   margin: var(--space-xl-2xl) 0 var(--space-m-l) 0;
 
+  &-hero-image {
+    margin-bottom: var(--space-l);
+    & > div:first-child {
+      max-width: none !important;
+    }
+  }
+
   &-title {
     width: 100%;
     font-weight: 400;

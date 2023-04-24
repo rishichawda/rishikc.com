@@ -45,7 +45,6 @@ const config: GatsbyConfig = {
     `gatsby-plugin-dark-mode`,
     "gatsby-plugin-sass",
     'gatsby-plugin-postcss',
-    "gatsby-plugin-image",
     "gatsby-plugin-sitemap",
     {
       resolve: 'gatsby-plugin-manifest',
@@ -53,8 +52,6 @@ const config: GatsbyConfig = {
         "icon": "static/assets/handsome-guy.webp"
       }
     },
-    "gatsby-plugin-sharp",
-    "gatsby-transformer-sharp",
     {
       resolve: 'gatsby-source-filesystem',
       options: {
@@ -202,6 +199,9 @@ const config: GatsbyConfig = {
           })),
       },
     },
+    "gatsby-plugin-image",
+    "gatsby-plugin-sharp",
+    "gatsby-transformer-sharp",
   ]
 };
 
