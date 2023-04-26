@@ -7,7 +7,7 @@ import React from "react";
 import { trackExternalUrlClick } from "../../utils/open-link";
 
 type Props = {
-  data: any;
+  data: Queries.InstaNodeEdge;
 };
 
 const Card = ({ data }: Props) => {

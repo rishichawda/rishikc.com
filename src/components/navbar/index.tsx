@@ -5,7 +5,7 @@ import React from "react";
 
 import { useSiteMetadata } from "../../hooks/use-site-metadata";
 import Logo from "../logo";
-import ThemeToggle from "../themetoggle";
+import ThemeToggle from "../themeToggle";
 
 const Navbar = () => {
   const siteMetadata = useSiteMetadata();
@@ -15,11 +15,15 @@ const Navbar = () => {
       aria-label={siteMetadata.title!}
     >
       <div className="flex flex-row items-center justify-between">
-        <Link to="/" className="brand">
+        <Link
+          aria-label="Click on this website logo image to navigate to the home page."
+          to="/"
+          className="brand"
+        >
           <Logo />
         </Link>
         <ul role="menubar">
-          <li role="menuitem">
+          <li aria-label="Theme toggle button" role="menuitem">
             <ThemeToggle />
           </li>
         </ul>
