@@ -14,6 +14,7 @@ const SEO = ({ title, description, keywords, children }: SeoProps) => {
 
   return (
     <>
+      <html lang="en" />
       <title>{seo.title}</title>
       <meta name="description" content={seo.description} />
       {keywords ? <meta name="keywords" content={keywords} /> : null}
