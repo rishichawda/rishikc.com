@@ -49,11 +49,11 @@ const ArticlesList = (props: ArticlesListProps) => {
             <motion.li
               variants={variantB}
               layout
-              className="article-list-item"
+              className="block focus-within:bg-gray-300 dark:focus-within:bg-slate-800 article-list-item"
               role="listitem"
               key={node.id}
             >
-              <Link to={node.fields?.slug!}>
+              <Link className="focus:outline-none" to={node.fields?.slug!}>
                 <div className="flex flex-col items-start md:justify-between md:items-center md:flex-row article-list-item-header">
                   <div className="article-list-item-header-content">
                     <h2 className="article-list-item-header-content-title">
@@ -62,6 +62,7 @@ const ArticlesList = (props: ArticlesListProps) => {
                     <span className="article-list-item-header-content-tags">
                       {node.frontmatter?.tags?.map((tag) => (
                         <Tag
+                          focusable={false}
                           onClick={(e) => {
                             props.onTagClick(e, tag!);
                           }}

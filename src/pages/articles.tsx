@@ -72,10 +72,12 @@ const Articles: React.FC = () => {
       const trimmedTag = tag.split("(")[0].trim();
       return (
         <motion.span key={tag} layout>
-          <Tag key={tag} onClick={(e) => onTagClick(e, trimmedTag)}>
+          <Tag
+            key={tag}
+            onClick={(e) => onTagClick(e, trimmedTag)}
+            showCloseButton={selectedTags.includes(trimmedTag)}
+          >
             {tag}
-            &nbsp;&nbsp;
-            {selectedTags.includes(trimmedTag) ? <strong>x</strong> : null}
           </Tag>
         </motion.span>
       );
@@ -97,12 +99,12 @@ const Articles: React.FC = () => {
               <motion.span className="flex flex-wrap items-center w-full sm:w-2/3 article-list-search-info-tags">
                 <p className="m-0">
                   Popular tags &nbsp;
-                  <small
-                    className="text-brand-600 hover:text-brand-800 cursor-pointer"
+                  <button
+                    className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700 cursor-pointer show-all-button"
                     onClick={toggleTags}
                   >
                     (show all)
-                  </small>
+                  </button>
                   &nbsp;:&nbsp;
                 </p>
                 {renderTags()}

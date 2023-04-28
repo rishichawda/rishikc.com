@@ -22,7 +22,7 @@ const Article: React.FC<ArticleProps> = (props) => {
       <div className="root-container">
         <main className="article-content-page-container">
           <Link
-            className="text-brand-600 hover:text-brand-800 back-navigation-link"
+            className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus:outline-dotted focus:outline-2 focus:outline-brand-700 back-navigation-link"
             to="/articles"
           >
             &#171;&nbsp;go back to main list
@@ -42,7 +42,7 @@ const Article: React.FC<ArticleProps> = (props) => {
             <span className="flex flex-wrap items-center justify-center article-header-tags">
               {props.data.mdx.frontmatter?.tags?.map((tag) => (
                 <span>
-                  <Tag>{tag}</Tag>
+                  <Tag focusable={false}>{tag}</Tag>
                 </span>
               ))}
             </span>
