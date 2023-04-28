@@ -6,6 +6,6 @@ export const trackExternalUrlClick = (url: string) => {
     if (window.gtag) {
       window.gtag('event', url, { url })
     }
-    window.open(url, '_newtab')
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 }
