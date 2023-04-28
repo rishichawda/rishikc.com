@@ -38,7 +38,7 @@ const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({
           >
             <feOffset in="SourceAlpha" />
             <feGaussianBlur stdDeviation="1" result="blur-2" />
-            <feFlood flood-opacity="0.161" />
+            <feFlood floodOpacity="0.161" />
             <feComposite operator="in" in2="blur-2" />
             <feComposite in="SourceGraphic" />
           </filter>
@@ -52,7 +52,7 @@ const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({
           >
             <feOffset dx="1" dy="1" in="SourceAlpha" />
             <feGaussianBlur stdDeviation="1.5" result="blur" />
-            <feFlood flood-opacity="0.102" />
+            <feFlood floodOpacity="0.102" />
             <feComposite operator="in" in2="blur" />
             <feComposite in="SourceGraphic" />
           </filter>
@@ -66,7 +66,7 @@ const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({
           >
             <feOffset in="SourceAlpha" />
             <feGaussianBlur stdDeviation="1" result="blur-2" />
-            <feFlood flood-opacity="0.161" />
+            <feFlood floodOpacity="0.161" />
             <feComposite operator="in" in2="blur-2" />
             <feComposite in="SourceGraphic" />
           </filter>
@@ -80,7 +80,7 @@ const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({
           >
             <feOffset in="SourceAlpha" />
             <feGaussianBlur stdDeviation="2.5" result="blur-3" />
-            <feFlood flood-color="#ffeb00" />
+            <feFlood floodColor="#ffeb00" />
             <feComposite operator="in" in2="blur-3" />
             <feComposite in="SourceGraphic" />
           </filter>
@@ -94,7 +94,7 @@ const ThemeToggleButton: React.FC<ThemeToggleButtonProps> = ({
           >
             <feOffset in="SourceAlpha" />
             <feGaussianBlur stdDeviation="0.5" result="blur-4" />
-            <feFlood flood-opacity="0.251" />
+            <feFlood floodOpacity="0.251" />
             <feComposite operator="in" in2="blur-4" />
             <feComposite in="SourceGraphic" />
           </filter>
