@@ -7,9 +7,16 @@ import * as React from "react";
 import Layout from "../components/layout";
 import Tag from "../components/tag";
 import { motion, useScroll } from "framer-motion";
+import useHeroImage from "../hooks/use-hero-image";
+import SEO from "../components/seo";
+import { GatsbyImage } from "gatsby-plugin-image";
 
 const Article: React.FC<ArticleProps> = (props) => {
   const { scrollYProgress } = useScroll();
+  const image = props.data.mdx.frontmatter?.hero_image
+    ? useHeroImage(props.data.mdx.frontmatter?.hero_image)
+    : null;
+
   return (
     <Layout>
       <div className="root-container">
@@ -21,6 +28,11 @@ const Article: React.FC<ArticleProps> = (props) => {
             &#171;&nbsp;go back to main list
           </Link>
           <div className="flex flex-col items-center sm:items-start article-header">
+            <GatsbyImage
+              className="article-header-hero-image w-full h-auto"
+              alt={props.data.mdx.frontmatter?.hero_image_alt!}
+              image={image?.gatsbyImageData!}
+            />
             <h1 className="text-center sm:text-left article-header-title">
               {props.data.mdx.frontmatter?.title}
             </h1>
@@ -74,11 +86,22 @@ export const query = graphql`
         title
         subtitle
         hero_image
+        keywords
         date(formatString: "MMMM D, YYYY")
         tags
       }
     }
   }
 `;
+
+export const Head: React.FC<ArticleProps> = ({ data }) => {
+  return (
+    <SEO
+      title={data.mdx.frontmatter?.title!}
+      description={data.mdx.frontmatter?.description!}
+      keywords={data.mdx.frontmatter?.keywords!}
+    />
+  );
+};
 
 export default Article;
