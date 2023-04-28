@@ -15,16 +15,23 @@ const Github = () => {
         Popular OSS repositories
       </h2>
       <div className="mx-auto py-6">
-        <div className="grid grid-cols-1 grid-rows-3 sm:grid-rows-2 sm:grid-cols-2 lg:grid-cols-3 grid-flow-row auto-cols-fr github-repositories-preview-list">
+        <ul
+          role="list"
+          className="grid grid-cols-1 grid-rows-3 sm:grid-rows-2 sm:grid-cols-2 lg:grid-cols-3 grid-flow-row auto-cols-fr github-repositories-preview-list"
+        >
           {data.map((repository: Queries.GitHub_RepositoryEdge) => (
-            <RepoCard repository={repository.node} />
+            <RepoCard
+              key={repository.node?.name}
+              repository={repository.node}
+            />
           ))}
-        </div>
+        </ul>
       </div>
       <a
+        className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700 antialiased"
         href="https://github.com/rishichawda"
         target="_blank"
-        className="text-brand-600 hover:text-brand-800 antialiased"
+        rel="noopener noreferrer"
       >
         See more projects on GitHub
       </a>

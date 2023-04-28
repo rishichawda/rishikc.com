@@ -10,12 +10,12 @@ type Props = {
 
 function Card({ repository }: Props) {
   return (
-    <div
+    <li
+      role="listitem"
       className="flex items-stretch max-w-md md:max-w-none w-full github-repositories-preview-list-item"
-      key={repository?.name}
     >
       <a
-        className="inline-flex w-full items-stretch"
+        className="inline-flex w-full items-stretch focus:outline-dotted focus:outline-2 focus:outline-brand-700"
         href={repository?.url}
         target="_blank"
       >
@@ -31,7 +31,7 @@ function Card({ repository }: Props) {
           ></div>
         </div>
       </a>
-    </div>
+    </li>
   );
 }
 
