@@ -104,6 +104,7 @@ const config: GatsbyConfig = {
             resolve: "gatsby-remark-embed-gist",
             options: {
               username: "rishichawda",
+              gistCssPreload: true,
             },
           },
           {
