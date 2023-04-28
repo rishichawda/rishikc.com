@@ -11,21 +11,27 @@
 @mixin link-with-hover-transition {
   position: relative;
 
+  &:focus {
+    @apply outline-none;
+  }
+
   &::after {
     content: "";
     padding: 2px;
     display: block;
     height: 5%;
     width: 100%;
-    background: $link-highlight-color;
     opacity: 0.25;
     position: absolute;
     bottom: -10%;
     left: 0;
     transition: height 0.2s linear;
+    @apply bg-brand-900;
+    @apply dark:bg-brand-300;
   }
 
-  &:hover {
+  &:hover,
+  &:focus {
     &::after {
       height: 110%;
     }
