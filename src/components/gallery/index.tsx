@@ -17,7 +17,8 @@ const Gallery = () => {
         <a
           href="https://www.instagram.com/rishiikc/"
           target="_blank"
-          className="text-brand-600 hover:text-brand-800 antialiased"
+          rel="noopener noreferrer"
+          className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 antialiased"
         >
           View all photos
         </a>
