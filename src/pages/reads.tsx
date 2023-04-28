@@ -6,27 +6,23 @@ import React from "react";
 import reads from "../../static/reads.json";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
+import shuffle from "../utils/shuffle";
 
 type Props = {};
 
 type ReadInfo = {
   quote: string;
-  info: string;
+  info?: string;
 };
 
 const Reads = (props: Props) => {
   const [shuffledData, setShuffledData] = React.useState(reads);
-  const shuffleArray = () => {
-    const data = [...shuffledData];
-    for (var i = data.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = data[i];
-      data[i] = data[j];
-      data[j] = temp;
-    }
 
+  const shuffleArray = () => {
+    let data = shuffle(shuffledData);
     setShuffledData(data);
   };
+
   return (
     <Layout>
       <div className="root-container">
@@ -49,12 +45,13 @@ const Reads = (props: Props) => {
                     <blockquote className="max-w-2xl mx-auto self-start reads-list-item-quote">
                       <p>{r.quote}</p>
                     </blockquote>
-                    <figcaption className="flex items-center justify-center text-gray-500 dark:text-gray-400 reads-list-item-info">
+                    <figcaption className="flex items-center justify-center text-gray-600 dark:text-gray-300 reads-list-item-info">
                       {r.info}
                     </figcaption>
                   </figure>
                   {index == 0 ? (
                     <div
+                      aria-labelledby="shuffle-button-text"
                       className="flex flex-row items-center cursor-pointer shuffle-button"
                       onClick={shuffleArray}
                     >
@@ -88,7 +85,7 @@ const Reads = (props: Props) => {
                           </g>
                         </svg>
                       </span>
-                      <p>Shuffle</p>
+                      <p id="shuffle-button-text">Shuffle</p>
                     </div>
                   ) : null}
                 </motion.li>
