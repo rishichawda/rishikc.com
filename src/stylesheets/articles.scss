@@ -21,4 +21,7 @@ main.article-page-container {
   & > span {
     padding: var(--space-3xs) 2.5px;
   }
+  .show-all-button {
+    font-size: var(--step-0);
+  }
 }

@@ -12,7 +12,7 @@ const useInstagramNodes = () => {
           mediaType: { eq: "GraphImage" }
           fields: { visibility: { eq: true } }
         }
-        sort: { order: DESC, fields: timestamp }
+        sort: { timestamp: DESC }
       ) {
         edges {
           node {

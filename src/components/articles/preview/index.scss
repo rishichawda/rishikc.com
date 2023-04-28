@@ -29,8 +29,9 @@
   &-item {
     will-change: transform;
     transition: transform 0.2s ease-in-out;
-    &:hover {
-      transform: scale(0.98);
+    &:hover,
+    &:focus-within {
+      transform: scale(0.97);
     }
 
     & > div {
@@ -43,7 +44,6 @@
       margin: var(--space-2xs-xs) 0 !important;
       margin-top: 0 !important;
       width: 100%;
-      display: inline-flex;
       font-weight: 400;
       display: -webkit-box;
       -webkit-box-orient: vertical;

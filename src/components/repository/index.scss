@@ -25,10 +25,17 @@
         }
       }
 
-      .github-repo-card {
-        border-radius: var(--space-2xs-xs);
+      & > a {
         will-change: transform;
         transition: transform 0.2s ease-in-out;
+        &:hover,
+        &:focus {
+          transform: scale(0.97);
+        }
+      }
+
+      .github-repo-card {
+        border-radius: var(--space-2xs-xs);
         padding: var(--space-s-m) var(--space-s-m);
 
         &-languages {
@@ -37,10 +44,6 @@
           overflow: hidden;
           height: calc(var(--step--2) / 1.75);
         }
-      }
-
-      .github-repo-card:hover {
-        transform: scale(0.97);
       }
 
       .repo-description {

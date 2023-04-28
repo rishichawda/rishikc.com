@@ -35,13 +35,13 @@ const ArticlePreview = () => {
       <div className="mx-auto py-4">
         <ul className="grid grid-cols-1 sm:grid-rows-1 md:grid-cols-3 grid-flow-row article-preview-list">
           {data.allMdx.nodes.map((node: Queries.Mdx) => (
-            <ArticlePreviewCard key={data.id} data={node} />
+            <ArticlePreviewCard key={node.id} data={node} />
           ))}
         </ul>
       </div>
       <Link
         to="articles"
-        className="text-brand-600 hover:text-brand-800 antialiased self-center all-articles-link"
+        className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus:outline-dotted focus:outline-2 focus:outline-brand-700 antialiased self-center all-articles-link"
       >
         Browse the complete list
       </Link>

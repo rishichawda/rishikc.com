@@ -1,22 +1,37 @@
 import "./index.scss";
 
-import React, { MouseEventHandler, ReactNode } from "react";
+import React, { MouseEventHandler } from "react";
 
-const Tag: React.FC<TagProps> = ({ children, ...rest }) => {
+const Tag: React.FC<TagProps> = ({
+  children,
+  focusable,
+  onClick,
+  showCloseButton,
+}) => {
   return (
-    <small className="tag-pill" {...rest}>
-      {children}
-    </small>
+    <button
+      tabIndex={!focusable ? -1 : undefined}
+      className="focus:outline-1 focus:outline-brand-300 focus:outline-dashed overflow-hidden tag-pill"
+      aria-label={children?.toString()}
+      onClick={onClick}
+    >
+      {children}&nbsp;&nbsp;
+      {showCloseButton ? <strong>x</strong> : null}
+    </button>
   );
 };
 
 type TagProps = {
-  children: ReactNode;
+  children: React.ReactNode | string;
   onClick?: MouseEventHandler;
+  showCloseButton?: boolean;
+  focusable?: boolean;
 };
 
 Tag.defaultProps = {
   children: "tag-pill",
+  showCloseButton: false,
+  focusable: true,
 };
 
 export default Tag;
