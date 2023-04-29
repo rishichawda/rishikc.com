@@ -102,6 +102,9 @@ export const Head: React.FC<ArticleProps> = ({ data }) => {
       title={data.mdx.frontmatter?.title!}
       description={data.mdx.frontmatter?.description!}
       keywords={data.mdx.frontmatter?.keywords!}
+      // NOTE: Include this in mdx metadata?
+      // value reference: https://schema.org/CreativeWork
+      type="BlogPosting"
     />
   );
 };
