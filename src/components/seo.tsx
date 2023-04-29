@@ -3,13 +3,15 @@ import React from "react";
 import { SiteMetadata } from "../../static/metadata";
 import { useSiteMetadata } from "../hooks/use-site-metadata";
 
-const SEO = ({ title, description, keywords, children }: SeoProps) => {
+const SEO = ({ title, description, keywords, image, children }: SeoProps) => {
   const defaultSiteMetadata = useSiteMetadata() as SiteMetadata;
 
   const seo = {
     title: title || defaultSiteMetadata.title,
     description: description || defaultSiteMetadata.description,
-    image: `${defaultSiteMetadata.siteUrl}${defaultSiteMetadata.image}`,
+    image: `${defaultSiteMetadata.siteUrl}/${
+      image || defaultSiteMetadata.image
+    }`,
   };
 
   return (
@@ -20,8 +22,14 @@ const SEO = ({ title, description, keywords, children }: SeoProps) => {
       {keywords ? <meta name="keywords" content={keywords} /> : null}
       <meta name="image" content={seo.image} />
       <meta name="og:title" content={seo.title} />
+      <meta name="og:site_name" content={seo.title} />
       <meta name="og:type" content={defaultSiteMetadata.og.type} />
       <meta name="og:description" content={seo.description} />
+      <meta name="og:image" content={seo.image} />
+      <meta
+        name="og:url"
+        content={`${defaultSiteMetadata.siteUrl}${location.pathname}`}
+      />
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
       <meta name="twitter:card" content={defaultSiteMetadata.twitter.card} />
@@ -40,6 +48,7 @@ type SeoProps = {
   description?: string;
   keywords?: string;
   pathname?: string;
+  image?: string;
   children?: React.ReactNode;
 };
 
