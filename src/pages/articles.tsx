@@ -120,6 +120,8 @@ const Articles: React.FC = () => {
   );
 };
 
-export const Head = () => <SEO title="Articles - rishikc.com" />;
+export const Head = () => (
+  <SEO title="Articles - rishikc.com" type="BlogPosting" />
+);
 
 export default Articles;

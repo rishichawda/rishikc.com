@@ -85,6 +85,7 @@ export const query = graphql`
       frontmatter {
         title
         subtitle
+        description
         hero_image
         keywords
         date(formatString: "MMMM D, YYYY")
@@ -95,11 +96,15 @@ export const query = graphql`
 `;
 
 export const Head: React.FC<ArticleProps> = ({ data }) => {
+  console.log({ data });
   return (
     <SEO
       title={data.mdx.frontmatter?.title!}
       description={data.mdx.frontmatter?.description!}
       keywords={data.mdx.frontmatter?.keywords!}
+      // NOTE: Include this in mdx metadata?
+      // value reference: https://schema.org/CreativeWork
+      type="BlogPosting"
     />
   );
 };
