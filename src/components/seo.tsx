@@ -1,5 +1,7 @@
 import React from "react";
 
+import { globalHistory } from "@reach/router";
+
 import { SiteMetadata } from "../../static/metadata";
 import { useSiteMetadata } from "../hooks/use-site-metadata";
 
@@ -20,7 +22,7 @@ const SEO = ({
       image || defaultSiteMetadata.image
     }`,
     type: type || "WebSite",
-    url: `${defaultSiteMetadata.siteUrl}${location.pathname}`,
+    url: `${defaultSiteMetadata.siteUrl}${globalHistory.location.pathname}`,
   };
 
   return (
