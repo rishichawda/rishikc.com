@@ -45,7 +45,6 @@ const config: GatsbyConfig = {
     `gatsby-plugin-dark-mode`,
     "gatsby-plugin-sass",
     'gatsby-plugin-postcss',
-    "gatsby-plugin-sitemap",
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
@@ -203,6 +202,15 @@ const config: GatsbyConfig = {
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
+    "gatsby-plugin-sitemap",
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: siteMetadata.siteUrl,
+        sitemap: `${siteMetadata.siteUrl}/sitemap-index.xml`,
+        policy: [{ userAgent: '*', allow: '/' }]
+      }
+    }
   ]
 };
 
