@@ -104,8 +104,19 @@ section[itemprop="articleBody"] {
 .article-header {
   margin: var(--space-xl-2xl) 0 var(--space-m-l) 0;
 
-  &-hero-image {
+  & > figure {
     margin-bottom: var(--space-l);
+    font-size: var(--step--1);
+    text-align: center;
+    width: 100%;
+    a {
+      border-bottom-width: 1px;
+      padding-bottom: 1px;
+    }
+  }
+
+  &-hero-image {
+    margin-bottom: var(--space-3xs);
     & > div:first-child {
       max-width: none !important;
     }

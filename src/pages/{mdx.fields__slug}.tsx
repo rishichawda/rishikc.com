@@ -17,6 +17,10 @@ const Article: React.FC<ArticleProps> = (props) => {
     ? useHeroImage(props.data.mdx.frontmatter?.hero_image)
     : null;
 
+  const hasHeroImageCredits =
+    props.data.mdx.frontmatter?.hero_image_credit_text ||
+    props.data.mdx.frontmatter?.hero_image_credit_link;
+
   return (
     <Layout>
       <div className="root-container">
@@ -28,11 +32,31 @@ const Article: React.FC<ArticleProps> = (props) => {
             &#171;&nbsp;go back to main list
           </Link>
           <div className="flex flex-col items-center sm:items-start article-header">
-            <GatsbyImage
-              className="article-header-hero-image w-full h-auto"
-              alt={props.data.mdx.frontmatter?.hero_image_alt!}
-              image={image?.gatsbyImageData!}
-            />
+            <figure>
+              <GatsbyImage
+                className="article-header-hero-image w-full h-auto"
+                alt={props.data.mdx.frontmatter?.hero_image_alt!}
+                image={image?.gatsbyImageData!}
+              />
+              {hasHeroImageCredits ? (
+                <figcaption>
+                  Image credits:&nbsp;
+                  {props.data.mdx.frontmatter?.hero_image_credit_text}
+                  {props.data.mdx.frontmatter?.hero_image_credit_link ? (
+                    <>
+                      &nbsp;
+                      <Link
+                        to={props.data.mdx.frontmatter?.hero_image_credit_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {props.data.mdx.frontmatter?.hero_image_credit_link}
+                      </Link>
+                    </>
+                  ) : null}
+                </figcaption>
+              ) : null}
+            </figure>
             <h1 className="text-center sm:text-left article-header-title">
               {props.data.mdx.frontmatter?.title}
             </h1>
@@ -87,6 +111,8 @@ export const query = graphql`
         subtitle
         description
         hero_image
+        hero_image_credit_text
+        hero_image_credit_link
         keywords
         date(formatString: "MMMM D, YYYY")
         tags
