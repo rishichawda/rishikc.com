@@ -15,8 +15,12 @@ const Tag: React.FC<TagProps> = ({
       aria-label={children?.toString()}
       onClick={onClick}
     >
-      {children}&nbsp;&nbsp;
-      {showCloseButton ? <strong>x</strong> : null}
+      {children}
+      {showCloseButton ? (
+        <>
+          &nbsp;&nbsp;<strong>x</strong>
+        </>
+      ) : null}
     </button>
   );
 };
