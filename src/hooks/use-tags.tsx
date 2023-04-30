@@ -20,8 +20,6 @@ export const useTags = () => {
     }
   `);
 
-  console.log({ data });
-
   const allTags = (data.globalMetadata?.data?.mdx?.tags?.all || []) as string[];
   const topTags = (data.globalMetadata?.data?.mdx?.tags?.top || []) as string[];
   const topTagsWithCount = allTags.filter((tag) =>

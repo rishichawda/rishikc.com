@@ -122,7 +122,6 @@ export const query = graphql`
 `;
 
 export const Head: React.FC<ArticleProps> = ({ data }) => {
-  console.log({ data });
   return (
     <SEO
       title={data.mdx.frontmatter?.title!}
