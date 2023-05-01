@@ -2,6 +2,11 @@ import siteMetadata from './static/metadata';
 
 import type { GatsbyConfig } from "gatsby";
 
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from 'tailwind.config.js'
+
+const twConfig = resolveConfig(tailwindConfig)
+
 require("dotenv").config({
   path: `.env.${process.env.NODE_ENV}`,
 })
@@ -45,12 +50,6 @@ const config: GatsbyConfig = {
     `gatsby-plugin-dark-mode`,
     "gatsby-plugin-sass",
     'gatsby-plugin-postcss',
-    {
-      resolve: 'gatsby-plugin-manifest',
-      options: {
-        "icon": "static/assets/handsome-guy.webp"
-      }
-    },
     {
       resolve: 'gatsby-source-filesystem',
       options: {
@@ -210,7 +209,22 @@ const config: GatsbyConfig = {
         sitemap: `${siteMetadata.siteUrl}/sitemap-index.xml`,
         policy: [{ userAgent: '*', allow: '/' }]
       }
-    }
+    },
+    {
+      resolve: 'gatsby-plugin-manifest',
+      options: {
+        icon: siteMetadata.image,
+        name: siteMetadata.title,
+        short_name: siteMetadata.title,
+        start_url: `/`,
+        background_color: twConfig.theme.colors.bg,
+        theme_color: twConfig.theme.colors.brand["900"],
+        display: `standalone`,
+        include_favicon: true,
+        theme_color_in_head: false,
+      }
+    },
+    `gatsby-plugin-offline`
   ]
 };
 

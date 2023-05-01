@@ -39,6 +39,7 @@
     "gatsby-plugin-local-search": "^2.0.1",
     "gatsby-plugin-manifest": "^5.8.0",
     "gatsby-plugin-mdx": "^5.8.0",
+    "gatsby-plugin-offline": "^6.9.0",
     "gatsby-plugin-remote-images": "^3.6.5",
     "gatsby-plugin-robots-txt": "^1.8.0",
     "gatsby-plugin-sass": "^6.8.0",
