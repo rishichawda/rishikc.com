@@ -48,7 +48,7 @@ const Article: React.FC<ArticleProps> = (props) => {
                       <Link
                         to={props.data.mdx.frontmatter?.hero_image_credit_link}
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="nofollow noopener noreferrer"
                       >
                         {props.data.mdx.frontmatter?.hero_image_credit_link}
                       </Link>
