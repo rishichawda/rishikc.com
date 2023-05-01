@@ -213,13 +213,16 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        icon: siteMetadata.image,
+        icon: 'static/assets/icon.png',
+        icon_options: {
+          purpose: `any maskable`,
+        },
         name: siteMetadata.title,
         short_name: siteMetadata.title,
-        start_url: `/`,
-        background_color: twConfig.theme.colors.bg,
+        start_url: '/',
+        background_color: twConfig.theme.colors.brand["900"],
         theme_color: twConfig.theme.colors.brand["900"],
-        display: `standalone`,
+        display: 'standalone',
         include_favicon: true,
         theme_color_in_head: false,
       }
