@@ -30,6 +30,16 @@ const SEO = ({
       <html lang="en" />
       <title>{seo.title}</title>
       <meta name="description" content={seo.description} />
+      <meta
+        name="theme-color"
+        content="#f9fafb"
+        media="(prefers-color-scheme: light)"
+      />
+      <meta
+        name="theme-color"
+        content="#1e293b"
+        media="(prefers-color-scheme: dark)"
+      />
       {keywords ? <meta name="keywords" content={keywords} /> : null}
       <meta name="image" content={seo.image} />
       <meta name="og:title" content={seo.title} />
