@@ -1,25 +1,25 @@
+import resolveConfig from 'tailwindcss/resolveConfig';
+
 import siteMetadata from './static/metadata';
+import tailwindConfig from './tailwind.config.js';
 
 import type { GatsbyConfig } from "gatsby";
-
-import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from 'tailwind.config.js'
-
-const twConfig = resolveConfig(tailwindConfig)
 
 require("dotenv").config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 
+const twConfig = resolveConfig(tailwindConfig)
+
 const config: GatsbyConfig = {
   siteMetadata: siteMetadata,
-  // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
-  // If you use VSCode you can also use the GraphQL plugin
-  // Learn more at: https://gatsby.dev/graphql-typegen
   flags: {
     DEV_SSR: true,
     PRESERVE_FILE_DOWNLOAD_CACHE: true,
   },
+  // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
+  // If you use VSCode you can also use the GraphQL plugin
+  // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
   plugins: [
     {
