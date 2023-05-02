@@ -64,12 +64,14 @@ const SEO = ({
           "@id": "${seo.url}",
           "headline": "${seo.title}",
           "description": "${seo.description}",
+          ${
+            keywords
+              ? `"keywords": ${JSON.stringify(keywords.split(","))},`
+              : ""
+          }
           "author": {
             "@type": "Person",
             "name": "Rishi Kumar Chawda"
-          },
-          ${
-            keywords ? `"keywords": ${JSON.stringify(keywords.split(","))}` : ""
           }
         }`}
       </script>
