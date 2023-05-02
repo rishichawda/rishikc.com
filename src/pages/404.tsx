@@ -1,6 +1,6 @@
 import "../stylesheets/404.scss";
 
-import { PageProps } from "gatsby";
+import { Link, PageProps } from "gatsby";
 import * as React from "react";
 
 import Layout from "../components/layout";
@@ -18,18 +18,18 @@ const NotFoundPage: React.FC<PageProps> = () => (
             Sorry, we couldn’t find the page you’re looking for.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="rounded-md bg-brand-900 hover:bg-brand-800 text-gray-200 px-3.5 py-2.5"
             >
               Go back home
-            </a>
-            <a
-              href="/contact"
+            </Link>
+            <Link
+              to="/contact"
               className="text-sm font-semibold text-gray-500 dark:text-gray-300"
             >
               Contact me <span aria-hidden="true">&rarr;</span>
-            </a>
+            </Link>
           </div>
         </div>
       </main>

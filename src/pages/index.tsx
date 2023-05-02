@@ -1,6 +1,6 @@
 import "../stylesheets/homepage.scss";
 
-import { PageProps } from "gatsby";
+import { Link, PageProps } from "gatsby";
 import { StaticImage } from "gatsby-plugin-image";
 import * as React from "react";
 
@@ -27,9 +27,10 @@ const IndexPage: React.FC<PageProps> = () => {
                 <br />
                 <br />
                 Apart from my work, I spend time reading{" "}
-                <a href="/reads">books</a>, painting or just doodling, designing
-                solutions to random ideas, learning new things and occasionally
-                indulging in <a href="#gallery-preview">photography</a>.<br />
+                <Link to="/reads">books</Link>, painting or just doodling,
+                designing solutions to random ideas, learning new things and
+                occasionally indulging in{" "}
+                <a href="#gallery-preview">photography</a>.<br />
                 <br />
                 Curious about science and mathematics, I spend an awful lot of
                 time gathering knowledge that I don’t generally use in day to

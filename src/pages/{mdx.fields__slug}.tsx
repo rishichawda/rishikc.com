@@ -10,6 +10,7 @@ import { motion, useScroll } from "framer-motion";
 import useHeroImage from "../hooks/use-hero-image";
 import SEO from "../components/seo";
 import { GatsbyImage } from "gatsby-plugin-image";
+import { OutboundLink } from "gatsby-plugin-google-gtag";
 
 const Article: React.FC<ArticleProps> = (props) => {
   const { scrollYProgress } = useScroll();
@@ -45,13 +46,15 @@ const Article: React.FC<ArticleProps> = (props) => {
                   {props.data.mdx.frontmatter?.hero_image_credit_link ? (
                     <>
                       &nbsp;
-                      <Link
-                        to={props.data.mdx.frontmatter?.hero_image_credit_link}
+                      <OutboundLink
+                        href={
+                          props.data.mdx.frontmatter?.hero_image_credit_link
+                        }
                         target="_blank"
                         rel="nofollow noopener noreferrer"
                       >
                         {props.data.mdx.frontmatter?.hero_image_credit_link}
-                      </Link>
+                      </OutboundLink>
                     </>
                   ) : null}
                 </figcaption>

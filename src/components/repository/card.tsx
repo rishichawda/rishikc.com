@@ -1,5 +1,6 @@
 import "./index.scss";
 
+import { OutboundLink } from "gatsby-plugin-google-gtag";
 import React from "react";
 
 import Languages from "./languages";
@@ -14,7 +15,7 @@ function Card({ repository }: Props) {
       role="listitem"
       className="flex items-stretch max-w-md md:max-w-none w-full github-repositories-preview-list-item"
     >
-      <a
+      <OutboundLink
         className="inline-flex w-full items-stretch focus:outline-dotted focus:outline-2 focus:outline-brand-700"
         href={repository?.url}
         target="_blank"
@@ -30,7 +31,7 @@ function Card({ repository }: Props) {
             dangerouslySetInnerHTML={{ __html: repository?.descriptionHTML }}
           ></div>
         </div>
-      </a>
+      </OutboundLink>
     </li>
   );
 }
