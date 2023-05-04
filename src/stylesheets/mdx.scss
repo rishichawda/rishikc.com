@@ -79,15 +79,24 @@ section[itemprop="articleBody"] {
   }
 
   hr {
-    border-color: #d6d6da;
-    margin: var(--space-l) 0;
-    border-width: 1px;
+    border-width: 0;
+    margin: 0;
+    margin-bottom: var(--space-xl-2xl);
+    margin-top: var(--space-s-m);
+
+    &::after {
+      content: "• • •";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   blockquote {
     border-width: 0 0 0 5px;
     border-color: #d1d0d0;
     display: flex;
+    flex-direction: column;
     border-style: solid;
     padding: 0 var(--space-l-xl);
     margin: var(--space-l-xl) var(--space-m-l);
@@ -152,6 +161,11 @@ section[itemprop="articleBody"] {
 body.dark {
   a.autolink-header-icon {
     @apply fill-gray-200;
+  }
+  section[itemprop="articleBody"] {
+    div.gist[id^="gist"] {
+      filter: invert(0.9) hue-rotate(180deg);
+    }
   }
 }
 
