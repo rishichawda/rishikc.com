@@ -62,6 +62,7 @@ const ArticlesList = (props: ArticlesListProps) => {
                     <span className="article-list-item-header-content-tags">
                       {node.frontmatter?.tags?.map((tag) => (
                         <Tag
+                          key={tag}
                           focusable={false}
                           onClick={(e) => {
                             props.onTagClick(e, tag!);

@@ -14,7 +14,6 @@ type FlattenedArticleNode = {
   timeToRead: string;
   date: Queries.MdxFrontmatter_dateArgs;
   tags: string[];
-  hero_image: string;
 };
 
 export const useArticleList = () => {
@@ -32,7 +31,6 @@ export const useArticleList = () => {
             frontmatter {
               title
               subtitle
-              hero_image
               date(formatString: "MMMM D, YYYY")
               tags
             }
@@ -77,7 +75,6 @@ export const transformFlexSearchData = (
         title: x.title,
         subtitle: x.subtitle,
         date: x.date,
-        hero_image: x.hero_image,
         tags: x.tags,
       },
       excerpt: x.excerpt,

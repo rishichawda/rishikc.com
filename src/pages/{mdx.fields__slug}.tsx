@@ -1,22 +1,18 @@
 import "prismjs/themes/prism-tomorrow.css";
 import "../stylesheets/mdx.scss";
 
+import { motion, useScroll } from "framer-motion";
 import { graphql, Link } from "gatsby";
+import { OutboundLink } from "gatsby-plugin-google-gtag";
+import { GatsbyImage } from "gatsby-plugin-image";
 import * as React from "react";
 
 import Layout from "../components/layout";
-import Tag from "../components/tag";
-import { motion, useScroll } from "framer-motion";
-import useHeroImage from "../hooks/use-hero-image";
 import SEO from "../components/seo";
-import { GatsbyImage } from "gatsby-plugin-image";
-import { OutboundLink } from "gatsby-plugin-google-gtag";
+import Tag from "../components/tag";
 
 const Article: React.FC<ArticleProps> = (props) => {
   const { scrollYProgress } = useScroll();
-  const image = props.data.mdx.frontmatter?.hero_image
-    ? useHeroImage(props.data.mdx.frontmatter?.hero_image)
-    : null;
 
   const hasHeroImageCredits =
     props.data.mdx.frontmatter?.hero_image_credit_text ||
@@ -37,7 +33,10 @@ const Article: React.FC<ArticleProps> = (props) => {
               <GatsbyImage
                 className="article-header-hero-image w-full h-auto"
                 alt={props.data.mdx.frontmatter?.hero_image_alt!}
-                image={image?.gatsbyImageData!}
+                image={
+                  props.data.mdx.frontmatter?.hero_image?.childImageSharp
+                    ?.gatsbyImageData!
+                }
               />
               {hasHeroImageCredits ? (
                 <figcaption>
@@ -115,7 +114,12 @@ export const query = graphql`
         title
         subtitle
         description
-        hero_image
+        hero_image {
+          childImageSharp {
+            gatsbyImageData
+          }
+          publicURL
+        }
         hero_image_credit_text
         hero_image_credit_link
         keywords
@@ -132,6 +136,7 @@ export const Head: React.FC<ArticleProps> = ({ data }) => {
       title={data.mdx.frontmatter?.title!}
       description={data.mdx.frontmatter?.description!}
       keywords={data.mdx.frontmatter?.keywords!}
+      image={data.mdx.frontmatter?.hero_image?.publicURL!}
       // NOTE: Include this in mdx metadata?
       // value reference: https://schema.org/CreativeWork
       type="BlogPosting"

@@ -18,9 +18,7 @@ const SEO = ({
   const seo = {
     title: title || defaultSiteMetadata.title,
     description: description || defaultSiteMetadata.description,
-    image: `${defaultSiteMetadata.siteUrl}/${
-      image || defaultSiteMetadata.image
-    }`,
+    image: `${defaultSiteMetadata.siteUrl}${image}`,
     type: type || "WebSite",
     url: `${defaultSiteMetadata.siteUrl}${globalHistory.location.pathname}`,
   };
@@ -30,24 +28,16 @@ const SEO = ({
       <html lang="en" />
       <title>{seo.title}</title>
       <meta name="description" content={seo.description} />
-      <meta
-        name="theme-color"
-        content="#f9fafb"
-        media="(prefers-color-scheme: light)"
-      />
-      <meta
-        name="theme-color"
-        content="#1e293b"
-        media="(prefers-color-scheme: dark)"
-      />
-      {keywords ? <meta name="keywords" content={keywords} /> : null}
       <meta name="image" content={seo.image} />
+      {keywords ? <meta name="keywords" content={keywords} /> : null}
+      {/* Open graph / Facebook */}
       <meta name="og:title" content={seo.title} />
       <meta name="og:site_name" content={seo.title} />
       <meta name="og:type" content={defaultSiteMetadata.og.type} />
       <meta name="og:description" content={seo.description} />
       <meta name="og:image" content={seo.image} />
       <meta name="og:url" content={seo.url} />
+      {/* Twitter */}
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
       <meta name="twitter:card" content={defaultSiteMetadata.twitter.card} />
@@ -56,7 +46,7 @@ const SEO = ({
         content={defaultSiteMetadata.twitter.creator}
       />
       <meta name="twitter:image" content={seo.image} />
-      {children}
+      {/* Structured Data */}
       <script type="application/ld+json">
         {`{
           "@context": "https://schema.org/",
@@ -75,6 +65,17 @@ const SEO = ({
           }
         }`}
       </script>
+      {children}
+      <meta
+        name="theme-color"
+        content="#f9fafb"
+        media="(prefers-color-scheme: light)"
+      />
+      <meta
+        name="theme-color"
+        content="#1e293b"
+        media="(prefers-color-scheme: dark)"
+      />
     </>
   );
 };

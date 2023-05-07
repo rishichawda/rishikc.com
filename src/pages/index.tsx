@@ -1,14 +1,14 @@
 import "../stylesheets/homepage.scss";
 
-import { Link, PageProps } from "gatsby";
+import { graphql, Link, PageProps } from "gatsby";
 import { StaticImage } from "gatsby-plugin-image";
 import * as React from "react";
 
 import ArticlePreview from "../components/articles/preview";
 import Gallery from "../components/gallery";
 import Layout from "../components/layout";
-import SEO from "../components/seo";
 import Github from "../components/repository";
+import SEO from "../components/seo";
 
 const IndexPage: React.FC<PageProps> = () => {
   return (
@@ -22,8 +22,10 @@ const IndexPage: React.FC<PageProps> = () => {
             <div className="flex flex-col lg:w-2/3 justify-around">
               <h1 className="lg:text-right antialiased">Hi, I'm Rishi.</h1>
               <p className="antialiased text-lg">
-                Currently, I am a software engineer by profession and building
-                awesome tools with the Chef team at Progress.
+                Currently, I am a software engineer by profession. I started out
+                building websites as a freelancer, then built fullstack web and
+                mobile applications as a professional. Now, I'm building awesome
+                DevSecOps tools with the Chef team at Progress.
                 <br />
                 <br />
                 Apart from my work, I spend time reading{" "}
@@ -54,6 +56,30 @@ const IndexPage: React.FC<PageProps> = () => {
   );
 };
 
-export const Head = () => <SEO />;
+export const query = graphql`
+  query SiteOGImage {
+    file(absolutePath: { glob: "**/static/assets/icon.png" }) {
+      publicURL
+      childImageSharp {
+        gatsbyImageData(layout: FIXED, width: 1080)
+      }
+    }
+  }
+`;
+
+type HeadProps = {
+  data: {
+    file: Queries.File;
+  };
+};
+
+export const Head: React.FC<HeadProps> = ({ data }) => (
+  <SEO
+    image={
+      data.file.publicURL ||
+      data.file.childImageSharp?.gatsbyImageData?.images?.fallback?.src
+    }
+  />
+);
 
 export default IndexPage;
