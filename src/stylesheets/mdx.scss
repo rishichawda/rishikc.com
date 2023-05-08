@@ -62,7 +62,7 @@ section[itemprop="articleBody"] {
     padding: 0 var(--space-3xs-m);
   }
 
-  a:not(.gatsby-resp-image-link):not(.autolink-header-icon.before[href^="#"]) {
+  a:not(.gatsby-resp-image-link):not(.autolink-header-icon.after[href^="#"]) {
     @include link-with-hover-transition;
   }
 
