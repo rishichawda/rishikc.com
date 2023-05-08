@@ -52,6 +52,14 @@ section[itemprop="articleBody"] {
   h2,
   h3,
   h4,
+  h5 {
+    margin-top: var(--space-m-l);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
   h5,
   p {
     a.autolink-header-icon {
