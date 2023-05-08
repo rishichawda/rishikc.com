@@ -36,11 +36,21 @@ section[itemprop="articleBody"] {
     }
   }
 
-  img {
+  .gatsby-resp-image-figure {
     margin: var(--space-m-l) auto;
-    width: 80%;
-    height: auto;
     @apply dark:brightness-50;
+    img {
+      width: 80%;
+      height: auto;
+    }
+    span.gatsby-resp-image-wrapper {
+      margin-bottom: var(--space-3xs);
+    }
+    figcaption {
+      font-size: var(--step-0);
+      padding: 0 var(--space-s-m);
+      text-align: center;
+    }
   }
 
   a.gatsby-resp-image-link {
