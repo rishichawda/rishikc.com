@@ -67,10 +67,8 @@ const Article: React.FC<ArticleProps> = (props) => {
             </h2>
             <span className="flex flex-wrap items-center justify-center article-header-tags">
               {props.data.mdx.frontmatter?.tags?.map((tag) => (
-                <span>
-                  <Tag key={tag} focusable={false}>
-                    {tag}
-                  </Tag>
+                <span key={tag}>
+                  <Tag focusable={false}>{tag}</Tag>
                 </span>
               ))}
             </span>
