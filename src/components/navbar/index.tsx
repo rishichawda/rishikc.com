@@ -11,7 +11,7 @@ const Navbar = () => {
   const siteMetadata = useSiteMetadata();
   return (
     <nav
-      className="flex flex-row items-center justify-center dark:text-gray-200 navigation-bar"
+      className="flex flex-row sticky top-0 items-center justify-center bg-gray-50 dark:bg-slate-800 dark:text-gray-200 navigation-bar z-10"
       aria-label={siteMetadata.title!}
     >
       <div className="flex flex-row items-center justify-between">
