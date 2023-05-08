@@ -32,9 +32,9 @@ const SideBar = (props: Props) => {
           <SideBarItem to="/contact" label="Contact" icon={<SendIcon />} />
         </ul>
         <ul className="pt-1 mt-4 space-y-2 font-medium border-t border-gray-200 dark:border-gray-700">
-          <p className="font-medium uppercase text-sm px-2 py-2 rounded-sm dark:bg-slate-700 bg-slate-200 mb-4">
+          <li className="font-medium uppercase text-sm px-2 py-2 rounded-sm dark:bg-slate-700 bg-slate-200 mb-4">
             continue reading
-          </p>
+          </li>
           {props.edge?.previous ? (
             <SideBarItem
               to={props.edge.previous.fields?.slug!}

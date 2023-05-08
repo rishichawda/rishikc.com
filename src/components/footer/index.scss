@@ -4,4 +4,10 @@ footer {
   padding: var(--space-s-m);
   font-size: var(--step-1);
   text-align: center;
+
+  a {
+    @apply focus-within:outline-dotted;
+    @apply focus-within:outline-2;
+    @apply focus-within:outline-brand-700;
+  }
 }

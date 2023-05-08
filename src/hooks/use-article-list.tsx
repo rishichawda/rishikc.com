@@ -25,6 +25,22 @@ export const useArticleList = () => {
       }
       allMdx(sort: { frontmatter: { date: DESC } }) {
         edges {
+          previous {
+            frontmatter {
+              title
+            }
+            fields {
+              slug
+            }
+          }
+          next {
+            frontmatter {
+              title
+            }
+            fields {
+              slug
+            }
+          }
           node {
             id
             excerpt(pruneLength: 340)
@@ -51,6 +67,12 @@ export const useArticleList = () => {
     data.localSearchArticles,
   ];
   return results;
+};
+
+export const getPreviousAndNext = (path: string) => {
+  let [edges, _] = useArticleList();
+  let res = edges.find((x) => x.node.fields?.slug === path);
+  return res;
 };
 
 export const filterByTags = (data: any[], tags: string[]) => {

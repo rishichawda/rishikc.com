@@ -19,7 +19,7 @@ const Gallery = () => {
           href="https://www.instagram.com/rishiikc/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 antialiased"
+          className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 antialiased focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700"
         >
           View all photos
         </OutboundLink>

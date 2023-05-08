@@ -1,8 +1,18 @@
 @import "mixins.scss";
 
-main.article-content-page-container {
+main.article-page {
   @include rounded-container;
-  padding: 0 var(--space-m-xl);
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+article.article-content-page-container {
+  margin-left: var(--space-2xs);
+  @media (max-width: 970px) {
+    max-width: 800px;
+    margin: auto;
+  }
 }
 
 section[itemprop="articleBody"] {
@@ -38,9 +48,9 @@ section[itemprop="articleBody"] {
 
   .gatsby-resp-image-figure {
     margin: var(--space-m-l) auto;
+    width: 80%;
     @apply dark:brightness-50;
     img {
-      width: 80%;
       height: auto;
     }
     span.gatsby-resp-image-wrapper {
@@ -76,6 +86,9 @@ section[itemprop="articleBody"] {
       display: inline-flex;
       align-items: center;
       height: 100%;
+      @apply focus-within:outline-dotted;
+      @apply focus-within:outline-2;
+      @apply focus-within:outline-brand-700;
     }
     padding: 0 var(--space-3xs-m);
   }
@@ -134,7 +147,7 @@ section[itemprop="articleBody"] {
 }
 
 .article-header {
-  margin: var(--space-xl-2xl) 0 var(--space-m-l) 0;
+  margin-bottom: var(--space-m-l);
   padding: 0 var(--space-3xs-m);
 
   & > figure {
@@ -159,7 +172,6 @@ section[itemprop="articleBody"] {
     width: 100%;
     font-weight: 400;
     margin: 0;
-    margin-bottom: 0.25em;
     font-size: var(--step-4);
   }
 
@@ -170,15 +182,39 @@ section[itemprop="articleBody"] {
   }
 
   &-tags {
-    margin: var(--space-xs-s) 0 var(--space-m-l) 0;
+    margin: var(--space-2xs-xs) 0;
 
     & > span {
       padding: var(--space-3xs) 2.5px;
     }
   }
 
-  &-time {
-    font-size: var(--step-0);
+  &-info {
+    border-width: thin;
+    border-left: none;
+    border-right: none;
+    @apply border-gray-500;
+    margin-top: var(--space-3xs-m);
+    padding: var(--space-xs) 0;
+
+    &-time {
+      font-size: var(--step-0);
+    }
+    &-share {
+      &-button {
+        height: var(--space-l);
+        padding: 0 var(--space-2xs-xs);
+        margin-left: var(--space-2xs);
+        svg {
+          height: var(--space-s);
+          width: auto;
+        }
+      }
+      button {
+        @apply mr-0;
+        @apply sm:mr-1;
+      }
+    }
   }
 }
 
