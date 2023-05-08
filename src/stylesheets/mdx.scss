@@ -40,6 +40,7 @@ section[itemprop="articleBody"] {
     margin: var(--space-m-l) auto;
     width: 80%;
     height: auto;
+    @apply dark:brightness-50;
   }
 
   a.gatsby-resp-image-link {
