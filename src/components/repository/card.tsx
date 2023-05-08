@@ -20,7 +20,7 @@ function Card({ repository }: Props) {
         href={repository?.url}
         target="_blank"
       >
-        <div className="github-repo-card relative w-full bg-white  dark:bg-gray-800 sm:mx-auto overflow-hidden">
+        <div className="github-repo-card relative w-full bg-white  dark:bg-gray-900 sm:mx-auto overflow-hidden shadow-sm">
           <Languages languages={repository?.languages} />
           <div className="flex justify-between items-start github-repositories-preview-list-item-title">
             <h2>{repository?.name}</h2>

@@ -39,10 +39,8 @@
 }
 
 @mixin rounded-container {
-  @apply bg-gray-100;
-  @apply dark:bg-slate-700;
   @apply dark:text-gray-200;
-  padding: var(--space-l-xl) var(--space-xs-l) !important;
+  padding: var(--space-l-xl) var(--space-2xs-m) !important;
   border-radius: var(--space-2xs-xs);
   margin: var(--space-m-xl) var(--space-xs);
 }

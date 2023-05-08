@@ -49,7 +49,7 @@ const ArticlesList = (props: ArticlesListProps) => {
             <motion.li
               variants={variantB}
               layout
-              className="block focus-within:bg-gray-300 dark:focus-within:bg-slate-800 article-list-item"
+              className="block focus-within:bg-gray-300 dark:focus-within:bg-slate-900 article-list-item"
               role="listitem"
               key={node.id}
             >

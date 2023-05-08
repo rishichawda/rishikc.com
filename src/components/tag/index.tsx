@@ -8,10 +8,13 @@ const Tag: React.FC<TagProps> = ({
   onClick,
   showCloseButton,
 }) => {
+  const classNames = `focus:outline-1 focus:outline-brand-300 focus:outline-dashed overflow-hidden tag-pill${
+    focusable ? "" : " focus:outline-0 cursor-default"
+  }`;
   return (
     <button
       tabIndex={!focusable ? -1 : undefined}
-      className="focus:outline-1 focus:outline-brand-300 focus:outline-dashed overflow-hidden tag-pill"
+      className={classNames}
       aria-label={children?.toString()}
       onClick={onClick}
     >

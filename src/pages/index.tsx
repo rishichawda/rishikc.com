@@ -33,10 +33,6 @@ const IndexPage: React.FC<PageProps> = () => {
                 designing solutions to random ideas, learning new things and
                 occasionally indulging in{" "}
                 <a href="#gallery-preview">photography</a>.<br />
-                <br />
-                Curious about science and mathematics, I spend an awful lot of
-                time gathering knowledge that I don’t generally use in day to
-                day life. It’s good for geeking out though.{" "}
               </p>
             </div>
             <div className="flex lg:w-3/12">

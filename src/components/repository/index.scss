@@ -15,6 +15,10 @@
     }
 
     &-item {
+      padding: 1px;
+      @media (max-width: 640px) {
+        padding: 0;
+      }
       overflow: hidden;
       &-title {
         font-size: var(--step-1);

@@ -2,6 +2,7 @@
 
 main.article-content-page-container {
   @include rounded-container;
+  padding: 0 var(--space-m-xl);
 }
 
 section[itemprop="articleBody"] {
@@ -50,12 +51,15 @@ section[itemprop="articleBody"] {
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  p,
+  ul {
     a.autolink-header-icon {
       display: inline-flex;
       align-items: center;
       height: 100%;
     }
+    padding: 0 var(--space-3xs-m);
   }
 
   a:not(.gatsby-resp-image-link):not(.autolink-header-icon.before[href^="#"]) {
@@ -81,8 +85,8 @@ section[itemprop="articleBody"] {
   hr {
     border-width: 0;
     margin: 0;
-    margin-bottom: var(--space-xl-2xl);
-    margin-top: var(--space-s-m);
+    margin-bottom: var(--space-l-xl);
+    margin-top: var(--space-xs-s);
 
     &::after {
       content: "• • •";
@@ -98,11 +102,12 @@ section[itemprop="articleBody"] {
     display: flex;
     flex-direction: column;
     border-style: solid;
-    padding: 0 var(--space-l-xl);
-    margin: var(--space-l-xl) var(--space-m-l);
+    padding: var(--space-3xs-xs) 0;
+    margin: var(--space-m-l) 0;
     font-size: var(--step-1);
     font-style: italic;
-    background-color: rgba(230, 230, 230, 0.338);
+    @apply bg-gray-100;
+    @apply dark:bg-slate-700;
   }
 }
 
@@ -112,6 +117,7 @@ section[itemprop="articleBody"] {
 
 .article-header {
   margin: var(--space-xl-2xl) 0 var(--space-m-l) 0;
+  padding: 0 var(--space-3xs-m);
 
   & > figure {
     margin-bottom: var(--space-l);
@@ -174,8 +180,9 @@ body.dark {
   top: 0;
   left: 0;
   right: 0;
-  height: 0.45em;
+  height: var(--space-2xs);
   transform-origin: 0%;
-  @apply bg-brand-700;
+  @apply bg-brand-900;
+  @apply dark:bg-brand-700;
   z-index: 10;
 }

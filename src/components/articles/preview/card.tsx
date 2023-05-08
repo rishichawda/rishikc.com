@@ -11,7 +11,7 @@ const ArticlePreviewCard = ({ data }: Props) => {
       className="inline-flex w-full items-stretch focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700 article-preview-list-item"
       role="listitem"
     >
-      <div className="h-full flex flex-col items-start justify-between p-6 bg-white  dark:bg-gray-800 dark:border-gray-700">
+      <div className="h-full flex flex-col items-start justify-between p-6 bg-white  dark:bg-gray-900 dark:border-gray-800 shadow-sm">
         <div className="h-2/3 flex flex-col justify-between">
           <Link
             className="focus:outline-none"
@@ -29,7 +29,7 @@ const ArticlePreviewCard = ({ data }: Props) => {
           </p>
           <Link
             to={data.fields?.slug!}
-            className="inline-flex items-center text-center text-brand-600 rounded-lg hover:text-brand-800 focus:outline-none"
+            className="inline-flex items-center text-center text-brand-700 rounded-lg hover:text-brand-900 focus:outline-none"
           >
             Read more&nbsp;&nbsp;&#10140;
           </Link>
