@@ -9,8 +9,11 @@ main.article-page {
 
 article.article-content-page-container {
   margin-left: var(--space-2xs);
+  max-width: 800px;
+  width: 100%;
+  overflow-x: hidden;
+  padding: 0 var(--space-3xs-m);
   @media (max-width: 970px) {
-    max-width: 800px;
     margin: auto;
   }
 }
@@ -76,11 +79,6 @@ section[itemprop="articleBody"] {
     margin-top: var(--space-m-l);
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
   p {
     a.autolink-header-icon {
       display: inline-flex;
@@ -90,7 +88,6 @@ section[itemprop="articleBody"] {
       @apply focus-within:outline-2;
       @apply focus-within:outline-brand-700;
     }
-    padding: 0 var(--space-3xs-m);
   }
 
   a:not(.gatsby-resp-image-link):not(.autolink-header-icon.after[href^="#"]) {
@@ -133,7 +130,7 @@ section[itemprop="articleBody"] {
     display: flex;
     flex-direction: column;
     border-style: solid;
-    padding: var(--space-3xs-xs) 0;
+    padding: var(--space-3xs-xs);
     margin: var(--space-m-l) 0;
     font-size: var(--step-1);
     font-style: italic;
@@ -148,7 +145,6 @@ section[itemprop="articleBody"] {
 
 .article-header {
   margin-bottom: var(--space-m-l);
-  padding: 0 var(--space-3xs-m);
 
   & > figure {
     margin-bottom: var(--space-l);

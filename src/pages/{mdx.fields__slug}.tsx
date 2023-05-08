@@ -44,7 +44,7 @@ const Article: React.FC<ArticleProps> = (props) => {
           <div className="flex flex-col items-center sm:items-start article-header">
             <figure>
               <GatsbyImage
-                className="article-header-hero-image w-full h-auto dark:brightness-50"
+                className="article-header-hero-image w-full h-auto rounded-md dark:brightness-50"
                 alt={
                   props.data.mdx.frontmatter?.hero_image_alt ||
                   `banner_for_${props.data.mdx.fields?.slug}`
