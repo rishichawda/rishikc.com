@@ -6,12 +6,17 @@ import React from "react";
 import { useSiteMetadata } from "../../hooks/use-site-metadata";
 import Logo from "../logo";
 import ThemeToggle from "../themeToggle";
+import ScrollProgress from "./scrollProgress";
 
-const Navbar = () => {
+type NavbarProps = {
+  showScrollProgress?: boolean;
+};
+
+const Navbar: React.FC<NavbarProps> = ({ showScrollProgress }) => {
   const siteMetadata = useSiteMetadata();
   return (
     <nav
-      className="flex flex-row sticky top-0 items-center justify-center bg-gray-50 dark:bg-slate-800 dark:text-gray-200 navigation-bar z-10"
+      className="flex flex-col sticky top-0 items-center justify-center bg-gray-50 dark:bg-slate-800 dark:text-gray-200 navigation-bar z-10"
       aria-label={siteMetadata.title!}
     >
       <div className="flex flex-row items-center justify-between">
@@ -28,8 +33,13 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
+      {showScrollProgress ? <ScrollProgress /> : null}
     </nav>
   );
+};
+
+Navbar.defaultProps = {
+  showScrollProgress: false,
 };
 
 export default Navbar;

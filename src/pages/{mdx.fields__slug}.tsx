@@ -24,8 +24,7 @@ import ShareButtonWrapper from "../components/articles/share-button-wrapper";
 import SideBar from "../components/articles/sidebar";
 import { getPreviousAndNext } from "../hooks/use-article-list";
 
-const Article: React.FC<ArticleProps> = (props) => {
-  const { scrollYProgress } = useScroll();
+const ArticlePage: React.FC<ArticlePageProps> = (props) => {
   const location = useLocation();
   const fb_share = React.useRef<HTMLButtonElement>(null);
   const linkedin_share = React.useRef<HTMLButtonElement>(null);
@@ -37,7 +36,7 @@ const Article: React.FC<ArticleProps> = (props) => {
     props.data.mdx.frontmatter?.hero_image_credit_link;
 
   return (
-    <Layout>
+    <Layout showScrollProgress={true}>
       <main className="root-container flex flex-row article-page">
         <SideBar edge={edge!} />
         <article className="article-content-page-container">
@@ -136,10 +135,6 @@ const Article: React.FC<ArticleProps> = (props) => {
               </div>
             </div>
           </div>
-          <motion.div
-            className="progress-bar"
-            style={{ scaleX: scrollYProgress }}
-          />
           <section className="flex flex-col" itemProp="articleBody">
             {props.children}
           </section>
@@ -149,7 +144,7 @@ const Article: React.FC<ArticleProps> = (props) => {
   );
 };
 
-type ArticleProps = {
+type ArticlePageProps = {
   children: React.ReactNode;
   data: {
     mdx: Queries.Mdx;
@@ -185,7 +180,7 @@ export const query = graphql`
   }
 `;
 
-export const Head: React.FC<ArticleProps> = ({ data }) => {
+export const Head: React.FC<ArticlePageProps> = ({ data }) => {
   return (
     <SEO
       title={data.mdx.frontmatter?.title!}
@@ -199,4 +194,4 @@ export const Head: React.FC<ArticleProps> = ({ data }) => {
   );
 };
 
-export default Article;
+export default ArticlePage;

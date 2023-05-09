@@ -224,15 +224,3 @@ body.dark {
     }
   }
 }
-
-.progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--space-2xs);
-  transform-origin: 0%;
-  @apply bg-brand-900;
-  @apply dark:bg-brand-700;
-  z-index: 10;
-}

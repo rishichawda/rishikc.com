@@ -10,7 +10,7 @@ body.dark nav.navigation-bar > div > .brand > svg {
   flex-direction: row;
   padding: 0 var(--space-2xs-xs);
 
-  & > div {
+  & > div:not(.progress-bar) {
     width: 100%;
     max-width: 1700px;
   }
@@ -42,5 +42,18 @@ body.dark nav.navigation-bar > div > .brand > svg {
         margin-right: 0;
       }
     }
+  }
+
+  .progress-bar {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: var(--space-2xs);
+    transform-origin: 0%;
+    @apply bg-brand-900;
+    @apply dark:bg-brand-700;
+    z-index: 10;
   }
 }
