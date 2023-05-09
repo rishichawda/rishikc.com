@@ -3,6 +3,7 @@ import Contact from "../components/contact";
 import Layout from "../components/layout";
 
 import "../stylesheets/contact.scss";
+import SEO from "../components/seo";
 
 type Props = {};
 
@@ -15,5 +16,7 @@ function ContactPage({}: Props) {
     </Layout>
   );
 }
+
+export const Head = () => <SEO title="Contact - rishikc.com" />;
 
 export default ContactPage;

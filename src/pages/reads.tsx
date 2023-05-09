@@ -98,6 +98,6 @@ const ReadsPage = (props: Props) => {
   );
 };
 
-export const Head = () => <SEO />;
+export const Head = () => <SEO title="Reads - rishikc.com" />;
 
 export default ReadsPage;

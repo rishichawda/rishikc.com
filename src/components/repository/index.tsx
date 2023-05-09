@@ -9,7 +9,7 @@ const Github = () => {
 
   return (
     <div
-      id="articles-preview"
+      id="repositories"
       className="flex flex-col w-full mx-auto mb-28 justify-between items-start github-repositories-preview"
     >
       <h2 className="antialiased github-repositories-preview-header">
