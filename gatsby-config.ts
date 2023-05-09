@@ -230,6 +230,13 @@ const config: GatsbyConfig = {
         theme_color_in_head: false,
       }
     },
+    {
+      resolve: `gatsby-plugin-nprogress`,
+      options: {
+        color: twConfig.theme.colors.brand["900"],
+        showSpinner: true,
+      },
+    },
     `gatsby-plugin-offline`
   ]
 };
