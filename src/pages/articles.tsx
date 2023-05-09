@@ -16,7 +16,7 @@ import {
 } from "../hooks/use-article-list";
 import { useTags } from "../hooks/use-tags";
 
-const Articles: React.FC = () => {
+const ArticlesListPage: React.FC = () => {
   const [articles, search] = useArticleList();
   const [allTags, topTags] = useTags();
   const [showAllTags, setShowAllTags] = React.useState(false);
@@ -124,4 +124,4 @@ export const Head = () => (
   <SEO title="Articles - rishikc.com" type="BlogPosting" />
 );
 
-export default Articles;
+export default ArticlesListPage;

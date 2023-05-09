@@ -15,7 +15,7 @@ type ReadInfo = {
   info?: string;
 };
 
-const Reads = (props: Props) => {
+const ReadsPage = (props: Props) => {
   const [shuffledData, setShuffledData] = React.useState(reads);
 
   const shuffleArray = () => {
@@ -100,4 +100,4 @@ const Reads = (props: Props) => {
 
 export const Head = () => <SEO />;
 
-export default Reads;
+export default ReadsPage;
