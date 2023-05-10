@@ -4,6 +4,7 @@ import emailjs from "@emailjs/browser";
 
 import MailIcon from "../icons/mail";
 import SendIcon from "../icons/send";
+import { validateEmail, validateMessage } from "../../utils/validation";
 
 enum FormState {
   Idle = 0,
@@ -12,12 +13,27 @@ enum FormState {
   Error,
 }
 
+enum FormInput {
+  Email = "reply_to",
+  Message = "message",
+}
+
 const ContactForm = () => {
   const form = React.useRef<HTMLFormElement>(null);
   const [fState, setFState] = React.useState(FormState.Idle);
+  const [errMessage, setErrorMessage] = React.useState({
+    [FormInput.Email]: "",
+    [FormInput.Message]: "",
+  });
 
   const sendEmail = (e: FormEvent) => {
     e.preventDefault();
+    let hasError = Object.keys(errMessage).some((k: string) => {
+      return errMessage[k as FormInput] !== "";
+    });
+    if (hasError) {
+      return;
+    }
     setFState(FormState.Processing);
     emailjs
       .sendForm(
@@ -34,6 +50,30 @@ const ContactForm = () => {
           setFState(FormState.Error);
         }
       );
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    let err;
+    switch (e.target.name) {
+      case FormInput.Email:
+        err = validateEmail(e.target.value.trim());
+        setErrorMessage({
+          ...errMessage,
+          [FormInput.Email]: err ? err.message : "",
+        });
+        break;
+      case FormInput.Message:
+        err = validateMessage(e.target.value.trim());
+        setErrorMessage({
+          ...errMessage,
+          [FormInput.Message]: err ? err.message : "",
+        });
+        break;
+      default:
+        break;
+    }
   };
 
   switch (fState) {
@@ -118,8 +158,15 @@ const ContactForm = () => {
                 id="email-address-input"
                 className="block w-full pl-10 p-2.5 bg-gray-50 border rounded-lg border-gray-300 focus:outline-none focus:border-brand-500 dark:bg-slate-800 dark:border-gray-700 dark:placeholder-gray-400  dark:focus:border-brand-700"
                 placeholder="email address"
+                onBlur={handleChange}
+                onChange={handleChange}
               />
             </div>
+            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errMessage[FormInput.Email]
+                ? `${errMessage[FormInput.Email]}`
+                : ""}
+            </p>
           </div>
           <div className="w-full contact-page-section-form-input-container">
             <label htmlFor="email-content-input" className="hide">
@@ -131,7 +178,14 @@ const ContactForm = () => {
               rows={4}
               className="block p-2.5 w-full text-sm bg-gray-50 border rounded-lg border-gray-300 focus:outline-none focus:border-brand-500 dark:bg-slate-800 dark:border-gray-700 dark:placeholder-gray-400  dark:focus:border-brand-700"
               placeholder="write your thoughts here.."
+              onBlur={handleChange}
+              onChange={handleChange}
             ></textarea>
+            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+              {errMessage[FormInput.Message]
+                ? `${errMessage[FormInput.Message]}`
+                : ""}
+            </p>
           </div>
           <button
             type="submit"
