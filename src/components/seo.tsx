@@ -31,12 +31,12 @@ const SEO = ({
       <meta name="image" content={seo.image} />
       {keywords ? <meta name="keywords" content={keywords} /> : null}
       {/* Open graph / Facebook */}
-      <meta name="og:title" content={seo.title} />
-      <meta name="og:site_name" content={seo.title} />
-      <meta name="og:type" content={defaultSiteMetadata.og.type} />
-      <meta name="og:description" content={seo.description} />
-      <meta name="og:image" content={seo.image} />
-      <meta name="og:url" content={seo.url} />
+      <meta property="og:title" content={seo.title} />
+      <meta property="og:site_name" content={defaultSiteMetadata.title} />
+      <meta property="og:type" content={defaultSiteMetadata.og.type} />
+      <meta property="og:description" content={seo.description} />
+      <meta property="og:image" content={seo.image} />
+      <meta property="og:url" content={seo.url} />
       {/* Twitter */}
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
@@ -45,6 +45,7 @@ const SEO = ({
         name="twitter:creator"
         content={defaultSiteMetadata.twitter.creator}
       />
+      <meta name="twitter:site" content={defaultSiteMetadata.twitter.creator} />
       <meta name="twitter:image" content={seo.image} />
       {/* Structured Data */}
       <script type="application/ld+json">

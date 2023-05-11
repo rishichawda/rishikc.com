@@ -183,7 +183,7 @@ export const query = graphql`
 export const Head: React.FC<ArticlePageProps> = ({ data }) => {
   return (
     <SEO
-      title={data.mdx.frontmatter?.title!}
+      title={`${data.mdx.frontmatter?.title!} | Rishi's blog`}
       description={data.mdx.frontmatter?.description!}
       keywords={data.mdx.frontmatter?.keywords!}
       image={data.mdx.frontmatter?.hero_image?.publicURL!}

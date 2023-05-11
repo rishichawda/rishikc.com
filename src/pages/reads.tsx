@@ -98,6 +98,11 @@ const ReadsPage = (props: Props) => {
   );
 };
 
-export const Head = () => <SEO title="Reads - rishikc.com" />;
+export const Head = () => (
+  <SEO
+    title="Reads - rishikc.com"
+    description="Some of my favorite lines from books, articles, talks, etc."
+  />
+);
 
 export default ReadsPage;

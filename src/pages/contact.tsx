@@ -17,6 +17,11 @@ function ContactPage({}: Props) {
   );
 }
 
-export const Head = () => <SEO title="Contact - rishikc.com" />;
+export const Head = () => (
+  <SEO
+    title="Contact - rishikc.com"
+    description="Get in touch for collaboration, queries and more. You can also connect with me through my social media profiles."
+  />
+);
 
 export default ContactPage;
