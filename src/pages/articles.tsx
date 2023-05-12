@@ -4,11 +4,11 @@ import { m, LazyMotion, domAnimation } from "framer-motion";
 import * as React from "react";
 import { useFlexSearch } from "react-use-flexsearch";
 
-import ArticlesList from "../components/articles/list";
-import Search from "../components/articles/search";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Tag from "../components/tag";
+import ArticlesList from "../components/articles/list";
+import Search from "../components/articles/search";
 import {
   filterByTags,
   transformFlexSearchData,

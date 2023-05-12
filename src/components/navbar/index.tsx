@@ -5,8 +5,8 @@ import React from "react";
 
 import { useSiteMetadata } from "../../hooks/use-site-metadata";
 import Logo from "../logo";
-import ThemeToggle from "../themeToggle";
 import ScrollProgress from "./scrollProgress";
+import ThemeToggle from "../themeToggle";
 
 type NavbarProps = {
   showScrollProgress?: boolean;

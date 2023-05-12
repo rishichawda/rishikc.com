@@ -1,7 +1,7 @@
 import React from "react";
 
-import Footer from "./footer";
 import Navbar from "./navbar";
+import Footer from "./footer";
 
 const Layout: React.FC<LayoutProps> = ({ children, showScrollProgress }) => {
   return (

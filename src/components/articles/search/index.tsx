@@ -10,7 +10,6 @@ const Search: React.FC<SearchProps> = ({ searchQuery, setSearchQuery }) => {
   return (
     <form
       id="articles-search-bar"
-      action="javascript:void(0);"
       method="get"
       autoComplete="off"
       className="border-4 border-gray-200 focus-within:border-gray-300 dark:border-slate-600 dark:focus-within:border-slate-500 w-full sm:w-fit"
@@ -26,9 +25,6 @@ const Search: React.FC<SearchProps> = ({ searchQuery, setSearchQuery }) => {
         name="articles-search-bar"
         className="placeholder:text-gray-400 block bg-gray-200 dark:bg-slate-600 dark:placeholder:text-slate-300"
       />
-      <button className="hide" type="submit">
-        Search
-      </button>
     </form>
   );
 };
