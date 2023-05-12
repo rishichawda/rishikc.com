@@ -52,30 +52,6 @@ const IndexPage: React.FC<PageProps> = () => {
   );
 };
 
-export const query = graphql`
-  query SiteOGImage {
-    file(absolutePath: { glob: "**/static/assets/icon.png" }) {
-      publicURL
-      childImageSharp {
-        gatsbyImageData(layout: FIXED, width: 1080)
-      }
-    }
-  }
-`;
-
-type HeadProps = {
-  data: {
-    file: Queries.File;
-  };
-};
-
-export const Head: React.FC<HeadProps> = ({ data }) => (
-  <SEO
-    image={
-      data.file.publicURL ||
-      data.file.childImageSharp?.gatsbyImageData?.images?.fallback?.src
-    }
-  />
-);
+export const Head = () => <SEO />;
 
 export default IndexPage;

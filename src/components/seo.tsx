@@ -4,6 +4,7 @@ import { globalHistory } from "@reach/router";
 
 import { SiteMetadata } from "../../static/metadata";
 import { useSiteMetadata } from "../hooks/use-site-metadata";
+import useIcon from "../hooks/use-icon";
 
 const SEO = ({
   title,
@@ -15,10 +16,12 @@ const SEO = ({
 }: SeoProps) => {
   const defaultSiteMetadata = useSiteMetadata() as SiteMetadata;
 
+  const icon = useIcon();
+
   const seo = {
     title: title || defaultSiteMetadata.title,
     description: description || defaultSiteMetadata.description,
-    image: `${defaultSiteMetadata.siteUrl}${image}`,
+    image: `${defaultSiteMetadata.siteUrl}${image || icon}`,
     type: type || "WebSite",
     url: `${defaultSiteMetadata.siteUrl}${globalHistory.location.pathname}`,
   };
