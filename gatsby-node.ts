@@ -2,6 +2,27 @@ const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
 const readingTime = require(`reading-time`)
 
+exports.onCreateWebpackConfig = ({
+  actions,
+  getConfig
+}) => {
+  let config = getConfig();
+
+  if (!config.optimization) { return; } // not writing this check throws an error; TypeError: Cannot set property 'splitChunks' of undefined
+
+  config.optimization.splitChunks.cacheGroups.motion = {
+    name: `framer-motion`,
+    chunks: `all`,
+    test: /[\\/]node_modules[\\/](framer-motion)[\\/]/,
+  }
+  config.optimization.splitChunks.cacheGroups.components = {
+    name: `components`,
+    chunks: `all`,
+    test: /[\\/]src[\\/](components)[\\/]/,
+  }
+  actions.replaceWebpackConfig(config);
+}
+
 exports.onCreateNode = ({
   node,
   actions,

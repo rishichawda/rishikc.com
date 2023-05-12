@@ -1,8 +1,7 @@
 import "prismjs/themes/prism-tomorrow.css";
 import "../stylesheets/mdx.scss";
 
-import { motion, useScroll } from "framer-motion";
-import { graphql, Link } from "gatsby";
+import { graphql } from "gatsby";
 import { OutboundLink } from "gatsby-plugin-google-gtag";
 import { GatsbyImage } from "gatsby-plugin-image";
 import * as React from "react";

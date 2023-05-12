@@ -1,6 +1,6 @@
 import "../stylesheets/reads.scss";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { m, LazyMotion, domMax } from "framer-motion";
 import React from "react";
 
 import reads from "../../static/reads.json";
@@ -30,10 +30,10 @@ const ReadsPage = (props: Props) => {
           <h2 className="antialiased dark:text-gray-200">
             Some lines I loved reading&nbsp;.&nbsp;.
           </h2>
-          <AnimatePresence>
-            <motion.ul className="grid grid-cols-2 gap-7 reads-list">
+          <LazyMotion features={domMax}>
+            <m.ul className="grid grid-cols-2 gap-7 reads-list">
               {shuffledData.map((r: ReadInfo, index: number) => (
-                <motion.li
+                <m.li
                   layout={index == 0 ? false : "preserve-aspect"}
                   key={r.quote}
                   className="flex flex-col items-center justify-around reads-list-item"
@@ -88,10 +88,10 @@ const ReadsPage = (props: Props) => {
                       <p id="shuffle-button-text">Shuffle</p>
                     </div>
                   ) : null}
-                </motion.li>
+                </m.li>
               ))}
-            </motion.ul>
-          </AnimatePresence>
+            </m.ul>
+          </LazyMotion>
         </main>
       </div>
     </Layout>

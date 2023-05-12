@@ -1,6 +1,6 @@
 import "../stylesheets/articles.scss";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { m, LazyMotion, domAnimation } from "framer-motion";
 import * as React from "react";
 import { useFlexSearch } from "react-use-flexsearch";
 
@@ -71,7 +71,7 @@ const ArticlesListPage: React.FC = () => {
     return data.map((tag: string) => {
       const trimmedTag = tag.split("(")[0].trim();
       return (
-        <motion.span key={tag} layout>
+        <m.span key={tag} layout>
           <Tag
             key={tag}
             onClick={(e) => onTagClick(e, trimmedTag)}
@@ -79,7 +79,7 @@ const ArticlesListPage: React.FC = () => {
           >
             {tag}
           </Tag>
-        </motion.span>
+        </m.span>
       );
     });
   }, [showAllTags, selectedTags]);
@@ -94,25 +94,29 @@ const ArticlesListPage: React.FC = () => {
             </h1>
             <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           </div>
-          <div className="article-list-search-info">
-            <AnimatePresence>
-              <motion.span className="flex flex-wrap items-center w-full sm:w-2/3 article-list-search-info-tags">
-                <p className="m-0">
-                  Popular tags &nbsp;
-                  <button
-                    className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700 cursor-pointer show-all-button"
-                    onClick={toggleTags}
-                  >
-                    (show all)
-                  </button>
-                  &nbsp;:&nbsp;
-                </p>
-                {renderTags()}
-              </motion.span>
-            </AnimatePresence>
-          </div>
+          <React.Suspense>
+            <div className="article-list-search-info">
+              <LazyMotion features={domAnimation}>
+                <m.span className="flex flex-wrap items-center w-full sm:w-2/3 article-list-search-info-tags">
+                  <p className="m-0">
+                    Popular tags &nbsp;
+                    <button
+                      className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700 cursor-pointer show-all-button"
+                      onClick={toggleTags}
+                    >
+                      (show all)
+                    </button>
+                    &nbsp;:&nbsp;
+                  </p>
+                  {renderTags()}
+                </m.span>
+              </LazyMotion>
+            </div>
+          </React.Suspense>
           <section>
-            <ArticlesList items={filteredResults} onTagClick={onTagClick} />
+            <React.Suspense>
+              <ArticlesList items={filteredResults} onTagClick={onTagClick} />
+            </React.Suspense>
           </section>
         </main>
       </div>
