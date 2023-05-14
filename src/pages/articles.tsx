@@ -1,6 +1,6 @@
 import "../stylesheets/articles.scss";
 
-import { m, LazyMotion, domAnimation } from "framer-motion";
+import { m, LazyMotion, domMax } from "framer-motion";
 import * as React from "react";
 import { useFlexSearch } from "react-use-flexsearch";
 
@@ -96,7 +96,7 @@ const ArticlesListPage: React.FC = () => {
           </div>
           <React.Suspense>
             <div className="article-list-search-info">
-              <LazyMotion features={domAnimation}>
+              <LazyMotion features={domMax}>
                 <m.span className="flex flex-wrap items-center w-full sm:w-2/3 article-list-search-info-tags">
                   <p className="m-0">
                     Popular tags &nbsp;
