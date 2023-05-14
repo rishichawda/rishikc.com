@@ -1,6 +1,6 @@
 import "../stylesheets/homepage.scss";
 
-import { graphql, Link, PageProps } from "gatsby";
+import { Link, PageProps } from "gatsby";
 import { StaticImage } from "gatsby-plugin-image";
 import * as React from "react";
 
