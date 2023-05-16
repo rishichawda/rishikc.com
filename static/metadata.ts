@@ -9,6 +9,18 @@ const siteMetadata: Record<string, unknown> = {
   twitter: {
     card: "summary_large_image",
     creator: "rishiikc"
+  },
+  schema: {
+    author: {
+      name: "Rishi Kumar Chawda",
+      url: "https://www.linkedin.com/in/rkrishi/",
+      sameAs: [
+        "https://github.com/rishichawda",
+        "https://www.instagram.com/rishiikc",
+        "https://twitter.com/rishiikc",
+        "https://dribbble.com/rishikc"
+      ]
+    }
   }
 }
 
@@ -25,4 +37,11 @@ export interface SiteMetadata {
     card: string;
     creator: string;
   };
+  schema: {
+    author: Queries.Maybe<{
+      name: string;
+      url: string;
+      sameAs: string[];
+    }>
+  }
 }

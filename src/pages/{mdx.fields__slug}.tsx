@@ -23,6 +23,12 @@ import ShareButtonWrapper from "../components/articles/share-button-wrapper";
 import SideBar from "../components/articles/sidebar";
 import { getPreviousAndNext } from "../hooks/use-article-list";
 
+const formatOptions: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
+
 const ArticlePage: React.FC<ArticlePageProps> = (props) => {
   const location = useLocation();
   const fb_share = React.useRef<HTMLButtonElement>(null);
@@ -33,6 +39,9 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
   const hasHeroImageCredits =
     props.data.mdx.frontmatter?.hero_image_credit_text ||
     props.data.mdx.frontmatter?.hero_image_credit_link;
+  const publishDate = new Date(
+    props.data.mdx.frontmatter?.date!
+  ).toLocaleString("en-US", formatOptions);
 
   return (
     <Layout showScrollProgress={true}>
@@ -89,7 +98,7 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
             <div className="inline-flex item-center justify-between w-full text-gray-500 dark:text-gray-400 article-header-info">
               <div className="inline-flex items-center article-header-info-time">
                 <ClockIcon />
-                <span>{props.data.mdx.frontmatter?.date}</span>
+                <span>{publishDate}</span>
                 &nbsp;&nbsp;
                 <strong>·</strong>
                 &nbsp;&nbsp;
@@ -154,6 +163,11 @@ type ArticlePageProps = {
 export const query = graphql`
   query ($id: String) {
     mdx(id: { eq: $id }) {
+      parent {
+        ... on File {
+          modifiedTime
+        }
+      }
       fields {
         timeToRead {
           text
@@ -172,23 +186,24 @@ export const query = graphql`
         hero_image_credit_text
         hero_image_credit_link
         keywords
-        date(formatString: "MMMM D, YYYY")
+        date(formatString: "YYYY-MM-DDTHH:mm:ss.SSS\\Z")
         tags
       }
     }
   }
 `;
 
-export const Head: React.FC<ArticlePageProps> = ({ data }) => {
+export const Head: React.FC<ArticlePageProps> = ({ data, ...rest }) => {
   return (
     <SEO
       title={`${data.mdx.frontmatter?.title!} | Rishi's blog`}
       description={data.mdx.frontmatter?.description!}
       keywords={data.mdx.frontmatter?.keywords!}
       image={data.mdx.frontmatter?.hero_image?.publicURL!}
+      articleData={data.mdx}
       // NOTE: Include this in mdx metadata?
       // value reference: https://schema.org/CreativeWork
-      type="BlogPosting"
+      type="NewsArticle"
     />
   );
 };

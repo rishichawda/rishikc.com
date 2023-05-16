@@ -128,7 +128,6 @@ export const Head = () => (
   <SEO
     title="Articles - rishikc.com"
     description="Welcome to my blog for quick reads to detailed articles on technology, development, science and everything in between."
-    type="BlogPosting"
   />
 );
 

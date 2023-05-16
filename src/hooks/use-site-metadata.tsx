@@ -17,6 +17,13 @@ export const useSiteMetadata = () => {
             card
             creator
           }
+          schema {
+            author {
+              name
+              url
+              sameAs
+            }
+          }
         }
       }
     }
