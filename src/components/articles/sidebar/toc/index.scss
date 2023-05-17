@@ -1,0 +1,13 @@
+nav.table-of-contents {
+  padding: var(--space-s);
+  & > h2 {
+    margin-bottom: var(--space-s);
+  }
+  ul > li {
+    margin-left: var(--space-xs);
+    margin-bottom: var(--space-xs);
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+}

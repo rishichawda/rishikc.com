@@ -94,29 +94,25 @@ const ArticlesListPage: React.FC = () => {
             </h1>
             <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           </div>
-          <React.Suspense>
-            <div className="article-list-search-info">
-              <LazyMotion features={domMax}>
-                <m.span className="flex flex-wrap items-center w-full sm:w-2/3 article-list-search-info-tags">
-                  <p className="m-0">
-                    Popular tags &nbsp;
-                    <button
-                      className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700 cursor-pointer show-all-button"
-                      onClick={toggleTags}
-                    >
-                      (show all)
-                    </button>
-                    &nbsp;:&nbsp;
-                  </p>
-                  {renderTags()}
-                </m.span>
-              </LazyMotion>
-            </div>
-          </React.Suspense>
+          <div className="article-list-search-info">
+            <LazyMotion features={domMax}>
+              <m.span className="flex flex-wrap items-center w-full sm:w-2/3 article-list-search-info-tags">
+                <p className="m-0">
+                  Popular tags &nbsp;
+                  <button
+                    className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700 cursor-pointer show-all-button"
+                    onClick={toggleTags}
+                  >
+                    (show all)
+                  </button>
+                  &nbsp;:&nbsp;
+                </p>
+                {renderTags()}
+              </m.span>
+            </LazyMotion>
+          </div>
           <section>
-            <React.Suspense>
-              <ArticlesList items={filteredResults} onTagClick={onTagClick} />
-            </React.Suspense>
+            <ArticlesList items={filteredResults} onTagClick={onTagClick} />
           </section>
         </main>
       </div>

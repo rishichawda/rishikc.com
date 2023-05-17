@@ -22,6 +22,7 @@ import ClockIcon from "../components/icons/clock";
 import ShareButtonWrapper from "../components/articles/share-button-wrapper";
 import SideBar from "../components/articles/sidebar";
 import { getPreviousAndNext } from "../hooks/use-article-list";
+import TableOfContents from "../components/articles/sidebar/toc";
 
 const formatOptions: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -46,7 +47,10 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
   return (
     <Layout showScrollProgress={true}>
       <main className="root-container flex flex-row article-page">
-        <SideBar edge={edge!} />
+        <SideBar
+          tableData={props.data.mdx.tableOfContents?.items as []}
+          edge={edge!}
+        />
         <article className="article-content-page-container">
           <div className="flex flex-col items-center sm:items-start article-header">
             <figure>
@@ -168,6 +172,7 @@ export const query = graphql`
           modifiedTime
         }
       }
+      tableOfContents
       fields {
         timeToRead {
           text

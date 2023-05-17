@@ -25,10 +25,6 @@
     padding: 0 var(--space-3xs);
   }
 
-  h2 {
-    font-size: var(--step-2);
-  }
-
   &-item {
     will-change: transform;
     transition: transform 0.2s ease-in-out;

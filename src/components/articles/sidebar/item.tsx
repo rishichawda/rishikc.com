@@ -8,8 +8,8 @@ type Props = {
 };
 
 const SideBarItem = (props: Props) => {
-  const classNames = `flex-1 ml-3 whitespace-nowrap overflow-hidden text-ellipsis${
-    props.to.startsWith("/articles/") ? " italic" : " not-italic"
+  const classNames = `flex-1 ml-3 ${
+    props.to.startsWith("/articles/") ? "not-italic" : " not-italic"
   }`;
   return (
     <li aria-label={props.label} role="listitem">
