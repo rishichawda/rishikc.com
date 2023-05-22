@@ -27,9 +27,9 @@ const ReadsPage = (props: Props) => {
     <Layout>
       <div className="root-container">
         <main className="flex flex-col items-start reads-page-container">
-          <h2 className="antialiased dark:text-gray-200">
+          <h1 className="antialiased dark:text-gray-200">
             Some lines I loved reading&nbsp;.&nbsp;.
-          </h2>
+          </h1>
           <LazyMotion features={domMax}>
             <m.ul className="grid grid-cols-2 gap-7 reads-list">
               {shuffledData.map((r: ReadInfo, index: number) => (
