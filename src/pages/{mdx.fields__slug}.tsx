@@ -23,6 +23,7 @@ import ShareButtonWrapper from "../components/articles/share-button-wrapper";
 import SideBar from "../components/articles/sidebar";
 import { getPreviousAndNext } from "../hooks/use-article-list";
 import TableOfContents from "../components/articles/sidebar/toc";
+import { useSiteMetadata } from "../hooks/use-site-metadata";
 
 const formatOptions: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -32,6 +33,7 @@ const formatOptions: Intl.DateTimeFormatOptions = {
 
 const ArticlePage: React.FC<ArticlePageProps> = (props) => {
   const location = useLocation();
+  const siteMeta = useSiteMetadata();
   const fb_share = React.useRef<HTMLButtonElement>(null);
   const linkedin_share = React.useRef<HTMLButtonElement>(null);
   const twitter_share = React.useRef<HTMLButtonElement>(null);
@@ -43,6 +45,17 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
   const publishDate = new Date(
     props.data.mdx.frontmatter?.date!
   ).toLocaleString("en-US", formatOptions);
+
+  const shouldFollow =
+    props.data.mdx.frontmatter?.hero_image_credit_link &&
+    props.data.mdx.frontmatter?.hero_image_credit_link!.includes(
+      siteMeta.siteUrl!
+    );
+
+  const creditImageProps = {
+    target: shouldFollow ? undefined : "_blank",
+    rel: shouldFollow ? undefined : "nofollow noopener noreferrer",
+  };
 
   return (
     <Layout showScrollProgress={true}>
@@ -76,8 +89,7 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
                         href={
                           props.data.mdx.frontmatter?.hero_image_credit_link
                         }
-                        target="_blank"
-                        rel="nofollow noopener noreferrer"
+                        {...creditImageProps}
                       >
                         {props.data.mdx.frontmatter?.hero_image_credit_link}
                       </OutboundLink>
