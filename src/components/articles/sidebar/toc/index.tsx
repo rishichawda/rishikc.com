@@ -15,7 +15,9 @@ const TableOfContents: React.FC<Props> = (props: Props) => {
         <h2>Table of Contents</h2>
         <ul className="pt-1 font-medium list-disc">
           {listItems.map((item) => {
-            return <TOCItem to={item.url} label={item.title} />;
+            return (
+              <TOCItem key={item.title} to={item.url} label={item.title} />
+            );
           })}
         </ul>
       </nav>
