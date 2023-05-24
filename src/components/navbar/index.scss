@@ -8,7 +8,7 @@ body.dark nav.navigation-bar > div > .brand > svg {
 .navigation-bar {
   display: flex;
   flex-direction: row;
-  padding: 0 var(--space-2xs-xs);
+  padding: var(--space-3xs-2xs) var(--space-2xs-xs);
 
   & > div:not(.progress-bar) {
     width: 100%;
