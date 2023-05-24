@@ -34,3 +34,20 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+div#bmc-wbtn,
+div#bmc-close-btn {
+  height: var(--space-2xl) !important;
+  width: var(--space-2xl) !important;
+  background-color: #576cbc !important;
+
+  & > img {
+    height: 60% !important;
+    width: auto !important;
+  }
+
+  & > svg {
+    width: 35% !important;
+    height: auto !important;
+  }
+}
