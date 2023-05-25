@@ -9,5 +9,6 @@ footer {
     @apply focus-within:outline-dotted;
     @apply focus-within:outline-2;
     @apply focus-within:outline-brand-700;
+    @apply transition-all;
   }
 }

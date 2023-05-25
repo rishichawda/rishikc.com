@@ -15,7 +15,7 @@ const SideBarItem = (props: Props) => {
     <li aria-label={props.label} role="listitem">
       <Link
         role="listitem"
-        className="flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none"
+        className="flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none transition-all"
         to={props.to}
       >
         {props.icon}
