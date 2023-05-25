@@ -10,12 +10,20 @@
   @include rounded-container;
 }
 
+#about {
+  scroll-margin-top: 7rem;
+}
+
 .about {
   margin-bottom: var(--space-2xl-3xl);
 
   h1 {
     font-size: var(--step-4);
     margin-bottom: var(--space-m-l);
+  }
+
+  h2 {
+    font-size: var(--step-3);
   }
 
   p {
