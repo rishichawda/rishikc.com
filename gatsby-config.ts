@@ -14,7 +14,9 @@ const twConfig = resolveConfig(tailwindConfig)
 const config: GatsbyConfig = {
   siteMetadata: siteMetadata,
   flags: {
-    DEV_SSR: true,
+    // Disabling DEV_SSR since it is troublesome right now.
+    // https://github.com/gatsbyjs/gatsby/discussions/28138
+    // DEV_SSR: true,
     PRESERVE_FILE_DOWNLOAD_CACHE: true,
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
