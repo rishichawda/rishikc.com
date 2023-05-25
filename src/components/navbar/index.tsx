@@ -7,6 +7,7 @@ import { useSiteMetadata } from "../../hooks/use-site-metadata";
 import Logo from "../logo";
 import ScrollProgress from "./scrollProgress";
 import ThemeToggle from "../themeToggle";
+import NavbarMenu from "./navbarMenu";
 
 type NavbarProps = {
   showScrollProgress?: boolean;
@@ -19,7 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({ showScrollProgress }) => {
       className="flex flex-col sticky top-0 items-center justify-center bg-gray-50 dark:bg-slate-800 dark:text-gray-200 navigation-bar z-10"
       aria-label={siteMetadata.title!}
     >
-      <div className="flex flex-row items-center justify-between">
+      <div className="max-w-screen-xl flex flex-wrap flex-row items-center justify-between">
         <Link
           aria-label="Click on this website logo image to navigate to the home page."
           to="/"
@@ -27,11 +28,14 @@ const Navbar: React.FC<NavbarProps> = ({ showScrollProgress }) => {
         >
           <Logo />
         </Link>
-        <ul role="menubar">
-          <li aria-label="Theme toggle button" role="menuitem">
-            <ThemeToggle />
-          </li>
-        </ul>
+        <div className="flex flex-row items-center md:flex-row-reverse">
+          <ul role="menubar">
+            <li aria-label="Theme toggle button" role="menuitem">
+              <ThemeToggle />
+            </li>
+          </ul>
+          <NavbarMenu />
+        </div>
       </div>
       {showScrollProgress ? <ScrollProgress /> : null}
     </nav>

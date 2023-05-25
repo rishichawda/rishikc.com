@@ -57,3 +57,16 @@ body.dark nav.navigation-bar > div > .brand > svg {
     z-index: 10;
   }
 }
+
+.nav-menu-container {
+  padding: var(--space-xs-s) var(--space-s-m);
+}
+
+.nav-menu-container.vertical {
+  top: 100%;
+  left: 0;
+  right: 0;
+  & > div {
+    margin: var(--space-3xs-2xs) 0;
+  }
+}
