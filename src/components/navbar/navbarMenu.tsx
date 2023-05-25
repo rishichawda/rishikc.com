@@ -35,38 +35,30 @@ const NavbarMenu = (props: Props) => {
         </svg>
       </div>
       <motion.nav layout="size" className={classNames}>
-        <div className="transition-all flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:cursor-pointer hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none">
-          <a
-            href="/#about"
-            className="text-base leading-6 hover:text-brand-800"
-          >
-            About
-          </a>
-        </div>
-        <div className="transition-all flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:cursor-pointer hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none">
-          <Link
-            to="/articles"
-            className="text-base leading-6 hover:text-brand-800"
-          >
-            Blog
-          </Link>
-        </div>
-        <div className="transition-all flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:cursor-pointer hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none">
-          <a
-            href="/#repositories"
-            className="text-base leading-6 hover:text-brand-800"
-          >
-            Projects
-          </a>
-        </div>
-        <div className="transition-all flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:cursor-pointer hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none">
-          <Link
-            to="/contact"
-            className="text-base leading-6 hover:text-brand-800"
-          >
-            Contact
-          </Link>
-        </div>
+        <Link
+          to="/#about"
+          className="text-base leading-6 transition-all flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:cursor-pointer hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none"
+        >
+          About
+        </Link>
+        <Link
+          to="/articles"
+          className="text-base leading-6 transition-all flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:cursor-pointer hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none"
+        >
+          Blog
+        </Link>
+        <Link
+          to="/#repositories"
+          className="text-base leading-6 transition-all flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:cursor-pointer hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none"
+        >
+          Projects
+        </Link>
+        <Link
+          to="/contact"
+          className="text-base leading-6 transition-all flex items-center p-2 rounded-lg text-slate-600 hover:text-gray-50 dark:text-gray-200 hover:cursor-pointer hover:bg-brand-500 dark:hover:bg-brand-800 focus:bg-brand-500 dark:focus:bg-brand-800 focus:text-gray-50 dark:focus:text-gray-200 outline-none"
+        >
+          Contact
+        </Link>
       </motion.nav>
       <motion.nav
         layout="size"
