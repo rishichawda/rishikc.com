@@ -1131,10 +1131,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@fontsource/montserrat@^5.0.1":
+"@fontsource/open-sans@^5.0.1":
   version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@fontsource/montserrat/-/montserrat-5.0.1.tgz#d0b0717d6c9d07fc7745e931611d358490a87222"
-  integrity sha512-Yv4V06evMh9ido3wsA9Z89pbINPXaWBAYTuOsNAuWLcKuy78b4WYIW3U3/WAcRSb0USP8dhQyy8DkSYVlHEeuw==
+  resolved "https://registry.yarnpkg.com/@fontsource/open-sans/-/open-sans-5.0.1.tgz#01123a667858f631059cafa6aa0b3d043c5fd6e1"
+  integrity sha512-lhgNXJDMmNzd0U02+xNRuBOyELZ0ZBOBLXcrX3ta5ccpUTZoL0XR0c4WkGh4Jow4yi7I1O8Cp6Nddc5p6XM7Eg==
 
 "@gatsbyjs/parcel-namer-relative-to-cwd@^2.10.0":
   version "2.10.0"
