@@ -17,7 +17,7 @@ const ArticlePreview = () => {
             }
           }
           id
-          excerpt
+          excerpt(pruneLength: 340)
           frontmatter {
             subtitle
             date(formatString: "Do MMMM, YYYY")
