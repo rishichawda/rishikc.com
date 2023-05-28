@@ -2,7 +2,7 @@ const siteMetadata: Record<string, unknown> = {
   title: `Rishi Kumar Chawda | Portfolio and Blog`,
   siteUrl: `https://rishikc.com`,
   description: `I write code that runs on your browsers, phones, and desktops. Experienced in building websites, mobile applications, DevSecOps tools, and more. `,
-  keywords: "software, engineer, freelance, web, mobile, applications",
+  keywords: "web developer,websites,app dev,software,engineer,freelancer,applications",
   og: {
     type: "website"
   },

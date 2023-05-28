@@ -123,7 +123,8 @@ const ArticlesListPage: React.FC = () => {
 export const Head = () => (
   <SEO
     title="Articles - rishikc.com"
-    description="Welcome to my blog for quick reads to detailed articles on technology, development, science and everything in between."
+    description="Welcome to my blog for quick reads to articles on technology, science, life, and everything in between."
+    keywords="react js,react website,blog,react javascript,online article"
   />
 );
 
