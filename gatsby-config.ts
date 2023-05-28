@@ -149,14 +149,15 @@ const config: GatsbyConfig = {
               noInlineHighlight: true,
             }
           },
-          {
-            resolve: `gatsby-plugin-canonical-urls`,
-            options: {
-              siteUrl: siteMetadata.siteUrl,
-            },
-          },
         ],
       }
+    },
+    {
+      resolve: `gatsby-plugin-canonical-urls`,
+      options: {
+        siteUrl: siteMetadata.siteUrl,
+        stripQueryString: true,
+      },
     },
     {
       resolve: 'gatsby-plugin-local-search',
