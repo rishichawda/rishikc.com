@@ -6,4 +6,4 @@ import './src/stylesheets/scales/type.scss';
 
 // Reload the page when updates are found so that new changes are
 // visible without manual page refresh.
-exports.onServiceWorkerUpdateReady = () => window.location.reload();
+export const onServiceWorkerUpdateReady = () => window.location.reload();
