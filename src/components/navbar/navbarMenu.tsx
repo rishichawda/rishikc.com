@@ -13,7 +13,7 @@ const NavbarMenu = (props: Props) => {
   };
 
   const classNames = `md:hidden nav-menu-container flex bg-gray-50 dark:bg-slate-800 dark:text-gray-200 vertical flex-col absolute w-full z-10${
-    showVerticalNavItems ? "" : " h-0 p-0 overflow-hidden"
+    showVerticalNavItems ? "" : " h-0 overflow-hidden"
   }`;
 
   return (

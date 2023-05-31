@@ -69,4 +69,7 @@ body.dark nav.navigation-bar > div > .brand > svg {
   & > a {
     margin: var(--space-3xs-2xs) 0;
   }
+  &.h-0.overflow-hidden {
+    padding: 0 !important;
+  }
 }
