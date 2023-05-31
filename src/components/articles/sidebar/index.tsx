@@ -1,13 +1,14 @@
+import "./index.scss";
+
 import { Link } from "gatsby";
 import React from "react";
 
-import "./index.scss";
-import SideBarItem from "./item";
+import FavoriteIcon from "../../icons/favorite";
 import HomeIcon from "../../icons/home";
 import ListIcon from "../../icons/list";
-import FavoriteIcon from "../../icons/favorite";
-import ArticleIcon from "../../icons/article";
 import SendIcon from "../../icons/send";
+import ArticleSuggestionCard from "./card";
+import SideBarItem from "./item";
 import TableOfContents from "./toc";
 
 type Props = {
@@ -31,23 +32,15 @@ const SideBar = (props: Props) => {
       {props.tableData?.length ? (
         <TableOfContents data={props.tableData} />
       ) : null}
-      <ul className="pt-1 font-medium border-t border-gray-200 dark:border-gray-700">
+      <ul className="pt-1 font-medium border-t border-gray-200 dark:border-gray-700 suggestion-list">
         <li className="font-medium uppercase text-sm px-2 py-2 rounded-sm dark:bg-slate-800 bg-slate-100 mb-4">
           continue reading
         </li>
         {props.edge?.previous ? (
-          <SideBarItem
-            to={props.edge.previous.fields?.slug!}
-            label={props.edge.previous.frontmatter?.title!}
-            icon={<ArticleIcon />}
-          />
+          <ArticleSuggestionCard data={props.edge.previous} />
         ) : null}
         {props.edge?.next ? (
-          <SideBarItem
-            to={props.edge.next.fields?.slug!}
-            label={props.edge.next.frontmatter?.title!}
-            icon={<ArticleIcon />}
-          />
+          <ArticleSuggestionCard data={props.edge.next} />
         ) : null}
       </ul>
     </aside>

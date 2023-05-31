@@ -10,19 +10,19 @@ import {
   LinkedinShareButton,
   TwitterShareButton,
 } from "react-share";
+
 import { useLocation } from "@reach/router";
 
+import ShareButtonWrapper from "../components/articles/share-button-wrapper";
+import SideBar from "../components/articles/sidebar";
+import ClockIcon from "../components/icons/clock";
+import FacebookIcon from "../components/icons/facebook";
+import LinkedinIcon from "../components/icons/linkedin";
+import TwitterIcon from "../components/icons/twitter";
 import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Tag from "../components/tag";
-import LinkedinIcon from "../components/icons/linkedin";
-import FacebookIcon from "../components/icons/facebook";
-import TwitterIcon from "../components/icons/twitter";
-import ClockIcon from "../components/icons/clock";
-import ShareButtonWrapper from "../components/articles/share-button-wrapper";
-import SideBar from "../components/articles/sidebar";
 import { getPreviousAndNext } from "../hooks/use-article-list";
-import TableOfContents from "../components/articles/sidebar/toc";
 import { useSiteMetadata } from "../hooks/use-site-metadata";
 
 const formatOptions: Intl.DateTimeFormatOptions = {

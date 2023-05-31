@@ -1,6 +1,8 @@
 aside.sidebar {
   font-size: var(--step-1);
   visibility: hidden;
+  overflow-y: scroll;
+  max-height: 100vh;
   width: 0px;
   @media (min-width: 970px) {
     visibility: visible;
@@ -10,5 +12,47 @@ aside.sidebar {
   height: max-content;
   & > ul {
     margin-bottom: var(--space-s);
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.suggestion-list {
+  padding-bottom: 25vh; // A little hack to keep the max visibility on scroll
+  display: grid;
+  gap: var(--space-xs);
+  &-item {
+    will-change: transform;
+    transition: transform 0.2s ease-in-out;
+    &:hover,
+    &:focus-within {
+      transform: scale(0.97);
+    }
+
+    & > div {
+      border-radius: var(--space-2xs-xs);
+    }
+
+    &-title {
+      font-size: var(--step-2);
+      padding-right: var(--space-m);
+      margin: var(--space-2xs-xs) 0 !important;
+      margin-top: 0 !important;
+      width: 100%;
+      font-weight: 400;
+    }
+
+    &-details {
+      font-size: var(--step-1);
+      line-height: 1.9;
+      margin-top: var(--space-2xs);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 7;
+      overflow: hidden;
+    }
   }
 }

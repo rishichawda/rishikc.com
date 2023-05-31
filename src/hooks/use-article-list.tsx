@@ -29,11 +29,13 @@ export const useArticleList = () => {
             frontmatter {
               title
             }
+            excerpt(pruneLength: 340)
             fields {
               slug
             }
           }
           next {
+            excerpt(pruneLength: 340)
             frontmatter {
               title
             }
