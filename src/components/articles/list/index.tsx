@@ -41,7 +41,7 @@ const ArticlesList = (props: ArticlesListProps) => {
         animate="animate"
         exit="exit"
         variants={variantA}
-        className="article-list"
+        className="h-feed article-list"
         role="list"
       >
         {props.items.length ? (
@@ -49,17 +49,15 @@ const ArticlesList = (props: ArticlesListProps) => {
             <m.li
               variants={variantB}
               layout
-              className="block focus-within:bg-gray-300 dark:focus-within:bg-slate-900 article-list-item"
+              className="h-entry"
               role="listitem"
               key={node.id}
             >
-              <Link className="focus:outline-none" to={node.fields?.slug!}>
-                <div className="flex flex-col items-start md:justify-between md:items-center md:flex-row article-list-item-header">
-                  <div className="article-list-item-header-content">
-                    <h2 className="article-list-item-header-content-title">
-                      {node.frontmatter?.title}
-                    </h2>
-                    <span className="article-list-item-header-content-tags">
+              <Link className="u-url" to={node.fields?.slug!}>
+                <div className="h-entry-header">
+                  <div>
+                    <h2 className="p-name">{node.frontmatter?.title}</h2>
+                    <span className="tags">
                       {node.frontmatter?.tags?.map((tag) => (
                         <Tag
                           key={tag}
@@ -73,15 +71,17 @@ const ArticlesList = (props: ArticlesListProps) => {
                       ))}
                     </span>
                   </div>
-                  <span className="dark:bg-slate-600 whitespace-nowrap article-list-item-header-info">
-                    <span>{node.frontmatter?.date}</span>
+                  <span className="h-entry-header-info">
+                    <span className="dt-published">
+                      {node.frontmatter?.date}
+                    </span>
                     &nbsp;&nbsp;
                     <strong>·</strong>
                     &nbsp;&nbsp;
                     <span>{node.fields?.timeToRead?.text}</span>
                   </span>
                 </div>
-                <p className="article-list-item-details">{node.excerpt}</p>
+                <p className="p-summary">{node.excerpt}</p>
               </Link>
             </m.li>
           ))

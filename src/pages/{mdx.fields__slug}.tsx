@@ -59,16 +59,16 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
 
   return (
     <Layout showScrollProgress={true}>
-      <main className="root-container flex flex-row article-page">
+      <main className="root-container article-page">
         <SideBar
           tableData={props.data.mdx.tableOfContents?.items as []}
           edge={edge!}
         />
-        <article className="article-content-page-container">
+        <article className="h-entry">
           <div className="flex flex-col items-center sm:items-start article-header">
             <figure>
               <GatsbyImage
-                className="article-header-hero-image w-full h-auto rounded-md dark:brightness-50"
+                className="u-photo"
                 alt={
                   props.data.mdx.frontmatter?.hero_image_alt ||
                   `banner_for_${props.data.mdx.fields?.slug}`
@@ -98,29 +98,25 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
                 </figcaption>
               ) : null}
             </figure>
-            <h1 className="text-center sm:text-left article-header-title">
-              {props.data.mdx.frontmatter?.title}
-            </h1>
-            <h2 className="text-center sm:text-left article-header-subtitle">
-              {props.data.mdx.frontmatter?.subtitle}
-            </h2>
-            <span className="flex flex-wrap items-center justify-center article-header-tags">
+            <h1 className="p-name">{props.data.mdx.frontmatter?.title}</h1>
+            <h2 className="subtitle">{props.data.mdx.frontmatter?.subtitle}</h2>
+            <span className="tags">
               {props.data.mdx.frontmatter?.tags?.map((tag) => (
                 <span key={tag}>
                   <Tag focusable={false}>{tag}</Tag>
                 </span>
               ))}
             </span>
-            <div className="inline-flex item-center justify-between w-full text-gray-500 dark:text-gray-400 article-header-info">
-              <div className="inline-flex items-center article-header-info-time">
+            <div className="info">
+              <div className="time">
                 <ClockIcon />
-                <span>{publishDate}</span>
+                <span className="dt-published">{publishDate}</span>
                 &nbsp;&nbsp;
                 <strong>·</strong>
                 &nbsp;&nbsp;
                 <span>{props.data.mdx.fields?.timeToRead?.text}</span>
               </div>
-              <div className="inline-flex flex-row items-center article-header-info-share">
+              <div className="share">
                 <ShareButtonWrapper shareRef={fb_share}>
                   <FacebookShareButton
                     url={location.href}
@@ -159,7 +155,7 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
               </div>
             </div>
           </div>
-          <section className="flex flex-col" itemProp="articleBody">
+          <section className="e-content" itemProp="articleBody">
             {props.children}
           </section>
         </article>

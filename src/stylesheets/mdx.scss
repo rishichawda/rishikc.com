@@ -1,24 +1,25 @@
 @import "mixins.scss";
 
 main.article-page {
+  @apply flex flex-row;
   @include rounded-container;
   margin-left: auto;
   margin-right: auto;
   position: relative;
-}
-
-article.article-content-page-container {
-  margin-left: var(--space-2xs);
-  max-width: 800px;
-  width: 100%;
-  overflow-x: hidden;
-  padding: 0 var(--space-3xs-m);
-  @media (max-width: 970px) {
-    margin: auto;
+  article.h-entry {
+    margin-left: var(--space-2xs);
+    max-width: 800px;
+    width: 100%;
+    overflow-x: hidden;
+    padding: 0 var(--space-3xs-m);
+    @media (max-width: 970px) {
+      margin: auto;
+    }
   }
 }
 
 section[itemprop="articleBody"] {
+  @apply flex flex-col;
   font-size: var(--step-1);
   line-height: 1.9;
 
@@ -152,6 +153,9 @@ section[itemprop="articleBody"] {
     font-size: var(--step--1);
     text-align: center;
     width: 100%;
+    .u-photo {
+      @apply article-header-hero-image w-full h-auto rounded-md dark:brightness-50;
+    }
     a {
       border-bottom-width: 1px;
       padding-bottom: 1px;
@@ -165,40 +169,44 @@ section[itemprop="articleBody"] {
     }
   }
 
-  &-title {
+  .p-name {
+    @apply text-center sm:text-left;
     width: 100%;
     font-weight: 400;
     margin: 0;
     font-size: var(--step-4);
-  }
 
-  &-subtitle {
-    width: 100%;
-    font-size: var(--step-2);
-    margin: 0;
-  }
+    + h2.subtitle {
+      @apply text-center sm:text-left;
+      width: 100%;
+      font-size: var(--step-2);
+      margin: 0;
+    }
 
-  &-tags {
-    margin: var(--space-2xs-xs) 0;
-
-    & > span {
-      padding: var(--space-3xs) 2.5px;
+    ~ span.tags {
+      @apply flex flex-wrap items-center justify-center;
+      margin: var(--space-2xs-xs) 0;
+      & > span {
+        padding: var(--space-3xs) 2.5px;
+      }
     }
   }
 
-  &-info {
-    border-width: thin;
-    border-left: none;
-    border-right: none;
+  & > .info {
+    @apply inline-flex items-center justify-between w-full text-gray-500 dark:text-gray-400;
     @apply border-gray-500;
     margin-top: var(--space-3xs-m);
     padding: var(--space-xs) 0;
 
-    &-time {
+    & .time {
+      @apply inline-flex items-center;
       font-size: var(--step-0);
     }
-    &-share {
-      &-button {
+
+    & > .share {
+      @apply inline-flex flex-row items-center;
+      & > .share-button {
+        @apply transition-all inline-flex items-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg shadow-sm hover:bg-gray-100 hover:text-brand-800 dark:bg-gray-800 dark:text-gray-400 dark:border-slate-700 dark:border dark:hover:text-white dark:hover:bg-gray-700 focus:bg-gray-200 dark:focus:bg-gray-700 focus:text-brand-800 dark:focus:text-white hover:cursor-pointer;
         height: var(--space-l);
         padding: 0 var(--space-2xs-xs);
         margin-left: var(--space-2xs);

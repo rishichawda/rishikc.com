@@ -10,7 +10,7 @@ type Props = {};
 function ContactPage({}: Props) {
   return (
     <Layout>
-      <main className="flex items-center justify-center contact-page-container">
+      <main className="contact-container">
         <Contact />
       </main>
     </Layout>

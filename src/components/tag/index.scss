@@ -1,12 +1,16 @@
 @import "../../stylesheets/colors.scss";
 
 button.tag-pill {
+  @apply focus:outline-1 focus:outline-brand-300 focus:outline-dashed overflow-hidden;
   font-size: var(--step-0);
   margin-right: var(--space-3xs);
   padding: var(--space-3xs) var(--space-2xs);
   border-radius: var(--space-3xs);
   background-color: $selection-color;
   white-space: nowrap;
+  &.nof {
+    @apply focus:outline-0 cursor-default;
+  }
 
   &:last-of-type {
     margin-right: 0;

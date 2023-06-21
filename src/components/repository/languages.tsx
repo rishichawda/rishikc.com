@@ -6,7 +6,7 @@ type Props = {
 
 const Languages = ({ languages }: Props) => {
   return (
-    <div className="w-full flex github-repo-card-languages">
+    <div className="repo-langs">
       {languages?.edges?.map(
         (node: Queries.Maybe<Queries.GitHub_LanguageEdge>) => {
           const n = node as Queries.GitHub_LanguageEdge;
@@ -16,7 +16,6 @@ const Languages = ({ languages }: Props) => {
           return (
             <dfn
               key={n.node.name}
-              className="h-full"
               title={`${n.node.name}, ${percentage}`}
               style={{
                 backgroundColor: n.node.color!,
@@ -24,7 +23,6 @@ const Languages = ({ languages }: Props) => {
               }}
             >
               <div
-                className="h-full w-full"
                 style={{ backgroundColor: n.node.color!, width: percentage }}
               ></div>
             </dfn>

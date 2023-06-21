@@ -18,8 +18,8 @@ type Props = {
 
 const SideBar = (props: Props) => {
   return (
-    <aside className="flex flex-col sticky top-28 w-56 rounded-lg overflow-hidden sidebar">
-      <ul role="list" className="space-y-2 font-medium">
+    <aside className="sidebar">
+      <ul role="list">
         <SideBarItem to="/" label="Home" icon={<HomeIcon />} />
         <SideBarItem to="/articles" label="All Articles" icon={<ListIcon />} />
         <SideBarItem
@@ -32,10 +32,8 @@ const SideBar = (props: Props) => {
       {props.tableData?.length ? (
         <TableOfContents data={props.tableData} />
       ) : null}
-      <ul className="pt-1 font-medium border-t border-gray-200 dark:border-gray-700 suggestion-list">
-        <li className="font-medium uppercase text-sm px-2 py-2 rounded-sm dark:bg-slate-800 bg-slate-100 mb-4">
-          continue reading
-        </li>
+      <ul className="suggestion-list">
+        <li>continue reading</li>
         {props.edge?.previous ? (
           <ArticleSuggestionCard data={props.edge.previous} />
         ) : null}

@@ -6,7 +6,7 @@ const useInstagramNodes = () => {
   // Also improves page load time.
   const data = useStaticQuery(graphql`
     query GalleryQuery {
-      allInstaNode(
+      allInstagramNode(
         limit: 12
         filter: {
           mediaType: { eq: "GraphImage" }
@@ -29,7 +29,7 @@ const useInstagramNodes = () => {
     }
   `);
 
-  return data.allInstaNode.edges;
+  return data.allInstagramNode.edges;
 };
 
 export default useInstagramNodes;

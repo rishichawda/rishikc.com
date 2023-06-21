@@ -26,33 +26,28 @@ const ReadsPage = (props: Props) => {
   return (
     <Layout>
       <div className="root-container">
-        <main className="flex flex-col items-start reads-page-container">
-          <h1 className="antialiased dark:text-gray-200">
-            Some lines I loved reading&nbsp;.&nbsp;.
-          </h1>
+        <main className="reads-container">
+          <h1>Some lines I loved reading&nbsp;.&nbsp;.</h1>
           <LazyMotion features={domMax}>
-            <m.ul className="grid grid-cols-2 gap-7 reads-list">
+            <m.ul className="reads-list">
               {shuffledData.map((r: ReadInfo, index: number) => (
                 <m.li
                   layout={index == 0 ? false : "preserve-aspect"}
                   key={r.quote}
-                  className="flex flex-col items-center justify-around reads-list-item"
+                  className="reads-list-item"
                 >
-                  <figure
-                    key={index}
-                    className="flex flex-col items-stretch justify-around text-center"
-                  >
-                    <blockquote className="max-w-2xl mx-auto self-start reads-list-item-quote">
+                  <figure key={index}>
+                    <blockquote className="reads-list-item-quote">
                       <p>{r.quote}</p>
                     </blockquote>
-                    <figcaption className="flex items-center justify-center text-gray-600 dark:text-gray-300 reads-list-item-info">
+                    <figcaption className="reads-list-item-info">
                       {r.info}
                     </figcaption>
                   </figure>
                   {index == 0 ? (
                     <div
                       aria-labelledby="shuffle-button-text"
-                      className="flex flex-row items-center cursor-pointer shuffle-button"
+                      className="shuffle-button"
                       onClick={shuffleArray}
                     >
                       <span>

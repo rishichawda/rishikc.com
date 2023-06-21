@@ -1,13 +1,26 @@
-nav.table-of-contents {
-  padding: var(--space-s);
-  & > h2 {
-    margin-bottom: var(--space-s);
-  }
-  ul > li {
-    margin-left: var(--space-xs);
-    margin-bottom: var(--space-xs);
-    &:last-of-type {
-      margin-bottom: 0;
+.table-of-contents {
+  @apply border-t border-gray-200 dark:border-gray-700 py-4;
+  & > nav {
+    @apply flex flex-col w-full rounded-lg overflow-hidden  dark:bg-slate-700 bg-slate-100;
+    padding: var(--space-s);
+    & > h2 {
+      margin-bottom: var(--space-s);
+    }
+    ul {
+      @apply pt-1 font-medium list-disc;
+      & > li {
+        margin-left: var(--space-xs);
+        margin-bottom: var(--space-xs);
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+        & > a {
+          @apply flex items-center rounded-lg text-slate-600 hover:text-brand-700 dark:text-gray-200 hover:dark:text-brand-700 focus:text-gray-50 dark:focus:text-gray-200 outline-none transition-all;
+          & > dfn {
+            @apply flex-1 not-italic;
+          }
+        }
+      }
     }
   }
 }

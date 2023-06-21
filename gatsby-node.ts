@@ -29,7 +29,7 @@ exports.onCreateNode = ({
   getNode
 }) => {
   const { createNodeField } = actions
-  if (node.internal.type === 'InstaNode') {
+  if (node.internal.type === 'InstagramNode') {
     createNodeField({
       node,
       name: 'visibility',

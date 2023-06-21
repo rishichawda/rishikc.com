@@ -139,12 +139,8 @@ const ContactForm = () => {
       );
     default:
       return (
-        <form
-          onSubmit={sendEmail}
-          ref={form}
-          className="text-slate-500 text-sm flex flex-col items-center w-full dark:text-gray-400"
-        >
-          <div className="w-full contact-page-section-form-input-container">
+        <form onSubmit={sendEmail} ref={form}>
+          <div className="contact-section-form-input-container">
             <label htmlFor="email-address-input" className="hide">
               Email
             </label>

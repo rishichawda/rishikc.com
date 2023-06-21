@@ -10,10 +10,10 @@ const TableOfContents: React.FC<Props> = (props: Props) => {
     return null;
   }
   return (
-    <div className="border-t border-gray-200 dark:border-gray-700 py-4">
-      <nav className="flex flex-col w-full rounded-lg overflow-hidden table-of-contents dark:bg-slate-700 bg-slate-100">
+    <div className="table-of-contents">
+      <nav>
         <h2>Table of Contents</h2>
-        <ul className="pt-1 font-medium list-disc">
+        <ul>
           {listItems.map((item) => {
             return (
               <TOCItem key={item.title} to={item.url} label={item.title} />

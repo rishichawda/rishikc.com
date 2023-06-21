@@ -28,21 +28,16 @@ const ArticlePreview = () => {
     }
   `);
   return (
-    <div className="flex flex-col mx-auto justify-between mb-28 article-preview">
-      <h2 className="antialiased article-preview-header">
-        Some of my writings&nbsp;.&nbsp;.
-      </h2>
+    <div className="h-feed article-preview">
+      <h2 className="p-name">Some of my writings&nbsp;.&nbsp;.</h2>
       <div className="mx-auto py-4">
-        <ul className="grid grid-cols-1 sm:grid-rows-1 md:grid-cols-3 grid-flow-row article-preview-list">
+        <ul>
           {data.allMdx.nodes.map((node: Queries.Mdx) => (
             <ArticlePreviewCard key={node.id} data={node} />
           ))}
         </ul>
       </div>
-      <Link
-        to="articles"
-        className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus:outline-dotted focus:outline-2 focus:outline-brand-700 antialiased self-center all-articles-link"
-      >
+      <Link to="articles" className="p-url">
         Browse the complete list
       </Link>
     </div>

@@ -16,11 +16,8 @@ type NavbarProps = {
 const Navbar: React.FC<NavbarProps> = ({ showScrollProgress }) => {
   const siteMetadata = useSiteMetadata();
   return (
-    <nav
-      className="flex flex-col sticky top-0 items-center justify-center bg-gray-50 dark:bg-slate-800 dark:text-gray-200 navigation-bar z-10"
-      aria-label={siteMetadata.title!}
-    >
-      <div className="max-w-screen-xl flex flex-wrap flex-row items-center justify-between">
+    <nav className="navbar" aria-label={siteMetadata.title!}>
+      <div>
         <Link
           aria-label="Click on this website logo image to navigate to the home page."
           to="/"
@@ -28,7 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({ showScrollProgress }) => {
         >
           <Logo />
         </Link>
-        <div className="flex flex-row items-center md:flex-row-reverse">
+        <div className="navbar-menu">
           <ul role="menubar">
             <li aria-label="Theme toggle button" role="menuitem">
               <ThemeToggle />

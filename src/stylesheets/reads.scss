@@ -1,17 +1,22 @@
 @import "../stylesheets/mixins.scss";
 
-.reads-page-container {
+.reads-container {
+  @apply flex flex-col items-start;
   min-height: 100vh;
   padding: var(--space-l-xl) var(--space-xs-l) !important;
   margin: var(--space-m-xl) var(--space-xs);
 
   & > h1 {
+    @apply antialiased dark:text-gray-200;
     font-size: var(--step-2);
     margin-bottom: var(--space-m-l);
   }
 
   .reads-list {
+    @apply grid grid-cols-2 gap-7;
+
     &-item {
+      @apply flex flex-col items-center justify-around;
       border-radius: var(--space-2xs-xs);
       padding: var(--space-s-m) var(--space-s-m);
       @apply dark:text-gray-200;
@@ -29,13 +34,19 @@
         @apply dark:bg-slate-700;
       }
 
+      & > figure {
+        @apply flex flex-col items-stretch justify-around text-center;
+      }
+
       &-quote {
+        @apply max-w-2xl mx-auto self-start;
         font-size: var(--step-1);
         line-height: 1.9;
         margin-bottom: var(--space-l-xl);
       }
 
       &-info {
+        @apply flex items-center justify-center text-gray-600 dark:text-gray-300;
         font-size: var(--step-0);
       }
 
@@ -46,21 +57,17 @@
       }
 
       div.shuffle-button {
+        @apply flex flex-row items-center cursor-pointer border-slate-500 dark:border-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700;
         border-width: 1px;
         border-radius: var(--space-2xs);
         padding: var(--space-3xs) var(--space-xs);
         font-size: var(--step-0);
-        @apply border-slate-500;
-        @apply dark:border-gray-400;
-        @apply hover:bg-gray-100;
-        @apply dark:hover:bg-slate-700;
         & > span {
           margin-right: var(--space-xs);
           display: inline-flex;
           height: var(--space-m-l);
           width: var(--space-m-l);
-          @apply dark:fill-gray-400;
-          @apply fill-slate-500;
+          @apply dark:fill-gray-400 fill-slate-500;
         }
       }
     }

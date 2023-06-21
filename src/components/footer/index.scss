@@ -1,9 +1,36 @@
 @import "../../stylesheets/mixins.scss";
 
 footer {
+  @apply dark:text-gray-200;
   padding: var(--space-s-m);
   font-size: var(--step-1);
   text-align: center;
+
+  & > div {
+    @apply max-w-screen-xl px-4 py-12 mx-auto space-y-8 overflow-hidden sm:px-6 lg:px-8;
+    & > nav {
+      @apply flex flex-wrap justify-center -mx-5 -my-2;
+      & > div {
+        @apply px-5 py-2;
+        & > a {
+          @apply text-base leading-6 hover:text-brand-800;
+        }
+      }
+    }
+    & > div {
+      @apply flex justify-center mt-8 space-x-6;
+      & > a {
+        @apply text-gray-400 hover:text-gray-500;
+        & > span {
+          @apply sr-only;
+        }
+      }
+    }
+
+    & > p {
+      @apply mt-8 text-center text-gray-400;
+    }
+  }
 
   a {
     @apply focus-within:outline-dotted;

@@ -87,22 +87,17 @@ const ArticlesListPage: React.FC = () => {
   return (
     <Layout>
       <div className="root-container">
-        <main className="article-page-container">
-          <div className="flex flex-col sm:flex-row items-center justify-between article-list-header">
-            <h1 className="mb-3 sm:m-0 article-list-header-title">
-              Blog posts
-            </h1>
+        <main className="articles-container">
+          <div className="article-list-header">
+            <h1 className="article-list-header-title">Blog posts</h1>
             <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           </div>
-          <div className="article-list-search-info">
+          <div>
             <LazyMotion features={domMax}>
-              <m.span className="flex flex-wrap items-center w-full sm:w-2/3 article-list-search-info-tags">
+              <m.span className="article-list-tags">
                 <p className="m-0">
                   Popular tags &nbsp;
-                  <button
-                    className="text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700 cursor-pointer show-all-button"
-                    onClick={toggleTags}
-                  >
+                  <button className="show-all-button" onClick={toggleTags}>
                     (show all)
                   </button>
                   &nbsp;:&nbsp;

@@ -14,19 +14,54 @@
   scroll-margin-top: 7rem;
 }
 
-.about {
+.services {
+  @apply flex flex-col mb-28 mx-5;
+  & > h2 {
+    @apply text-center w-3/4 mx-auto;
+    font-size: var(--step-3);
+  }
+  &-info {
+    @apply flex flex-col mx-auto sm:max-w-xs md:m-0 md:max-w-screen-2xl;
+
+    &-images {
+      @apply grid grid-cols-1 md:grid-cols-3 items-center justify-evenly mt-8;
+      & > .lf-player-container > #lottie > svg {
+        width: auto;
+        max-height: 12rem;
+      }
+    }
+
+    &-text {
+      @apply hidden md:grid grid-cols-1 md:grid-cols-3 gap-6;
+    }
+  }
+}
+
+#about.h-card {
+  @apply flex lg:flex-row flex-col-reverse items-center max-w-screen-2xl mx-auto justify-between;
   margin-bottom: var(--space-2xl-3xl);
+
+  & > div:not(.u-photo) {
+    @apply flex flex-col lg:w-2/3 justify-around;
+    h1 {
+      @apply lg:text-right antialiased;
+    }
+  }
+
+  & > .u-photo {
+    @apply flex lg:w-3/12;
+    & > div {
+      @apply w-full max-w-xs h-auto;
+    }
+  }
 
   h1 {
     font-size: var(--step-4);
     margin-bottom: var(--space-m-l);
   }
 
-  h2 {
-    font-size: var(--step-3);
-  }
-
-  p {
+  p.p-note {
+    @apply antialiased text-lg;
     font-size: var(--step-1);
     line-height: 1.9;
 

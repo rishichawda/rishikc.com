@@ -44,9 +44,12 @@ const config: GatsbyConfig = {
       },
     },
     {
-      resolve: `gatsby-source-instagram`,
+      resolve: `instagram-graphql-media`,
       options: {
-        username: process.env.INSTAGRAM_USER_ID,
+        instagram_id: process.env.INSTAGRAM_USERNAME,
+        headers: {
+          Cookie: process.env.INSTAGRAM_COOKIE,
+        }
       },
     },
     `gatsby-plugin-dark-mode`,
@@ -71,7 +74,7 @@ const config: GatsbyConfig = {
     {
       resolve: `gatsby-plugin-remote-images`,
       options: {
-        nodeType: 'InstaNode',
+        nodeType: 'InstagramNode',
         imagePath: 'original',
       },
     },
