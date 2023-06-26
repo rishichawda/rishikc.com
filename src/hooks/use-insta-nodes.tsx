@@ -20,7 +20,7 @@ const useInstagramNodes = () => {
             caption
             localFile {
               childImageSharp {
-                gatsbyImageData(placeholder: BLURRED, quality: 2)
+                gatsbyImageData(placeholder: BLURRED, width: 250)
               }
             }
           }

@@ -2,7 +2,6 @@ import "prismjs/themes/prism-tomorrow.css";
 import "../stylesheets/mdx.scss";
 
 import { graphql } from "gatsby";
-import { OutboundLink } from "gatsby-plugin-google-gtag";
 import { GatsbyImage } from "gatsby-plugin-image";
 import * as React from "react";
 import {
@@ -85,14 +84,14 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
                   {props.data.mdx.frontmatter?.hero_image_credit_link ? (
                     <>
                       &nbsp;
-                      <OutboundLink
+                      <a
                         href={
                           props.data.mdx.frontmatter?.hero_image_credit_link
                         }
                         {...creditImageProps}
                       >
                         {props.data.mdx.frontmatter?.hero_image_credit_link}
-                      </OutboundLink>
+                      </a>
                     </>
                   ) : null}
                 </figcaption>

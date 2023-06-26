@@ -79,20 +79,6 @@ const config: GatsbyConfig = {
       },
     },
     {
-      resolve: `gatsby-plugin-google-gtag`,
-      options: {
-        trackingIds: [
-          process.env.GATSBY_GOOGLE_ANALYTICS_TRACKING_ID,
-        ],
-        gtagConfig: {
-          anonymize_ip: true,
-        },
-        pluginConfig: {
-          respectDNT: true,
-        },
-      },
-    },
-    {
       resolve: `gatsby-plugin-mdx`,
       options: {
         gatsbyRemarkPlugins: [

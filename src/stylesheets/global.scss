@@ -3,6 +3,10 @@
 @tailwind utilities;
 @import "colors.scss";
 
+:root {
+  --fontsource-display: swap;
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   background-color: #fafbfc;

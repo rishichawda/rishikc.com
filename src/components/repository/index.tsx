@@ -2,7 +2,6 @@ import React from "react";
 
 import useGitRepositoryInfo from "../../hooks/use-git-repositories";
 import RepoCard from "./card";
-import { OutboundLink } from "gatsby-plugin-google-gtag";
 
 const Github = () => {
   const data = useGitRepositoryInfo();
@@ -20,13 +19,13 @@ const Github = () => {
           ))}
         </ul>
       </div>
-      <OutboundLink
+      <a
         href="https://github.com/rishichawda"
         target="_blank"
         rel="noopener noreferrer"
       >
         See more projects on GitHub
-      </OutboundLink>
+      </a>
     </div>
   );
 };

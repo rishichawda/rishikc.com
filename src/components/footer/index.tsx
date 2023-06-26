@@ -1,7 +1,6 @@
 import "./index.scss";
 
 import { Link } from "gatsby";
-import { OutboundLink } from "gatsby-plugin-google-gtag";
 import React from "react";
 import TwitterIcon from "../icons/twitter";
 import LinkedinIcon from "../icons/linkedin";
@@ -28,47 +27,47 @@ const Footer = () => {
           </div>
         </nav>
         <div>
-          <OutboundLink
+          <a
             href="https://www.linkedin.com/in/rkrishi/"
             target="_blank"
             rel="noopener noreferrer"
           >
             <span>LinkedIn</span>
             <LinkedinIcon />
-          </OutboundLink>
-          <OutboundLink
+          </a>
+          <a
             href="https://github.com/rishichawda"
             target="_blank"
             rel="noopener noreferrer"
           >
             <span>GitHub</span>
             <GitHubIcon />
-          </OutboundLink>
-          <OutboundLink
+          </a>
+          <a
             href="https://www.instagram.com/rishiikc/"
             target="_blank"
             rel="noopener noreferrer"
           >
             <span>Instagram</span>
             <InstagramIcon />
-          </OutboundLink>
-          <OutboundLink
+          </a>
+          <a
             href="https://twitter.com/rishiikc"
             target="_blank"
             rel="noopener noreferrer"
           >
             <span>Twitter</span>
             <TwitterIcon />
-          </OutboundLink>
+          </a>
 
-          <OutboundLink
+          <a
             href="https://dribbble.com/rishikc"
             target="_blank"
             rel="noopener noreferrer"
           >
             <span>Dribbble</span>
             <DribbbleIcon />
-          </OutboundLink>
+          </a>
         </div>
         <p>
           © {new Date().getFullYear()} Rishi Kumar Chawda. All Rights Reserved.

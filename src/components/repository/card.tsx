@@ -1,6 +1,5 @@
 import "./index.scss";
 
-import { OutboundLink } from "gatsby-plugin-google-gtag";
 import React from "react";
 
 import Languages from "./languages";
@@ -12,7 +11,7 @@ type Props = {
 function Card({ repository }: Props) {
   return (
     <li role="listitem" className="h-item">
-      <OutboundLink href={repository?.url} target="_blank">
+      <a href={repository?.url} target="_blank">
         <div className="card">
           <Languages languages={repository?.languages} />
           <div className="p-name">
@@ -24,7 +23,7 @@ function Card({ repository }: Props) {
             dangerouslySetInnerHTML={{ __html: repository?.descriptionHTML }}
           ></div>
         </div>
-      </OutboundLink>
+      </a>
     </li>
   );
 }

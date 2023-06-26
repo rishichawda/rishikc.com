@@ -5854,14 +5854,6 @@ gatsby-plugin-dark-mode@^1.1.2:
   dependencies:
     prop-types "^15.5.7"
 
-gatsby-plugin-google-gtag@^5.10.0:
-  version "5.10.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-google-gtag/-/gatsby-plugin-google-gtag-5.10.0.tgz#94117a6b4e92ece63a25f513f8569f47a9c3d597"
-  integrity sha512-GZRLaDhEV7QtGsyMkO7sdp7grcLiTQm9LNFjPLvGTRfm+H3tM782yVt3BUIBLqpex/ST+Sr0Om//6FJ98Ji3BA==
-  dependencies:
-    "@babel/runtime" "^7.20.13"
-    minimatch "^3.1.2"
-
 gatsby-plugin-image@^3.10.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/gatsby-plugin-image/-/gatsby-plugin-image-3.10.0.tgz#76f066bbc53fd707142b3c74329c55cf46875ff3"
@@ -7104,7 +7096,7 @@ inquirer@^7.0.0:
     strip-ansi "^6.0.0"
     through "^2.3.6"
 
-instagram-graphql-media@../../github/instagram-graphql-media:
+instagram-graphql-media@../../private/instagram-graphql-media:
   version "0.1.0"
   dependencies:
     lodash "^4.17.21"
