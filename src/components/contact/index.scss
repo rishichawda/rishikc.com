@@ -26,20 +26,20 @@
   &-text {
     @apply mt-12 lg:mt-0;
     h1 {
-      @apply text-brand-700 dark:text-brand-200 font-bold;
+      @apply text-brand-900 dark:text-brand-200 font-bold;
       font-size: var(--step-6);
     }
     h2 {
-      @apply text-brand-600 dark:text-brand-300;
+      @apply text-brand-800 dark:text-brand-300;
       font-size: var(--step-3);
       margin-bottom: var(--space-m-2xl);
     }
     & > p {
-      @apply text-brand-500 dark:text-brand-300 font-medium mt-1;
+      @apply text-brand-700 dark:text-brand-300 font-medium mt-1;
       font-size: var(--step-1);
     }
     & > p:last-of-type {
-      @apply text-brand-500 dark:text-brand-300 font-medium;
+      @apply text-brand-700 dark:text-brand-300 font-medium;
       margin-top: var(--space-m-l);
     }
   }

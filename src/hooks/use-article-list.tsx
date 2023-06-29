@@ -77,9 +77,11 @@ export const getPreviousAndNext = (path: string) => {
   return res;
 };
 
-export const filterByTags = (data: any[], tags: string[]) => {
+export const filterByTags = (data: Queries.MdxEdge[], tags: string[]) => {
   return data.filter((edge) => {
-    return edge.node.frontmatter.tags.some((t: string) => tags.includes(t));
+    return edge.node!.frontmatter!.tags!.some((t: Queries.Maybe<string>) =>
+      tags.includes(t!)
+    );
   });
 };
 

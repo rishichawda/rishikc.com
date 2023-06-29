@@ -24,7 +24,8 @@ body.light {
 }
 
 body.dark {
-  @apply bg-slate-800;
+  @apply bg-slate-900;
+  @apply text-gray-300;
 }
 
 .root-container {

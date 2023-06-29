@@ -1,5 +1,5 @@
 .git-preview {
-  @apply flex flex-col w-full mx-auto mb-28 justify-between items-start;
+  @apply flex flex-col w-full mx-auto mb-28 justify-between;
   scroll-margin-top: 7rem;
   & > a {
     @apply text-brand-700 dark:text-brand-400 hover:text-brand-900 dark:hover:text-brand-700 focus-within:outline-dotted focus-within:outline-2 focus-within:outline-brand-700 antialiased;
@@ -30,7 +30,7 @@
       }
       overflow: hidden;
       .p-name {
-        @apply flex justify-between items-start;
+        @apply dark:text-slate-200 flex justify-between;
         font-size: var(--step-1);
         margin-bottom: var(--space-xs-s);
         small {
@@ -50,7 +50,7 @@
       }
 
       .card {
-        @apply relative w-full bg-white  dark:bg-gray-900 sm:mx-auto overflow-hidden shadow-sm;
+        @apply relative w-full bg-white dark:bg-slate-800 sm:mx-auto overflow-hidden shadow-sm;
         border-radius: var(--space-2xs-xs);
         padding: var(--space-s-m) var(--space-s-m);
 
@@ -70,7 +70,7 @@
       }
 
       .repo-description {
-        @apply opacity-70;
+        @apply opacity-70 dark:opacity-90;
         font-size: var(--step-1);
         display: -webkit-box;
         -webkit-box-orient: vertical;

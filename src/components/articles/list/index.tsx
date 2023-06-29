@@ -7,7 +7,7 @@ import React from "react";
 import Tag from "../../tag";
 
 type ArticlesListProps = {
-  items: any[];
+  items: readonly Queries.MdxEdge[];
   onTagClick: (event: React.MouseEvent, tag: string) => void;
 };
 

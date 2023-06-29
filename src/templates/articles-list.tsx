@@ -1,6 +1,7 @@
 import "../stylesheets/articles.scss";
 
-import { m, LazyMotion, domMax } from "framer-motion";
+import { domMax, LazyMotion, m } from "framer-motion";
+import { graphql } from "gatsby";
 import * as React from "react";
 import { useFlexSearch } from "react-use-flexsearch";
 
@@ -8,6 +9,7 @@ import Layout from "../components/layout";
 import SEO from "../components/seo";
 import Tag from "../components/tag";
 import ArticlesList from "../components/articles/list";
+import PaginationNav from "../components/articles/list/pagination";
 import Search from "../components/articles/search";
 import {
   filterByTags,
@@ -16,12 +18,25 @@ import {
 } from "../hooks/use-article-list";
 import { useTags } from "../hooks/use-tags";
 
-const ArticlesListPage: React.FC = () => {
+type ArticlesListProps = {
+  pageContext: {
+    limit: number;
+    skip: number;
+    numPages: number;
+    currentPage: number;
+  };
+  data: {
+    allMdx: Queries.MdxConnection;
+  };
+};
+
+const BlogList: React.FC<ArticlesListProps> = (props) => {
   const [articles, search] = useArticleList();
   const [allTags, topTags] = useTags();
   const [showAllTags, setShowAllTags] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
+  const posts = props.data.allMdx.edges;
 
   const data = useFlexSearch(searchQuery, search.index, search.store);
 
@@ -107,20 +122,68 @@ const ArticlesListPage: React.FC = () => {
             </LazyMotion>
           </div>
           <section>
-            <ArticlesList items={filteredResults} onTagClick={onTagClick} />
+            <ArticlesList
+              items={
+                searchQuery.length || selectedTags.length
+                  ? filteredResults
+                  : posts
+              }
+              onTagClick={onTagClick}
+            />
           </section>
+          {searchQuery.length || selectedTags.length ? null : (
+            <PaginationNav pageContext={props.pageContext} />
+          )}
         </main>
       </div>
     </Layout>
   );
 };
 
-export const Head = () => (
+export const Head = (props: ArticlesListProps) => (
   <SEO
-    title="Articles - rishikc.com"
-    description="Welcome to my blog for quick reads to articles on technology, science, life, and everything in between."
+    title={`${
+      props.pageContext.currentPage > 1
+        ? `Page ${props.pageContext.currentPage} - `
+        : ""
+    }Articles - rishikc.com`}
+    description={`${
+      props.pageContext.currentPage > 1
+        ? `Page ${props.pageContext.currentPage} of`
+        : "Welcome to"
+    } my blog for quick reads to articles on technology, science, life, and everything in between.`}
     keywords="react js,react website,blog,react javascript,online article"
   />
 );
 
-export default ArticlesListPage;
+export const blogListQuery = graphql`
+  query blogListQuery($skip: Int!, $limit: Int!) {
+    allSitePage {
+      nodes {
+        path
+      }
+    }
+    allMdx(sort: { frontmatter: { date: DESC } }, limit: $limit, skip: $skip) {
+      edges {
+        node {
+          id
+          excerpt(pruneLength: 340)
+          frontmatter {
+            title
+            subtitle
+            date(formatString: "MMMM D, YYYY")
+            tags
+          }
+          fields {
+            slug
+            timeToRead {
+              text
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export default BlogList;

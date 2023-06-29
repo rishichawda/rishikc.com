@@ -90,3 +90,46 @@ type GlobalMetadata = {
     }
   }
 }
+
+
+exports.createPages = async ({ graphql, actions, reporter }) => {
+  const { createPage } = actions
+
+  const result = await graphql(`
+  query {
+    allMdx(
+      sort: { frontmatter: { date: DESC }}
+    ) {
+      edges {
+        node {
+          fields {
+            slug
+          }
+        }
+      }
+    }
+  }
+`)
+
+  if (result.errors) {
+    reporter.panicOnBuild(`Error while running GraphQL query.`)
+    return
+  }
+
+  // Create blog-list pages
+  const posts = result.data.allMdx.edges
+  const postsPerPage = 5
+  const numPages = Math.ceil(posts.length / postsPerPage)
+  Array.from({ length: numPages }).forEach((_, i) => {
+    createPage({
+      path: i === 0 ? `/articles` : `/articles/${i + 1}`,
+      component: path.resolve("./src/templates/articles-list.tsx"),
+      context: {
+        limit: postsPerPage,
+        skip: i * postsPerPage,
+        numPages,
+        currentPage: i + 1,
+      },
+    })
+  })
+};

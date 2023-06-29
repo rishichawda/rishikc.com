@@ -11,7 +11,7 @@
   min-height: 100vh;
 
   .h-entry {
-    @apply block focus-within:bg-gray-300 dark:focus-within:bg-slate-900;
+    @apply block focus-within:bg-gray-300 dark:focus-within:bg-slate-800;
     padding: var(--space-3xs-2xs) var(--space-2xs-s);
     margin-bottom: var(--space-m-2xl);
     border-radius: var(--space-3xs-2xs);
@@ -21,12 +21,13 @@
     }
 
     &-header {
-      @apply flex flex-col items-start md:justify-between md:items-center md:flex-row;
+      @apply flex flex-col md:justify-between md:items-center md:flex-row;
       & > div {
         display: flex;
         flex-direction: column;
 
         .p-name {
+          @apply dark:text-slate-300;
           font-size: var(--step-3);
           padding-right: var(--space-m);
           margin: var(--space-2xs-xs) 0 !important;
@@ -45,7 +46,7 @@
         @apply dark:bg-slate-600 whitespace-nowrap;
         display: inline-flex;
         align-items: center;
-        align-self: start;
+        max-width: fit-content;
         font-size: var(--step-0);
         padding: 1px var(--space-2xs);
         border-radius: var(--space-3xs);

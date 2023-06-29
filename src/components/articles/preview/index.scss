@@ -39,7 +39,7 @@
     }
 
     & > div {
-      @apply h-full flex flex-col items-start justify-between p-6 bg-white  dark:bg-gray-900 dark:border-gray-800 shadow-sm;
+      @apply h-full flex flex-col justify-between p-6 bg-white  dark:bg-slate-800 dark:border-gray-800 shadow-sm;
       border-radius: var(--space-2xs-xs);
       .h-item {
         @apply h-2/3 flex flex-col justify-between;
@@ -47,7 +47,7 @@
           @apply focus:outline-none;
         }
         .p-name {
-          @apply mb-2 text-gray-900 dark:text-white;
+          @apply mb-2 text-gray-900 dark:text-slate-200;
           font-size: var(--step-2);
           padding-right: var(--space-m);
           margin: var(--space-2xs-xs) 0 !important;

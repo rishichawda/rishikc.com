@@ -6,7 +6,7 @@ body.dark nav.navbar > div > .brand > svg {
 }
 
 nav.navbar {
-  @apply flex flex-col sticky top-0 items-center justify-center bg-gray-50 dark:bg-slate-800 dark:text-gray-200 z-10;
+  @apply flex flex-col sticky top-0 items-center justify-center bg-gray-50 dark:bg-slate-900 dark:text-gray-200 z-10;
   display: flex;
   flex-direction: row;
   padding: var(--space-3xs-2xs) var(--space-2xs-xs);
@@ -69,7 +69,7 @@ nav.navbar {
 }
 
 nav.nav-menu-container {
-  @apply hidden md:flex md:flex-row bg-gray-50 dark:bg-slate-800 dark:text-gray-200 w-full z-10;
+  @apply hidden md:flex md:flex-row dark:text-gray-200 bg-gray-50 dark:bg-slate-900 w-full z-10;
   padding: var(--space-xs-s) var(--space-s-m);
   &:not(.vertical) {
     & > a {

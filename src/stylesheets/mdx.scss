@@ -78,6 +78,7 @@ section[itemprop="articleBody"] {
   h4,
   h5 {
     scroll-margin-top: 7rem;
+    @apply dark:text-gray-300;
     margin-top: var(--space-m-l);
   }
 
@@ -170,6 +171,7 @@ section[itemprop="articleBody"] {
   }
 
   .p-name {
+    @apply dark:text-gray-300;
     @apply text-center sm:text-left;
     width: 100%;
     font-weight: 400;
@@ -232,4 +234,10 @@ body.dark {
       filter: invert(0.9) hue-rotate(180deg);
     }
   }
+}
+
+#disqus_thread.root-container {
+  @apply flex flex-col justify-between p-6 bg-slate-100 mx-2 lg:mx-auto dark:bg-gray-900 dark:border-gray-800 shadow-sm;
+  padding: var(--space-l-xl) var(--space-l);
+  border-radius: var(--space-2xs-xs);
 }

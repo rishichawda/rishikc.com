@@ -152,7 +152,7 @@ const ContactForm = () => {
                 name="reply_to"
                 type="email"
                 id="email-address-input"
-                className="block w-full pl-10 p-2.5 bg-gray-50 border rounded-lg border-gray-300 focus:outline-none focus:border-brand-500 dark:bg-slate-800 dark:border-gray-700 dark:placeholder-gray-400  dark:focus:border-brand-700"
+                className="block w-full pl-10 p-2.5 bg-gray-50 border rounded-lg border-gray-300 focus:outline-none focus:border-brand-500 dark:bg-slate-900 dark:border-gray-700 dark:placeholder-gray-400  dark:focus:border-brand-700"
                 placeholder="email address"
                 onBlur={handleChange}
                 onChange={handleChange}
@@ -172,7 +172,7 @@ const ContactForm = () => {
               name="message"
               id="email-content-input"
               rows={4}
-              className="block p-2.5 w-full text-sm bg-gray-50 border rounded-lg border-gray-300 focus:outline-none focus:border-brand-500 dark:bg-slate-800 dark:border-gray-700 dark:placeholder-gray-400  dark:focus:border-brand-700"
+              className="block p-2.5 w-full text-sm bg-gray-50 border rounded-lg border-gray-300 focus:outline-none focus:border-brand-500 dark:bg-slate-900 dark:border-gray-700 dark:placeholder-gray-400  dark:focus:border-brand-700"
               placeholder="write your thoughts here.."
               onBlur={handleChange}
               onChange={handleChange}
