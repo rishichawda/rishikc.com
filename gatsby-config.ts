@@ -149,6 +149,12 @@ const config: GatsbyConfig = {
       },
     },
     {
+      resolve: `gatsby-plugin-disqus`,
+      options: {
+        shortname: process.env.DISQUS_SHORTNAME
+      }
+    },
+    {
       resolve: 'gatsby-plugin-local-search',
       options: {
         name: 'articles',

@@ -36,6 +36,7 @@
     "gatsby": "^5.10.0",
     "gatsby-plugin-canonical-urls": "^5.10.0",
     "gatsby-plugin-dark-mode": "^1.1.2",
+    "gatsby-plugin-disqus": "^1.2.6",
     "gatsby-plugin-image": "^3.10.0",
     "gatsby-plugin-local-search": "^2.0.1",
     "gatsby-plugin-manifest": "^5.10.0",

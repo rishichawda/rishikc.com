@@ -23,6 +23,7 @@ import SEO from "../components/seo";
 import Tag from "../components/tag";
 import { getPreviousAndNext } from "../hooks/use-article-list";
 import { useSiteMetadata } from "../hooks/use-site-metadata";
+import CommentSection from "../components/articles/disqus";
 
 const formatOptions: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -32,6 +33,7 @@ const formatOptions: Intl.DateTimeFormatOptions = {
 
 const ArticlePage: React.FC<ArticlePageProps> = (props) => {
   const location = useLocation();
+
   const siteMeta = useSiteMetadata();
   const fb_share = React.useRef<HTMLButtonElement>(null);
   const linkedin_share = React.useRef<HTMLButtonElement>(null);
@@ -159,6 +161,17 @@ const ArticlePage: React.FC<ArticlePageProps> = (props) => {
           </section>
         </article>
       </main>
+      <CommentSection
+        config={{
+          url: location.href,
+          identifier: props.path,
+          title: `${props.data.mdx.frontmatter?.title || ""}${
+            props.data.mdx.frontmatter?.subtitle
+              ? ` - ${props.data.mdx.frontmatter?.subtitle}`
+              : ""
+          }`,
+        }}
+      />
     </Layout>
   );
 };
