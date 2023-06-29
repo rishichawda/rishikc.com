@@ -35,6 +35,7 @@ function PaginationNav({ pageContext }: Props) {
             to={prev}
             rel="prev"
             className={isFirst ? "item-disabled" : undefined}
+            tabIndex={isFirst ? -1 : undefined}
           >
             Previous
           </Link>
@@ -55,6 +56,7 @@ function PaginationNav({ pageContext }: Props) {
             className={isLast ? "item-disabled" : undefined}
             to={`/articles/${next}`}
             rel="next"
+            tabIndex={isLast ? -1 : undefined}
           >
             Next
           </Link>

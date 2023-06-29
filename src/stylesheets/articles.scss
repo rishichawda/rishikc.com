@@ -38,7 +38,7 @@ nav.pagination-nav {
   & > ul {
     @apply list-none flex;
     & > li > a {
-      @apply relative block rounded-full bg-transparent px-4 py-2.5 text-sm text-neutral-600 transition-all duration-300 dark:text-white hover:bg-brand-100 dark:hover:bg-brand-950 dark:hover:text-white;
+      @apply relative block rounded-full bg-transparent px-4 py-2.5 text-sm text-neutral-600 transition-all duration-300 dark:text-white hover:bg-brand-100 dark:hover:bg-brand-950 focus-within:bg-brand-100 dark:focus-within:bg-brand-950 focus:outline-1 focus:outline-brand-950 focus:outline-dashed;
       margin: 0 var(--space-3xs);
       font-size: var(--step-1);
 
