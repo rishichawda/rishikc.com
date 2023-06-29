@@ -6,15 +6,15 @@
 }
 
 #articles-search-bar {
+  @apply border-4 border-slate-200 focus-within:border-slate-300 dark:border-slate-700 dark:focus-within:border-slate-600 w-full my-4 sm:my-0 sm:w-fit rounded-full;
   max-width: 100%;
   min-width: 40%;
-  border-radius: var(--space-2xs);
   padding: 2px;
 
   input {
+    @apply placeholder:text-slate-400 block bg-slate-200 dark:bg-slate-700 dark:placeholder:text-slate-400 rounded-full;
     font-size: var(--step-0);
-    padding: var(--space-3xs-2xs);
-    border-radius: var(--space-3xs);
+    padding: var(--space-2xs-xs) var(--space-xs-s);
     border: none;
     width: fill-available;
     outline: none;

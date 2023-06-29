@@ -26,11 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ showScrollProgress }) => {
           <Logo />
         </Link>
         <div className="navbar-menu">
-          <ul role="menubar">
-            <li aria-label="Theme toggle button" role="menuitem">
-              <ThemeToggle />
-            </li>
-          </ul>
+          <ThemeToggle />
           <NavbarMenu />
         </div>
       </div>
