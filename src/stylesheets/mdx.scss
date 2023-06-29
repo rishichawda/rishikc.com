@@ -1,7 +1,7 @@
 @import "mixins.scss";
 
 main.article-page {
-  @apply flex flex-row;
+  @apply flex flex-row dark:bg-slate-900;
   @include rounded-container;
   margin-left: auto;
   margin-right: auto;
