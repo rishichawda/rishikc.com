@@ -17,10 +17,16 @@ const useInstagramNodes = () => {
         edges {
           node {
             id
-            caption
-            localFile {
+            localImage {
+              id
               childImageSharp {
-                gatsbyImageData(placeholder: BLURRED, width: 250)
+                gatsbyImageData(
+                  aspectRatio: 1
+                  transformOptions: { cropFocus: CENTER }
+                  width: 200
+                  formats: [WEBP]
+                  placeholder: DOMINANT_COLOR
+                )
               }
             }
           }

@@ -43,6 +43,8 @@ const IndexPage: React.FC<PageProps> = () => {
               <StaticImage
                 src="../../static/assets/handsome-guy.webp"
                 alt="handsome"
+                formats={["webp"]}
+                placeholder="tracedSVG"
               />
             </div>
           </div>
