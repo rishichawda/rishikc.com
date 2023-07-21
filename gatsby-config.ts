@@ -199,6 +199,63 @@ const config: GatsbyConfig = {
           })),
       },
     },
+    {
+      resolve: "gatsby-plugin-feed",
+      options: {
+        query: `
+          {
+            site {
+              siteMetadata {
+                title
+                description
+                siteUrl
+                site_url: siteUrl
+              }
+            }
+          }
+        `,
+        feeds: [
+          {
+            serialize: ({ query: { site, allMdx } }) => {
+              return allMdx.edges.map(edge => {
+
+                const siteUrl = site.siteMetadata.siteUrl
+                const slug = siteUrl + edge.node.fields.slug
+
+                return Object.assign({}, edge.node.frontmatter, {
+                  url: slug,
+                  guid: slug,
+                  custom_elements: [
+                    { "content:encoded": edge.node.excerpt }
+                  ],
+                })
+              })
+            },
+            query: `
+              {
+                allMdx(sort: {frontmatter: {date: DESC}}) {
+                  edges {
+                    node {
+                      excerpt(pruneLength: 340)
+                      fields {
+                        slug
+                      }
+                      frontmatter {
+                        title
+                        description
+                        date
+                      }
+                    }
+                  }
+                }
+              }
+            `,
+            output: "/rss.xml",
+            title: "Rishi's Blog - rishikc.com",
+          },
+        ]
+      }
+    },
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
     "gatsby-transformer-sharp",
