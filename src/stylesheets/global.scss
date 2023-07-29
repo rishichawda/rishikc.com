@@ -2,10 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 @import "colors.scss";
-
-:root {
-  --fontsource-display: swap;
-}
+@import "./scales/space.scss";
+@import "./scales/type.scss";
 
 body {
   font-family: "Open Sans", sans-serif;

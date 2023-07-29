@@ -15,6 +15,8 @@ const NotFoundPage: React.FC<PageProps> = () => (
         imgStyle={{ objectFit: "contain" }}
         src="../../static/assets/404.png"
         alt="404image"
+        formats={["webp"]}
+        placeholder="tracedSVG"
       />
       <main className="dark:text-gray-200 grid place-items-center px-6 lg:px-8">
         <div className="text-center">

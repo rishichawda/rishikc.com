@@ -8,7 +8,7 @@ type Props = {
 };
 
 const Card = ({ data }: Props) => {
-  const image = getImage(data.node.localFile);
+  const image = getImage(data.node.localImage);
 
   return (
     <div className="inline-flex w-full items-stretch cursor-pointer aspect-square instagram-gallery-image-wrapper">
