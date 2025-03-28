@@ -1,0 +1,65 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import BaseLayout from "./base_layout.astro";
+
+const posts = await getCollection("articles");
+
+let {
+	content: {
+		title,
+		description,
+		subtitle,
+		hero_image,
+		hero_image_alt,
+		hero_image_credit_text,
+		path,
+		date,
+		keywords,
+		tags,
+	},
+} = Astro.props;
+
+date = new Date(date).toLocaleDateString("en-us", {
+	year: "numeric",
+	month: "short",
+	day: "numeric",
+});
+---
+
+<BaseLayout page_info={{
+	title: title,
+	description: description,
+	keywords: keywords,
+}}  >
+	<main>
+		<article class="w-[651px] flex flex-col mx-auto items-center pt-10">
+			<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-2">
+				<h1 class="justify-start text-black text-3xl text-center font-semibold font-['RedHat Display'] leading-7">{title}</h1>
+				{subtitle && <h2 class="justify-start text-black text-center text-base font-normal font-['RedHat Display'] leading-normal">{subtitle}</h2>}
+			  </div>
+			  <div class="justify-start text-black text-center text-sm font-normal font-['RedHat Text'] leading-tight mb-2">12th December, 2020</div>
+			  <div class="w-[650px] mb-7">
+				<Image class="max-w-[650px] rounded-xl" fit="cover" src={hero_image} alt={hero_image_alt || `${title}`} />
+				<div class="inline-flex w-full px-2 mt-4 justify-between items-center">
+					<div class="inline-flex justify-start items-start gap-[5px]">
+						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
+							<div class="justify-start text-white text-sm font-normal font-['RedHat Text'] leading-tight">ui</div>
+						</div>
+						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
+							<div class="justify-start text-white text-sm font-normal font-['RedHat Text'] leading-tight">ux</div>
+						</div>
+						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
+							<div class="justify-start text-white text-sm font-normal font-['RedHat Text'] leading-tight">design</div>
+						</div>
+					</div>
+					<div class="justify-start text-black text-sm font-normal font-['RedHat Text'] leading-tight">3 min. read</div>
+				</div>
+			  </div>
+			<hr />
+			<div class="flex flex-col mb-20">
+				<slot />
+			</div>
+		</article>
+	</main>
+</BaseLayout>

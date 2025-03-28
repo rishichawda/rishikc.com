@@ -1,0 +1,6 @@
+@use './mixins.scss' as *;
+@plugin '@tailwindcss/typography';
+
+// * {
+//     @include dev-random-highlight;
+// }

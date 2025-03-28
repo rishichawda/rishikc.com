@@ -1,0 +1,41 @@
+---
+import SEO from "../components/seo.astro";
+import "../styles/mixins.scss";
+import "../styles/global.scss";
+import "../styles/tailwind.css";
+import "@fontsource-variable/red-hat-display";
+import "@fontsource-variable/red-hat-text"
+
+let {
+	page_info: { title, description, image, keywords },
+} = Astro.props;
+
+const seo = {
+	title: title || "title",
+	// title: title || defaultSiteMetadata.title,
+	description: description || "description",
+	// description: description || defaultSiteMetadata.description,
+	image: `siteUrl${image || "icon"}`,
+	// image: `${defaultSiteMetadata.siteUrl}${image || icon}`,
+	type: "WebSite",
+	// type: type || "WebSite",
+	keywords: keywords || "keywords",
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<SEO page_info={seo} />
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style>
+	html,
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>

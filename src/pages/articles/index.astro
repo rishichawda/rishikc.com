@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import BaseLayout from "../../layouts/base_layout.astro";
+import ArticleItem from "../../components/article_list/article_item.astro";
+
+const articles = await getCollection('articles');
+// Optionally, sort articles (e.g., newest first)
+articles.sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
+
+const articlesPerPage = 5;
+const totalPages = Math.ceil(articles.length / articlesPerPage);
+const currentPage = 1;
+const start = (currentPage - 1) * articlesPerPage;
+const end = start + articlesPerPage;
+const articlesToShow = articles.slice(start, end);
+---
+
+<BaseLayout
+    page_info={{
+        title: `${currentPage > 1 ? `Page ${currentPage} - ` : ""}Articles - rishikc.com`,
+        description: `${
+            currentPage > 1 ? `Page ${currentPage} of` : "Welcome to"
+        } my blog for quick reads to articles on technology, science, life, and everything in between.`,
+        keywords: "react js,react website,blog,react javascript,online article",
+    }}  
+>
+    <main>
+        <content>
+            <div
+                class="flex flex-col flex-shrink-0 justify-center items-start gap-8 w-[486px] h-[682px]"
+            >
+                {articlesToShow.map((p) => <ArticleItem data={p} />)}
+            </div>
+        </content>
+        <nav>
+            {totalPages > 1 && (
+                <a href={`/articles/2`}>Next</a>
+              )}
+        </nav>
+    </main>
+    <!-- <Footer /> -->
+    <!-- <ColorScript /> -->
+</BaseLayout>

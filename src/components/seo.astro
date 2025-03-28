@@ -1,0 +1,79 @@
+---
+let {
+    page_info: { title, description, image, keywords },
+} = Astro.props;
+---
+
+<head>
+    <meta charset="UTF-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href={image} />
+    <meta name="description" content={description} />
+    <meta name="image" content={image} />
+    {keywords ? <meta name="keywords" content={keywords} /> : null}
+    {/* Open graph / Facebook */}
+    <meta property="og:title" content={title} />
+    <meta property="og:site_name" content={title} />
+    <!-- <meta property="og:type" content={defaultSiteMetadata.og.type} /> -->
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:url" content={Astro.url.pathname} />
+    {/* Twitter */}
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <!-- <meta name="twitter:card" content={defaultSiteMetadata.twitter.card} /> -->
+    <!-- <meta
+  name="twitter:creator"
+  content={defaultSiteMetadata.twitter.creator}
+/> -->
+    <!-- <meta name="twitter:site" content={defaultSiteMetadata.twitter.creator} /> -->
+    <meta name="twitter:image" content={image} />
+    {/* Structured data */}
+    <!-- <JsonLDSchema
+  article={
+	type === "NewsArticle"
+	  ? {
+		  "@id": url,
+		  "@type": "NewsArticle",
+		  image: image,
+		  headline: title,
+		  dateCreated: articleData?.frontmatter?.date!,
+		  dateModified:
+			articleData?.parent?.modifiedTime ||
+			articleData?.frontmatter?.date!,
+		  datePublished: articleData?.frontmatter?.date!,
+		  author: {
+			"@type": "Person",
+			name: "Rishi Kumar Chawda",
+			url: defaultSiteMetadata.schema.author?.url!,
+			sameAs: defaultSiteMetadata.schema.author?.sameAs!,
+		  },
+		  creator: {
+			"@type": "Person",
+			name: "Rishi Kumar Chawda",
+			url: defaultSiteMetadata.schema.author?.url!,
+			sameAs: defaultSiteMetadata.schema.author?.sameAs!,
+		  },
+		  publisher: {
+			"@type": "Organization",
+			name: defaultSiteMetadata.title,
+			url: defaultSiteMetadata.siteUrl,
+			logo: `${defaultSiteMetadata.siteUrl}${icon}`,
+			sameAs: defaultSiteMetadata.schema.author?.sameAs!,
+		  },
+		}
+	  : undefined
+  }
+  website={{
+	"@context": "https://schema.org/",
+	"@type": "WebSite",
+	name: title,
+	url: url,
+	description: description,
+	keywords: keywords.length ? keywords.split(",") : [],
+	mainEntityOfPage: url,
+	image: `${defaultSiteMetadata.siteUrl}${icon}`,
+  }}
+/> -->
+</head>
