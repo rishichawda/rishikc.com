@@ -19,8 +19,13 @@ const articles = defineCollection({
         }),
 });
 
+const logo = defineCollection({
+    loader: glob({ pattern: "**/*.{png,svg,jpg}", base: "./content/assets/logo" }),
+    schema: ({ image }) => z.object({ image: image() })
+})
+
 const quotes = defineCollection({
     loader: file("content/reads/quotes.json", { parser: (text) => JSON.parse(text) })
 })
 
-export const collections = { articles, quotes };
+export const collections = { articles, quotes, logo };

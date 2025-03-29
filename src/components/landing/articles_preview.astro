@@ -1,0 +1,188 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+// interface ArticlePreview {
+//   title: string;
+//   description: string;
+//   image: string;
+//   link: string;
+//   date: string;
+// }
+
+const allArticles = await getCollection('articles');
+console.log(allArticles);
+const articles = allArticles
+  .sort((a: CollectionEntry<'articles'>, b: CollectionEntry<'articles'>) => 
+    new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  )
+  .map((article: CollectionEntry<'articles'>) => ({
+    title: article.data.title,
+    subtitle: article.data.subtitle,
+    description: article.data.description,
+    image: article.data.hero_image,
+    link: article.data.path,
+    date: new Date(article.data.date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }));
+
+  
+
+// Calculate how many items to show based on viewport width
+const itemWidth = 300; // width of each item
+const gapWidth = 32; // gap between items
+const itemWithGap = itemWidth + gapWidth;
+const viewportWidth = 964; // Desired viewport width (3 items + gaps)
+const itemsPerView = Math.floor(viewportWidth / itemWithGap);
+---
+
+<section class="py-12 sm:py-16 lg:py-20">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
+    <h2 class="text-2xl sm:text-3xl lg:text-[2rem] font-light text-gray-800 mb-8 sm:mb-12 lg:mb-16">
+      What I've written about recently..
+    </h2>
+    
+    <div class="relative" id="blog-carousel">
+      <!-- Carousel viewport -->
+      <div class="relative overflow-hidden w-full max-w-[964px] mx-auto">
+        <!-- Carousel container -->
+        <div class="flex gap-4 sm:gap-6 lg:gap-8 transition-transform duration-300 ease-in-out" id="carousel-container">
+          {articles.map((article) => (
+            <div class="min-w-[280px] sm:min-w-[300px] w-[280px] sm:w-[300px] flex-shrink-0">
+              <div class="aspect-w-16 aspect-h-9 mb-3 sm:mb-4">
+                <Image
+                  src={article.image}
+                  alt={article.title}
+                  class="object-cover rounded-lg w-full h-full"
+                />
+              </div>
+              <h3 class="text-lg sm:text-xl font-medium text-gray-800 mb-1 sm:mb-2">
+                {article.title}
+              </h3>
+              <p class="text-gray-600 mb-1 sm:mb-2 text-xs sm:text-sm">
+                {article.date}
+              </p>
+              <p class="text-gray-600 mb-3 sm:mb-4 leading-relaxed line-clamp-3 text-sm sm:text-base">
+                {article.description}
+              </p>
+              <a href={article.link} class="text-gray-700 hover:text-gray-900 font-light text-sm sm:text-base">
+                Read article →
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <button 
+        class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 lg:-translate-x-6 bg-white rounded-full p-2 shadow-md text-gray-600 hover:text-gray-900 transition-colors hidden sm:block" 
+        id="prev-btn"
+        aria-label="Previous slide"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      
+      <button 
+        class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 lg:translate-x-6 bg-white rounded-full p-2 shadow-md text-gray-600 hover:text-gray-900 transition-colors hidden sm:block" 
+        id="next-btn"
+        aria-label="Next slide"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      
+      <div class="flex justify-center gap-2 mt-6 sm:mt-8" id="carousel-dots">
+        <!-- Dots will be added dynamically via JavaScript -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const carousel = document.getElementById('blog-carousel');
+  const container = document.getElementById('carousel-container') as HTMLElement;
+  const prevBtn = document.getElementById('prev-btn') as HTMLButtonElement;
+  const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
+  const dotsContainer = document.getElementById('carousel-dots');
+  
+  if (carousel && container && prevBtn && nextBtn && dotsContainer) {
+    const items = container.children;
+    const itemWidth = window.innerWidth < 640 ? 284 : 332; // width (280/300) + gap (4/8)
+    const itemsPerView = window.innerWidth < 640 ? 1 : window.innerWidth < 1024 ? 2 : 3;
+    const totalSlides = Math.ceil(items.length / itemsPerView);
+    let currentIndex = 0;
+    
+    // Create dots
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('button');
+      dot.className = `w-2 h-2 rounded-full ${i === 0 ? 'bg-[#B7BEE7]' : 'bg-[#B7BEE7]/40'}`;
+      dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+      dot.setAttribute('data-index', i.toString());
+      dotsContainer.appendChild(dot);
+    }
+    
+    const dots = dotsContainer.querySelectorAll('[data-index]');
+    
+    function updateCarousel() {
+      const offset = -currentIndex * (itemWidth * itemsPerView);
+      container.style.transform = `translateX(${offset}px)`;
+      
+      // Update dots
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('bg-[#B7BEE7]', index === currentIndex);
+        dot.classList.toggle('bg-[#B7BEE7]/40', index !== currentIndex);
+      });
+      
+      // Update button states
+      prevBtn.classList.toggle('opacity-50', currentIndex === 0);
+      nextBtn.classList.toggle('opacity-50', currentIndex === totalSlides - 1);
+    }
+    
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCarousel();
+      }
+    });
+    
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < totalSlides - 1) {
+        currentIndex++;
+        updateCarousel();
+      }
+    });
+    
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentIndex = index;
+        updateCarousel();
+      });
+    });
+    
+    // Handle window resize
+    let resizeTimeout: number;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = window.setTimeout(() => {
+        currentIndex = 0;
+        updateCarousel();
+      }, 250);
+    });
+  }
+</script>
+
+<style>
+  #carousel-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  #carousel-container::-webkit-scrollbar {
+    display: none;
+  }
+</style> 

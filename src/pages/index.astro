@@ -1,11 +1,29 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Footer from "../components/Footer.astro";
+import Hero from "../components/landing/hero.astro";
+import ArticlesPreview from "../components/landing/articles_preview.astro";
+import Services from "../components/landing/services.astro";
+import CallToAction from "../components/landing/call_to_action.astro";
+import "../styles/global.css";
+import BaseLayout from "../layouts/base_layout.astro";
+
+const page_info = {
+	title: "Rishi Chawda - Software Engineer",
+	description: "Rishi Chawda - Software Engineer",
+	image: Astro.glob("../../public/favicon.svg"),
+	keywords: "Rishi Chawda - Software Engineer",
+};
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout page_info={page_info}>
+	<main>
+		<Hero />
+		<Services />
+		<ArticlesPreview />
+		<CallToAction />
+	</main>
+	<Footer />
+</BaseLayout>

@@ -1,6 +1,11 @@
 module.exports = {
-    plugins: [
-      require('autoprefixer'),
-      // require('cssnano'),
-    ],
-  };
+  plugins: {
+    "@tailwindcss/postcss": {
+      config: {
+            path: './tailwind.config.mjs',
+            applyBaseStyles: false,
+          },
+    },
+    autoprefixer: {},
+  },
+};
