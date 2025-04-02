@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from './project_card.astro';
+
+const galleries = await getCollection('gallery');
+const sortedGalleries = galleries.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date) : new Date(0);
+  const dateB = b.data.date ? new Date(b.data.date) : new Date(0);
+  return dateB.getTime() - dateA.getTime();
+});
+---
+
+<div class="min-h-screen">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {sortedGalleries.map((gallery) => (
+        <ProjectCard project={gallery} />
+      ))}
+</div> 

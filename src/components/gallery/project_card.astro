@@ -1,0 +1,38 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+
+interface Props {
+  project: CollectionEntry<'gallery'>;
+}
+
+const { project } = Astro.props;
+console.log(project.data)
+const { title, description, featured_image, featured_image_alt, tags } = project.data;
+---
+
+<a
+  href={project.data.path}
+  class="group relative aspect-[4/3] overflow-hidden rounded-lg shadow-lg"
+>
+  <Image
+    src={featured_image}
+    alt={featured_image_alt || title}
+    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+    <div class="absolute bottom-0 left-0 right-0 p-6">
+      <h3 class="text-xl font-light text-white mb-3">{title}</h3>
+      <p class="text-white/90 text-sm mb-3">{description}</p>
+      {tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span class="text-xs bg-white/15 text-white px-3 py-1.5 rounded-full tracking-[0.05em] uppercase">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</a> 
