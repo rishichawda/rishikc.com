@@ -2,6 +2,8 @@
 import { getCollection, render } from "astro:content";
 import BlogPost from "../../layouts/article.astro";
 import Prose from "../../components/article/prose.astro";
+import RelatedArticles from "../../components/article/related_articles.astro";
+import BaseLayout from "../../layouts/base_layout.astro";
 
 export async function getStaticPaths() {
 	let posts = await getCollection("articles");
@@ -9,17 +11,28 @@ export async function getStaticPaths() {
 	return posts.map((post) => {
 		return {
 			params: { slug: post.id },
-			props: { post },
+			props: { post, allPosts: posts },
 		};
 	});
 }
 
-const { post } = Astro.props;
+const { post, allPosts } = Astro.props;
 const { Content, remarkPluginFrontmatter } = await render(post);
 ---
 
-<BlogPost content={post.data} frontmatter={remarkPluginFrontmatter}>
-	<Prose>
-		<Content />
-	</Prose>
-</BlogPost>
+<BaseLayout
+	page_info={{
+		title: post.data.title,
+		description: post.data.description,
+		keywords: post.data.keywords,
+	}}
+>
+	<main class="flex flex-col mx-auto items-center">
+		<BlogPost content={post.data} frontmatter={remarkPluginFrontmatter}>
+			<Prose>
+				<Content />
+			</Prose>
+		</BlogPost>
+		<RelatedArticles currentArticle={post} allArticles={allPosts} />
+	</main>
+</BaseLayout>

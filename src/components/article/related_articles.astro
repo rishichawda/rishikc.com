@@ -1,0 +1,111 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+    currentArticle: CollectionEntry<"articles">;
+    allArticles: CollectionEntry<"articles">[];
+}
+
+let { currentArticle, allArticles } = Astro.props;
+
+// Function to calculate similarity score between two articles
+function calculateSimilarity(article1: CollectionEntry<"articles">, article2: CollectionEntry<"articles">): number {
+  // Skip if it's the same article
+  if (article1.id === article2.id) return 0;
+
+  let score = 0;
+  
+  // Check for matching tags
+  const commonTags = article1.data.tags.filter(tag => article2.data.tags.includes(tag));
+  score += commonTags.length * 2; // Each matching tag adds 2 points
+
+  // Check for matching keywords
+  const keywords1 = article1.data.keywords.split(",").map(k => k.trim());
+  const keywords2 = article2.data.keywords.split(",").map(k => k.trim());
+  const commonKeywords = keywords1.filter(k => keywords2.includes(k));
+  score += commonKeywords.length; // Each matching keyword adds 1 point
+
+  // Check for matching category
+  if (article1.data.category && article2.data.category && article1.data.category === article2.data.category) {
+    score += 2; // Matching category adds 3 points
+  }
+
+  return score;
+}
+
+// Get related articles
+const relatedArticles = allArticles
+  .map(article => ({
+    article,
+    similarity: calculateSimilarity(currentArticle, article)
+  }))
+  .sort((a, b) => b.similarity - a.similarity)
+  .slice(0, 6) // Get top 3 related articles
+  .map(({ article }) => article);
+
+// Format date
+function formatDate(date: Date): string {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+---
+
+<section class="max-w-[90%] lg:max-w-[1000px] flex flex-col items-center py-12 sm:py-16 lg:py-20">
+  <h2 class="text-md sm:text-lg lg:text-xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-6 sm:mb-9 lg:mb-10">
+    You may also be interested in
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 sm:gap-x-6 lg:gap-x-6 gap-y-8 sm:gap-y-10 lg:gap-y-12">
+    {
+      relatedArticles.map((article) => (
+        <a
+          href={article.data.path}
+          class="group flex flex-col hover:-scale-[97%] transition-all"
+        >
+          <div class="aspect-square mb-3 sm:mb-4">
+            <Image
+              src={article.data.hero_image}
+              alt={article.data.hero_image_alt || article.data.title}
+              class="object-cover rounded-lg aspect-square"
+            />
+          </div>
+          <div class="flex flex-col h-full justify-between">
+            <h3 class="text-lg sm:text-xl font-medium text-brand-800 mb-1 sm:mb-2 line-clamp-2 font-['Red_Hat_Display_Variable']">
+              {article.data.title}
+            </h3>
+            <div>
+              <p class="font-['Red_Hat_Display_Variable'] text-brand-400 mb-1 sm:mb-2 text-xs sm:text-sm">
+                {formatDate(article.data.date)}
+              </p>
+              <p class="font-['Red_Hat_Display_Variable'] text-brand-700 mb-3 sm:mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3">
+                {article.data.description}
+              </p>
+              <div class="text-brand-700 font-['Montserrat_Variable'] hover:text-brand-900 hover:cursor-pointer font-medium text-sm sm:text-base inline-flex items-center gap-x-1">
+                Read article
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 17 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
+                    stroke="#737FAE"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</section> 

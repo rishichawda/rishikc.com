@@ -2,10 +2,7 @@
 import { Image } from "astro:assets";
 import BaseLayout from "./base_layout.astro";
 
-let {
-	content,
-	frontmatter
-} = Astro.props;
+let { content, frontmatter } = Astro.props;
 
 const date = new Date(content.date).toLocaleDateString("en-us", {
 	year: "numeric",
@@ -14,71 +11,55 @@ const date = new Date(content.date).toLocaleDateString("en-us", {
 });
 ---
 
-<BaseLayout
-	page_info={{
-		title: content.title,
-		description: content.description,
-		keywords: content.keywords,
-	}}
->
-	<main>
-		<article class="max-w-[90%] flex flex-col mx-auto items-center pt-10">
+<article class="max-w-[90%] flex flex-col mx-auto items-center pt-10">
+	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-2">
+		<h1
+			class="justify-start text-black text-3xl text-center font-semibold font-['Red_Hat_Display_Variable'] leading-7"
+		>
+			{content.title}
+		</h1>
+		{
+			content.subtitle && (
+				<h2 class="justify-start text-black text-center text-base font-normal font-['Red_Hat_Display_Variable'] leading-normal">
+					{content.subtitle}
+				</h2>
+			)
+		}
+	</div>
+	<div
+		class="justify-start text-black text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-2 mt-7"
+	>
+		{date}
+	</div>
+	<div class="w-full md:max-w-[790px] mb-7">
+		<Image
+			class="w-full rounded-xl"
+			fit="cover"
+			src={content.hero_image}
+			alt={content.hero_image_alt || `${content.title}`}
+		/>
+		<div class="inline-flex w-full px-2 mt-4 justify-between items-start">
 			<div
-				class="inline-flex flex-col justify-start items-center gap-2.5 mb-2"
+				class="inline-flex justify-start items-start gap-[5px] max-w-3/4 flex-wrap"
 			>
-				<h1
-					class="justify-start text-black text-3xl text-center font-semibold font-['Red_Hat_Display_Variable'] leading-7"
-				>
-					{content.title}
-				</h1>
 				{
-					content.subtitle && (
-						<h2 class="justify-start text-black text-center text-base font-normal font-['Red_Hat_Display_Variable'] leading-normal">
-							{content.subtitle}
-						</h2>
-					)
-				}
-			</div>
-			<div
-				class="justify-start text-black text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-2 mt-7"
-			>
-				{date}
-			</div>
-			<div class="w-full md:max-w-1/2 mb-7">
-				<Image
-					class="w-full rounded-xl"
-					fit="cover"
-					src={content.hero_image}
-					alt={content.hero_image_alt || `${content.title}`}
-				/>
-				<div
-					class="inline-flex w-full px-2 mt-4 justify-between items-start"
-				>
-					<div
-						class="inline-flex justify-start items-start gap-[5px] max-w-3/4 flex-wrap"
-					>
-						{content.tags.map((tag: string) => (
-							<div
-							class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden"
-						>
-							<div
-								class="justify-start bg-brand-500 text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight"
-							>
+					content.tags.map((tag: string) => (
+						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
+							<div class="justify-start bg-brand-500 text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight">
 								{tag}
 							</div>
 						</div>
-						))}
-					</div>
-					<small
-						class="justify-start text-gray-500 text-xs font-normal font-['Montserrat_Variable'] leading-tight"
-					>
-						{frontmatter.minutesRead}
-					</small>
-				</div>
+					))
+				}
 			</div>
-			<div class="mb-20 font-['Montserrat_Variable'] max-w-full">
-				<slot />
-			</div>
-		</article>
-	</main>
-</BaseLayout>
+			<small
+				class="justify-start text-gray-500 text-xs font-normal font-['Montserrat_Variable'] leading-tight"
+			>
+				{frontmatter.minutesRead}
+			</small>
+		</div>
+	</div>
+	<div class="mb-20 font-['Montserrat_Variable'] max-w-full">
+		<slot />
+	</div>
+</article>
