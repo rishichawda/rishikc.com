@@ -8,13 +8,15 @@ import { getEnv } from 'astro/env/runtime';
 import remarkToc from 'remark-toc';
 import rehypePresetMinify from 'rehype-preset-minify';
 
+import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs';
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [
     mdx({
     syntaxHighlight: 'shiki',
     shikiConfig: { theme: 'dracula' },
-    remarkPlugins: [remarkToc],
+    remarkPlugins: [remarkToc, remarkReadingTime],
     rehypePlugins: [rehypePresetMinify],
     remarkRehype: { footnoteLabel: 'Footnotes' },
     // gfm: true,

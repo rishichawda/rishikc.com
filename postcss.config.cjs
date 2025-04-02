@@ -3,7 +3,7 @@ module.exports = {
     "@tailwindcss/postcss": {
       config: {
             path: './tailwind.config.mjs',
-            applyBaseStyles: false,
+            applyBaseStyles: true,
           },
     },
     autoprefixer: {},

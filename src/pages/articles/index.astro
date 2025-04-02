@@ -72,7 +72,7 @@ function getSearchableContent(article: any): string {
         </h1>
 
         <div
-            class="flex flex-col lg:grid lg:grid-cols-[1fr_320px] gap-8 lg:gap-16"
+            class="flex flex-col lg:grid lg:grid-cols-[2fr_1fr] gap-8 lg:gap-16"
         >
             <!-- Sidebar - Moved to top on mobile -->
             <div class="order-first lg:order-last">
@@ -100,10 +100,22 @@ function getSearchableContent(article: any): string {
                         {
                             allTags.map((tag) => (
                                 <button
-                                    class="font-['Montserrat_Variable'] peer-[data-selected=true]:bg-[#6B7AB0] peer-[data-selected=true]:text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm bg-[#F8F9FE] text-[#6B7AB0] hover:bg-[#6B7AB0] hover:text-white transition-colors"
+                                    class="inline-flex items-center font-['Montserrat_Variable'] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm bg-[#F8F9FE] text-[#6B7AB0] hover:bg-[#6B7AB0]/90 hover:text-white transition-all relative group data-[selected=true]:bg-[#6B7AB0] data-[selected=true]:text-white"
                                     data-tag={tag}
                                 >
-                                    {tag}
+                                    <span>{tag}</span>
+                                    <svg
+                                        class="overflow-hidden w-0 group-data-[selected=true]:w-3 group-data-[selected=true]:ml-4 transition-all"
+                                        // viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
                                 </button>
                             ))
                         }
@@ -135,7 +147,7 @@ function getSearchableContent(article: any): string {
                             >
                                 <a
                                     href={article.data.path}
-                                    class="flex flex-col sm:flex-row gap-4 sm:gap-6"
+                                    class="flex flex-row gap-4 sm:gap-6"
                                 >
                                     <div class="flex-shrink-0">
                                         <Image
@@ -144,9 +156,10 @@ function getSearchableContent(article: any): string {
                                                 article.data.hero_image_alt ||
                                                 article.data.title
                                             }
-                                            class="w-full h-full aspect-square object-cover rounded-lg"
-                                            width={120}
-                                            height={120}
+                                            class="aspect-square rounded-lg"
+                                            quality="low"
+                                            // width={120}
+                                            // height={120}
                                             fit="cover"
                                         />
                                     </div>
@@ -157,7 +170,7 @@ function getSearchableContent(article: any): string {
                                         <small class="font-['Montserrat_Variable'] text-xs text-gray-500 align-text-top sm:mt-2">
                                             {formatDate(article.data.date)}
                                         </small>
-                                        <p class="font-['Montserrat_Variable'] text-sm text-gray-600 line-clamp-2 sm:line-clamp-none sm:mt-2">
+                                        <p class="font-['Montserrat_Variable'] text-sm text-gray-600 line-clamp-2 sm:mt-2">
                                             {article.data.description}
                                         </p>
                                     </div>

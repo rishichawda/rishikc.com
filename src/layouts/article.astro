@@ -1,26 +1,13 @@
 ---
-import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import BaseLayout from "./base_layout.astro";
 
-const posts = await getCollection("articles");
-
 let {
-	content: {
-		title,
-		description,
-		subtitle,
-		hero_image,
-		hero_image_alt,
-		hero_image_credit_text,
-		path,
-		date,
-		keywords,
-		tags,
-	},
+	content,
+	frontmatter
 } = Astro.props;
 
-date = new Date(date).toLocaleDateString("en-us", {
+const date = new Date(content.date).toLocaleDateString("en-us", {
 	year: "numeric",
 	month: "long",
 	day: "numeric",
@@ -29,9 +16,9 @@ date = new Date(date).toLocaleDateString("en-us", {
 
 <BaseLayout
 	page_info={{
-		title: title,
-		description: description,
-		keywords: keywords,
+		title: content.title,
+		description: content.description,
+		keywords: content.keywords,
 	}}
 >
 	<main>
@@ -42,18 +29,18 @@ date = new Date(date).toLocaleDateString("en-us", {
 				<h1
 					class="justify-start text-black text-3xl text-center font-semibold font-['Red_Hat_Display_Variable'] leading-7"
 				>
-					{title}
+					{content.title}
 				</h1>
 				{
-					subtitle && (
+					content.subtitle && (
 						<h2 class="justify-start text-black text-center text-base font-normal font-['Red_Hat_Display_Variable'] leading-normal">
-							{subtitle}
+							{content.subtitle}
 						</h2>
 					)
 				}
 			</div>
 			<div
-				class="justify-start text-black text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-2"
+				class="justify-start text-black text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-2 mt-7"
 			>
 				{date}
 			</div>
@@ -61,51 +48,35 @@ date = new Date(date).toLocaleDateString("en-us", {
 				<Image
 					class="w-full rounded-xl"
 					fit="cover"
-					src={hero_image}
-					alt={hero_image_alt || `${title}`}
+					src={content.hero_image}
+					alt={content.hero_image_alt || `${content.title}`}
 				/>
 				<div
-					class="inline-flex w-full px-2 mt-4 justify-between items-center"
+					class="inline-flex w-full px-2 mt-4 justify-between items-start"
 				>
 					<div
-						class="inline-flex justify-start items-start gap-[5px]"
+						class="inline-flex justify-start items-start gap-[5px] max-w-3/4 flex-wrap"
 					>
-						<div
+						{content.tags.map((tag: string) => (
+							<div
 							class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden"
 						>
 							<div
-								class="justify-start text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight"
+								class="justify-start bg-brand-500 text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight"
 							>
-								ui
+								{tag}
 							</div>
 						</div>
-						<div
-							class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden"
-						>
-							<div
-								class="justify-start text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight"
-							>
-								ux
-							</div>
-						</div>
-						<div
-							class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden"
-						>
-							<div
-								class="justify-start text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight"
-							>
-								design
-							</div>
-						</div>
+						))}
 					</div>
-					<div
-						class="justify-start text-black text-sm font-normal font-['Montserrat_Variable'] leading-tight"
+					<small
+						class="justify-start text-gray-500 text-xs font-normal font-['Montserrat_Variable'] leading-tight"
 					>
-						3 min. read
-					</div>
+						{frontmatter.minutesRead}
+					</small>
 				</div>
 			</div>
-			<div class="mb-20 font-['Montserrat_Variable']">
+			<div class="mb-20 font-['Montserrat_Variable'] max-w-full">
 				<slot />
 			</div>
 		</article>

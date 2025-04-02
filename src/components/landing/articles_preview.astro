@@ -4,7 +4,6 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
 const allArticles = await getCollection("articles");
-console.log(allArticles);
 const articles = allArticles
   .sort(
     (a: CollectionEntry<"articles">, b: CollectionEntry<"articles">) =>
@@ -22,13 +21,12 @@ const articles = allArticles
       day: "numeric",
     }),
   }));
-
 ---
 
 <section class="py-12 sm:py-16 lg:py-20">
   <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
     <h2
-      class="text-lg sm:text-xl lg:text-2xl font-medium font-['Red_Hat_Display_Variable'] text-[#6B7AB0] mb-8 sm:mb-12 lg:mb-16"
+      class="text-lg sm:text-xl lg:text-2xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-8 sm:mb-12 lg:mb-16"
     >
       What I've written about recently..
     </h2>
@@ -63,28 +61,32 @@ const articles = allArticles
         >
           {
             articles.map((article) => (
-              <div class="lg:max-w-[25%] md:max-w-[30%] max-w-[80%] flex-shrink-0 flex flex-col">
-                <div class="aspect-square mb-3 sm:mb-4">
-                  <Image
-                    src={article.image}
-                    alt={article.title}
-                    class="object-cover rounded-lg aspect-square"
-                  />
-                </div>
+              <div class="lg:max-w-[25%] md:max-w-[30%] max-w-[80%] flex-shrink-0 flex flex-col hover:-scale-[97%] transition-all">
+                <a class="hover:cursor-pointer" href={article.link}>
+                  <div class="aspect-square mb-3 sm:mb-4">
+                    <Image
+                      src={article.image}
+                      alt={article.title}
+                      class="object-cover rounded-lg aspect-square"
+                    />
+                  </div>
+                </a>
                 <div class="flex flex-col h-full justify-between">
-                  <h3 class="text-lg sm:text-xl font-medium text-[#6B7AB0] mb-1 sm:mb-2 line-clamp-2 font-['Red_Hat_Display_Variable']">
-                    {article.title}
-                  </h3>
+                  <a class="hover:cursor-pointer" href={article.link}>
+                    <h3 class="text-lg sm:text-xl font-medium text-brand-800 mb-1 sm:mb-2 line-clamp-2 font-['Red_Hat_Display_Variable']">
+                      {article.title}
+                    </h3>
+                  </a>
                   <div>
-                    <p class="font-['Red_Hat_Display_Variable'] text-[#6B7AB0]/[0.5] mb-1 sm:mb-2 text-xs sm:text-sm">
+                    <p class="font-['Red_Hat_Display_Variable'] text-brand-400 mb-1 sm:mb-2 text-xs sm:text-sm">
                       {article.date}
                     </p>
-                    <p class="font-['Red_Hat_Display_Variable'] text-[#6B7AB0] mb-3 sm:mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3">
+                    <p class="font-['Red_Hat_Display_Variable'] text-brand-700 mb-3 sm:mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3">
                       {article.description}
                     </p>
                     <a
                       href={article.link}
-                      class="text-[#6B7AB0] font-['Montserrat_Variable'] hover:text-gray-900 font-medium text-sm sm:text-base inline-flex items-center gap-x-1"
+                      class="text-brand-700 font-['Montserrat_Variable'] hover:text-brand-900 hover:cursor-pointer font-medium text-sm sm:text-base inline-flex items-center gap-x-1"
                     >
                       Read article
                       <svg
@@ -140,42 +142,52 @@ const articles = allArticles
 <script>
   const carousel = document.getElementById("blog-carousel");
   const viewport = document.getElementById("carousel-viewport") as HTMLElement;
-  const container = document.getElementById("carousel-container") as HTMLElement;
+  const container = document.getElementById(
+    "carousel-container",
+  ) as HTMLElement;
   const prevBtn = document.getElementById("prev-btn") as HTMLButtonElement;
   const nextBtn = document.getElementById("next-btn") as HTMLButtonElement;
   const dotsContainer = document.getElementById("carousel-dots");
 
-  if (carousel && container && viewport && prevBtn && nextBtn && dotsContainer) {
+  if (
+    carousel &&
+    container &&
+    viewport &&
+    prevBtn &&
+    nextBtn &&
+    dotsContainer
+  ) {
     const items = container.children;
     let currentIndex = 0;
 
     function calculateLayout() {
       const viewportWidth = viewport.offsetWidth;
-      const gap = window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40; // gap-6, gap-8, gap-10
+      const gap =
+        window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40; // gap-6, gap-8, gap-10
       const minItemWidth = 160; // Minimum width for an item
       const maxItemWidth = 200; // Maximum width for an item
-      
+
       // Calculate how many items can fit in the viewport
       let itemsPerView = Math.floor(viewportWidth / (minItemWidth + gap));
       itemsPerView = Math.max(1, Math.min(itemsPerView, items.length)); // Ensure at least 1 item and not more than total items
-      
+
       // Calculate the actual item width to fit items evenly
-      let itemWidth = (viewportWidth - (gap * (itemsPerView - 1))) / itemsPerView;
-      
+      let itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
+
       // If the calculated width exceeds maxItemWidth, reduce itemsPerView
       if (itemWidth > maxItemWidth) {
         itemsPerView = Math.floor(viewportWidth / (maxItemWidth + gap));
         itemsPerView = Math.max(1, Math.min(itemsPerView, items.length));
-        itemWidth = (viewportWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+        itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
       }
-      
+
       // Apply the calculated width to all items
       Array.from(items).forEach((item) => {
         (item as HTMLElement).style.width = `${itemWidth}px`;
       });
 
       // Update container width to accommodate all items
-      const totalWidth = (itemWidth * items.length) + (gap * (items.length - 1));
+      const totalWidth = itemWidth * items.length + gap * (items.length - 1);
       container.style.width = `${totalWidth}px`;
 
       // Calculate total slides, ensuring we only show complete slides
@@ -186,7 +198,7 @@ const articles = allArticles
 
     function updateDots(totalSlides: number) {
       if (dotsContainer) {
-        dotsContainer.innerHTML = '';
+        dotsContainer.innerHTML = "";
         for (let i = 0; i < totalSlides; i++) {
           const dot = document.createElement("button");
           dot.className = `w-2 h-2 rounded-full ${i === currentIndex ? "bg-[#B7BEE7]" : "bg-[#B7BEE7]/40"}`;
@@ -199,7 +211,11 @@ const articles = allArticles
 
     function updateCarousel() {
       const { itemWidth, itemsPerView, totalSlides } = calculateLayout();
-      const offset = -currentIndex * (itemWidth + (window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40)) * itemsPerView;
+      const offset =
+        -currentIndex *
+        (itemWidth +
+          (window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40)) *
+        itemsPerView;
       container.style.transform = `translateX(${offset}px)`;
 
       // Update button states

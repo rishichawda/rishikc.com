@@ -13,7 +13,9 @@
     "@fontsource-variable/montserrat": "^5.2.5",
     "@fontsource-variable/red-hat-display": "^5.2.5",
     "@fontsource-variable/red-hat-text": "^5.2.5",
-    "astro": "^5.5.5"
+    "astro": "^5.5.5",
+    "mdast-util-to-string": "^4.0.0",
+    "reading-time": "^1.5.0"
   },
   "devDependencies": {
     "@astrojs/mdx": "^4.2.2",
