@@ -1,8 +1,6 @@
 ---
-import Footer from "../components/Footer.astro";
 import Hero from "../components/landing/hero.astro";
 import ArticlesPreview from "../components/landing/articles_preview.astro";
-import Services from "../components/landing/services.astro";
 import CallToAction from "../components/landing/call_to_action.astro";
 import "../styles/global.css";
 import BaseLayout from "../layouts/base_layout.astro";
@@ -21,9 +19,8 @@ const page_info = {
 <BaseLayout page_info={page_info}>
 	<main>
 		<Hero />
-		<Services />
+		<!-- <Services /> -->
 		<ArticlesPreview />
 		<CallToAction />
 	</main>
-	<Footer />
 </BaseLayout>

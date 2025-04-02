@@ -2,14 +2,12 @@
 import { Image } from "astro:assets";
 
 const navItems = [
-  { label: "ABOUT ME", path: "/about" },
-  { label: "SERVICES", path: "#services" },
-  { label: "GALLERY", path: "/gallery" },
-  { label: "ARTICLES", path: "/articles" },
+  // { label: "about me", path: "/about" },
+  // { label: "services", path: "#services" },
+  { label: "articles", path: "/articles" },
+  { label: "gallery", path: "/gallery" },
 ];
 import logo from "../../../content/assets/logo/Group 489.svg";
-import github from "../../../content/assets/icon-github.svg";
-import github from "../../../content/assets/icon-linkedin.svg";
 ---
 
 <section
@@ -34,7 +32,7 @@ import github from "../../../content/assets/icon-linkedin.svg";
           navItems.map((item) => (
             <a
               href={item.path}
-              class="capitalize  flex justify-center items-center px-2 md:px-4 h-[2.3125rem] rounded-lg text-white font-['Inter Variable'] text-sm font-medium tracking-wide hover:bg-white/10 transition-colors"
+              class="capitalize flex justify-center items-center px-2 md:px-4 h-[2.3125rem] rounded-lg text-white font-['Inter_Variable'] text-sm tracking-wide hover:bg-white/10 transition-colors"
             >
               {item.label}
             </a>
@@ -58,7 +56,7 @@ import github from "../../../content/assets/icon-linkedin.svg";
         /> the Internet.
       </h1>
 
-      <div class="space-y-6 font-['Montserrat Variable']">
+      <div class="space-y-6 font-['Montserrat_Variable']">
         <p class="text-white sm:text-lg font-light">
           I currently work as a Senior Software Engineer at Progress Chef where
           I build awesome systems with my Software Engineering and DevSecOps
@@ -74,7 +72,7 @@ import github from "../../../content/assets/icon-linkedin.svg";
 
       <a
         href="#more"
-        class="font-['Montserrat Variable'] inline-flex items-center gap-1 py-1 leading-6 text-white font-light group hover:opacity-90 transition-opacity"
+        class="font-['Montserrat_Variable'] inline-flex items-center gap-1 py-1 leading-6 text-white font-light group hover:opacity-90 transition-opacity"
       >
         <span>Find out more about me</span>
         <svg
@@ -166,7 +164,7 @@ import github from "../../../content/assets/icon-linkedin.svg";
   <div class="relative z-20 mt-8 w-fit mx-auto">
     <a
       href="#contact"
-      class="bg-[#98a5db] text-white px-6 py-3 rounded font-['Inter Variable'] text-sm font-medium uppercase tracking-wide hover:bg-[#8592c8] transition-colors block text-center"
+      class="bg-[#98a5db] text-white px-6 py-3 rounded font-['Inter_Variable'] text-sm font-medium uppercase tracking-wide hover:bg-[#8592c8] transition-colors block text-center"
     >
       Get in Touch
     </a>

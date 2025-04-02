@@ -17,7 +17,7 @@ export default defineConfig({
     remarkPlugins: [remarkToc],
     rehypePlugins: [rehypePresetMinify],
     remarkRehype: { footnoteLabel: 'Footnotes' },
-    gfm: false,
+    // gfm: true,
   })],
 
   site: siteMetadata.siteUrl,

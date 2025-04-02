@@ -62,7 +62,7 @@ function getSearchableContent(article: any): string {
 ---
 
 <Layout page_info={page_info}>
-    <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16">
+    <main class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16">
         <h1 class="text-2xl sm:text-3xl lg:text-[2rem] font-medium text-gray-900 mb-8 sm:mb-12">Articles</h1>
 
         <div class="flex flex-col lg:grid lg:grid-cols-[1fr_320px] gap-8 lg:gap-16">
@@ -73,7 +73,7 @@ function getSearchableContent(article: any): string {
                     href="/quotes"
                     class="block mb-8 sm:mb-12 p-4 sm:p-6 bg-[#F8F9FE] rounded-lg hover:bg-[#F0F2FC] transition-colors"
                 >
-                    <p class="text-gray-600 text-sm">
+                    <p class="text-gray-600 text-sm font-['Montserrat_Variable']">
                         Click here to read some of my favourite lines from books
                         and the internet
                     </p>
@@ -81,14 +81,14 @@ function getSearchableContent(article: any): string {
 
                 <!-- Tags -->
                 <div>
-                    <h3 class="text-base font-medium text-gray-900 mb-4">
+                    <h3 class="text-base font-medium font-['Red_Hat_Display_Variable'] text-gray-900 mb-4">
                         Filter by tags
                     </h3>
                     <div class="flex flex-wrap gap-2">
                         {
                             allTags.map((tag) => (
                                 <button
-                                    class="peer-[data-selected=true]:bg-[#6B7AB0] peer-[data-selected=true]:text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm bg-[#F8F9FE] text-[#6B7AB0] hover:bg-[#6B7AB0] hover:text-white transition-colors"
+                                    class="font-['Montserrat_Variable'] peer-[data-selected=true]:bg-[#6B7AB0] peer-[data-selected=true]:text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm bg-[#F8F9FE] text-[#6B7AB0] hover:bg-[#6B7AB0] hover:text-white transition-colors"
                                     data-tag={tag}
                                 >
                                     {tag}
@@ -100,19 +100,19 @@ function getSearchableContent(article: any): string {
             </div>
 
             <!-- Main content area -->
-            <div>
+            <div class="flex flex-col">
                 <!-- Search bar -->
                 <div class="mb-8 sm:mb-12">
                     <input
                         type="text"
                         id="search"
                         placeholder="Search by title, description, keywords, or tags"
-                        class="peer w-full px-4 sm:px-6 py-3 sm:py-4 rounded-lg bg-[#F8F9FE] border-none text-gray-700 placeholder-gray-500 text-sm sm:text-base focus:ring-0 focus:outline-none"
+                        class="font-['Montserrat_Variable'] peer w-full px-4 sm:px-6 py-3 sm:py-4 rounded-lg bg-[#F8F9FE] border-none text-gray-700 placeholder-gray-500 text-sm sm:text-base focus:ring-0 focus:outline-none"
                     />
                 </div>
 
                 <!-- Articles list -->
-                <div class="space-y-12 sm:space-y-8">
+                <div class="space-y-12 sm:space-y-8 flex-1">
                     {
                         sortedArticles.map((article) => (
                             <article
@@ -125,29 +125,33 @@ function getSearchableContent(article: any): string {
                                     href={article.data.path}
                                     class="flex flex-col sm:flex-row gap-4 sm:gap-6"
                                 >
-                                    <div class="w-full sm:w-[120px] h-[200px] sm:h-[120px] flex-shrink-0">
+                                    <div class="flex-shrink-0">
                                         <Image
                                             src={article.data.hero_image}
                                             alt={
                                                 article.data.hero_image_alt ||
                                                 article.data.title
                                             }
-                                            class="w-full h-full object-cover rounded-lg"
-                                            width={120}
-                                            height={120}
+                                            class="w-full h-full aspect-square object-cover rounded-lg"
+                                            // width={120}
+                                            // height={120}
                                             fit="cover"
                                         />
                                     </div>
-                                    <div class="flex flex-col gap-2 sm:gap-0 sm:justify-between sm:py-1">
-                                        <h2 class="text-lg sm:text-xl font-medium text-gray-900 group-hover:text-[#6B7AB0] transition-colors">
+                                    <div class="flex flex-col gap-2 sm:gap-0 sm:py-1">
+                                        
+                                        {/* <div class="flex inline-flex justify-between items-center"> */}
+                                            <h2 class="font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-[#6B7AB0] transition-colors">
                                             {article.data.title}
                                         </h2>
-                                        <p class="text-sm text-gray-500 line-clamp-2 sm:line-clamp-none sm:mt-1">
-                                            {article.data.description}
-                                        </p>
-                                        <small class="text-xs sm:text-sm text-gray-500">
+                                        <small class="font-['Montserrat_Variable'] text-xs text-gray-500 align-text-top sm:mt-2">
                                             {formatDate(article.data.date)}
                                         </small>
+                                        {/* </div> */}
+                                        <p class="font-['Montserrat_Variable'] text-sm text-gray-600 line-clamp-2 sm:line-clamp-none sm:mt-2">
+                                            {article.data.description}
+                                        </p>
+
                                     </div>
                                 </a>
                             </article>
@@ -156,32 +160,33 @@ function getSearchableContent(article: any): string {
                 </div>
 
                 <!-- Pagination -->
-                <div class="mt-8 sm:mt-12 flex items-center gap-2 justify-start">
+                <div class="mt-8 sm:mt-12 flex items-center gap-2 justify-center">
                     <button
-                        class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+                        class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                         data-prev
                         disabled={currentPage === 1}
                     >
-                        <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            class="rotate-180"
-                        >
-                            <path
-                                d="M3 8h10M9 4l4 4-4 4"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                        </svg>
+                    <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 17 17"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="rotate-180"
+                  >
+                    <path
+                      d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
+                      stroke="#737FAE"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                     </button>
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                         <button
                             class:list={[
-                                "w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg transition-colors text-sm sm:text-base",
+                                "w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-colors text-sm sm:text-base",
                                 page === currentPage
                                     ? "bg-[#6B7AB0] text-white font-medium"
                                     : "text-gray-600 hover:bg-gray-100",
@@ -192,24 +197,25 @@ function getSearchableContent(article: any): string {
                         </button>
                     ))}
                     <button
-                        class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+                        class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                         data-next
                         disabled={currentPage >= totalPages}
                     >
-                        <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                        >
-                            <path
-                                d="M3 8h10M9 4l4 4-4 4"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                        </svg>
+                    <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 17 17"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
+                      stroke="#737FAE"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                     </button>
                 </div>
             </div>

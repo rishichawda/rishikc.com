@@ -22,42 +22,90 @@ let {
 
 date = new Date(date).toLocaleDateString("en-us", {
 	year: "numeric",
-	month: "short",
+	month: "long",
 	day: "numeric",
 });
 ---
 
-<BaseLayout page_info={{
-	title: title,
-	description: description,
-	keywords: keywords,
-}}  >
+<BaseLayout
+	page_info={{
+		title: title,
+		description: description,
+		keywords: keywords,
+	}}
+>
 	<main>
-		<article class="w-[651px] flex flex-col mx-auto items-center pt-10">
-			<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-2">
-				<h1 class="justify-start text-black text-3xl text-center font-semibold font-['RedHat Display'] leading-7">{title}</h1>
-				{subtitle && <h2 class="justify-start text-black text-center text-base font-normal font-['RedHat Display'] leading-normal">{subtitle}</h2>}
-			  </div>
-			  <div class="justify-start text-black text-center text-sm font-normal font-['RedHat Text'] leading-tight mb-2">12th December, 2020</div>
-			  <div class="w-[650px] mb-7">
-				<Image class="max-w-[650px] rounded-xl" fit="cover" src={hero_image} alt={hero_image_alt || `${title}`} />
-				<div class="inline-flex w-full px-2 mt-4 justify-between items-center">
-					<div class="inline-flex justify-start items-start gap-[5px]">
-						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
-							<div class="justify-start text-white text-sm font-normal font-['RedHat Text'] leading-tight">ui</div>
+		<article class="max-w-[90%] flex flex-col mx-auto items-center pt-10">
+			<div
+				class="inline-flex flex-col justify-start items-center gap-2.5 mb-2"
+			>
+				<h1
+					class="justify-start text-black text-3xl text-center font-semibold font-['Red_Hat_Display_Variable'] leading-7"
+				>
+					{title}
+				</h1>
+				{
+					subtitle && (
+						<h2 class="justify-start text-black text-center text-base font-normal font-['Red_Hat_Display_Variable'] leading-normal">
+							{subtitle}
+						</h2>
+					)
+				}
+			</div>
+			<div
+				class="justify-start text-black text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-2"
+			>
+				{date}
+			</div>
+			<div class="w-full md:max-w-1/2 mb-7">
+				<Image
+					class="w-full rounded-xl"
+					fit="cover"
+					src={hero_image}
+					alt={hero_image_alt || `${title}`}
+				/>
+				<div
+					class="inline-flex w-full px-2 mt-4 justify-between items-center"
+				>
+					<div
+						class="inline-flex justify-start items-start gap-[5px]"
+					>
+						<div
+							class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden"
+						>
+							<div
+								class="justify-start text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight"
+							>
+								ui
+							</div>
 						</div>
-						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
-							<div class="justify-start text-white text-sm font-normal font-['RedHat Text'] leading-tight">ux</div>
+						<div
+							class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden"
+						>
+							<div
+								class="justify-start text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight"
+							>
+								ux
+							</div>
 						</div>
-						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
-							<div class="justify-start text-white text-sm font-normal font-['RedHat Text'] leading-tight">design</div>
+						<div
+							class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden"
+						>
+							<div
+								class="justify-start text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight"
+							>
+								design
+							</div>
 						</div>
 					</div>
-					<div class="justify-start text-black text-sm font-normal font-['RedHat Text'] leading-tight">3 min. read</div>
+					<div
+						class="justify-start text-black text-sm font-normal font-['Montserrat_Variable'] leading-tight"
+					>
+						3 min. read
+					</div>
 				</div>
-			  </div>
-			<hr />
-			<div class="flex flex-col mb-20">
+			</div>
+			<div class="mb-20 font-['Montserrat_Variable']">
 				<slot />
 			</div>
 		</article>

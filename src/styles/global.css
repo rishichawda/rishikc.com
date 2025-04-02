@@ -1,8 +1,9 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @layer base {
   html {
-    font-family: 'Inter', sans-serif;
+    /* font-family: 'Inter', sans-serif; */
     scroll-behavior: smooth;
   }
   
