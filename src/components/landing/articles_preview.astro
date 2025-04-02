@@ -3,14 +3,6 @@ import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
-// interface ArticlePreview {
-//   title: string;
-//   description: string;
-//   image: string;
-//   link: string;
-//   date: string;
-// }
-
 const allArticles = await getCollection("articles");
 console.log(allArticles);
 const articles = allArticles
@@ -31,12 +23,6 @@ const articles = allArticles
     }),
   }));
 
-// Calculate how many items to show based on viewport width
-const itemWidth = 300; // width of each item
-const gapWidth = 32; // gap between items
-const itemWithGap = itemWidth + gapWidth;
-const viewportWidth = 964; // Desired viewport width (3 items + gaps)
-const itemsPerView = Math.floor(viewportWidth / itemWithGap);
 ---
 
 <section class="py-12 sm:py-16 lg:py-20">
@@ -69,7 +55,7 @@ const itemsPerView = Math.floor(viewportWidth / itemWithGap);
       </button>
 
       <!-- Carousel viewport -->
-      <div class="relative overflow-hidden w-full max-w-[88%] mx-4">
+      <div class="relative overflow-hidden w-full mx-4" id="carousel-viewport">
         <!-- Carousel container -->
         <div
           class="flex gap-6 sm:gap-8 lg:gap-10 transition-transform duration-300 ease-in-out"
@@ -93,7 +79,7 @@ const itemsPerView = Math.floor(viewportWidth / itemWithGap);
                     <p class="font-['Red_Hat_Display_Variable'] text-[#6B7AB0]/[0.5] mb-1 sm:mb-2 text-xs sm:text-sm">
                       {article.date}
                     </p>
-                    <p class="font-['Red_Hat_Display_Variable'] text-[#6B7AB0] mb-3 sm:mb-4 font-light leading-relaxed line-clamp-3 text-sm sm:text-base line-clamp-3">
+                    <p class="font-['Red_Hat_Display_Variable'] text-[#6B7AB0] mb-3 sm:mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3">
                       {article.description}
                     </p>
                     <a
@@ -153,48 +139,79 @@ const itemsPerView = Math.floor(viewportWidth / itemWithGap);
 
 <script>
   const carousel = document.getElementById("blog-carousel");
-  const container = document.getElementById(
-    "carousel-container",
-  ) as HTMLElement;
+  const viewport = document.getElementById("carousel-viewport") as HTMLElement;
+  const container = document.getElementById("carousel-container") as HTMLElement;
   const prevBtn = document.getElementById("prev-btn") as HTMLButtonElement;
   const nextBtn = document.getElementById("next-btn") as HTMLButtonElement;
   const dotsContainer = document.getElementById("carousel-dots");
 
-  if (carousel && container && prevBtn && nextBtn && dotsContainer) {
+  if (carousel && container && viewport && prevBtn && nextBtn && dotsContainer) {
     const items = container.children;
-    const itemWidth = window.innerWidth < 640 ? 284 : 332; // width (280/300) + gap (4/8)
-    const itemsPerView =
-      window.innerWidth < 640 ? 3 : window.innerWidth < 1024 ? 5 : 6;
-    const totalSlides = Math.floor(items.length / itemsPerView);
     let currentIndex = 0;
 
-    // Create dots
-    for (let i = 0; i < totalSlides; i++) {
-      const dot = document.createElement("button");
-      dot.className = `w-2 h-2 rounded-full ${i === 0 ? "bg-[#B7BEE7]" : "bg-[#B7BEE7]/40"}`;
-      dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
-      dot.setAttribute("data-index", i.toString());
-      dotsContainer.appendChild(dot);
+    function calculateLayout() {
+      const viewportWidth = viewport.offsetWidth;
+      const gap = window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40; // gap-6, gap-8, gap-10
+      const minItemWidth = 160; // Minimum width for an item
+      const maxItemWidth = 200; // Maximum width for an item
+      
+      // Calculate how many items can fit in the viewport
+      let itemsPerView = Math.floor(viewportWidth / (minItemWidth + gap));
+      itemsPerView = Math.max(1, Math.min(itemsPerView, items.length)); // Ensure at least 1 item and not more than total items
+      
+      // Calculate the actual item width to fit items evenly
+      let itemWidth = (viewportWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+      
+      // If the calculated width exceeds maxItemWidth, reduce itemsPerView
+      if (itemWidth > maxItemWidth) {
+        itemsPerView = Math.floor(viewportWidth / (maxItemWidth + gap));
+        itemsPerView = Math.max(1, Math.min(itemsPerView, items.length));
+        itemWidth = (viewportWidth - (gap * (itemsPerView - 1))) / itemsPerView;
+      }
+      
+      // Apply the calculated width to all items
+      Array.from(items).forEach((item) => {
+        (item as HTMLElement).style.width = `${itemWidth}px`;
+      });
+
+      // Update container width to accommodate all items
+      const totalWidth = (itemWidth * items.length) + (gap * (items.length - 1));
+      container.style.width = `${totalWidth}px`;
+
+      // Calculate total slides, ensuring we only show complete slides
+      const totalSlides = Math.floor(items.length / itemsPerView);
+
+      return { itemWidth, itemsPerView, totalSlides };
     }
 
-    const dots = dotsContainer.querySelectorAll("[data-index]");
+    function updateDots(totalSlides: number) {
+      if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < totalSlides; i++) {
+          const dot = document.createElement("button");
+          dot.className = `w-2 h-2 rounded-full ${i === currentIndex ? "bg-[#B7BEE7]" : "bg-[#B7BEE7]/40"}`;
+          dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
+          dot.setAttribute("data-index", i.toString());
+          dotsContainer.appendChild(dot);
+        }
+      }
+    }
 
     function updateCarousel() {
-      const offset = -currentIndex * (itemWidth * itemsPerView);
+      const { itemWidth, itemsPerView, totalSlides } = calculateLayout();
+      const offset = -currentIndex * (itemWidth + (window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40)) * itemsPerView;
       container.style.transform = `translateX(${offset}px)`;
-
-      // Update dots
-      dots.forEach((dot, index) => {
-        dot.classList.toggle("bg-[#B7BEE7]", index === currentIndex);
-        dot.classList.toggle("bg-[#B7BEE7]/40", index !== currentIndex);
-      });
 
       // Update button states
       prevBtn.classList.toggle("opacity-50", currentIndex === 0);
       nextBtn.classList.toggle("opacity-50", currentIndex === totalSlides - 1);
+
+      // Update dots
+      updateDots(totalSlides);
     }
 
     prevBtn.addEventListener("click", () => {
+      const { totalSlides } = calculateLayout();
       if (currentIndex > 0) {
         currentIndex--;
         updateCarousel();
@@ -202,17 +219,19 @@ const itemsPerView = Math.floor(viewportWidth / itemWithGap);
     });
 
     nextBtn.addEventListener("click", () => {
+      const { totalSlides } = calculateLayout();
       if (currentIndex < totalSlides - 1) {
         currentIndex++;
         updateCarousel();
       }
     });
 
-    dots.forEach((dot, index) => {
-      dot.addEventListener("click", () => {
-        currentIndex = index;
+    dotsContainer.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.hasAttribute("data-index")) {
+        currentIndex = parseInt(target.getAttribute("data-index") || "0");
         updateCarousel();
-      });
+      }
     });
 
     // Handle window resize
@@ -224,6 +243,9 @@ const itemsPerView = Math.floor(viewportWidth / itemWithGap);
         updateCarousel();
       }, 250);
     });
+
+    // Initial setup
+    updateCarousel();
   }
 </script>
 

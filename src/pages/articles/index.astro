@@ -4,10 +4,10 @@ import Layout from "../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
 
 const page_info = {
-	title: "Articles | Rishi Chawda",
-	description: "Articles | Rishi Chawda",
-	image: Astro.glob("../../../public/favicon.svg"),
-	keywords: "Articles | Rishi Chawda",
+    title: "Articles | Rishi Chawda",
+    description: "Articles | Rishi Chawda",
+    image: Astro.glob("../../../public/favicon.svg"),
+    keywords: "Articles | Rishi Chawda",
 };
 
 // interface ArticleData {
@@ -62,10 +62,18 @@ function getSearchableContent(article: any): string {
 ---
 
 <Layout page_info={page_info}>
-    <main class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16">
-        <h1 class="text-2xl sm:text-3xl lg:text-[2rem] font-medium text-gray-900 mb-8 sm:mb-12">Articles</h1>
+    <main
+        class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16"
+    >
+        <h1
+            class="text-2xl sm:text-3xl lg:text-[2rem] font-medium text-gray-900 mb-8 sm:mb-12"
+        >
+            Articles
+        </h1>
 
-        <div class="flex flex-col lg:grid lg:grid-cols-[1fr_320px] gap-8 lg:gap-16">
+        <div
+            class="flex flex-col lg:grid lg:grid-cols-[1fr_320px] gap-8 lg:gap-16"
+        >
             <!-- Sidebar - Moved to top on mobile -->
             <div class="order-first lg:order-last">
                 <!-- Quote box -->
@@ -73,7 +81,9 @@ function getSearchableContent(article: any): string {
                     href="/quotes"
                     class="block mb-8 sm:mb-12 p-4 sm:p-6 bg-[#F8F9FE] rounded-lg hover:bg-[#F0F2FC] transition-colors"
                 >
-                    <p class="text-gray-600 text-sm font-['Montserrat_Variable']">
+                    <p
+                        class="text-gray-600 text-sm font-['Montserrat_Variable']"
+                    >
                         Click here to read some of my favourite lines from books
                         and the internet
                     </p>
@@ -81,7 +91,9 @@ function getSearchableContent(article: any): string {
 
                 <!-- Tags -->
                 <div>
-                    <h3 class="text-base font-medium font-['Red_Hat_Display_Variable'] text-gray-900 mb-4">
+                    <h3
+                        class="text-base font-medium font-['Red_Hat_Display_Variable'] text-gray-900 mb-4"
+                    >
                         Filter by tags
                     </h3>
                     <div class="flex flex-wrap gap-2">
@@ -133,25 +145,21 @@ function getSearchableContent(article: any): string {
                                                 article.data.title
                                             }
                                             class="w-full h-full aspect-square object-cover rounded-lg"
-                                            // width={120}
-                                            // height={120}
+                                            width={120}
+                                            height={120}
                                             fit="cover"
                                         />
                                     </div>
                                     <div class="flex flex-col gap-2 sm:gap-0 sm:py-1">
-                                        
-                                        {/* <div class="flex inline-flex justify-between items-center"> */}
-                                            <h2 class="font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-[#6B7AB0] transition-colors">
+                                        <h2 class="font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-[#6B7AB0] transition-colors">
                                             {article.data.title}
                                         </h2>
                                         <small class="font-['Montserrat_Variable'] text-xs text-gray-500 align-text-top sm:mt-2">
                                             {formatDate(article.data.date)}
                                         </small>
-                                        {/* </div> */}
                                         <p class="font-['Montserrat_Variable'] text-sm text-gray-600 line-clamp-2 sm:line-clamp-none sm:mt-2">
                                             {article.data.description}
                                         </p>
-
                                     </div>
                                 </a>
                             </article>
@@ -160,62 +168,66 @@ function getSearchableContent(article: any): string {
                 </div>
 
                 <!-- Pagination -->
-                <div class="mt-8 sm:mt-12 flex items-center gap-2 justify-center">
+                <div
+                    class="mt-8 sm:mt-12 flex items-center gap-2 justify-center"
+                >
                     <button
                         class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                         data-prev
                         disabled={currentPage === 1}
                     >
-                    <svg
-                    width="17"
-                    height="17"
-                    viewBox="0 0 17 17"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="rotate-180"
-                  >
-                    <path
-                      d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
-                      stroke="#737FAE"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                    </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <button
-                            class:list={[
-                                "w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-colors text-sm sm:text-base",
-                                page === currentPage
-                                    ? "bg-[#6B7AB0] text-white font-medium"
-                                    : "text-gray-600 hover:bg-gray-100",
-                            ]}
-                            data-page={page}
+                        <svg
+                            width="17"
+                            height="17"
+                            viewBox="0 0 17 17"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="rotate-180"
                         >
-                            {page}
-                        </button>
-                    ))}
+                            <path
+                                d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
+                                stroke="#737FAE"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    {
+                        Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                            (page) => (
+                                <button
+                                    class:list={[
+                                        "w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-colors text-sm sm:text-base",
+                                        page === currentPage
+                                            ? "bg-[#6B7AB0] text-white font-medium"
+                                            : "text-gray-600 hover:bg-gray-100",
+                                    ]}
+                                    data-page={page}
+                                >
+                                    {page}
+                                </button>
+                            ),
+                        )
+                    }
                     <button
                         class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                         data-next
                         disabled={currentPage >= totalPages}
                     >
-                    <svg
-                    width="17"
-                    height="17"
-                    viewBox="0 0 17 17"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
-                      stroke="#737FAE"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
+                        <svg
+                            width="17"
+                            height="17"
+                            viewBox="0 0 17 17"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
+                                stroke="#737FAE"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -259,8 +271,12 @@ function getSearchableContent(article: any): string {
         (el) => el as HTMLButtonElement,
     );
 
-    const prevButton = document.querySelector("[data-prev]") as HTMLButtonElement;
-    const nextButton = document.querySelector("[data-next]") as HTMLButtonElement;
+    const prevButton = document.querySelector(
+        "[data-prev]",
+    ) as HTMLButtonElement;
+    const nextButton = document.querySelector(
+        "[data-next]",
+    ) as HTMLButtonElement;
 
     // Filter and pagination logic
     function updateArticlesVisibility(): void {
@@ -355,4 +371,3 @@ function getSearchableContent(article: any): string {
     // Initial display
     updateArticlesVisibility();
 </script>
-
