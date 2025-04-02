@@ -21,9 +21,9 @@ import logo from "../../../content/assets/logo/Group 489.svg";
 
   <!-- Navigation -->
   <div class="relative z-10 pt-3">
-    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+    <div class="flex justify-between items-center gap-4">
       <div
-        class="max-w-fit text-white font-['Inter Variable'] text-sm px-[1.6875rem] h-[2.3125rem] flex justify-center rounded-lg"
+        class="max-w-fit text-white font-['Inter Variable'] text-sm h-[2.3125rem] flex justify-center rounded-lg"
       >
         <Image alt="logo" class="max-h-auto max-w-10" src={logo} />
       </div>
@@ -32,7 +32,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
           navItems.map((item) => (
             <a
               href={item.path}
-              class="capitalize flex justify-center items-center px-2 md:px-4 h-[2.3125rem] rounded-lg text-white font-['Inter_Variable'] text-sm tracking-wide hover:bg-white/10 transition-colors"
+              class="capitalize flex justify-center items-center px-2 md:px-4 h-[2.3125rem] rounded-lg text-white font-['Red_Hat_Display_Variable'] text-sm tracking-wide hover:bg-white/10 hover:cursor-pointer transition-colors"
             >
               {item.label}
             </a>
@@ -49,22 +49,22 @@ import logo from "../../../content/assets/logo/Group 489.svg";
     <!-- Left Content -->
     <div class="w-full lg:w-[492px] space-y-8 order-1">
       <h1
-        class="text-3xl sm:text-3xl lg:text-[1.75rem] font-light text-white leading-[1.2]"
+        class="font-['Red_Hat_Display_Variable'] text-3xl sm:text-3xl lg:text-[1.75rem] font-light text-white leading-[1.2]"
       >
         Welcome to <span class="font-medium">Rishi</span>'s personal corner on<br
           class="hidden sm:block"
         /> the Internet.
       </h1>
 
-      <div class="space-y-6 font-['Montserrat_Variable']">
-        <p class="text-white sm:text-lg font-light">
+      <div class="space-y-6 font-['Montserrat_Variable'] leading-7">
+        <p class="text-white sm:text-md font-light">
           I currently work as a Senior Software Engineer at Progress Chef where
           I build awesome systems with my Software Engineering and DevSecOps
           skills — constantly learning, evolving, and conquering challenges in
           the digital realm!
         </p>
 
-        <p class="text-white sm:text-lg font-light">
+        <p class="text-white sm:text-md font-light font-['Montserrat_Variable'] leading-7">
           Open to new freelance and open source adventures, feel free to reach
           out for any exciting projects that need some code magic.
         </p>
@@ -72,7 +72,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
 
       <a
         href="#more"
-        class="font-['Montserrat_Variable'] inline-flex items-center gap-1 py-1 leading-6 text-white font-light group hover:opacity-90 transition-opacity"
+        class="font-['Montserrat_Variable'] text-sm inline-flex items-center gap-1 py-1 leading-6 text-white font-light group hover:opacity-90 transition-opacity"
       >
         <span>Find out more about me</span>
         <svg
@@ -94,7 +94,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
     </div>
 
     <div
-      class="flex hidden lg:block lg:order-1 xl:order-2 top-[-0.5rem] xl:absolute left-[40%] flex-col h-[90%] items-center justify-center"
+      class="hidden lg:block lg:order-1 xl:order-2 top-[-0.5rem] xl:absolute left-[40%] flex-col h-[90%] items-center justify-center"
     >
       <Image alt="logo" src={logo} class="max-h-full max-w-auto" />
     </div>
@@ -105,7 +105,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         href="https://github.com/rishichawda"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:opacity-80 transition-opacity"
+        class="hover:opacity-80 transition-opacity hover:cursor-pointer"
       >
         <svg
           width="32"
@@ -123,7 +123,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         href="https://linkedin.com/in/rishi-chawda"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:opacity-80 transition-opacity"
+        class="hover:opacity-80 transition-opacity hover:cursor-pointer"
       >
         <svg
           width="26"
@@ -141,7 +141,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         href="https://instagram.com/rishikc"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:opacity-80 transition-opacity"
+        class="hover:opacity-80 transition-opacity hover:cursor-pointer"
       >
         <svg
         width="26"
@@ -164,7 +164,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
   <div class="relative z-20 mt-8 w-fit mx-auto mb-4">
     <a
       href="#contact"
-      class="bg-[#98a5db] text-white px-6 py-3 rounded font-['Inter_Variable'] text-sm font-medium uppercase tracking-wide hover:bg-[#8592c8] transition-colors block text-center"
+      class="bg-[#98a5db] text-white px-6 py-3 rounded font-['Red_Hat_Display_Variable'] text-sm font-medium uppercase tracking-wide hover:bg-[#8592c8] transition-colors block text-center"
     >
       Get in Touch
     </a>

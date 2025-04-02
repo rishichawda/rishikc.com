@@ -28,6 +28,25 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 	}}
 >
 	<main class="flex flex-col mx-auto items-center">
+		<a
+                href="/articles"
+                class="inline-flex items-center text-brand-800/90 hover:text-brand-950 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300 mt-10"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-3 group-hover:-translate-x-1 transition-transform"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to articles
+            </a>
 		<BlogPost content={post.data} frontmatter={remarkPluginFrontmatter}>
 			<Prose>
 				<Content />

@@ -65,11 +65,32 @@ function getSearchableContent(article: any): string {
     <main
         class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16"
     >
-        <h1
-            class="text-2xl sm:text-3xl lg:text-[2rem] font-medium text-gray-900 mb-8 sm:mb-12"
-        >
-            Articles
-        </h1>
+        <div class="flex flex-row justify-between items-center mb-8 sm:mb-12">
+            <h1
+                class="text-2xl sm:text-3xl lg:text-[2rem] font-medium text-gray-900"
+            >
+                Articles
+            </h1>
+            <a
+                href="/"
+                class="inline-flex items-center text-brand-800/90 hover:text-brand-950 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-3 group-hover:-translate-x-1 transition-transform"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Home
+            </a>
+        </div>
 
         <div
             class="flex flex-col lg:grid lg:grid-cols-[2fr_1fr] gap-8 lg:gap-16"
@@ -106,15 +127,15 @@ function getSearchableContent(article: any): string {
                                     <span>{tag}</span>
                                     <svg
                                         class="overflow-hidden w-0 group-data-[selected=true]:w-3 group-data-[selected=true]:ml-4 transition-all"
-                                        // viewBox="0 0 24 24"
+                                        viewBox="0 0 24 24"
                                         fill="none"
                                         stroke="currentColor"
                                         stroke-width="2"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
                                     >
-                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        <line x1="18" y1="6" x2="6" y2="18" />
+                                        <line x1="6" y1="6" x2="18" y2="18" />
                                     </svg>
                                 </button>
                             ))
@@ -158,8 +179,8 @@ function getSearchableContent(article: any): string {
                                             }
                                             class="aspect-square rounded-lg"
                                             quality="low"
-                                            // width={120}
-                                            // height={120}
+                                            width={120}
+                                            height={120}
                                             fit="cover"
                                         />
                                     </div>
