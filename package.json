@@ -25,6 +25,7 @@
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "rehype-preset-minify": "^7.0.1",
+    "remark-notes-plugin": "^1.0.0",
     "remark-toc": "^9.0.0",
     "tailwindcss": "^4.0.17"
   }

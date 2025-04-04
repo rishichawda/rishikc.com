@@ -2059,7 +2059,7 @@ mdast-util-phrasing@^4.0.0:
     "@types/mdast" "^4.0.0"
     unist-util-is "^6.0.0"
 
-mdast-util-to-hast@^13.0.0:
+mdast-util-to-hast@^13.0.0, mdast-util-to-hast@^13.2.0:
   version "13.2.0"
   resolved "https://registry.yarnpkg.com/mdast-util-to-hast/-/mdast-util-to-hast-13.2.0.tgz#5ca58e5b921cc0a3ded1bc02eed79a4fe4fe41f4"
   integrity sha512-QGYKEuUsYT9ykKBCMOEDLsU5JRObWQusAolFMeko/tYPufNkRffBAQjIE+99jbA87xv6FgmjLtwjh9wBWajwAA==
@@ -2108,6 +2108,11 @@ mdast-util-toc@^7.0.0:
     mdast-util-to-string "^4.0.0"
     unist-util-is "^6.0.0"
     unist-util-visit "^5.0.0"
+
+mdast@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/mdast/-/mdast-3.0.0.tgz#626bce9603ed43fb6fb053245a6e4a17f4457aa8"
+  integrity sha512-xySmf8g4fPKMeC07jXGz971EkLbWAJ83s4US2Tj9lEdnZ142UP5grN73H1Xd3HzrdbU5o9GYYP/y8F9ZSwLE9g==
 
 micromark-core-commonmark@^2.0.0:
   version "2.0.3"
@@ -3076,6 +3081,18 @@ remark-mdx@^3.0.0:
     mdast-util-mdx "^3.0.0"
     micromark-extension-mdxjs "^3.0.0"
 
+remark-notes-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/remark-notes-plugin/-/remark-notes-plugin-1.0.0.tgz#1b62b65d8bef31c4b9f186bf73b660306d4329df"
+  integrity sha512-X1+cMS7yOOwbp1jJkFYwcyyAqsdYvA1gX/siAywkgWT4eofoMwi4itzJujPLM69bveDHhg2bS8qxAEmkCsXC3w==
+  dependencies:
+    hast-util-to-html "^9.0.5"
+    mdast "^3.0.0"
+    mdast-util-to-hast "^13.2.0"
+    remark "^15.0.1"
+    unified "^11.0.4"
+    unist-util-visit "^5.0.0"
+
 remark-parse@^11.0.0:
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/remark-parse/-/remark-parse-11.0.0.tgz#aa60743fcb37ebf6b069204eb4da304e40db45a1"
@@ -3123,6 +3140,16 @@ remark-toc@^9.0.0:
   dependencies:
     "@types/mdast" "^4.0.0"
     mdast-util-toc "^7.0.0"
+
+remark@^15.0.1:
+  version "15.0.1"
+  resolved "https://registry.yarnpkg.com/remark/-/remark-15.0.1.tgz#ac7e7563260513b66426bc47f850e7aa5862c37c"
+  integrity sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==
+  dependencies:
+    "@types/mdast" "^4.0.0"
+    remark-parse "^11.0.0"
+    remark-stringify "^11.0.0"
+    unified "^11.0.0"
 
 retext-latin@^4.0.0:
   version "4.0.0"
