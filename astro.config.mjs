@@ -14,6 +14,8 @@ import remarkNotes from 'remark-notes-plugin';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 
+import sitemap from '@astrojs/sitemap';
+
 const AnchorLinkIcon = h(
   'span',
   { ariaHidden: 'true', class: 'anchor-icon' },
@@ -49,18 +51,17 @@ const AnchorLinkIcon = h(
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [
-    mdx({
-      syntaxHighlight: 'shiki',
-      shikiConfig: { theme: 'dracula' },
-      remarkPlugins: [remarkToc, remarkReadingTime, remarkNotes],
-      rehypePlugins: [rehypePresetMinify, rehypeSlug, [rehypeAutolinkHeadings, {
-        behavior: 'append',
-        content: AnchorLinkIcon,
-      }]],
-      remarkRehype: { footnoteLabel: 'Footnotes' },
-      // gfm: true,
-    })],
+  integrations: [mdx({
+    syntaxHighlight: 'shiki',
+    shikiConfig: { theme: 'dracula' },
+    remarkPlugins: [remarkToc, remarkReadingTime, remarkNotes],
+    rehypePlugins: [rehypePresetMinify, rehypeSlug, [rehypeAutolinkHeadings, {
+      behavior: 'append',
+      content: AnchorLinkIcon,
+    }]],
+    remarkRehype: { footnoteLabel: 'Footnotes' },
+    // gfm: true,
+  }), sitemap()],
 
   site: siteMetadata.siteUrl,
   trailingSlash: getEnv('NODE_ENV') == 'development' ? 'ignore' : 'always',
@@ -68,4 +69,4 @@ export default defineConfig({
   security: {
     checkOrigin: true
   },
-}); ``
+});
