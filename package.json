@@ -13,9 +13,7 @@
     "@fontsource-variable/montserrat": "^5.2.5",
     "@fontsource-variable/red-hat-display": "^5.2.5",
     "@fontsource-variable/red-hat-text": "^5.2.5",
-    "astro": "^5.5.5",
-    "mdast-util-to-string": "^4.0.0",
-    "reading-time": "^1.5.0"
+    "astro": "^5.5.5"
   },
   "devDependencies": {
     "@astrojs/mdx": "^4.2.2",
@@ -23,9 +21,16 @@
     "@tailwindcss/postcss": "^4.0.17",
     "@tailwindcss/typography": "^0.5.16",
     "autoprefixer": "^10.4.21",
+    "hastscript": "^9.0.1",
+    "mdast-util-to-string": "^4.0.0",
     "postcss": "^8.5.3",
+    "reading-time": "^1.5.0",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-highlight": "^7.0.2",
     "rehype-preset-minify": "^7.0.1",
+    "rehype-slug": "^6.0.0",
     "remark-notes-plugin": "^1.0.0",
+    "remark-smartypants": "^3.0.2",
     "remark-toc": "^9.0.0",
     "tailwindcss": "^4.0.17"
   }
