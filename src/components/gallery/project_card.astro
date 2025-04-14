@@ -1,13 +1,12 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image } from "@unpic/astro";
 
 interface Props {
   project: CollectionEntry<'gallery'>;
 }
 
 const { project } = Astro.props;
-console.log(project.data)
 const { title, description, featured_image, featured_image_alt, tags } = project.data;
 ---
 

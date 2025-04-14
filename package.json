@@ -5,22 +5,24 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "yarn build && astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.3.0",
     "@fontsource-variable/inter": "^5.2.5",
     "@fontsource-variable/montserrat": "^5.2.5",
     "@fontsource-variable/red-hat-display": "^5.2.5",
     "@fontsource-variable/red-hat-text": "^5.2.5",
+    "@unpic/astro": "^1.0.0",
     "astro": "^5.5.5"
   },
   "devDependencies": {
     "@astrojs/mdx": "^4.2.2",
+    "@astrojs/sitemap": "^3.3.0",
     "@astrojs/tailwind": "^6.0.2",
     "@tailwindcss/postcss": "^4.0.17",
     "@tailwindcss/typography": "^0.5.16",
+    "astro-imagetools": "^0.9.0",
     "autoprefixer": "^10.4.21",
     "hastscript": "^9.0.1",
     "mdast-util-to-string": "^4.0.0",

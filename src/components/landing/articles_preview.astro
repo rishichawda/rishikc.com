@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Image } from "@unpic/astro";
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
@@ -67,6 +67,7 @@ const articles = allArticles
                     <Image
                       src={article.image}
                       alt={article.title}
+                      aspectRatio={1}
                       class="object-cover rounded-lg aspect-square"
                     />
                   </div>

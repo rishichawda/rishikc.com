@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Image } from "@unpic/astro";
 
 const navItems = [
   // { label: "about me", path: "/about" },
@@ -25,7 +25,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
       <div
         class="max-w-fit text-white font-['Inter Variable'] text-sm h-[2.3125rem] flex justify-center rounded-lg"
       >
-        <Image alt="logo" class="max-h-auto max-w-10" src={logo} />
+        <Image alt="logo" layout="constrained" width={40} class="max-h-auto max-w-10" src={logo} />
       </div>
       <nav class="flex flex-wrap justify-center gap-0 md:gap-2">
         {
@@ -44,7 +44,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
 
   <!-- Main Content -->
   <div
-    class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8 mt-7 md:mt-16"
+    class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8 mt-7"
   >
     <!-- Left Content -->
     <div class="w-full lg:w-[492px] space-y-8 order-1">
@@ -65,7 +65,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         </p>
 
         <p class="text-white sm:text-md font-light font-['Montserrat_Variable'] leading-7">
-          Open to new freelance and open source adventures, feel free to reach
+          Open to new freelance and open source adventures - feel free to reach
           out for any exciting projects that need some code magic.
         </p>
       </div>
@@ -94,9 +94,9 @@ import logo from "../../../content/assets/logo/Group 489.svg";
     </div>
 
     <div
-      class="hidden lg:block lg:order-1 xl:order-2 top-[-0.5rem] xl:absolute left-[40%] flex-col h-[90%] items-center justify-center"
+      class="hidden lg:block lg:order-1 xl:order-2 flex-col h-[90%] items-center justify-center"
     >
-      <Image alt="logo" src={logo} class="max-h-full max-w-auto" />
+      <Image alt="logo" src={logo} layout="constrained" />
     </div>
 
     <!-- Right Social Icons -->

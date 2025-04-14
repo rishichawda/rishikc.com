@@ -4,7 +4,7 @@ import GalleryGrid from "../../components/gallery/gallery_grid.astro";
 import "../../styles/global.css";
 
 import logo from "../../../content/assets/logo/Group 489.svg";
-import { Image } from "astro:assets";
+import { Image } from "@unpic/astro";
 
 const page_info = {
   title: "Gallery - Rishi Chawda",
@@ -38,12 +38,16 @@ const page_info = {
         Back to Home
       </a>
 
-      <div class="text-center mb-20">
-        <Image alt="logo" src={logo} class="mx-auto max-w-[80%] md:max-w-1/3" />
-        <h1 class="text-5xl font-light text-brand-950 mb-8 tracking-[-0.02em] leading-tight">Photography Gallery</h1>
+      <div class="flex flex-col md:flex-row items-center justify-around text-center mb-20">
+        <div class="basis-1/3 lg:basis-2/5">
+          <Image alt="logo" src={logo} class="mx-auto max-w-[80%] md:max-w-1/3" />
+        </div>
+        <div class="basis-2/3 lg:3/5">
+          <h1 class="text-4xl lg:text-5xl font-light text-brand-950 mb-8 tracking-[-0.02em] leading-tight">Photography Gallery</h1>
         <p class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto tracking-wide">
           Explore my collection of photography projects, from street photography to portrait sessions.
         </p>
+        </div>
       </div>
       <GalleryGrid />
     </div>

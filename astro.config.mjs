@@ -13,6 +13,7 @@ import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs';
 import remarkNotes from 'remark-notes-plugin';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
+import { imageService } from "@unpic/astro/service";
 
 import sitemap from '@astrojs/sitemap';
 
@@ -63,8 +64,16 @@ export default defineConfig({
     // gfm: true,
   }), sitemap()],
 
+  image: {
+    service: imageService({
+      fallbackService: 'sharp',
+      placeholder: 'blurhash',
+    }),
+  },
+
   site: siteMetadata.siteUrl,
   trailingSlash: getEnv('NODE_ENV') == 'development' ? 'ignore' : 'always',
+  // trailingSlash: 'ignore',
   compressHTML: true,
   security: {
     checkOrigin: true

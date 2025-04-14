@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Image } from "@unpic/astro";
 import BaseLayout from "./base_layout.astro";
 
 let { content, frontmatter } = Astro.props;
@@ -34,7 +34,6 @@ const date = new Date(content.date).toLocaleDateString("en-us", {
 	<div class="w-full md:max-w-[790px] mb-7">
 		<Image
 			class="w-full rounded-xl"
-			fit="cover"
 			src={content.hero_image}
 			alt={content.hero_image_alt || `${content.title}`}
 		/>
