@@ -61,7 +61,7 @@ export default defineConfig({
       content: AnchorLinkIcon,
     }]],
     remarkRehype: { footnoteLabel: 'Footnotes' },
-    // gfm: true,
+    gfm: true,
   }), sitemap()],
 
   image: {
