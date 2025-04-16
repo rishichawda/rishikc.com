@@ -2,11 +2,13 @@
 import SEO from "../components/seo.astro";
 import "../styles/global.css";
 import "../styles/tailwind.css";
+import "../styles/animations.css";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/red-hat-display";
 import "@fontsource-variable/red-hat-text";
 import "@fontsource-variable/montserrat";
 import Footer from "../components/footer.astro";
+import { ClientRouter } from "astro:transitions";
 
 let {
 	page_info: { title, description, image, keywords },
@@ -27,7 +29,10 @@ const seo = {
 
 <!doctype html>
 <html lang="en">
-	<SEO page_info={seo} />
+	<head>
+		<SEO page_info={seo} />
+		<ClientRouter />
+	</head>
 	<body>
 		<slot />
 		<Footer />

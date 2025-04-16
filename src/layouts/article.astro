@@ -14,6 +14,7 @@ const date = new Date(content.date).toLocaleDateString("en-us", {
 <article class="max-w-[90%] flex flex-col mx-auto items-center pt-10">
 	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-2">
 		<h1
+			transition:name={`${content.path}-title`}
 			class="justify-start text-black text-3xl text-center font-semibold font-['Red_Hat_Display_Variable'] leading-7"
 		>
 			{content.title}
@@ -26,16 +27,18 @@ const date = new Date(content.date).toLocaleDateString("en-us", {
 			)
 		}
 	</div>
-	<div
+	<small
+		transition:name={`${content.path}-date`}
 		class="justify-start text-black text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-2 mt-7"
 	>
 		{date}
-	</div>
+</small>
 	<div class="w-full md:max-w-[790px] mb-7">
 		<Image
 			class="w-full rounded-xl"
 			src={content.hero_image}
 			alt={content.hero_image_alt || `${content.title}`}
+			transition:name={`${content.path}-image`}
 		/>
 		<div class="inline-flex w-full px-2 mt-4 justify-between items-start">
 			<div
@@ -44,9 +47,9 @@ const date = new Date(content.date).toLocaleDateString("en-us", {
 				{
 					content.tags.map((tag: string) => (
 						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
-							<div class="justify-start bg-brand-500 text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight">
+							<span class="justify-start bg-brand-500 text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight">
 								{tag}
-							</div>
+							</span>
 						</div>
 					))
 				}
