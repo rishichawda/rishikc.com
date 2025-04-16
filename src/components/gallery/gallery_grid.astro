@@ -1,7 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import ProjectCard from "./project_card.astro";
-import { Image } from "@unpic/astro";
+import { Image } from "astro:assets";
+
 import Flowers from '../../../content/assets/gallery maintainence.svg'
 
 const galleries = await getCollection("gallery");
@@ -27,7 +28,7 @@ const processing = true;
           </p>
         </div>
         <div>
-          <Image src={Flowers} />
+          <Image src={Flowers} alt="sorting through photos" />
         </div>
       </section>
     ) : (

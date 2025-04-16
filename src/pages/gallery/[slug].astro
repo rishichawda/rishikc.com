@@ -3,7 +3,7 @@ import BaseLayout from "../../layouts/base_layout.astro";
 import "../../styles/global.css";
 import Lightbox from "../../components/gallery/lightbox.astro";
 import { getCollection } from "astro:content";
-import { Image } from "@unpic/astro";
+import { Image } from "astro:assets";
 
 export async function getStaticPaths() {
   const galleries = await getCollection("gallery");
@@ -29,7 +29,7 @@ const page_info = {
   <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
       <a
-        href="/gallery"
+        href="/gallery/"
         class="inline-flex items-center text-brand-800/90 hover:text-brand-950 mb-20 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
       >
         <svg

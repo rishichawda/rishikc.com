@@ -64,16 +64,9 @@ export default defineConfig({
     gfm: true,
   }), sitemap()],
 
-  image: {
-    service: imageService({
-      fallbackService: 'sharp',
-      placeholder: 'blurhash',
-    }),
-  },
-
   site: siteMetadata.siteUrl,
-  trailingSlash: getEnv('NODE_ENV') == 'development' ? 'ignore' : 'always',
-  // trailingSlash: 'ignore',
+  // trailingSlash: getEnv('NODE_ENV') == 'development' ? 'ignore' : 'always',
+  trailingSlash: 'always',
   compressHTML: true,
   security: {
     checkOrigin: true

@@ -1,5 +1,5 @@
 ---
-import { Image } from "@unpic/astro";
+import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -71,7 +71,6 @@ function formatDate(date: Date): string {
               src={article.data.hero_image}
               alt={article.data.hero_image_alt || article.data.title}
               class="object-cover rounded-lg aspect-square"
-              aspectRatio={1}
               transition:name={`${article.data.path}-image`}
             />
           </div>

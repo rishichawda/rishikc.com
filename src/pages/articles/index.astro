@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/base_layout.astro";
-import { Image } from "@unpic/astro";
+import { Image } from "astro:assets";
 
 const page_info = {
     title: "Articles | Rishi Chawda",
@@ -99,7 +99,7 @@ function getSearchableContent(article: any): string {
             <div class="order-first lg:order-last">
                 <!-- Quote box -->
                 <a
-                    href="/quotes"
+                    href="/quotes/"
                     class="block mb-8 sm:mb-12 p-4 sm:p-6 bg-[#F8F9FE] rounded-lg hover:bg-[#F0F2FC] transition-colors"
                 >
                     <p
@@ -177,9 +177,7 @@ function getSearchableContent(article: any): string {
                                                 article.data.hero_image_alt ||
                                                 article.data.title
                                             }
-                                            class="aspect-square rounded-lg"
-                                            layout="constrained"
-                                            aspectRatio={1}
+                                            class="aspect-square rounded-lg object-cover"
                                             transition:name={`${article.data.path}-image`}
                                         />
                                     </div>
