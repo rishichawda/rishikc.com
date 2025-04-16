@@ -4078,10 +4078,10 @@ remark-mdx@^3.0.0:
     mdast-util-mdx "^3.0.0"
     micromark-extension-mdxjs "^3.0.0"
 
-remark-notes-plugin@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/remark-notes-plugin/-/remark-notes-plugin-1.0.0.tgz#1b62b65d8bef31c4b9f186bf73b660306d4329df"
-  integrity sha512-X1+cMS7yOOwbp1jJkFYwcyyAqsdYvA1gX/siAywkgWT4eofoMwi4itzJujPLM69bveDHhg2bS8qxAEmkCsXC3w==
+remark-notes-plugin@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/remark-notes-plugin/-/remark-notes-plugin-1.0.2.tgz#3d33d5eded1223be2badf69d363c04c5187a7f07"
+  integrity sha512-svtGFefVfLT221KK7nD9nOJlunOM/ghHmE/mEANZEs8759UbKLz/nu1kFPLMUHxEMmJhWhmhADuq4tMISxWt6A==
   dependencies:
     hast-util-to-html "^9.0.5"
     mdast "^3.0.0"
