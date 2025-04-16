@@ -1,0 +1,324 @@
+---
+import BaseLayout from "../layouts/base_layout.astro";
+import "../styles/global.css";
+
+const page_info = {
+  title: "Contact - Rishi Chawda",
+  description: "Get in touch with Rishi Chawda for collaborations, job opportunities, or general inquiries",
+  image: "/favicon.svg",
+  keywords: "contact, email, collaboration, Rishi Chawda, software engineer",
+};
+
+// Access environment variables securely on the server
+const emailJSPublicKey = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
+const emailJSServiceID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
+const emailJSTemplateID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
+---
+
+<BaseLayout page_info={page_info}>
+  <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
+      <a
+        href="/"
+        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 mb-20 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 mr-3 group-hover:-translate-x-1 transition-transform"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          ></path>
+        </svg>
+        Back to home
+      </a>
+      
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl lg:text-5xl font-light text-brand-950 mb-8 tracking-[-0.02em] leading-tight">Get in Touch</h1>
+        <p class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto font-['Montserrat_Variable']">
+          Have a question, proposal, or just want to say hello? Fill out the form below and I'll get back to you soon.
+        </p>
+      </div>
+      
+      <!-- Contact Form -->
+      <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 lg:p-10" transition:animate="fade">
+        <form id="contact-form" class="space-y-6">
+          <div class="grid grid-cols-1 gap-6">
+            <div>
+              <label for="name" class="block text-sm font-medium text-brand-800 mb-1 font-['Montserrat_Variable']">Name</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="from_name" 
+                required
+                class="w-full px-4 py-2 border border-brand-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-['Montserrat_Variable']"
+                placeholder="Your name"
+              />
+              <div class="error-text text-red-500 text-sm mt-1 hidden"></div>
+            </div>
+            
+            <div>
+              <label for="email" class="block text-sm font-medium text-brand-800 mb-1 font-['Montserrat_Variable']">Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="reply_to"
+                required
+                class="w-full px-4 py-2 border border-brand-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-['Montserrat_Variable']"
+                placeholder="your.email@example.com"
+              />
+              <div class="error-text text-red-500 text-sm mt-1 hidden"></div>
+            </div>
+            
+            <div>
+              <label for="subject" class="block text-sm font-medium text-brand-800 mb-1 font-['Montserrat_Variable']">Subject</label>
+              <select 
+                id="subject" 
+                name="subject" 
+                required
+                class="w-full px-4 py-2 border border-brand-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-['Montserrat_Variable']"
+              >
+                <option value="" disabled selected>Please select a subject</option>
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Job Opportunity">Job Opportunity</option>
+                <option value="Collaboration">Collaboration</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="error-text text-red-500 text-sm mt-1 hidden"></div>
+            </div>
+            
+            <div>
+              <label for="message" class="block text-sm font-medium text-brand-800 mb-1 font-['Montserrat_Variable']">Message</label>
+              <textarea 
+                id="message" 
+                name="message" 
+                rows="5" 
+                required
+                class="w-full px-4 py-2 border border-brand-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-['Montserrat_Variable']"
+                placeholder="Your message here..."
+              ></textarea>
+              <div class="error-text text-red-500 text-sm mt-1 hidden"></div>
+            </div>
+            
+            <div class="text-center">
+              <button 
+                type="submit" 
+                id="submit-button"
+                class="inline-block bg-brand-700 hover:bg-brand-900 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-md transition-colors text-sm sm:text-base font-['Montserrat_Variable']"
+              >
+                Send Message
+              </button>
+            </div>
+          </div>
+          
+          <!-- Form Status Messages -->
+          <div id="form-status" class="text-center mt-4 hidden">
+            <p id="success-message" class="text-green-600 font-['Montserrat_Variable'] hidden">
+              Your message has been sent successfully. I'll get back to you soon!
+            </p>
+            <p id="error-message" class="text-red-600 font-['Montserrat_Variable'] hidden">
+              There was an error sending your message. Please try again later.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<script define:vars={{ emailJSPublicKey, emailJSServiceID, emailJSTemplateID }}>
+  // Initialize EmailJS with the public key passed from the server
+  (function() {
+    emailjs.init(emailJSPublicKey);
+  })();
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Cache DOM elements
+    const form = document.getElementById('contact-form');
+    const submitButton = document.getElementById('submit-button');
+    const formStatus = document.getElementById('form-status');
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
+    
+    // Form configuration - centralizing validation rules and messages
+    const formFields = {
+      'name': {
+        validator: value => value.trim() !== '',
+        errorMessage: 'Please enter your name'
+      },
+      'email': {
+        validator: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        errorMessage: 'Please enter a valid email address',
+        emptyMessage: 'Please enter your email address'
+      },
+      'subject': {
+        validator: value => value.trim() !== '',
+        errorMessage: 'Please select a subject'
+      },
+      'message': {
+        validator: value => value.trim() !== '',
+        errorMessage: 'Please enter your message'
+      }
+    };
+    
+    // Single function to validate any field
+    function validateField(fieldId, showError = true) {
+      const field = document.getElementById(fieldId);
+      const errorElement = field.nextElementSibling;
+      const fieldConfig = formFields[fieldId];
+      
+      let isValid = true;
+      let message = '';
+      
+      // For empty email field
+      if (fieldId === 'email' && !field.value.trim()) {
+        isValid = false;
+        message = fieldConfig.emptyMessage;
+      } 
+      // Normal validation
+      else if (!fieldConfig.validator(field.value)) {
+        isValid = false;
+        message = fieldConfig.errorMessage;
+      }
+      
+      // Only update UI if showError is true
+      if (showError) {
+        if (!isValid) {
+          errorElement.textContent = message;
+          errorElement.classList.remove('hidden');
+          field.classList.add('border-red-500');
+          field.classList.remove('border-green-500');
+          
+          // Announce error for screen readers
+          field.setAttribute('aria-invalid', 'true');
+          errorElement.setAttribute('role', 'alert');
+        } else {
+          errorElement.classList.add('hidden');
+          field.classList.remove('border-red-500');
+          field.classList.add('border-green-500');
+          field.setAttribute('aria-invalid', 'false');
+        }
+      }
+      
+      return isValid;
+    }
+
+    // Attach event listeners using event delegation
+    form.addEventListener('input', function(event) {
+      const target = event.target;
+      const fieldId = target.id;
+      
+      // Only run for our monitored fields
+      if (formFields[fieldId]) {
+        validateField(fieldId);
+      }
+    });
+    
+    form.addEventListener('blur', function(event) {
+      const target = event.target;
+      const fieldId = target.id;
+      
+      // Only run for our monitored fields
+      if (formFields[fieldId]) {
+        validateField(fieldId);
+      }
+    }, true); // Using capture to ensure blur is captured for all elements
+    
+    // Special case for select field, which needs change event
+    document.getElementById('subject').addEventListener('change', function() {
+      validateField('subject');
+    });
+    
+    // Form submission handler
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      // Validate all fields at once
+      const isFormValid = Object.keys(formFields).every(fieldId => 
+        validateField(fieldId, true)
+      );
+      
+      if (!isFormValid) {
+        // Focus the first invalid field for accessibility
+        const firstInvalidField = Object.keys(formFields)
+          .find(fieldId => !validateField(fieldId, false));
+          
+        if (firstInvalidField) {
+          document.getElementById(firstInvalidField).focus();
+        }
+        return;
+      }
+      
+      // Show loading state
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<span class="inline-block animate-pulse">Sending...</span>';
+      submitButton.setAttribute('aria-busy', 'true');
+      
+      // Prepare form data for submission
+      const templateParams = {
+        from_name: document.getElementById('name').value,
+        reply_to: document.getElementById('email').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
+      };
+      
+      // Send the form using EmailJS
+      emailjs.send(
+        emailJSServiceID,
+        emailJSTemplateID,
+        templateParams
+      )
+      .then(function() {
+        // Success handling
+        submitButton.innerHTML = 'Send Message';
+        submitButton.disabled = false;
+        submitButton.setAttribute('aria-busy', 'false');
+        
+        // Reset form and validation styles
+        form.reset();
+        Object.keys(formFields).forEach(fieldId => {
+          const field = document.getElementById(fieldId);
+          field.classList.remove('border-green-500', 'border-red-500');
+          field.setAttribute('aria-invalid', 'false');
+        });
+        
+        formStatus.classList.remove('hidden');
+        successMessage.classList.remove('hidden');
+        errorMessage.classList.add('hidden');
+        
+        // Announce success for screen readers
+        successMessage.setAttribute('role', 'alert');
+        
+        // Hide success message after 5 seconds
+        setTimeout(function() {
+          formStatus.classList.add('hidden');
+          successMessage.classList.add('hidden');
+          successMessage.removeAttribute('role');
+        }, 5000);
+      })
+      .catch(function(error) {
+        // Error handling
+        console.error('EmailJS error:', error);
+        
+        submitButton.innerHTML = 'Send Message';
+        submitButton.disabled = false;
+        submitButton.setAttribute('aria-busy', 'false');
+        
+        formStatus.classList.remove('hidden');
+        errorMessage.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+        
+        // Announce error for screen readers
+        errorMessage.setAttribute('role', 'alert');
+      });
+    });
+  });
+</script>
