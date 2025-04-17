@@ -65,20 +65,22 @@ const page_info = {
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {images.map((image, index) => (
-          <div class="group relative aspect-[4/3] overflow-hidden rounded-lg shadow-lg">
+          <div class="gallery-image group relative aspect-[4/3] overflow-hidden rounded-lg shadow-lg">
             <Image
               src={image.src}
               alt={image.alt || `${title} photo ${index + 1}`}
+              data-caption={image.caption}
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
-            <div class="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-950/10 to-brand-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
               <button
-                class="text-white p-4 rounded-full bg-white/20 hover:bg-white/30 transition-colors transform scale-0 group-hover:scale-100 duration-300 shadow-md"
-                onclick="openLightbox(this.closest('.group').querySelector('img'))"
+                class="text-white p-4 rounded-full bg-brand-700/30 hover:bg-brand-700/50 transition-all duration-300 transform scale-0 group-hover:scale-100 hover:scale-110 shadow-lg backdrop-blur-sm"
+                onclick="openLightbox(this.closest('.gallery-image').querySelector('img'))"
+                aria-label="View image in fullscreen"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-7 w-7"
+                  class="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
