@@ -67,22 +67,22 @@
   </div>
 </div>
 
-<script>
+<script is:inline data-astro-rerun>
   const lightbox = document.getElementById('lightbox');
-  const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
+  const lightboxImage = document.getElementById('lightbox-image');
   const closeButton = document.getElementById('close-lightbox');
   const prevButton = document.getElementById('prev-image');
   const nextButton = document.getElementById('next-image');
 
   let currentImageIndex = 0;
-  let images: string[] = [];
+  let images = [];
 
-  function openLightbox(imageElement: HTMLImageElement) {
+  function openLightbox(imageElement) {
     if (!lightbox || !lightboxImage) return;
 
     // Get all images in the current project
     const projectImages = Array.from(document.querySelectorAll('.group img')).map(
-      (img) => (img as HTMLImageElement).src
+      (img) => img.src
     );
     images = projectImages;
     currentImageIndex = projectImages.indexOf(imageElement.src);
@@ -99,7 +99,7 @@
     document.body.style.overflow = '';
   }
 
-  function showImage(index: number) {
+  function showImage(index) {
     if (!lightboxImage || images.length === 0) return;
     currentImageIndex = (index + images.length) % images.length;
     lightboxImage.src = images[currentImageIndex];
@@ -131,5 +131,5 @@
   });
 
   // Expose the openLightbox function globally
-  (window as any).openLightbox = openLightbox;
-</script> 
+  window.openLightbox = openLightbox;
+</script>

@@ -67,7 +67,6 @@ const articles = allArticles
                     <Image
                       src={article.image}
                       alt={article.title}
-                      aspectRatio={1}
                       class="object-cover rounded-lg aspect-square"
                     />
                   </div>
@@ -141,129 +140,151 @@ const articles = allArticles
 </section>
 
 <script>
-  const carousel = document.getElementById("blog-carousel");
-  const viewport = document.getElementById("carousel-viewport") as HTMLElement;
-  const container = document.getElementById(
-    "carousel-container",
-  ) as HTMLElement;
-  const prevBtn = document.getElementById("prev-btn") as HTMLButtonElement;
-  const nextBtn = document.getElementById("next-btn") as HTMLButtonElement;
-  const dotsContainer = document.getElementById("carousel-dots");
+  document.addEventListener('astro:page-load', () => {
+    const carousel = document.getElementById("blog-carousel");
+    const viewport = document.getElementById("carousel-viewport");
+    const container = document.getElementById("carousel-container");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const dotsContainer = document.getElementById("carousel-dots");
 
-  if (
-    carousel &&
-    container &&
-    viewport &&
-    prevBtn &&
-    nextBtn &&
-    dotsContainer
-  ) {
-    const items = container.children;
-    let currentIndex = 0;
+    if (
+      carousel &&
+      container &&
+      viewport &&
+      prevBtn &&
+      nextBtn &&
+      dotsContainer
+    ) {
+      // Store event handlers so we can remove them later
+      const eventHandlers = {
+        prevBtn: null,
+        nextBtn: null,
+        dots: null,
+        resize: null
+      };
+      
+      const items = container.children;
+      let currentIndex = 0;
 
-    function calculateLayout() {
-      const viewportWidth = viewport.offsetWidth;
-      const gap =
-        window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40; // gap-6, gap-8, gap-10
-      const minItemWidth = 160; // Minimum width for an item
-      const maxItemWidth = 200; // Maximum width for an item
+      // Calculate the layout based on viewport width and number of items
+      function calculateLayout() {
+        const viewportWidth = viewport.offsetWidth;
+        const gap =
+          window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40; // gap-6, gap-8, gap-10
+        const minItemWidth = 160; // Minimum width for an item
+        const maxItemWidth = 200; // Maximum width for an item
 
-      // Calculate how many items can fit in the viewport
-      let itemsPerView = Math.floor(viewportWidth / (minItemWidth + gap));
-      itemsPerView = Math.max(1, Math.min(itemsPerView, items.length)); // Ensure at least 1 item and not more than total items
+        // Calculate how many items can fit in the viewport
+        let itemsPerView = Math.floor(viewportWidth / (minItemWidth + gap));
+        itemsPerView = Math.max(1, Math.min(itemsPerView, items.length)); // Ensure at least 1 item and not more than total items
 
-      // Calculate the actual item width to fit items evenly
-      let itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
+        // Calculate the actual item width to fit items evenly
+        let itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
 
-      // If the calculated width exceeds maxItemWidth, reduce itemsPerView
-      if (itemWidth > maxItemWidth) {
-        itemsPerView = Math.floor(viewportWidth / (maxItemWidth + gap));
-        itemsPerView = Math.max(1, Math.min(itemsPerView, items.length));
-        itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
+        // If the calculated width exceeds maxItemWidth, reduce itemsPerView
+        if (itemWidth > maxItemWidth) {
+          itemsPerView = Math.floor(viewportWidth / (maxItemWidth + gap));
+          itemsPerView = Math.max(1, Math.min(itemsPerView, items.length));
+          itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
+        }
+
+        // Apply the calculated width to all items
+        Array.from(items).forEach((item) => {
+          item.style.width = `${itemWidth}px`;
+        });
+
+        // Update container width to accommodate all items
+        const totalWidth = itemWidth * items.length + gap * (items.length - 1);
+        container.style.width = `${totalWidth}px`;
+
+        // Calculate total slides, ensuring we only show complete slides
+        const totalSlides = Math.ceil((items.length - itemsPerView + 1) / itemsPerView);
+
+        return { itemWidth, itemsPerView, totalSlides, gap };
       }
 
-      // Apply the calculated width to all items
-      Array.from(items).forEach((item) => {
-        (item as HTMLElement).style.width = `${itemWidth}px`;
-      });
-
-      // Update container width to accommodate all items
-      const totalWidth = itemWidth * items.length + gap * (items.length - 1);
-      container.style.width = `${totalWidth}px`;
-
-      // Calculate total slides, ensuring we only show complete slides
-      const totalSlides = Math.floor(items.length / itemsPerView);
-
-      return { itemWidth, itemsPerView, totalSlides };
-    }
-
-    function updateDots(totalSlides: number) {
-      if (dotsContainer) {
-        dotsContainer.innerHTML = "";
-        for (let i = 0; i < totalSlides; i++) {
-          const dot = document.createElement("button");
-          dot.className = `w-2 h-2 rounded-full ${i === currentIndex ? "bg-[#B7BEE7]" : "bg-[#B7BEE7]/40"}`;
-          dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
-          dot.setAttribute("data-index", i.toString());
-          dotsContainer.appendChild(dot);
+      function updateDots(totalSlides) {
+        if (dotsContainer) {
+          dotsContainer.innerHTML = "";
+          for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement("button");
+            dot.className = `w-2 h-2 rounded-full ${i === currentIndex ? "bg-[#B7BEE7]" : "bg-[#B7BEE7]/40"}`;
+            dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
+            dot.setAttribute("data-index", i.toString());
+            dotsContainer.appendChild(dot);
+          }
         }
       }
+
+      function updateCarousel() {
+        const { itemWidth, itemsPerView, totalSlides, gap } = calculateLayout();
+        const offset =
+          -currentIndex * (itemWidth + gap) * itemsPerView;
+        container.style.transform = `translateX(${offset}px)`;
+
+        // Update button states
+        prevBtn.classList.toggle("opacity-50", currentIndex === 0);
+        nextBtn.classList.toggle("opacity-50", currentIndex >= totalSlides - 1);
+
+        // Update dots
+        updateDots(totalSlides);
+      }
+
+      // Clean up existing event listeners before adding new ones
+      function cleanup() {
+        if (eventHandlers.prevBtn) prevBtn.removeEventListener("click", eventHandlers.prevBtn);
+        if (eventHandlers.nextBtn) nextBtn.removeEventListener("click", eventHandlers.nextBtn);
+        if (eventHandlers.dots) dotsContainer.removeEventListener("click", eventHandlers.dots);
+        if (eventHandlers.resize) window.removeEventListener("resize", eventHandlers.resize);
+      }
+
+      // Clean up on navigation
+      document.addEventListener('astro:before-preparation', cleanup, { once: true });
+      
+      // Set up new event handlers
+      eventHandlers.prevBtn = () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateCarousel();
+        }
+      };
+      
+      eventHandlers.nextBtn = () => {
+        const { totalSlides } = calculateLayout();
+        if (currentIndex < totalSlides - 1) {
+          currentIndex++;
+          updateCarousel();
+        }
+      };
+      
+      eventHandlers.dots = (e) => {
+        const target = e.target;
+        if (target.hasAttribute("data-index")) {
+          currentIndex = parseInt(target.getAttribute("data-index") || "0");
+          updateCarousel();
+        }
+      };
+      
+      let resizeTimeout;
+      eventHandlers.resize = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = window.setTimeout(() => {
+          currentIndex = 0; // Reset to first slide on resize
+          updateCarousel();
+        }, 250);
+      };
+      
+      // Add event listeners
+      prevBtn.addEventListener("click", eventHandlers.prevBtn);
+      nextBtn.addEventListener("click", eventHandlers.nextBtn);
+      dotsContainer.addEventListener("click", eventHandlers.dots);
+      window.addEventListener("resize", eventHandlers.resize);
+
+      // Initial setup
+      updateCarousel();
     }
-
-    function updateCarousel() {
-      const { itemWidth, itemsPerView, totalSlides } = calculateLayout();
-      const offset =
-        -currentIndex *
-        (itemWidth +
-          (window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40)) *
-        itemsPerView;
-      container.style.transform = `translateX(${offset}px)`;
-
-      // Update button states
-      prevBtn.classList.toggle("opacity-50", currentIndex === 0);
-      nextBtn.classList.toggle("opacity-50", currentIndex === totalSlides - 1);
-
-      // Update dots
-      updateDots(totalSlides);
-    }
-
-    prevBtn.addEventListener("click", () => {
-      const { totalSlides } = calculateLayout();
-      if (currentIndex > 0) {
-        currentIndex--;
-        updateCarousel();
-      }
-    });
-
-    nextBtn.addEventListener("click", () => {
-      const { totalSlides } = calculateLayout();
-      if (currentIndex < totalSlides - 1) {
-        currentIndex++;
-        updateCarousel();
-      }
-    });
-
-    dotsContainer.addEventListener("click", (e) => {
-      const target = e.target as HTMLElement;
-      if (target.hasAttribute("data-index")) {
-        currentIndex = parseInt(target.getAttribute("data-index") || "0");
-        updateCarousel();
-      }
-    });
-
-    // Handle window resize
-    let resizeTimeout: number;
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = window.setTimeout(() => {
-        currentIndex = 0;
-        updateCarousel();
-      }, 250);
-    });
-
-    // Initial setup
-    updateCarousel();
-  }
+  });
 </script>
 
 <style>

@@ -267,138 +267,117 @@ function getSearchableContent(article: any): string {
 </Layout>
 
 <script>
-    // Types
-    type Article = HTMLElement & {
-        dataset: {
-            tags: string;
-            title: string;
-            search: string;
-            hidden: string;
-        };
-    };
+    document.addEventListener('astro:page-load', () => {
+        // State
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        const selectedTags = new Set();
 
-    type TagButton = HTMLButtonElement & {
-        dataset: {
-            tag: string;
-            selected?: string;
-        };
-    };
+        // DOM Elements
+        const searchInput = document.getElementById("search");
+        const articleElements = document.querySelectorAll("[data-tags]");
+        const articles = [...articleElements].map((el) => el);
 
-    // State
-    let currentPage = 1;
-    const itemsPerPage = 5;
-    const selectedTags = new Set<string>();
+        const tagButtonElements = document.querySelectorAll("[data-tag]");
+        const tagButtons = [...tagButtonElements].map((el) => el);
 
-    // DOM Elements
-    const searchInput = document.getElementById("search") as HTMLInputElement;
-    const articleElements = document.querySelectorAll("[data-tags]");
-    const articles = [...articleElements].map((el) => el as Article);
+        const pageButtonElements = document.querySelectorAll("[data-page]");
+        const pageButtons = [...pageButtonElements].map((el) => el);
 
-    const tagButtonElements = document.querySelectorAll("[data-tag]");
-    const tagButtons = [...tagButtonElements].map((el) => el as TagButton);
+        const prevButton = document.querySelector("[data-prev]");
+        const nextButton = document.querySelector("[data-next]");
 
-    const pageButtonElements = document.querySelectorAll("[data-page]");
-    const pageButtons = [...pageButtonElements].map(
-        (el) => el as HTMLButtonElement,
-    );
+        // Filter and pagination logic
+        function updateArticlesVisibility() {
+            const searchTerm = searchInput?.value.toLowerCase() || "";
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
 
-    const prevButton = document.querySelector(
-        "[data-prev]",
-    ) as HTMLButtonElement;
-    const nextButton = document.querySelector(
-        "[data-next]",
-    ) as HTMLButtonElement;
+            let visibleCount = 0;
+            articles.forEach((article) => {
+                const matchesSearch = article.dataset.search.includes(searchTerm);
+                const matchesTags =
+                    selectedTags.size === 0 ||
+                    Array.from(selectedTags).every((tag) =>
+                        article.dataset.tags
+                            .toLowerCase()
+                            .includes(tag.toLowerCase()),
+                    );
 
-    // Filter and pagination logic
-    function updateArticlesVisibility(): void {
-        const searchTerm = searchInput?.value.toLowerCase() || "";
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
+                const isVisible = matchesSearch && matchesTags;
+                if (isVisible) {
+                    visibleCount++;
+                    article.dataset.hidden = (
+                        visibleCount <= startIndex || visibleCount > endIndex
+                    ).toString();
+                } else {
+                    article.dataset.hidden = "true";
+                }
+            });
 
-        let visibleCount = 0;
-        articles.forEach((article) => {
-            const matchesSearch = article.dataset.search.includes(searchTerm);
-            const matchesTags =
-                selectedTags.size === 0 ||
-                Array.from(selectedTags).every((tag) =>
-                    article.dataset.tags
-                        .toLowerCase()
-                        .includes(tag.toLowerCase()),
-                );
+            // Update pagination visibility
+            const totalPages = Math.ceil(visibleCount / itemsPerPage);
+            pageButtons.forEach((button) => {
+                const page = parseInt(button.dataset.page || "1", 10);
+                button.classList.toggle("hidden", page > totalPages);
+                button.classList.toggle("bg-[#6B7AB0]", page === currentPage);
+                button.classList.toggle("text-white", page === currentPage);
+                button.classList.toggle("text-gray-600", page !== currentPage);
+            });
 
-            const isVisible = matchesSearch && matchesTags;
-            if (isVisible) {
-                visibleCount++;
-                article.dataset.hidden = (
-                    visibleCount <= startIndex || visibleCount > endIndex
-                ).toString();
-            } else {
-                article.dataset.hidden = "true";
+            // Update arrow buttons
+            if (prevButton) {
+                prevButton.disabled = currentPage === 1;
             }
-        });
-
-        // Update pagination visibility
-        const totalPages = Math.ceil(visibleCount / itemsPerPage);
-        pageButtons.forEach((button) => {
-            const page = parseInt(button.dataset.page || "1", 10);
-            button.classList.toggle("hidden", page > totalPages);
-            button.classList.toggle("bg-[#6B7AB0]", page === currentPage);
-            button.classList.toggle("text-white", page === currentPage);
-            button.classList.toggle("text-gray-600", page !== currentPage);
-        });
-
-        // Update arrow buttons
-        if (prevButton) {
-            prevButton.disabled = currentPage === 1;
-        }
-        if (nextButton) {
-            nextButton.disabled = currentPage >= totalPages;
-        }
-    }
-
-    // Event Listeners
-    searchInput?.addEventListener("input", () => {
-        currentPage = 1;
-        updateArticlesVisibility();
-    });
-
-    tagButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const tag = button.dataset.tag;
-            if (selectedTags.has(tag)) {
-                selectedTags.delete(tag);
-                button.dataset.selected = "false";
-            } else {
-                selectedTags.add(tag);
-                button.dataset.selected = "true";
+            if (nextButton) {
+                nextButton.disabled = currentPage >= totalPages;
             }
+        }
+
+        // Event Listeners
+        searchInput?.addEventListener("input", () => {
             currentPage = 1;
             updateArticlesVisibility();
         });
-    });
 
-    pageButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            currentPage = parseInt(button.dataset.page || "1", 10);
-            updateArticlesVisibility();
+        tagButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                const tag = button.dataset.tag;
+                if (selectedTags.has(tag)) {
+                    selectedTags.delete(tag);
+                    button.dataset.selected = "false";
+                } else {
+                    selectedTags.add(tag);
+                    button.dataset.selected = "true";
+                }
+                currentPage = 1;
+                updateArticlesVisibility();
+            });
         });
-    });
 
-    prevButton?.addEventListener("click", () => {
-        if (currentPage > 1) {
-            currentPage--;
-            updateArticlesVisibility();
-        }
-    });
+        pageButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                currentPage = parseInt(button.dataset.page || "1", 10);
+                updateArticlesVisibility();
+            });
+        });
 
-    nextButton?.addEventListener("click", () => {
-        const totalPages = Math.ceil(articles.length / itemsPerPage);
-        if (currentPage < totalPages) {
-            currentPage++;
-            updateArticlesVisibility();
-        }
-    });
+        prevButton?.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updateArticlesVisibility();
+            }
+        });
 
-    // Initial display
-    updateArticlesVisibility();
+        nextButton?.addEventListener("click", () => {
+            const totalPages = Math.ceil(articles.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateArticlesVisibility();
+            }
+        });
+
+        // Initial display
+        updateArticlesVisibility();
+    });
 </script>

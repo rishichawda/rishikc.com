@@ -135,12 +135,25 @@ const emailJSTemplateID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 <script define:vars={{ emailJSPublicKey, emailJSServiceID, emailJSTemplateID }}>
-  // Initialize EmailJS with the public key passed from the server
-  (function() {
-    emailjs.init(emailJSPublicKey);
-  })();
+  function setUpForm() {
+    // Initialize EmailJS properly
+    if (typeof emailjs !== 'undefined') {
+      // Only initialize if public key exists
+      if (emailJSPublicKey) {
+        emailjs.init(emailJSPublicKey);
+      } else {
+        console.error("EmailJS public key is not set. Contact form will not work.");
+      }
+    }
 
-  document.addEventListener('DOMContentLoaded', function() {
+    // Check if the form is already set up
+    if (document.getElementById('contact-form').dataset.initialized) {
+      return;
+    }
+
+    // Mark the form as initialized
+    document.getElementById('contact-form').dataset.initialized = "true";
+
     // Cache DOM elements
     const form = document.getElementById('contact-form');
     const submitButton = document.getElementById('submit-button');
@@ -320,5 +333,8 @@ const emailJSTemplateID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
         errorMessage.setAttribute('role', 'alert');
       });
     });
-  });
+  }
+
+  document.addEventListener('DOMContentLoaded', setUpForm);
+  document.addEventListener('astro:page-load', setUpForm);
 </script>
