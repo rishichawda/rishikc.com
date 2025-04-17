@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  html {
+    /* font-family: 'Inter', sans-serif; */
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply text-gray-900 bg-white;
+  }
+}
+
+html {
+  overflow-y: scroll;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.remark-note-content {
+  font-family: 'Montserrat Variable';
+}
+
+.remark-note-title {
+  font-family: 'Red Hat Display Variable';
+}

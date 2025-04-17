@@ -1,0 +1,59 @@
+---
+import { getCollection, render } from "astro:content";
+import BlogPost from "../../layouts/article.astro";
+import Prose from "../../components/article/prose.astro";
+import RelatedArticles from "../../components/article/related_articles.astro";
+import BaseLayout from "../../layouts/base_layout.astro";
+import TableOfContents from "../../components/article/table_of_contents.astro";
+
+export async function getStaticPaths() {
+	let posts = await getCollection("articles");
+
+	return posts.map((post) => {
+		return {
+			params: { slug: post.id },
+			props: { post, allPosts: posts },
+		};
+	});
+}
+
+const { post, allPosts } = Astro.props;
+const { Content, remarkPluginFrontmatter, headings } = await render(post);
+---
+
+<BaseLayout
+	page_info={{
+		title: post.data.title,
+		description: post.data.description,
+		keywords: post.data.keywords,
+	}}
+>
+	<main class="flex flex-col mx-auto items-center">
+		<a
+			href="/articles/"
+			class="inline-flex items-center text-brand-800/90 hover:text-brand-950 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300 mt-10"
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="h-4 w-4 mr-3 group-hover:-translate-x-1 transition-transform"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+			</svg>
+			Back to articles
+		</a>
+		<BlogPost content={post.data} frontmatter={remarkPluginFrontmatter}>
+			<TableOfContents headings={headings} />
+			<Prose>
+				<Content />
+			</Prose>
+		</BlogPost>
+		<RelatedArticles currentArticle={post} allArticles={allPosts} />
+	</main>
+</BaseLayout>

@@ -1,0 +1,98 @@
+---
+import { Image } from "astro:assets";
+
+let { content, frontmatter } = Astro.props;
+
+const date = new Date(content.date).toLocaleDateString("en-us", {
+	year: "numeric",
+	month: "long",
+	day: "numeric",
+});
+
+// Format date for ISO format for JSON-LD
+const isoDate = content.date ? new Date(content.date).toISOString() : '';
+const articleUrl = new URL(content.path || Astro.url.pathname, Astro.site || 'https://rishikc.com').toString();
+const imageUrl = content.hero_image?.src ? new URL(content.hero_image.src, Astro.site || 'https://rishikc.com').toString() : '';
+---
+
+<article class="max-w-[90%] flex flex-col mx-auto items-center pt-10">
+	<!-- Article JSON-LD Schema -->
+	<script type="application/ld+json" slot="head">
+		{JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "BlogPosting",
+			"headline": content.title,
+			"description": content.description,
+			"image": imageUrl,
+			"datePublished": isoDate,
+			"dateModified": isoDate,
+			"author": {
+				"@type": "Person",
+				"name": "Rishi Chawda",
+				"url": "https://rishikc.com"
+			},
+			"publisher": {
+				"@type": "Person",
+				"name": "Rishi Chawda",
+				"url": "https://rishikc.com"
+			},
+			"mainEntityOfPage": {
+				"@type": "WebPage",
+				"@id": articleUrl
+			},
+			"keywords": content.tags?.join(", ")
+		})}
+	</script>
+	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-2">
+		<h1
+			transition:name={`${content.path}-title`}
+			class="justify-start text-black text-3xl text-center font-semibold font-['Red_Hat_Display_Variable'] leading-7"
+		>
+			{content.title}
+		</h1>
+		{
+			content.subtitle && (
+				<h2 class="justify-start text-black text-center text-base font-normal font-['Red_Hat_Display_Variable'] leading-normal">
+					{content.subtitle}
+				</h2>
+			)
+		}
+	</div>
+	<small
+		transition:name={`${content.path}-date`}
+		class="justify-start text-black text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-2 mt-7"
+	>
+		{date}
+</small>
+	<div class="w-full md:max-w-[790px] mb-7">
+		<Image
+			class="w-full rounded-xl"
+			src={content.hero_image}
+			alt={content.hero_image_alt || `${content.title}`}
+			transition:name={`${content.path}-image`}
+		/>
+		<div class="inline-flex w-full px-2 mt-4 justify-between items-start">
+			<div
+				class="inline-flex justify-start items-start gap-[5px] max-w-3/4 flex-wrap"
+			>
+				{
+					content.tags.map((tag: string) => (
+						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
+							<span class="justify-start bg-brand-500 text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight">
+								{tag}
+							</span>
+						</div>
+					))
+				}
+			</div>
+			<small
+				class="justify-start text-gray-500 text-xs font-normal font-['Montserrat_Variable'] leading-tight"
+			>
+				{frontmatter.minutesRead}
+			</small>
+		</div>
+	</div>
+	<div class="mb-20 font-['Montserrat_Variable'] max-w-full lg:flex lg:flex-row lg:gap-4">
+		<slot />
+	</div>
+</article>

@@ -1,0 +1,383 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/base_layout.astro";
+import { Image } from "astro:assets";
+
+const page_info = {
+    title: "Articles | Rishi Chawda",
+    description: "Articles | Rishi Chawda",
+    image: Astro.glob("../../../public/favicon.svg"),
+    keywords: "Articles | Rishi Chawda",
+};
+
+// interface ArticleData {
+//     title: string;
+//     description: string;
+//     hero_image: ImageMetadata;
+//     hero_image_alt?: string;
+//     path: string;
+//     date: Date;
+//     tags: string[];
+// }
+
+// Get all articles
+const allArticles = await getCollection("articles");
+
+// Sort articles by date
+const sortedArticles = allArticles.sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+// Get unique tags
+const allTags = [
+    ...new Set(sortedArticles.flatMap((article) => article.data.tags)),
+];
+
+const itemsPerPage = 5;
+const totalPages = Math.ceil(sortedArticles.length / itemsPerPage);
+const currentPage = 1;
+
+// Format date
+function formatDate(date: Date): string {
+    return new Date(date).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
+}
+
+// Prepare searchable content
+function getSearchableContent(article: any): string {
+    return [
+        article.data.title,
+        article.data.description,
+        article.data.subtitle,
+        article.data.keywords,
+        article.data.tags.join(" "),
+    ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+}
+---
+
+<Layout page_info={page_info}>
+    <main
+        class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16"
+    >
+        <div class="flex flex-row justify-between items-center mb-8 sm:mb-12">
+            <h1
+                class="text-2xl sm:text-3xl lg:text-[2rem] font-medium text-gray-900"
+            >
+                Articles
+            </h1>
+            <a
+                href="/"
+                class="inline-flex items-center text-brand-800/90 hover:text-brand-950 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-3 group-hover:-translate-x-1 transition-transform"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+
+        <div
+            class="flex flex-col lg:grid lg:grid-cols-[2fr_1fr] gap-8 lg:gap-16"
+        >
+            <!-- Sidebar - Moved to top on mobile -->
+            <div class="order-first lg:order-last">
+                <!-- Quote box -->
+                <a
+                    href="/quotes/"
+                    class="block mb-8 sm:mb-12 p-4 sm:p-6 bg-[#F8F9FE] rounded-lg hover:bg-[#F0F2FC] transition-colors"
+                >
+                    <p
+                        class="text-gray-600 text-sm font-['Montserrat_Variable']"
+                    >
+                        Click here to read some of my favourite lines from books
+                        and the internet
+                    </p>
+                </a>
+
+                <!-- Tags -->
+                <div>
+                    <h3
+                        class="text-base font-medium font-['Red_Hat_Display_Variable'] text-gray-900 mb-4"
+                    >
+                        Filter by tags
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        {
+                            allTags.map((tag) => (
+                                <button
+                                    class="inline-flex items-center font-['Montserrat_Variable'] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm bg-[#F8F9FE] text-[#6B7AB0] hover:bg-[#6B7AB0]/90 hover:text-white transition-all relative group data-[selected=true]:bg-[#6B7AB0] data-[selected=true]:text-white"
+                                    data-tag={tag}
+                                >
+                                    <span>{tag}</span>
+                                    <svg
+                                        class="overflow-hidden w-0 group-data-[selected=true]:w-3 group-data-[selected=true]:ml-4 transition-all"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <line x1="18" y1="6" x2="6" y2="18" />
+                                        <line x1="6" y1="6" x2="18" y2="18" />
+                                    </svg>
+                                </button>
+                            ))
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content area -->
+            <div class="flex flex-col">
+                <!-- Search bar -->
+                <div class="mb-8 sm:mb-12">
+                    <input
+                        type="text"
+                        id="search"
+                        placeholder="Search by title, description, keywords, or tags"
+                        class="font-['Montserrat_Variable'] peer w-full px-4 sm:px-6 py-3 sm:py-4 rounded-lg bg-[#F8F9FE] border-none text-gray-700 placeholder-gray-500 text-sm sm:text-base focus:ring-0 focus:outline-none"
+                    />
+                </div>
+
+                <!-- Articles list -->
+                <div class="space-y-12 sm:space-y-8 flex-1">
+                    {
+                        sortedArticles.map((article) => (
+                            <article
+                                class="group data-[hidden=true]:hidden"
+                                data-tags={article.data.tags.join(",")}
+                                data-title={article.data.title.toLowerCase()}
+                                data-search={getSearchableContent(article)}
+                            >
+                                <a
+                                    href={article.data.path}
+                                    class="flex flex-row gap-4 sm:gap-6"
+                                >
+                                    <div class="basis-1/3 md:basis-1/6 lg:basis-2/12">
+                                        <Image
+                                            src={article.data.hero_image}
+                                            alt={
+                                                article.data.hero_image_alt ||
+                                                article.data.title
+                                            }
+                                            class="aspect-square rounded-lg object-cover"
+                                            transition:name={`${article.data.path}-image`}
+                                        />
+                                    </div>
+                                    <div class="basis-2/3 md:basis-5/6 lg:basis-10/12 flex flex-col gap-2 sm:gap-0 sm:py-1">
+                                        <h2 transition:name={`${article.data.path}-title`} class="font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-[#6B7AB0] transition-colors">
+                                            {article.data.title}
+                                        </h2>
+                                        <small transition:name={`${article.data.path}-date`} class="font-['Montserrat_Variable'] text-xs text-gray-500 align-text-top sm:mt-2">
+                                            {formatDate(article.data.date)}
+                                        </small>
+                                        <p class="font-['Montserrat_Variable'] text-sm text-gray-600 line-clamp-2 sm:mt-2">
+                                            {article.data.description}
+                                        </p>
+                                    </div>
+                                </a>
+                            </article>
+                        ))
+                    }
+                </div>
+
+                <!-- Pagination -->
+                <div
+                    class="mt-8 sm:mt-12 flex items-center gap-2 justify-center"
+                >
+                    <button
+                        class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+                        data-prev
+                        disabled={currentPage === 1}
+                    >
+                        <svg
+                            width="17"
+                            height="17"
+                            viewBox="0 0 17 17"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="rotate-180"
+                        >
+                            <path
+                                d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
+                                stroke="#737FAE"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    {
+                        Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                            (page) => (
+                                <button
+                                    class:list={[
+                                        "w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-colors text-sm sm:text-base",
+                                        page === currentPage
+                                            ? "bg-[#6B7AB0] text-white font-medium"
+                                            : "text-gray-600 hover:bg-gray-100",
+                                    ]}
+                                    data-page={page}
+                                >
+                                    {page}
+                                </button>
+                            ),
+                        )
+                    }
+                    <button
+                        class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+                        data-next
+                        disabled={currentPage >= totalPages}
+                    >
+                        <svg
+                            width="17"
+                            height="17"
+                            viewBox="0 0 17 17"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
+                                stroke="#737FAE"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    document.addEventListener('astro:page-load', () => {
+        // State
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        const selectedTags = new Set();
+
+        // DOM Elements
+        const searchInput = document.getElementById("search");
+        const articleElements = document.querySelectorAll("[data-tags]");
+        const articles = [...articleElements].map((el) => el);
+
+        const tagButtonElements = document.querySelectorAll("[data-tag]");
+        const tagButtons = [...tagButtonElements].map((el) => el);
+
+        const pageButtonElements = document.querySelectorAll("[data-page]");
+        const pageButtons = [...pageButtonElements].map((el) => el);
+
+        const prevButton = document.querySelector("[data-prev]");
+        const nextButton = document.querySelector("[data-next]");
+
+        // Filter and pagination logic
+        function updateArticlesVisibility() {
+            const searchTerm = searchInput?.value.toLowerCase() || "";
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+
+            let visibleCount = 0;
+            articles.forEach((article) => {
+                const matchesSearch = article.dataset.search.includes(searchTerm);
+                const matchesTags =
+                    selectedTags.size === 0 ||
+                    Array.from(selectedTags).every((tag) =>
+                        article.dataset.tags
+                            .toLowerCase()
+                            .includes(tag.toLowerCase()),
+                    );
+
+                const isVisible = matchesSearch && matchesTags;
+                if (isVisible) {
+                    visibleCount++;
+                    article.dataset.hidden = (
+                        visibleCount <= startIndex || visibleCount > endIndex
+                    ).toString();
+                } else {
+                    article.dataset.hidden = "true";
+                }
+            });
+
+            // Update pagination visibility
+            const totalPages = Math.ceil(visibleCount / itemsPerPage);
+            pageButtons.forEach((button) => {
+                const page = parseInt(button.dataset.page || "1", 10);
+                button.classList.toggle("hidden", page > totalPages);
+                button.classList.toggle("bg-[#6B7AB0]", page === currentPage);
+                button.classList.toggle("text-white", page === currentPage);
+                button.classList.toggle("text-gray-600", page !== currentPage);
+            });
+
+            // Update arrow buttons
+            if (prevButton) {
+                prevButton.disabled = currentPage === 1;
+            }
+            if (nextButton) {
+                nextButton.disabled = currentPage >= totalPages;
+            }
+        }
+
+        // Event Listeners
+        searchInput?.addEventListener("input", () => {
+            currentPage = 1;
+            updateArticlesVisibility();
+        });
+
+        tagButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                const tag = button.dataset.tag;
+                if (selectedTags.has(tag)) {
+                    selectedTags.delete(tag);
+                    button.dataset.selected = "false";
+                } else {
+                    selectedTags.add(tag);
+                    button.dataset.selected = "true";
+                }
+                currentPage = 1;
+                updateArticlesVisibility();
+            });
+        });
+
+        pageButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                currentPage = parseInt(button.dataset.page || "1", 10);
+                updateArticlesVisibility();
+            });
+        });
+
+        prevButton?.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                updateArticlesVisibility();
+            }
+        });
+
+        nextButton?.addEventListener("click", () => {
+            const totalPages = Math.ceil(articles.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateArticlesVisibility();
+            }
+        });
+
+        // Initial display
+        updateArticlesVisibility();
+    });
+</script>

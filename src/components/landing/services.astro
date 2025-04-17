@@ -1,0 +1,63 @@
+---
+const services = [
+  {
+    title: "Web Applications",
+    description: "Web development expertise infused with experience, curiosity, and no shortage of tenacity!",
+    link: "#",
+  },
+  {
+    title: "Mobile Applications",
+    description: "Crafting pixel-perfect apps for Android and iOS devices.",
+    link: "#",
+  },
+  {
+    title: "Desktop Software",
+    description: "Delivering powerful desktop applications for various platforms.",
+    link: "#",
+  },
+  {
+    title: "Writing Articles",
+    description: "Expressing thoughts through engaging articles and insights.",
+    link: "/articles",
+    linkText: "See Articles"
+  },
+  {
+    title: "Photography",
+    description: "Capturing the beauty of life through a creative lens.",
+    link: "/gallery",
+    linkText: "View Gallery"
+  },
+  {
+    title: "Freelance and Collaborations",
+    description: "Always open to taking on new challenges and collaborations.",
+    link: "#contact",
+    linkText: "Say Hi!"
+  }
+];
+---
+
+<section id="services" class="py-12 sm:py-16 lg:py-20">
+  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
+    <h2 class="text-lg sm:text-xl lg:text-2xl font-light text-[#6B7AB0] mb-8 sm:mb-12 lg:mb-16">
+      What I do and look forward to..
+    </h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12 lg:gap-x-12 lg:gap-y-16">
+      {services.map((service) => (
+        <div class="p-4 sm:p-6 lg:p-0">
+          <h3 class="text-lg sm:text-xl lg:text-[1.25rem] font-medium text-[#6B7AB0] mb-2 sm:mb-3">
+            {service.title}
+          </h3>
+          <p class="text-sm sm:text-base text-[#6B7AB0]/70 mb-3 sm:mb-4 leading-relaxed font-light">
+            {service.description}
+          </p>
+          {service.linkText && (
+            <a href={service.link} class="text-[#6B7AB0] hover:text-[#6B7AB0]/80 font-light inline-flex items-center text-sm sm:text-base">
+              {service.linkText} <span class="ml-1">→</span>
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 

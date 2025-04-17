@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import ProjectCard from "./project_card.astro";
+import { Image } from "astro:assets";
+
+import Flowers from '../../../content/assets/gallery maintainence.svg'
+
+const galleries = await getCollection("gallery");
+const sortedGalleries = galleries.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date) : new Date(0);
+  const dateB = b.data.date ? new Date(b.data.date) : new Date(0);
+  return dateB.getTime() - dateA.getTime();
+});
+
+const processing = true;
+---
+
+<div class="min-h-screen">
+  {
+    processing ? (
+      <section class="bg-gray-100 rounded-2xl flex flex-col items-center justify-around md:flex-row px-8 py-6">
+        <div class="order-last md:order-first y-8 px-4 mx-auto max-w-screen-md text-center lg:py-16 lg:px-12">
+          <h1 class="mb-4 text-3xl font-bold tracking-tight leading-none text-gray-900 lg:mb-6 md:text2xl xl:text-3xl dark:text-white">
+            Refreshing my portfolio..
+          </h1>
+          <p class="font-light text-gray-500 md:text-md xl:text-lg dark:text-gray-400">
+            I'm fishing my drives to pick and sort the photos for my portfolio. Stay tuned for the updates!
+          </p>
+        </div>
+        <div>
+          <Image src={Flowers} alt="sorting through photos" />
+        </div>
+      </section>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {sortedGalleries.map((gallery) => (
+          <ProjectCard project={gallery} />
+        ))}
+      </div>
+    )
+  }
+</div>

@@ -1,0 +1,86 @@
+---
+import BaseLayout from "../../layouts/base_layout.astro";
+import GalleryGrid from "../../components/gallery/gallery_grid.astro";
+import "../../styles/global.css";
+
+import logo from "../../../content/assets/logo/Group 489.svg";
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+const page_info = {
+  title: "Gallery - Rishi Chawda",
+  description: "Photography portfolio showcasing various projects and moments captured by Rishi Chawda",
+  image: "/favicon.svg",
+  keywords: "photography, portfolio, gallery, Rishi Chawda",
+};
+
+// Get gallery collection for structured data
+const galleries = await getCollection("gallery");
+const pageUrl = new URL(Astro.url.pathname, Astro.site || 'https://rishikc.com').toString();
+
+// Create gallery items for JSON-LD
+const galleryItems = galleries.map(gallery => {
+  return {
+    "@type": "ImageGallery",
+    "name": gallery.data.title,
+    "description": gallery.data.description,
+    "url": new URL(`/gallery/${gallery.data.directory}/`, Astro.site || 'https://rishikc.com').toString(),
+  }
+});
+---
+
+<BaseLayout page_info={page_info}>
+  <!-- CollectionPage JSON-LD Schema for Gallery Index -->
+  <script type="application/ld+json" slot="head">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Photography Gallery",
+      "description": "Photography portfolio showcasing various projects and moments captured by Rishi Chawda",
+      "mainEntity": galleryItems,
+      "author": {
+        "@type": "Person",
+        "name": "Rishi Chawda",
+        "url": "https://rishikc.com"
+      },
+      "url": pageUrl
+    })}
+  </script>
+  <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
+      <a
+        href="/"
+        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 mb-20 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 mr-3 group-hover:-translate-x-1 transition-transform"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          />
+        </svg>
+        Back to Home
+      </a>
+
+      <div class="flex flex-col md:flex-row items-center justify-around text-center mb-20">
+        <div class="basis-1/3 lg:basis-2/5">
+          <Image alt="logo" src={logo} transition:name="hero-logo-image" class="mx-auto max-w-[80%]" />
+        </div>
+        <div class="basis-2/3 lg:3/5">
+          <h1 class="text-4xl lg:text-5xl font-light text-brand-950 mb-8 tracking-[-0.02em] leading-tight">Photography Gallery</h1>
+        <p class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto tracking-wide">
+          Explore my collection of photography projects, from street photography to portrait sessions.
+        </p>
+        </div>
+      </div>
+      <GalleryGrid />
+    </div>
+  </main>
+</BaseLayout>

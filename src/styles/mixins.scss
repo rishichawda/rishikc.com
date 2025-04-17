@@ -1,0 +1,8 @@
+@mixin dev-random-highlight {
+    $red: random(255);
+    $blue: random(255);
+    $green: random(255);
+    border: 1px solid rgb($red, $blue, $green);
+    // background-color: rgb($red, $blue, $green, 0.5);
+  }
+  

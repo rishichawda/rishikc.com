@@ -1,0 +1,42 @@
+---
+import SEO from "../components/seo.astro";
+import "../styles/global.css";
+import "../styles/tailwind.css";
+import "../styles/animations.css";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/red-hat-display";
+import "@fontsource-variable/red-hat-text";
+import "@fontsource-variable/montserrat";
+import Footer from "../components/footer.astro";
+import { ClientRouter } from "astro:transitions";
+
+let {
+	page_info: { title, description, image, keywords },
+} = Astro.props;
+
+const seo = {
+	title: title || "title",
+	// title: title || defaultSiteMetadata.title,
+	description: description || "description",
+	// description: description || defaultSiteMetadata.description,
+	image: `siteUrl${image || "image"}`,
+	// image: `${defaultSiteMetadata.siteUrl}${image || icon}`,
+	type: "WebSite",
+	// type: type || "WebSite",
+	keywords: keywords || "keywords",
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<SEO page_info={seo} />
+		<ClientRouter />
+		<!-- Slot for page-specific JSON-LD and other head elements -->
+		<slot name="head" />
+	</head>
+	<body>
+		<slot />
+		<Footer />
+	</body>
+</html>

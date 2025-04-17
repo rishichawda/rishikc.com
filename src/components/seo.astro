@@ -1,0 +1,45 @@
+---
+let {
+    page_info: { title, description, image, keywords },
+} = Astro.props;
+
+// Get the site URL for JSON-LD
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://rishikc.com');
+---
+
+<!-- <head> -->
+    <meta charset="UTF-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href={image} />
+    <meta name="description" content={description} />
+    <meta name="image" content={image} />
+    {keywords ? <meta name="keywords" content={keywords} /> : null}
+    {/* Open graph / Facebook */}
+    <meta property="og:title" content={title} />
+    <meta property="og:site_name" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:url" content={Astro.url.pathname} />
+    {/* Twitter */}
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={image} />
+
+    <!-- WebSite JSON-LD Schema -->
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Rishi Chawda",
+        "url": canonicalURL.toString(),
+        "description": description,
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": `${canonicalURL.origin}/search?q={search_term_string}`,
+          "query-input": "required name=search_term_string"
+        }
+      })}
+    </script>
+<!-- </head> -->
