@@ -1,0 +1,37 @@
+---
+import type { MarkdownHeading } from "astro";
+
+type Props = {
+    headings: MarkdownHeading[];
+};
+
+const { headings } = Astro.props;
+let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.length > 10 ? 2 : 4));
+---
+
+<div class="lg:sticky top-0 py-4 max-w-xs max-h-[calc(100vh)]">
+    <nav class="flex flex-col w-full rounded-lg overflow-hidden p-3 bg-white/60 backdrop-blur-sm shadow-sm">
+        <h2 class="mb-3 text-md font-medium text-brand-950">Table of Contents</h2>
+        <ul class="pt-1 font-normal space-y-2">
+            {
+                filteredHeadings.map((item) => (
+                    <li 
+                        class={`pl-${item.depth} mb-1 list-none last-of-type:mb-0`} 
+                        aria-label={item.text} 
+                        role="listitem"
+                    >
+                        <a 
+                            class="flex items-center rounded px-2 py-1 transition-all duration-200 text-slate-700 hover:bg-gray-50 hover:text-brand-500"} 
+                            role="listitem" 
+                            href={`#${item.slug}`}
+                        >
+                            <span class="flex-1 text-sm line-clamp-2" title={item.text}>
+                                {item.depth > 2 && "– "}{item.text}
+                            </span>
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </nav>
+</div>
