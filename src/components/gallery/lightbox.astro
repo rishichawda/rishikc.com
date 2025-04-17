@@ -22,8 +22,7 @@
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
+          d="M6 18L18 6M6 6l12 12"></path>
       </svg>
     </button>
     <button
@@ -41,8 +40,7 @@
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          d="M15 19l-7-7 7-7"
-        />
+          d="M15 19l-7-7 7-7"></path>
       </svg>
     </button>
     <button
@@ -60,76 +58,77 @@
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          d="M9 5l7 7-7 7"
-        />
+          d="M9 5l7 7-7 7"></path>
       </svg>
     </button>
   </div>
 </div>
 
 <script is:inline data-astro-rerun>
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImage = document.getElementById('lightbox-image');
-  const closeButton = document.getElementById('close-lightbox');
-  const prevButton = document.getElementById('prev-image');
-  const nextButton = document.getElementById('next-image');
+  document.addEventListener("astro:page-load", function () {
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const closeButton = document.getElementById("close-lightbox");
+    const prevButton = document.getElementById("prev-image");
+    const nextButton = document.getElementById("next-image");
 
-  let currentImageIndex = 0;
-  let images = [];
+    let currentImageIndex = 0;
+    let images = [];
 
-  function openLightbox(imageElement) {
-    if (!lightbox || !lightboxImage) return;
+    function openLightbox(imageElement) {
+      if (!lightbox || !lightboxImage) return;
 
-    // Get all images in the current project
-    const projectImages = Array.from(document.querySelectorAll('.group img')).map(
-      (img) => img.src
-    );
-    images = projectImages;
-    currentImageIndex = projectImages.indexOf(imageElement.src);
+      // Get all images in the current project
+      const projectImages = Array.from(
+        document.querySelectorAll(".group img"),
+      ).map((img) => img.src);
+      images = projectImages;
+      currentImageIndex = projectImages.indexOf(imageElement.src);
 
-    lightboxImage.src = imageElement.src;
-    lightboxImage.alt = imageElement.alt;
-    lightbox.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
+      lightboxImage.src = imageElement.src;
+      lightboxImage.alt = imageElement.alt;
+      lightbox.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
 
-  function closeLightbox() {
-    if (!lightbox) return;
-    lightbox.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
+    function closeLightbox() {
+      if (!lightbox) return;
+      lightbox.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
 
-  function showImage(index) {
-    if (!lightboxImage || images.length === 0) return;
-    currentImageIndex = (index + images.length) % images.length;
-    lightboxImage.src = images[currentImageIndex];
-  }
+    function showImage(index) {
+      if (!lightboxImage || images.length === 0) return;
+      currentImageIndex = (index + images.length) % images.length;
+      lightboxImage.src = images[currentImageIndex];
+    }
 
-  function showPrevImage() {
-    showImage(currentImageIndex - 1);
-  }
+    function showPrevImage() {
+      showImage(currentImageIndex - 1);
+    }
 
-  function showNextImage() {
-    showImage(currentImageIndex + 1);
-  }
+    function showNextImage() {
+      showImage(currentImageIndex + 1);
+    }
 
-  // Event listeners
-  closeButton?.addEventListener('click', closeLightbox);
-  prevButton?.addEventListener('click', showPrevImage);
-  nextButton?.addEventListener('click', showNextImage);
+    // Event listeners
+    closeButton?.addEventListener("click", closeLightbox);
+    prevButton?.addEventListener("click", showPrevImage);
+    nextButton?.addEventListener("click", showNextImage);
 
-  // Close on escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') showPrevImage();
-    if (e.key === 'ArrowRight') showNextImage();
+    // Close on escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") showPrevImage();
+      if (e.key === "ArrowRight") showNextImage();
+    });
+
+    // Close on click outside image
+    lightbox?.addEventListener("click", (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    // Expose the openLightbox function globally
+    window.openLightbox = openLightbox;
   });
-
-  // Close on click outside image
-  lightbox?.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
-
-  // Expose the openLightbox function globally
-  window.openLightbox = openLightbox;
 </script>

@@ -99,20 +99,3 @@ const page_info = {
   </main>
   <Lightbox />
 </BaseLayout>
-
-<script is:inline data-astro-rerun>
-  function openLightbox(image) {
-    // Implement lightbox functionality here
-    console.log('Opening lightbox for:', image?.src);
-  }
-</script>
-
-<script>
-  document.addEventListener('astro:page-load', () => {
-    // The main openLightbox function is defined in the lightbox component
-    // This just makes sure the page-specific click handlers use that function
-    window.openLightbox = window.openLightbox || function(image) {
-      console.log('Opening lightbox for:', image?.src);
-    };
-  });
-</script>
