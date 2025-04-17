@@ -157,12 +157,8 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site || 'https://rishikc.com')
   function setUpForm() {
     // Initialize EmailJS properly
     if (typeof emailjs !== 'undefined') {
-      // Only initialize if public key exists
-      if (emailJSPublicKey) {
-        emailjs.init(emailJSPublicKey);
-      } else {
-        console.error("EmailJS public key is not set. Contact form will not work.");
-      }
+    // Only initialize if public key exists
+      emailjs.init(emailJSPublicKey);
     }
 
     // Check if the form is already set up

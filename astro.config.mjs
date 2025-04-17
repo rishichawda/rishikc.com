@@ -17,6 +17,8 @@ import { imageService } from "@unpic/astro/service";
 
 import sitemap from '@astrojs/sitemap';
 
+import playformCompress from '@playform/compress';
+
 const AnchorLinkIcon = h(
   'span',
   { ariaHidden: 'true', class: 'anchor-icon' },
@@ -62,7 +64,18 @@ export default defineConfig({
     }]],
     remarkRehype: { footnoteLabel: 'Footnotes' },
     gfm: true,
-  }), sitemap()],
+  }), sitemap(), playformCompress({
+    CSS: false,
+    HTML: {
+      "html-minifier-terser": {
+        removeAttributeQuotes: false,
+      },
+    },
+    Image: true,
+    JavaScript: true,
+    SVG: true,
+    Logger: 0,
+  })],
 
   site: siteMetadata.siteUrl,
   // trailingSlash: getEnv('NODE_ENV') == 'development' ? 'ignore' : 'always',
