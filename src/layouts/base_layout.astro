@@ -32,6 +32,8 @@ const seo = {
 	<head>
 		<SEO page_info={seo} />
 		<ClientRouter />
+		<!-- Slot for page-specific JSON-LD and other head elements -->
+		<slot name="head" />
 	</head>
 	<body>
 		<slot />

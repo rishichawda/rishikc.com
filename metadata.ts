@@ -16,6 +16,7 @@ const siteMetadata: SiteMetadata = {
         url: "https://www.linkedin.com/in/rkrishi/",
         sameAs: [
           "https://github.com/rishichawda",
+          "https://www.linkedin.com/in/rkrishi/",
           "https://www.instagram.com/rishiikc",
           "https://twitter.com/rishiikc",
           "https://dribbble.com/rishikc"

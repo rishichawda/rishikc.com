@@ -23,9 +23,41 @@ const page_info = {
   image: featured_image,
   keywords: `photography, ${title.toLowerCase()}, portfolio, Rishi Chawda`,
 };
+
+// Prepare image array for JSON-LD
+const galleryImageUrls = images?.map((img) => {
+  return {
+    "@type": "ImageObject",
+    "contentUrl": new URL(img.src.src, Astro.site || 'https://rishikc.com').toString(),
+    "name": img.caption || img.alt || `${title} image`,
+    "description": img.caption || img.alt || `Image from ${title} gallery`
+  }
+}) || [];
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site || 'https://rishikc.com').toString();
 ---
 
 <BaseLayout page_info={page_info}>
+  <!-- ImageGallery JSON-LD Schema -->
+  <script type="application/ld+json" slot="head">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "headline": title,
+      "description": description,
+      "image": galleryImageUrls,
+      "author": {
+        "@type": "Person",
+        "name": "Rishi Chawda",
+        "url": "https://rishikc.com"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": pageUrl
+      },
+      "keywords": tags?.join(", ")
+    })}
+  </script>
   <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
       <a

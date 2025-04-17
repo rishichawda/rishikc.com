@@ -1,6 +1,5 @@
 ---
 import { Image } from "astro:assets";
-import BaseLayout from "./base_layout.astro";
 
 let { content, frontmatter } = Astro.props;
 
@@ -9,9 +8,41 @@ const date = new Date(content.date).toLocaleDateString("en-us", {
 	month: "long",
 	day: "numeric",
 });
+
+// Format date for ISO format for JSON-LD
+const isoDate = content.date ? new Date(content.date).toISOString() : '';
+const articleUrl = new URL(content.path || Astro.url.pathname, Astro.site || 'https://rishikc.com').toString();
+const imageUrl = content.hero_image?.src ? new URL(content.hero_image.src, Astro.site || 'https://rishikc.com').toString() : '';
 ---
 
 <article class="max-w-[90%] flex flex-col mx-auto items-center pt-10">
+	<!-- Article JSON-LD Schema -->
+	<script type="application/ld+json" slot="head">
+		{JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "BlogPosting",
+			"headline": content.title,
+			"description": content.description,
+			"image": imageUrl,
+			"datePublished": isoDate,
+			"dateModified": isoDate,
+			"author": {
+				"@type": "Person",
+				"name": "Rishi Chawda",
+				"url": "https://rishikc.com"
+			},
+			"publisher": {
+				"@type": "Person",
+				"name": "Rishi Chawda",
+				"url": "https://rishikc.com"
+			},
+			"mainEntityOfPage": {
+				"@type": "WebPage",
+				"@id": articleUrl
+			},
+			"keywords": content.tags?.join(", ")
+		})}
+	</script>
 	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-2">
 		<h1
 			transition:name={`${content.path}-title`}

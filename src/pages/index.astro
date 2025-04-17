@@ -12,11 +12,34 @@ const page_info = {
 	keywords: "Rishi Chawda - Software Engineer",
 };
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Define site URL for structured data
+const siteUrl = new URL(Astro.url.pathname, Astro.site || 'https://rishikc.com').toString();
 ---
 
 <BaseLayout page_info={page_info}>
+	<!-- Person JSON-LD Schema -->
+	<script type="application/ld+json" slot="head">
+		{JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Rishi Chawda",
+			"jobTitle": "Senior Software Engineer",
+			"worksFor": {
+				"@type": "Organization",
+				"name": "Progress Chef"
+			},
+			"url": siteUrl,
+			"image": `${siteUrl.replace(/\/$/, "")}/favicon.svg`,
+			"description": "Senior Software Engineer building systems with Software Engineering and DevSecOps skills",
+			"sameAs": [
+				"https://github.com/rishichawda",
+				"https://www.linkedin.com/in/rkrishi",
+				"https://www.instagram.com/rishiikc",
+				"https://twitter.com/rishiikc",
+          		"https://dribbble.com/rishikc"
+			]
+		})}
+	</script>
 	<main>
 		<Hero />
 		<!-- <Services /> -->

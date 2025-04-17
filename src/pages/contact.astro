@@ -13,9 +13,28 @@ const page_info = {
 const emailJSPublicKey = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
 const emailJSServiceID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
 const emailJSTemplateID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site || 'https://rishikc.com').toString();
 ---
 
 <BaseLayout page_info={page_info}>
+  <!-- ContactPage JSON-LD Schema -->
+  <script type="application/ld+json" slot="head">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      "name": "Contact Rishi Chawda",
+      "description": "Get in touch with Rishi Chawda for collaborations, job opportunities, or general inquiries",
+      "url": pageUrl,
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Rishi Chawda",
+        "email": "mailto:hello@rishikc.com",
+        "url": "https://rishikc.com",
+        "contactType": "Professional Inquiries"
+      }
+    })}
+  </script>
   <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
       <a
