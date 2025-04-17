@@ -1,0 +1,96 @@
+---
+import BaseLayout from "../layouts/base_layout.astro";
+import "../styles/global.css";
+import { Image } from "astro:assets";
+
+const page_info = {
+  title: "Page Not Found - Rishi Chawda",
+  description: "The page you're looking for doesn't exist or has been moved.",
+  image: "/favicon.svg",
+  keywords: "404, page not found, error, Rishi Chawda",
+};
+---
+
+<BaseLayout page_info={page_info}>
+  <main class="font-['Red_Hat_Display_Variable'] min-h-screen relative overflow-hidden">
+    <!-- Background with gradient similar to hero section -->
+    <div class="absolute inset-0 bg-[#98a5db]/[0.25] z-0">
+      <div class="absolute inset-0 flex">
+        <div class="w-0 lg:w-1/2 bg-[#98a5db]/[0.88]"></div>
+        <div class="w-full lg:w-1/2 bg-[#8592c8]"></div>
+      </div>
+    </div>
+    
+    <!-- Content container -->
+    <div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col items-center justify-center min-h-screen text-center">
+      <!-- 404 Illustration - Updated for better contrast -->
+      <div class="mb-8 animate-in">
+        <svg width="200" height="150" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto">
+          <!-- Background shape -->
+          <rect x="10" y="20" width="180" height="110" rx="10" fill="white" opacity="0.9"/>
+          
+          <!-- 4 -->
+          <path d="M45 95V85L63 58H72V84H77V95H72V105H64V95H45ZM64 69L52 84H64V69Z" fill="#6B7AB0"/>
+          
+          <!-- 0 -->
+          <path d="M94 105C88 105 83 103 79 99C75 95 73 90 73 84C73 78 75 73 79 69C83 65 88 63 94 63C100 63 105 65 109 69C113 73 115 78 115 84C115 90 113 95 109 99C105 103 100 105 94 105ZM94 94C97 94 99 93 101 91C103 89 104 87 104 84C104 81 103 79 101 77C99 75 97 74 94 74C91 74 89 75 87 77C85 79 84 81 84 84C84 87 85 89 87 91C89 93 91 94 94 94Z" fill="#6B7AB0"/>
+          
+          <!-- 4 -->
+          <path d="M135 95V85L153 58H162V84H167V95H162V105H154V95H135ZM154 69L142 84H154V69Z" fill="#6B7AB0"/>
+          
+          <!-- Decorative elements -->
+          <path d="M20 40L180 40" stroke="#98a5db" stroke-width="2" stroke-dasharray="6 3"/>
+          <path d="M20 110L180 110" stroke="#98a5db" stroke-width="2" stroke-dasharray="6 3"/>
+          
+          <!-- Connection lines -->
+          <path d="M32 58C60 85 140 85 168 58" stroke="#8592c8" stroke-width="1.5"/>
+          <circle cx="30" cy="58" r="4" fill="#6B7AB0"/>
+          <circle cx="170" cy="58" r="4" fill="#6B7AB0"/>
+        </svg>
+      </div>
+      
+      <!-- Heading and message with improved contrast -->
+      <h1 class="text-4xl lg:text-5xl font-medium text-white mb-8 tracking-[-0.02em] leading-tight animate-in" style="animation-delay: 100ms;">
+        Page Not Found
+      </h1>
+      
+      <p class="text-white text-xl leading-relaxed font-normal max-w-2xl mx-auto font-['Montserrat_Variable'] mb-12 animate-in" style="animation-delay: 200ms;">
+        The page you're looking for doesn't exist or has been moved to another location.
+      </p>
+      
+      <!-- Navigation options with enhanced visibility -->
+      <div class="space-y-6 animate-in" style="animation-delay: 300ms;">
+        <!-- Primary button with improved contrast -->
+        <a 
+          href="/" 
+          class="bg-white text-brand-800 px-6 py-3 rounded font-['Red_Hat_Display_Variable'] text-sm font-medium uppercase tracking-wide hover:bg-brand-100 transition-colors inline-block shadow-md"
+        >
+          Return to Homepage
+        </a>
+        
+        <!-- Secondary links with better visibility -->
+        <div class="flex flex-wrap justify-center gap-6 pt-6 font-['Montserrat_Variable'] font-medium">
+          <a href="/articles/" class="text-white hover:text-brand-100 transition-colors">Articles</a>
+          <a href="/gallery/" class="text-white hover:text-brand-100 transition-colors">Gallery</a>
+          <a href="/contact/" class="text-white hover:text-brand-100 transition-colors">Contact</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  /* Add animation styles specific to this page */
+  .animate-in {
+    animation: fade-slide-up 0.8s ease-out forwards;
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  
+  @keyframes fade-slide-up {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
