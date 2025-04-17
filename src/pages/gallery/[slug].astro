@@ -50,12 +50,12 @@ const page_info = {
       </a>
 
       <div class="max-w-3xl mx-auto text-center mb-24">
-        <h1 class="text-6xl font-light text-brand-950 mb-10 tracking-[-0.02em] leading-tight">{title}</h1>
-        <p class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto tracking-wide">{description}</p>
+        <h1 transition:name={`${gallery.id}-title`} class="text-6xl font-light text-brand-950 mb-10 tracking-[-0.02em] leading-tight">{title}</h1>
+        <p transition:name={`${gallery.id}-description`} class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto tracking-wide">{description}</p>
         {tags && tags.length > 0 && (
           <div class="flex flex-wrap gap-3 justify-center mt-12">
             {tags.map((tag) => (
-              <span class="text-[13px] bg-brand-950/10 text-brand-950 px-5 py-2 rounded-full tracking-[0.15em] uppercase hover:bg-brand-950/20 transition-colors duration-300 shadow-sm">
+              <span transition:name={`${gallery.id}-${tag}`}  class="text-[13px] bg-brand-950/10 text-brand-950 px-5 py-2 rounded-full tracking-[0.15em] uppercase hover:bg-brand-950/20 transition-colors duration-300 shadow-sm">
                 {tag}
               </span>
             ))}
