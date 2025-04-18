@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/base_layout.astro";
 import GalleryGrid from "../../components/gallery/gallery_grid.astro";
 import "../../styles/global.css";
+import { Schema } from "astro-seo-schema";
 
 import logo from "../../../content/assets/logo/Group 489.svg";
 import { Image } from "astro:assets";
@@ -9,44 +10,73 @@ import { getCollection } from "astro:content";
 
 const page_info = {
   title: "Gallery - Rishi Chawda",
-  description: "Photography portfolio showcasing various projects and moments captured by Rishi Chawda",
+  description:
+    "Photography portfolio showcasing various projects and moments captured by Rishi Chawda",
   image: "/favicon.svg",
   keywords: "photography, portfolio, gallery, Rishi Chawda",
 };
 
 // Get gallery collection for structured data
 const galleries = await getCollection("gallery");
-const pageUrl = new URL(Astro.url.pathname, Astro.site || 'https://rishikc.com').toString();
+const pageUrl = new URL(
+  Astro.url.pathname,
+  Astro.site || "https://rishikc.com",
+).toString();
 
 // Create gallery items for JSON-LD
-const galleryItems = galleries.map(gallery => {
+const galleryItems = galleries.map((gallery) => {
   return {
     "@type": "ImageGallery",
-    "name": gallery.data.title,
-    "description": gallery.data.description,
-    "url": new URL(`/gallery/${gallery.data.directory}/`, Astro.site || 'https://rishikc.com').toString(),
-  }
+    name: gallery.data.title,
+    description: gallery.data.description,
+    url: new URL(
+      `/gallery/${gallery.data.directory}/`,
+      Astro.site || "https://rishikc.com",
+    ).toString(),
+  };
 });
 ---
 
 <BaseLayout page_info={page_info}>
   <!-- CollectionPage JSON-LD Schema for Gallery Index -->
-  <script type="application/ld+json" slot="head">
-    {JSON.stringify({
+  <Schema
+    slot="head"
+    item={{
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      "name": "Photography Gallery",
-      "description": "Photography portfolio showcasing various projects and moments captured by Rishi Chawda",
-      "mainEntity": galleryItems,
-      "author": {
-        "@type": "Person",
-        "name": "Rishi Chawda",
-        "url": "https://rishikc.com"
+      name: "Photography Gallery",
+      description:
+        "Photography portfolio showcasing various projects and moments captured by Rishi Chawda",
+      mainEntity: {
+        "@type": "ItemList",
+        itemListElement: galleryItems.map((gallery, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item: {
+            "@type": "ImageGallery",
+            name: gallery.name,
+            description: gallery.description,
+            url: gallery.url,
+            image: {
+              "@type": "ImageObject",
+              url: gallery.url,
+              width: 800,
+              height: 600,
+            },
+          },
+        })),
       },
-      "url": pageUrl
-    })}
-  </script>
-  <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]">
+      author: {
+        "@type": "Person",
+        name: "Rishi Chawda",
+        url: "https://rishikc.com",
+      },
+      url: pageUrl,
+    }}
+  />
+  <main
+    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
       <a
         href="/"
@@ -63,21 +93,34 @@ const galleryItems = galleries.map(gallery => {
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         Back to Home
       </a>
 
-      <div class="flex flex-col md:flex-row items-center justify-around text-center mb-20">
+      <div
+        class="flex flex-col md:flex-row items-center justify-around text-center mb-20"
+      >
         <div class="basis-1/3 lg:basis-2/5">
-          <Image alt="logo" src={logo} transition:name="hero-logo-image" class="mx-auto max-w-[80%]" />
+          <Image
+            alt="logo"
+            src={logo}
+            transition:name="hero-logo-image"
+            class="mx-auto max-w-[80%]"
+          />
         </div>
         <div class="basis-2/3 lg:3/5">
-          <h1 class="text-4xl lg:text-5xl font-light text-brand-950 mb-8 tracking-[-0.02em] leading-tight">Photography Gallery</h1>
-        <p class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto tracking-wide">
-          Explore my collection of photography projects, from street photography to portrait sessions.
-        </p>
+          <h1
+            class="text-4xl lg:text-5xl font-light text-brand-950 mb-8 tracking-[-0.02em] leading-tight"
+          >
+            Photography Gallery
+          </h1>
+          <p
+            class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto tracking-wide"
+          >
+            Explore my collection of photography projects, from street
+            photography to portrait sessions.
+          </p>
         </div>
       </div>
       <GalleryGrid />
