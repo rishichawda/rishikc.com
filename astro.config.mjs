@@ -21,7 +21,7 @@ import playformCompress from '@playform/compress';
 
 const AnchorLinkIcon = h(
   'span',
-  { ariaHidden: 'true', class: 'anchor-icon' },
+  { ariaHidden: 'true', class: 'inline-flex items-center justify-center ml-2' },
   h(
     'svg',
     { width: '0.7em', height: '0.7em', viewBox: '0 0 24 24', fill: "none" },
