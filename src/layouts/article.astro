@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import { Schema } from "astro-seo-schema";
 
 let { content, frontmatter } = Astro.props;
 
@@ -10,39 +11,47 @@ const date = new Date(content.date).toLocaleDateString("en-us", {
 });
 
 // Format date for ISO format for JSON-LD
-const isoDate = content.date ? new Date(content.date).toISOString() : '';
-const articleUrl = new URL(content.path || Astro.url.pathname, Astro.site || 'https://rishikc.com').toString();
-const imageUrl = content.hero_image?.src ? new URL(content.hero_image.src, Astro.site || 'https://rishikc.com').toString() : '';
+const isoDate = content.date ? new Date(content.date).toISOString() : "";
+const articleUrl = new URL(
+	content.path || Astro.url.pathname,
+	Astro.site || "https://rishikc.com",
+).toString();
+const imageUrl = content.hero_image?.src
+	? new URL(
+			content.hero_image.src,
+			Astro.site || "https://rishikc.com",
+		).toString()
+	: "";
 ---
 
 <article class="max-w-[90%] flex flex-col mx-auto items-center pt-10">
 	<!-- Article JSON-LD Schema -->
-	<script type="application/ld+json" slot="head">
-		{JSON.stringify({
+	<Schema
+		item={{
 			"@context": "https://schema.org",
 			"@type": "BlogPosting",
-			"headline": content.title,
-			"description": content.description,
-			"image": imageUrl,
-			"datePublished": isoDate,
-			"dateModified": isoDate,
-			"author": {
+			headline: content.title,
+			description: content.description,
+			image: imageUrl,
+			datePublished: isoDate,
+			dateModified: isoDate,
+			author: {
 				"@type": "Person",
-				"name": "Rishi Chawda",
-				"url": "https://rishikc.com"
+				name: "Rishi Chawda",
+				url: "https://rishikc.com",
 			},
-			"publisher": {
+			publisher: {
 				"@type": "Person",
-				"name": "Rishi Chawda",
-				"url": "https://rishikc.com"
+				name: "Rishi Chawda",
+				url: "https://rishikc.com",
 			},
-			"mainEntityOfPage": {
+			mainEntityOfPage: {
 				"@type": "WebPage",
-				"@id": articleUrl
+				"@id": articleUrl,
 			},
-			"keywords": content.tags?.join(", ")
-		})}
-	</script>
+			keywords: content.tags?.join(", "),
+		}}
+	/>
 	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-2">
 		<h1
 			transition:name={`${content.path}-title`}
@@ -63,7 +72,7 @@ const imageUrl = content.hero_image?.src ? new URL(content.hero_image.src, Astro
 		class="justify-start text-black text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-2 mt-7"
 	>
 		{date}
-</small>
+	</small>
 	<div class="w-full md:max-w-[790px] mb-7">
 		<Image
 			class="w-full rounded-xl"
@@ -92,7 +101,9 @@ const imageUrl = content.hero_image?.src ? new URL(content.hero_image.src, Astro
 			</small>
 		</div>
 	</div>
-	<div class="mb-20 font-['Montserrat_Variable'] max-w-full lg:flex lg:flex-row lg:gap-4">
+	<div
+		class="mb-20 font-['Montserrat_Variable'] max-w-full lg:flex lg:flex-row lg:gap-4"
+	>
 		<slot />
 	</div>
 </article>

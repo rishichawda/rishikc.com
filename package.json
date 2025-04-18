@@ -1,7 +1,7 @@
 {
   "name": "rishikc.com",
   "type": "module",
-  "version": "4.0.4",
+  "version": "4.0.5",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -15,7 +15,9 @@
     "@fontsource-variable/red-hat-text": "^5.2.5",
     "@playform/compress": "^0.1.9",
     "@unpic/astro": "^1.0.0",
-    "astro": "^5.5.5"
+    "astro": "^5.5.5",
+    "astro-seo-schema": "^5.0.0",
+    "schema-dts": "^1.1.5"
   },
   "devDependencies": {
     "@astrojs/mdx": "^4.2.2",

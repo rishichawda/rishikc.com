@@ -1403,6 +1403,11 @@ astro-imagetools@^0.9.0:
   optionalDependencies:
     imagetools-core "3.0.2"
 
+astro-seo-schema@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/astro-seo-schema/-/astro-seo-schema-5.0.0.tgz#1b4e1860aa2e678a2f321998faa3e4f05795e113"
+  integrity sha512-rbP9BUxvqH4tdgG5VEYDcoAxUhVKv93TdHRQ5zbYUxee1TKAWsNcAG3nqavX83QTTGqU5anvikMcJZXWhGN9wg==
+
 astro@*, astro@^5.5.5:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/astro/-/astro-5.7.2.tgz#8e94c21ab6d92018e102a3289118fb9d1ad64c23"
@@ -4806,6 +4811,11 @@ sax@>=0.6.0, sax@^1.2.4:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.4.1.tgz#44cc8988377f126304d3b3fc1010c733b929ef0f"
   integrity sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==
+
+schema-dts@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/schema-dts/-/schema-dts-1.1.5.tgz#9237725d305bac3469f02b292a035107595dc324"
+  integrity sha512-RJr9EaCmsLzBX2NDiO5Z3ux2BVosNZN5jo0gWgsyKvxKIUL5R3swNvoorulAeL9kLB0iTSX7V6aokhla2m7xbg==
 
 semver@^6.0.0:
   version "6.3.1"
