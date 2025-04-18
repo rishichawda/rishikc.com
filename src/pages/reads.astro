@@ -138,30 +138,38 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site || 'https://rishikc.com')
     background-color: rgba(var(--color-brand-50), 0.7);
   }
   
-  /* 3. Scroll-Triggered Animations */
+  /* 3. Scroll-Triggered Animations - Pure CSS approach */
   @media (prefers-reduced-motion: no-preference) {
     .quote-card {
-      /* Set initial state for cards before they're visible */
+      /* Initial state for all cards */
       opacity: 0;
-      transform: translateY(40px) scale(0.92);
-      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), 
-                  transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-      /* Turn off the default animation when using scroll triggers */
-      animation: none;
+      transform: translateY(40px) scale(0.7);
+      will-change: opacity, transform;
+      
+      /* View transition animation */
+      view-timeline-name: --card-reveal;
+      view-timeline-axis: block;
+      animation: revealCard linear both;
+      animation-timeline: --card-reveal;
+      animation-range: entry 10% cover 30%;
     }
     
-    .quote-card.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      /* Add a slight pop effect at the end of the animation */
-      animation: cardPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      animation-delay: 0.3s;
+    @keyframes revealCard {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.92);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
     
-    @keyframes cardPopIn {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-      100% { transform: scale(1); }
+    /* Fallback for browsers that don't support scroll-driven animations */
+    @supports not (animation-timeline: --card-reveal) {
+      .quote-card {
+        animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
     }
   }
   
@@ -225,32 +233,3 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site || 'https://rishikc.com')
     }
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', setupScrollObserver);
-  document.addEventListener('astro:page-load', setupScrollObserver);
-  
-  function setupScrollObserver() {
-    // Only set up if IntersectionObserver is supported
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            // Once the animation has played, no need to observe anymore
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
-      
-      document.querySelectorAll('.quote-card').forEach(card => {
-        observer.observe(card);
-      });
-    } else {
-      // Fallback for browsers that don't support IntersectionObserver
-      document.querySelectorAll('.quote-card').forEach(card => {
-        card.classList.add('visible');
-      });
-    }
-  }
-</script>
