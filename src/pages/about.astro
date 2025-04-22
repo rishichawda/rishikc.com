@@ -76,13 +76,13 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       <a href="/" class="inline-block mb-10 text-brand-700 hover:text-brand-900 transition-colors duration-300 text-sm tracking-widest uppercase font-medium font-['Montserrat_Variable'] group"> {/* Added group class */}
         <span class="inline-block transition-transform duration-300 group-hover:-translate-x-1">&larr;</span> Back to Home
       </a>
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-900 mb-4">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-900 mb-5 leading-tight sm:leading-tight lg:leading-tight"> {/* Adjusted margin, added leading */}
         Hi, I'm Rishi
       </h1>
-      <p class="text-lg sm:text-xl lg:text-2xl font-light font-['Montserrat_Variable'] text-brand-700 max-w-3xl mx-auto">
+      <p class="text-lg sm:text-xl lg:text-2xl font-light font-['Montserrat_Variable'] text-brand-700 max-w-3xl mx-auto leading-relaxed"> {/* Added leading */}
         {profile.title}
       </p>
-      <p class="text-md font-light font-['Montserrat_Variable'] text-brand-600 mt-4 max-w-3xl mx-auto flex items-center justify-center"> {/* Increased margin-top */}
+      <p class="text-base font-light font-['Montserrat_Variable'] text-brand-600 mt-5 max-w-3xl mx-auto flex items-center justify-center"> {/* Adjusted size/margin */}
          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -92,12 +92,12 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     </section>
 
     <!-- Introduction Section -->
-    <section class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-5 gap-12 sm:gap-16 lg:gap-20 items-center">
+    <section class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-5 gap-12 sm:gap-16 lg:gap-20 items-start"> {/* Changed items-center to items-start */}
       <div class="md:col-span-3 animate-on-scroll fade-in-left">
-        <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-8">
+        <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-8 leading-snug"> {/* Added leading */}
           A bit about me..
         </h2>
-        <div class="space-y-6 text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed"> {/* Increased space-y */}
+        <div class="space-y-6 text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed sm:leading-relaxed"> {/* Ensured leading */}
           <p>{profile.bio}</p>
           <p>
             With over <strong class="font-medium text-brand-800">{pluralize(yearsExperience, 'year', 'years')}</strong> of experience in the tech industry, I've had the privilege of working on diverse projects, from developing scalable web applications to contributing to DevSecOps tooling at <a href={profile.experience[0]?.website?.[0] || '#'} target="_blank" rel="noopener noreferrer" class="text-brand-700 hover:text-brand-900 underline decoration-brand-300 hover:decoration-brand-500 transition duration-300">{profile.experience[0]?.company || 'my current role'}</a>.
@@ -147,10 +147,10 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
 
     <!-- Beyond Code Section -->
     <section class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 text-center py-16 sm:py-20 lg:py-24 animate-on-scroll fade-in-up">
-       <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-6">
+       <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-6 leading-snug"> {/* Added leading */}
          Beyond the Code
        </h2>
-       <p class="text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed max-w-3xl mx-auto mb-10">
+       <p class="text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed sm:leading-relaxed max-w-3xl mx-auto mb-10"> {/* Ensured leading */}
          When I step away from the keyboard, I often find myself behind a camera lens. Photography is a passion that allows me to capture moments and see the world from different perspectives. I also enjoy exploring new technologies and occasionally contributing to open-source projects.
        </p>
        <a href="/gallery/" class="inline-flex items-center text-brand-700 hover:text-brand-900 font-medium font-['Montserrat_Variable'] group transition-all duration-300 text-base"> {/* Made inline-flex */}
@@ -166,10 +166,10 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     <!-- Call to Action Section -->
     <section class="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 text-center animate-on-scroll fade-in-up bg-gray-50/50"> {/* Added subtle background */}
       <div class="max-w-xl mx-auto bg-white p-10 md:p-12 rounded-lg shadow-lg border border-gray-200/80"> {/* Increased shadow, adjusted border */}
-        <h2 class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5">
+        <h2 class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5 leading-snug"> {/* Added leading */}
           Let's Connect
         </h2>
-        <p class="text-gray-600 font-['Montserrat_Variable'] mb-8">
+        <p class="text-gray-600 font-['Montserrat_Variable'] mb-8 leading-relaxed"> {/* Added leading */}
           Have a project in mind, a question, or just want to chat about tech or photography? Feel free to reach out.
         </p>
         <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-5">
