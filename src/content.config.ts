@@ -65,4 +65,8 @@ const gallery = defineCollection({
         }),
 });
 
-export const collections = { articles, quotes, logo, gallery };
+const profile = defineCollection({
+    loader: file("content/about/profile.json", { parser: (text) => JSON.parse(text) }),
+})
+
+export const collections = { articles, quotes, logo, gallery, profile };

@@ -1,0 +1,440 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/base_layout.astro";
+import { Schema } from "astro-seo-schema";
+
+// Define TypeScript interfaces for profile data
+interface Language {
+  name: string;
+  level: string;
+}
+
+interface Social {
+  platform: string;
+  url: string;
+}
+
+interface Position {
+  title: string;
+  period: string;
+  duration: string;
+  location?: string;
+  description?: string;
+  responsibilities?: string[];
+}
+
+interface Experience {
+  company: string;
+  duration: string;
+  positions: Position[];
+}
+
+interface Education {
+  institution: string;
+  degree: string;
+  period: string;
+}
+
+// Add Certification interface
+interface Certification {
+  institution: string;
+  title: string;
+}
+
+interface ProfileData {
+  name: string;
+  title: string;
+  location: string;
+  summary: string;
+  bio: string;
+  contact: {
+    linkedin: string;
+  };
+  skills: string[];
+  languages: Language[];
+  certifications: Certification[]; // Updated type
+  experience: Experience[];
+  education: Education[];
+  socials: Social[];
+}
+
+// Get profile data - using proper type handling with better null safety
+const profileEntry = await getCollection("profile");
+// Assuming profile.json is the single entry in the 'profile' collection
+// Access the nested 'data' object within the JSON file
+const profileData = profileEntry[0].data as ProfileData; 
+const profile = profileData;
+
+// Format experience duration
+function formatExperienceDuration(duration: string): string {
+  return duration;
+}
+
+// Format date range for readability 
+function formatDateRange(period: string): string {
+  return period;
+}
+
+const page_info = {
+  title: "About | Rishi Chawda",
+  description: "About Rishi Chawda - Senior Software Engineer",
+  image: Astro.glob("../../public/favicon.svg"),
+  keywords: "Rishi Chawda, Software Engineer, Developer, About, Experience, Skills",
+};
+
+// Define site URL for structured data
+const siteUrl = new URL(
+  Astro.url.pathname,
+  Astro.site || "https://rishikc.com",
+).toString();
+---
+
+<BaseLayout page_info={page_info}>
+  <Schema
+    slot="head"
+    item={{
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: profile.name,
+      jobTitle: profile.title,
+      worksFor: {
+        "@type": "Organization",
+        name: "Progress Chef",
+      },
+      url: siteUrl,
+      image: `${siteUrl.replace(/\/$/, "")}/favicon.svg`,
+      description: profile.summary,
+      sameAs: profile.socials.map((social: Social) => social.url),
+    }}
+  />
+  
+  <main class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16">
+    <div class="flex flex-row justify-between items-center mb-8 sm:mb-12">
+      <h1 class="text-2xl sm:text-3xl lg:text-[2rem] font-medium text-gray-900">
+        About Me
+      </h1>
+      <a
+        href="/"
+        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 mr-3 group-hover:-translate-x-1 transition-transform"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          ></path>
+        </svg>
+        Back to Home
+      </a>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="mb-16">
+      <div class="bg-[#F8F9FE] rounded-lg p-6 sm:p-8 lg:p-10">
+        <div class="flex flex-col md:flex-row gap-8">
+          <div class="md:w-2/3">
+            <h2 class="text-xl sm:text-2xl font-['Red_Hat_Display_Variable'] font-medium text-gray-900 mb-4">
+              {profile.name}
+            </h2>
+            <p class="text-gray-500 font-['Montserrat_Variable'] mb-4">
+              {profile.title}
+            </p>
+            <p class="text-gray-700 font-['Montserrat_Variable'] mb-6 leading-relaxed">
+              {profile.bio}
+            </p>
+            
+            <!-- Location -->
+            <div class="flex items-center mb-4 text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 location-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span class="font-['Montserrat_Variable'] text-sm location-text">{profile.location}</span>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="flex items-center mb-6 text-gray-600 contact-item">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 linkedin-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 9h4v12H2z" />
+                <circle cx="4" cy="4" r="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+              </svg>
+              <a href={profile.contact.linkedin} target="_blank" rel="noopener noreferrer" class="font-['Montserrat_Variable'] text-sm hover:text-[#6B7AB0] transition-colors link-underline shine-effect">
+                LinkedIn Profile
+              </a>
+            </div>
+            
+            <!-- Social Links -->
+            <div class="flex flex-wrap gap-3 social-links-container">
+              {profile.socials.map((social) => (
+                <a
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-link inline-flex items-center px-4 py-2 rounded-full bg-white text-gray-700 hover:bg-[#6B7AB0] hover:text-white transition-all shadow-sm border border-gray-100"
+                >
+                  <span class="font-['Montserrat_Variable'] text-sm">{social.platform}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div class="md:w-1/3">
+            <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+              <h3 class="text-lg font-['Red_Hat_Display_Variable'] font-medium text-gray-900 mb-4">
+                Skills
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                {profile.skills.map((skill) => (
+                  <span class="inline-block px-3 py-1 rounded-full bg-[#F0F2FC] text-[#6B7AB0] text-xs font-['Montserrat_Variable']">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+              <h3 class="text-lg font-['Red_Hat_Display_Variable'] font-medium text-gray-900 mt-6 mb-4">
+                Languages
+              </h3>
+              <ul class="space-y-2">
+                {profile.languages.map((language) => (
+                  <li class="flex items-center justify-between">
+                    <span class="text-sm text-gray-700 font-['Montserrat_Variable']">{language.name}</span>
+                    <span class="text-xs text-gray-500 font-['Montserrat_Variable']">{language.level}</span>
+                  </li>
+                ))}
+              </ul>
+              {profile.certifications && profile.certifications.length > 0 && (
+                <>
+                  <h3 class="text-lg font-['Red_Hat_Display_Variable'] font-medium text-gray-900 mt-6 mb-4">
+                    Certifications
+                  </h3>
+                  <ul class="space-y-3"> {/* Increased spacing */}
+                    {profile.certifications.map((certification) => (
+                      <li class="border-l-2 border-[#6B7AB0] pl-3 py-1"> {/* Added left border and padding */}
+                        <p class="text-sm font-medium text-gray-800 font-['Montserrat_Variable']"> {/* Made title slightly bolder */}
+                          {certification.title} 
+                        </p>
+                        <p class="text-xs text-gray-500 font-['Montserrat_Variable']"> {/* Kept institution smaller */}
+                          {certification.institution}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Experience Timeline Section -->
+    <div class="mb-16">
+      <h2 class="text-xl sm:text-2xl font-['Red_Hat_Display_Variable'] font-medium text-gray-900 mb-8">
+        Work Experience
+      </h2>
+      <div class="relative">
+        {/* Vertical line */}
+        <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gray-200 transform md:translate-x-[-0.5px]"></div>
+        <div class="space-y-12">
+          {profile.experience.map((exp, index) => (
+            <div class={`relative flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+              {/* Timeline dot */}
+              <div class="absolute left-0 md:left-1/2 top-0 w-5 h-5 bg-[#6B7AB0] rounded-full transform translate-x-[-10px] md:translate-x-[-10px] z-10 timeline-dot"></div>
+              {/* Date/Company side */}
+              <div class={`px-8 ${index % 2 === 0 ? 'md:pl-0' : 'pr-0'} md:w-1/2 md:px-8 mb-4 md:mb-0`}>
+                <div class={`${index % 2 === 0 ? 'md:text-right' : 'md:text-left'}`}>
+                  <h3 class="text-lg font-['Red_Hat_Display_Variable'] font-medium text-gray-900">
+                    {exp.company}
+                  </h3>
+                  <p class="text-sm text-gray-500 font-['Montserrat_Variable']">
+                    {exp.duration}
+                  </p>
+                </div>
+              </div>
+              {/* Content side */}
+              <div class={`pl-8 ${index % 2 === 0 ? 'pr-0' : 'pl-0'} md:w-1/2 md:px-8 timeline-item`}>
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+                  {exp.positions.map((position) => (
+                    <div class="mb-6 last:mb-0">
+                      <h4 class="text-base font-medium text-gray-900 font-['Red_Hat_Display_Variable']">
+                        {position.title}
+                      </h4>
+                      <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-2">
+                        {position.period} ({position.duration})
+                      </p>
+                      {position.location && (
+                        <p class="text-sm text-gray-600 font-['Montserrat_Variable'] mb-3 flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          {position.location}
+                        </p>
+                      )}
+                      {position.description && (
+                        <p class="text-sm text-gray-700 font-['Montserrat_Variable'] mb-3">
+                          {position.description}
+                        </p>
+                      )}
+                      {position.responsibilities && position.responsibilities.length > 0 && (
+                        <div class="mt-3">
+                          <h5 class="text-sm font-medium text-gray-800 font-['Red_Hat_Display_Variable'] mb-2">Responsibilities:</h5>
+                          <ul class="list-disc pl-5 space-y-1">
+                            {position.responsibilities.map((item) => (
+                              <li class="text-sm text-gray-700 font-['Montserrat_Variable']">
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <!-- Education Section -->
+    <div class="mb-16">
+      <h2 class="text-xl sm:text-2xl font-['Red_Hat_Display_Variable'] font-medium text-gray-900 mb-8">
+        Education
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {profile.education.map((edu) => (
+          <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+            <h3 class="text-lg font-medium text-gray-900 font-['Red_Hat_Display_Variable'] mb-2">
+              {edu.institution}
+            </h3>
+            <p class="text-sm text-gray-700 font-['Montserrat_Variable'] mb-2">
+              {edu.degree}
+            </p>
+            <p class="text-sm text-gray-500 font-['Montserrat_Variable']">
+              {edu.period}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+    <!-- Call To Action -->
+    <div class="bg-[#F8F9FE] rounded-lg p-8 text-center">
+      <h2 class="text-xl sm:text-2xl font-['Red_Hat_Display_Variable'] font-medium text-gray-900 mb-4">
+        Let's Connect
+      </h2>
+      <p class="text-gray-700 font-['Montserrat_Variable'] mb-6 max-w-2xl mx-auto">
+        Whether you're interested in working together or just want to say hello, I'd love to hear from you!
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a
+          href="/contact/"
+          class="inline-flex items-center px-6 py-3 rounded-lg bg-[#6B7AB0] text-white hover:bg-[#5A6A9F] transition-colors"
+        >
+          <span class="font-['Montserrat_Variable']">Contact Me</span>
+        </a>
+        <a
+          href="/articles/"
+          class="inline-flex items-center px-6 py-3 rounded-lg bg-white text-[#6B7AB0] border border-[#6B7AB0] hover:bg-[#F0F2FC] transition-colors"
+        >
+          <span class="font-['Montserrat_Variable']">Read My Articles</span>
+        </a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  /* Timeline dot animation */
+  .timeline-dot {
+    transition: transform 0.3s ease;
+  }
+  
+  .timeline-item:hover .timeline-dot {
+    transform: scale(1.5);
+  }
+  
+  /* Smooth hover effects */
+  a {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  /* Animation for timeline items */
+  @media (min-width: 768px) {
+    .timeline-item:hover {
+      transform: translateY(-5px);
+      transition: transform 0.3s ease;
+    }
+  }
+  
+  /* Social links with gradient effect only */
+  .social-link {
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .social-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: radial-gradient(circle, transparent 70%, rgba(255, 255, 255, 0.3) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .social-link:hover::after {
+    opacity: 1;
+  }
+  
+  /* Shine effect */
+  .shine-effect {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shine-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-25deg);
+    transition: all 0.7s ease;
+  }
+  
+  .shine-effect:hover::before {
+    left: 125%;
+  }
+</style>
+
+<script>
+  // Intersection Observer for scroll animations (if needed for other elements)
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+    
+    // Observe elements with animate-on-scroll class (if any remain)
+    document.querySelectorAll('.animate-on-scroll').forEach(element => {
+      observer.observe(element);
+    });
+  });
+</script>
