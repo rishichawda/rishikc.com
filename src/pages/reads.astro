@@ -60,10 +60,10 @@ const pageUrl = new URL(
   <main
     class="font-['Red_Hat_Display_Variable'] min-h-screen reads-page-background"
   >
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 pt-10">
       <a
         href="/"
-        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 mb-20 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
+        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 mb-16 sm:mb-20 group text-sm tracking-[0.15em] uppercase transition-colors duration-300 font-['Montserrat_Variable']"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -81,19 +81,19 @@ const pageUrl = new URL(
         Back to home
       </a>
 
-      <div class="mb-12 text-center">
+      <div class="mb-16 sm:mb-20 text-center">
         <h1
-          class="text-4xl lg:text-5xl font-light text-brand-950 mb-4 tracking-[-0.02em] leading-tight"
+          class="text-4xl sm:text-5xl font-light text-brand-950 mb-3 tracking-tight leading-tight"
         >
           Reads
         </h1>
         <p
-          class="text-xs text-brand-700/80 mb-6 font-['Montserrat_Variable'] uppercase tracking-wider"
+          class="text-xs text-brand-700/60 mb-6 font-['Montserrat_Variable'] uppercase tracking-widest"
         >
           Last updated: {formattedDate}
         </p>
         <p
-          class="text-brand-800/90 text-lg leading-relaxed font-light max-w-2xl mx-auto font-['Montserrat_Variable']"
+          class="text-brand-800/70 text-lg sm:text-xl leading-relaxed font-light max-w-3xl mx-auto font-['Montserrat_Variable']"
         >
           A collection of quotes and passages that have inspired me, challenged
           my thinking, or simply resonated with me.
@@ -101,21 +101,22 @@ const pageUrl = new URL(
       </div>
 
       <!-- Quotes Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
         {
           quotes.map((quote, index) => (
             <div
-              class="quote-card bg-white rounded-xl shadow-lg p-6 md:p-8 flex flex-col justify-between items-center"
+              class="quote-card relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden"
               style={`--index: ${index};`}
               transition:animate="fade"
             >
-              <blockquote class="mb-4">
-                <p class="quote-text text-center text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable']">
-                  "{quote.quote}"
+              <span class="absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none" aria-hidden="true">“</span>
+              <blockquote class="mb-5 z-10">
+                <p class="quote-text text-center sm:text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable']">
+                  {quote.quote}
                 </p>
               </blockquote>
               {quote.info && (
-                <cite class="quote-author text-center block text-brand-900/95 text-sm font-medium italic font-['Montserrat_Variable']">
+                <cite class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
                   — {quote.info}
                 </cite>
               )}
@@ -128,17 +129,11 @@ const pageUrl = new URL(
 </BaseLayout>
 
 <style>
-  /* 1. Staggered Entry Animation */
-  .quote-card {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-    animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  }
-
+  /* 1. Staggered Entry Animation (Fallback) */
   @keyframes fadeInUp {
     from {
       opacity: 0;
-      transform: translateY(30px) scale(0.95);
+      transform: translateY(25px) scale(0.98);
     }
     to {
       opacity: 1;
@@ -149,39 +144,36 @@ const pageUrl = new URL(
   /* 2. Elegant Hover Effects */
   .quote-card {
     transition:
-      transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-      box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
       background-color 0.3s ease;
     backface-visibility: hidden;
     perspective: 1000px;
   }
 
   .quote-card:hover {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
-    background-color: rgba(var(--color-brand-50), 0.7);
+    transform: translateY(-5px) scale(1.015);
+    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.12);
+    background-color: rgba(var(--color-brand-50), 0.5);
   }
 
-  /* 3. Scroll-Triggered Animations - Pure CSS approach */
+  /* 3. Scroll-Triggered Animations - View Transitions */
   @media (prefers-reduced-motion: no-preference) {
     .quote-card {
-      /* Initial state for all cards */
       opacity: 0;
-      transform: translateY(40px) scale(0.7);
+      transform: translateY(30px) scale(0.9);
       will-change: opacity, transform;
-
-      /* View transition animation */
       view-timeline-name: --card-reveal;
       view-timeline-axis: block;
       animation: revealCard linear both;
       animation-timeline: --card-reveal;
-      animation-range: entry 10% cover 30%;
+      animation-range: entry 5% cover 35%;
     }
 
     @keyframes revealCard {
       from {
         opacity: 0;
-        transform: translateY(40px) scale(0.92);
+        transform: translateY(30px) scale(0.95);
       }
       to {
         opacity: 1;
@@ -189,10 +181,10 @@ const pageUrl = new URL(
       }
     }
 
-    /* Fallback for browsers that don't support scroll-driven animations */
     @supports not (animation-timeline: --card-reveal) {
       .quote-card {
-        animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation-delay: calc(var(--index) * 0.08s);
       }
     }
   }
@@ -201,18 +193,17 @@ const pageUrl = new URL(
   .reads-page-background {
     background: linear-gradient(
       135deg,
-      rgba(var(--color-brand-50), 0.4),
-      rgba(var(--color-brand-100), 0.2) 30%,
-      rgba(var(--color-brand-50), 0.3) 60%,
-      rgba(var(--color-brand-100), 0.15)
+      rgba(var(--color-brand-50), 0.3),
+      rgba(var(--color-brand-100), 0.15) 30%,
+      rgba(var(--color-brand-50), 0.25) 60%,
+      rgba(var(--color-brand-100), 0.1)
     );
-    background-size: 400% 400%;
-    animation: gradientFloat 25s ease-in-out infinite;
+    background-size: 300% 300%;
+    animation: gradientFloat 30s ease-in-out infinite;
     position: relative;
     z-index: 0;
   }
 
-  /* Add subtle noise overlay for texture */
   .reads-page-background::after {
     content: "";
     position: fixed;
@@ -220,55 +211,53 @@ const pageUrl = new URL(
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.03;
+    opacity: 0.025;
     pointer-events: none;
     z-index: -1;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
 
   @keyframes gradientFloat {
-    0% {
-      background-position: 0% 50%;
-    }
-    25% {
-      background-position: 50% 25%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    75% {
-      background-position: 50% 75%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    25% { background-position: 50% 25%; }
+    50% { background-position: 100% 50%; }
+    75% { background-position: 50% 75%; }
+    100% { background-position: 0% 50%; }
   }
 
   /* 7. Quote Author Reveal */
   .quote-author {
-    opacity: 0.7;
-    transform: translateX(-10px);
-    transition: all 0.3s ease;
+    opacity: 0.6;
+    transform: translateY(5px);
+    transition: all 0.4s ease;
   }
 
-  .quote-card:hover .quote-author {
-    opacity: 1;
-    transform: translateX(0);
+  /* Typography Refinements */
+  .quote-text {
+    line-height: 1.7;
   }
 
-  /* Accessibility: respect user preference for reduced motion */
+  .quote-author {
+    letter-spacing: 0.01em;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .quote-card,
     .quote-author,
     .quote-text,
     .reads-page-background {
-      animation: none;
-      transition: none;
+      animation: none !important;
+      transition: none !important;
     }
 
     .quote-card {
-      opacity: 1;
-      transform: none;
+      opacity: 1 !important;
+      transform: none !important;
+      animation-delay: 0s !important;
+    }
+    .quote-author {
+       opacity: 1;
+       transform: none;
     }
   }
 </style>
