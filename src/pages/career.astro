@@ -43,6 +43,7 @@ interface Experience {
   company: string;
   duration: string;
   positions: Position[];
+  website?: string[]; // Added website
 }
 
 interface Education {
@@ -116,7 +117,7 @@ const siteUrl = new URL(
       jobTitle: profile.title,
       worksFor: {
         "@type": "Organization",
-        name: "Progress Chef",
+        name: profile.experience[0]?.company || "Unknown Company", // Use dynamic company name
       },
       url: siteUrl,
       image: `${siteUrl.replace(/\/$/, "")}/favicon.svg`,
@@ -258,20 +259,35 @@ const siteUrl = new URL(
         <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 transform md:translate-x-[-1px]"></div> 
         <div class="space-y-12">
           {profile.experience.map((exp, index) => (
-            <div class={`relative flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} timeline-item-container`}> 
-              <div class="absolute left-0 md:left-1/2 top-1 w-6 h-6 bg-[#5A6A9F] rounded-full transform translate-x-[-12px] md:translate-x-[-12px] z-10 timeline-dot border-4 border-white dark:border-gray-900"></div> 
-              <div class={`px-8 ${index % 2 === 0 ? 'md:pl-0' : 'pr-0'} md:w-1/2 md:px-8 mb-4 md:mb-0`}>
-                <div class={`${index % 2 === 0 ? 'md:text-right' : 'md:text-left'} pt-1`}> 
-                  <h3 class="text-lg font-['Red_Hat_Display_Variable'] font-semibold text-gray-800"> 
-                    {exp.company}
-                  </h3>
-                  <p class="text-sm text-gray-500 font-['Montserrat_Variable']">
-                    {exp.duration}
-                  </p>
-                </div>
+            <div class={`relative flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} timeline-item-container`}>
+              {/* Timeline Dot */}
+              <div class={`absolute left-0 md:left-1/2 top-8 w-4 h-4 bg-[#6B7AB0] rounded-full transform -translate-x-1/2 md:translate-x-[-7px] z-10 timeline-dot`}></div>
+
+              {/* Company Info */}
+              <div class={`mb-4 ml-8 md:ml-0 md:mb-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16 text-left md:text-right' : 'md:pl-16 text-left'} company-info`}>
+                <h3 class="text-xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-1">
+                  {exp.company}
+                  {exp.website && exp.website.length > 0 && (
+                    <span class="ml-2">
+                      {exp.website.map((url, urlIndex) => (
+                        <a href={url} target="_blank" rel="noopener noreferrer" class="text-[#6B7AB0] hover:text-[#55639a] transition-colors text-sm" title={`Visit ${exp.company} website`}>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          {exp.website.length > 1 ? ` (${urlIndex + 1})` : ''}
+                        </a>
+                      ))}
+                    </span>
+                  )}
+                </h3>
+                <p class="text-sm text-gray-500 font-['Montserrat_Variable']">
+                  {exp.duration}
+                </p>
               </div>
+
+              {/* Position Details */}
               <div class={`pl-8 ${index % 2 === 0 ? 'pr-0' : 'pl-0'} md:w-1/2 md:px-8 timeline-item`}>
-                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 transition-shadow duration-300 hover:shadow-lg"> 
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 transition-shadow duration-300 hover:shadow-lg">
                   {exp.positions.map((position) => (
                     <div class="mb-6 last:mb-0">
                       <h4 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-1"> 
