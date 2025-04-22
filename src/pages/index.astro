@@ -5,11 +5,11 @@ import CallToAction from "../components/landing/call_to_action.astro";
 import "../styles/global.css";
 import BaseLayout from "../layouts/base_layout.astro";
 import { Schema } from "astro-seo-schema";
+import favicon from "../../content/assets/logo/Group 489.png";
 
 const page_info = {
 	title: "Rishi Chawda - Software Engineer",
 	description: "Rishi Chawda - Software Engineer",
-	image: Astro.glob("../../public/favicon.svg"),
 	keywords: "Rishi Chawda - Software Engineer",
 };
 
@@ -34,7 +34,7 @@ const siteUrl = new URL(
 				name: "Progress Chef",
 			},
 			url: siteUrl,
-			image: `${siteUrl.replace(/\/$/, "")}/favicon.svg`,
+			image: `${siteUrl.replace(/\/$/, "")}/${favicon.src}`,
 			description:
 				"Senior Software Engineer building systems with Software Engineering and DevSecOps skills",
 			sameAs: [

@@ -23,12 +23,11 @@ const profile = profileEntry[0].data as ProfileData;
 const page_info = {
   title: `About | ${profile.name}`,
   description: profile.summary || `Learn more about ${profile.name, profile.title}.`,
-  image: "/favicon.svg", // Use a relevant image if available
   keywords: `Rishi Chawda, About Me, Software Engineer, ${profile.skills.join(', ')}`,
 };
 
 const siteUrl = new URL(Astro.url.pathname, Astro.site || "https://rishikc.com").toString();
-const profileImageUrl = `${siteUrl.replace(/\/$/, "")}/favicon.svg`; // Replace with actual profile image URL if you have one
+const profileImageUrl = `${siteUrl.replace(/\/$/, "")}/${profileImage.src}`;
 
 // Helper function for simple pluralization
 function pluralize(count: number, singular: string, plural: string): string {

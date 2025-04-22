@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
 import { Schema } from "astro-seo-schema";
+import favicon from "../../content/assets/logo/Group 489.png";
 
 // Define TypeScript interfaces for profile data
 interface Language {
@@ -96,7 +97,6 @@ function formatDateRange(period: string): string {
 const page_info = {
   title: "About | Rishi Chawda",
   description: "About Rishi Chawda - Senior Software Engineer",
-  image: Astro.glob("../../public/favicon.svg"),
   keywords: "Rishi Chawda, Software Engineer, Developer, About, Experience, Skills",
 };
 
@@ -120,7 +120,7 @@ const siteUrl = new URL(
         name: profile.experience[0]?.company || "Unknown Company", // Use dynamic company name
       },
       url: siteUrl,
-      image: `${siteUrl.replace(/\/$/, "")}/favicon.svg`,
+      image: `${siteUrl.replace(/\/$/, "")}/${favicon.src}`,
       description: profile.summary,
       address: { // Added address
         "@type": "PostalAddress",
