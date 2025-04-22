@@ -53,54 +53,54 @@ const pageUrl = new URL(
   />
 
   <main
-    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]"
+    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-brand-50/50 via-brand-100/20 to-brand-200/10"
   >
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 pt-12 sm:pt-16">
       <a
         href="/"
-        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 mb-20 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
+        class="inline-flex items-center text-brand-700 hover:text-brand-900 mb-16 sm:mb-20 group text-sm sm:text-[15px] tracking-[0.15em] sm:tracking-[0.2em] uppercase transition-colors duration-300 font-medium"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-3 group-hover:-translate-x-1 transition-transform"
+          class="h-4 w-4 mr-2.5 group-hover:-translate-x-1 transition-transform duration-200 ease-in-out"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          stroke-width="2"
         >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
             d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         Back to home
       </a>
 
-      <div class="mb-12 text-center">
+      <div class="mb-12 sm:mb-16 text-center">
         <h1
-          class="text-4xl lg:text-5xl font-light text-brand-950 mb-8 tracking-[-0.02em] leading-tight"
+          class="text-4xl lg:text-5xl font-light text-brand-950 mb-6 sm:mb-8 tracking-tight leading-tight"
         >
           Get in Touch
         </h1>
         <p
-          class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto font-['Montserrat_Variable']"
+          class="text-brand-800/80 text-lg sm:text-xl leading-relaxed font-light max-w-2xl mx-auto font-['Montserrat_Variable']"
         >
           Have a question, proposal, or just want to say hello? Fill out the
-          form below and I'll get back to you soon.
+          form below and I'll get back to you as soon as possible.
         </p>
       </div>
 
       <!-- Contact Form -->
       <div
-        class="bg-white rounded-xl shadow-lg p-6 md:p-8 lg:p-10"
+        class="bg-white rounded-xl shadow-lg p-6 sm:p-8 lg:p-10 border border-brand-200/50"
         transition:animate="fade"
       >
         <form id="contact-form" class="space-y-6">
-          <div class="grid grid-cols-1 gap-6">
+          <div class="grid grid-cols-1 gap-y-6 gap-x-4">
             <div>
               <label
                 for="name"
-                class="block text-sm font-medium text-brand-800 mb-1 font-['Montserrat_Variable']"
+                class="block text-sm font-medium text-brand-800 mb-1.5 font-['Montserrat_Variable']"
                 >Name</label
               >
               <input
@@ -108,16 +108,16 @@ const pageUrl = new URL(
                 id="name"
                 name="from_name"
                 required
-                class="w-full px-4 py-2 border border-brand-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-['Montserrat_Variable']"
+                class="w-full px-4 py-2.5 border border-brand-300 rounded-lg focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition duration-200 ease-in-out font-['Montserrat_Variable'] placeholder-brand-400/70"
                 placeholder="Your name"
               />
-              <div class="error-text text-red-500 text-sm mt-1 hidden"></div>
+              <div class="error-text text-red-600 text-xs mt-1.5 hidden font-['Montserrat_Variable']"></div>
             </div>
 
             <div>
               <label
                 for="email"
-                class="block text-sm font-medium text-brand-800 mb-1 font-['Montserrat_Variable']"
+                class="block text-sm font-medium text-brand-800 mb-1.5 font-['Montserrat_Variable']"
                 >Email</label
               >
               <input
@@ -125,25 +125,25 @@ const pageUrl = new URL(
                 id="email"
                 name="reply_to"
                 required
-                class="w-full px-4 py-2 border border-brand-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-['Montserrat_Variable']"
-                placeholder="your.email@rishikc.com"
+                class="w-full px-4 py-2.5 border border-brand-300 rounded-lg focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition duration-200 ease-in-out font-['Montserrat_Variable'] placeholder-brand-400/70"
+                placeholder="your.email@example.com"
               />
-              <div class="error-text text-red-500 text-sm mt-1 hidden"></div>
+              <div class="error-text text-red-600 text-xs mt-1.5 hidden font-['Montserrat_Variable']"></div>
             </div>
 
             <div>
               <label
                 for="subject"
-                class="block text-sm font-medium text-brand-800 mb-1 font-['Montserrat_Variable']"
+                class="block text-sm font-medium text-brand-800 mb-1.5 font-['Montserrat_Variable']"
                 >Subject</label
               >
               <select
                 id="subject"
                 name="subject"
                 required
-                class="w-full px-4 py-2 border border-brand-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-['Montserrat_Variable']"
+                class="w-full px-4 py-2.5 border border-brand-300 rounded-lg focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition duration-200 ease-in-out font-['Montserrat_Variable'] text-brand-900 bg-white appearance-none"
               >
-                <option value="" disabled selected
+                <option value="" disabled selected class="text-brand-400/90"
                   >Please select a subject</option
                 >
                 <option value="General Inquiry">General Inquiry</option>
@@ -151,13 +151,13 @@ const pageUrl = new URL(
                 <option value="Collaboration">Collaboration</option>
                 <option value="Other">Other</option>
               </select>
-              <div class="error-text text-red-500 text-sm mt-1 hidden"></div>
+              <div class="error-text text-red-600 text-xs mt-1.5 hidden font-['Montserrat_Variable']"></div>
             </div>
 
             <div>
               <label
                 for="message"
-                class="block text-sm font-medium text-brand-800 mb-1 font-['Montserrat_Variable']"
+                class="block text-sm font-medium text-brand-800 mb-1.5 font-['Montserrat_Variable']"
                 >Message</label
               >
               <textarea
@@ -165,16 +165,16 @@ const pageUrl = new URL(
                 name="message"
                 rows="5"
                 required
-                class="w-full px-4 py-2 border border-brand-300 rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-['Montserrat_Variable']"
+                class="w-full px-4 py-2.5 border border-brand-300 rounded-lg focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition duration-200 ease-in-out font-['Montserrat_Variable'] placeholder-brand-400/70"
                 placeholder="Your message here..."></textarea>
-              <div class="error-text text-red-500 text-sm mt-1 hidden"></div>
+              <div class="error-text text-red-600 text-xs mt-1.5 hidden font-['Montserrat_Variable']"></div>
             </div>
 
-            <div class="text-center">
+            <div class="pt-2 text-center">
               <button
                 type="submit"
                 id="submit-button"
-                class="inline-block bg-brand-700 hover:bg-brand-900 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-md transition-colors text-sm sm:text-base font-['Montserrat_Variable']"
+                class="inline-block bg-brand-700 hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 text-white px-7 sm:px-8 py-3 sm:py-3 rounded-lg transition-all duration-300 ease-in-out text-sm sm:text-base font-medium font-['Montserrat_Variable'] shadow-md hover:shadow-lg"
               >
                 Send Message
               </button>
@@ -182,19 +182,19 @@ const pageUrl = new URL(
           </div>
 
           <!-- Form Status Messages -->
-          <div id="form-status" class="text-center mt-4 hidden">
+          <div id="form-status" class="text-center mt-6 hidden">
             <p
               id="success-message"
-              class="text-green-600 font-['Montserrat_Variable'] hidden"
+              class="text-green-600 font-medium font-['Montserrat_Variable'] text-sm hidden"
             >
               Your message has been sent successfully. I'll get back to you
               soon!
             </p>
             <p
               id="error-message"
-              class="text-red-600 font-['Montserrat_Variable'] hidden"
+              class="text-red-600 font-medium font-['Montserrat_Variable'] text-sm hidden"
             >
-              There was an error sending your message. Please try again later.
+              There was an error sending your message. Please try again later or contact me directly.
             </p>
           </div>
         </form>
@@ -255,7 +255,7 @@ const pageUrl = new URL(
     // Single function to validate any field
     function validateField(fieldId, showError = true) {
       const field = document.getElementById(fieldId);
-      const errorElement = field.nextElementSibling;
+      const errorElement = field.nextElementSibling; // Assumes error div is always next sibling
       const fieldConfig = formFields[fieldId];
 
       let isValid = true;
@@ -277,16 +277,18 @@ const pageUrl = new URL(
         if (!isValid) {
           errorElement.textContent = message;
           errorElement.classList.remove("hidden");
-          field.classList.add("border-red-500");
-          field.classList.remove("border-green-500");
+          field.classList.add("border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
+          field.classList.remove("border-green-500", "focus:border-green-500", "focus:ring-green-500/50");
+          field.classList.remove("border-brand-300", "focus:border-brand-500", "focus:ring-brand-500/50"); // Remove default focus styles on error
 
           // Announce error for screen readers
           field.setAttribute("aria-invalid", "true");
           errorElement.setAttribute("role", "alert");
         } else {
           errorElement.classList.add("hidden");
-          field.classList.remove("border-red-500");
-          field.classList.add("border-green-500");
+          field.classList.remove("border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
+          field.classList.add("border-green-500", "focus:border-green-500", "focus:ring-green-500/50"); // Add green border on valid input
+          field.classList.remove("border-brand-300", "focus:border-brand-500", "focus:ring-brand-500/50"); // Remove default focus styles on success
           field.setAttribute("aria-invalid", "false");
         }
       }
@@ -372,8 +374,14 @@ const pageUrl = new URL(
           form.reset();
           Object.keys(formFields).forEach((fieldId) => {
             const field = document.getElementById(fieldId);
-            field.classList.remove("border-green-500", "border-red-500");
+            field.classList.remove("border-green-500", "focus:border-green-500", "focus:ring-green-500/50", "border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
+            field.classList.add("border-brand-300", "focus:border-brand-500", "focus:ring-brand-500/50"); // Restore default border/focus
             field.setAttribute("aria-invalid", "false");
+            const errorElement = field.nextElementSibling;
+            if (errorElement && errorElement.classList.contains('error-text')) {
+                errorElement.classList.add('hidden');
+                errorElement.textContent = '';
+            }
           });
 
           formStatus.classList.remove("hidden");
