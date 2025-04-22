@@ -1,0 +1,266 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/base_layout.astro";
+import { Schema } from "astro-seo-schema";
+import { Image } from "astro:assets"; // Assuming you might want an image later
+
+// Define interfaces based on profile.json structure
+interface Language { name: string; level: string; }
+interface Social { platform: string; url: string; }
+interface Position { title: string; period: string; duration: string; location?: string; description?: string; responsibilities?: string[]; }
+interface ClubPosition { title: string; period: string; duration: string; location?: string; description?: string; responsibilities?: string[]; }
+interface ExtraCurricular { club: string; positions: ClubPosition[]; }
+interface Experience { company: string; duration: string; positions: Position[]; }
+interface Education { institution: string; degree: string; period: string; extra_curriculars?: ExtraCurricular[]; }
+interface Certification { institution: string; title: string; }
+interface ProfileData { name: string; title: string; location: string; summary: string; bio: string; contact: { linkedin: string; }; skills: string[]; languages: Language[]; certifications: Certification[]; experience: Experience[]; education: Education[]; socials: Social[]; }
+
+// Fetch profile data
+const profileEntry = await getCollection("profile");
+const profile = profileEntry[0].data as ProfileData;
+
+const page_info = {
+  title: `About | ${profile.name}`,
+  description: profile.summary || `Learn more about ${profile.name}, ${profile.title}.`,
+  image: "/favicon.svg", // Use a relevant image if available
+  keywords: `Rishi Chawda, About Me, Software Engineer, ${profile.skills.join(', ')}`,
+};
+
+const siteUrl = new URL(Astro.url.pathname, Astro.site || "https://rishikc.com").toString();
+const profileImageUrl = `${siteUrl.replace(/\/$/, "")}/favicon.svg`; // Replace with actual profile image URL if you have one
+
+// Helper function for simple pluralization
+function pluralize(count: number, singular: string, plural: string): string {
+  return count === 1 ? `1 ${singular}` : `${count} ${plural}`;
+}
+
+// Calculate years of experience (approximate)
+const firstJobStartDate = new Date("2018-07-01"); // Approx start date from profile.json (Internship)
+const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear();
+---
+
+<BaseLayout page_info={page_info}>
+  <Schema
+    slot="head"
+    item={{
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: profile.name,
+      jobTitle: profile.title,
+      worksFor: {
+        "@type": "Organization",
+        name: "Progress Chef", // Update if needed
+      },
+      url: siteUrl,
+      image: profileImageUrl,
+      description: profile.summary,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Bengaluru",
+        addressRegion: "KA",
+        addressCountry: "IN"
+      },
+      alumniOf: profile.education.map(edu => ({
+        "@type": "EducationalOrganization",
+        name: edu.institution
+      })),
+      knowsLanguage: profile.languages.map(lang => lang.name),
+      sameAs: profile.socials.map((social: Social) => social.url),
+    }}
+  />
+
+  <main class="bg-white"> {/* Add a base background */}
+    <!-- Header Section -->
+    <section class="text-center py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 animate-on-scroll fade-in-up bg-gradient-to-b from-brand-50 to-white">
+      <a href="/" class="inline-block mb-8 text-brand-700 hover:text-brand-900 transition-colors duration-300 text-sm tracking-widest uppercase font-medium font-['Montserrat_Variable']">
+        &larr; Back to Home
+      </a>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-900 mb-4">
+        Hi, I'm Rishi
+      </h1>
+      <p class="text-lg sm:text-xl lg:text-2xl font-light font-['Montserrat_Variable'] text-brand-700 max-w-3xl mx-auto">
+        {profile.title}
+      </p>
+      <p class="text-md font-light font-['Montserrat_Variable'] text-brand-600 mt-3 max-w-3xl mx-auto flex items-center justify-center">
+         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        {profile.location}
+      </p>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-5 gap-12 sm:gap-16 lg:gap-20 items-center">
+      <div class="md:col-span-3 animate-on-scroll fade-in-left">
+        <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-8">
+          A Bit About Me
+        </h2>
+        <div class="space-y-5 text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed"> {/* Changed text color */}
+          <p>{profile.bio}</p>
+          <p>
+            With over <strong class="font-medium text-brand-800">{pluralize(yearsExperience, 'year', 'years')}</strong> of experience in the tech industry, I've had the privilege of working on diverse projects, from developing scalable web applications to contributing to DevSecOps tooling at <a href="https://www.chef.io/" target="_blank" rel="noopener noreferrer" class="text-brand-700 hover:text-brand-900 underline decoration-brand-300 hover:decoration-brand-500 transition duration-300">Chef</a>.
+          </p>
+          <p>
+            My journey in software development is driven by a curiosity for technology and a desire to build things that are not only functional but also elegant and user-friendly.
+          </p>
+        </div>
+        <a href="/career/" class="inline-block mt-10 text-brand-700 hover:text-brand-900 font-medium font-['Montserrat_Variable'] group transition-all duration-300 text-base">
+          Explore my career journey
+          <span class="inline-block ml-1.5 transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+        </a>
+      </div>
+      <div class="md:col-span-2 animate-on-scroll fade-in-right">
+         {/* Enhanced Connect Box / Image Placeholder */}
+         <div class="bg-gradient-to-br from-brand-100 to-brand-200/[0.5] p-8 rounded-xl shadow-lg border border-brand-200/50 aspect-square flex flex-col justify-center items-center text-center">
+            {/* Placeholder for Image */}
+            <div class="w-32 h-32 sm:w-40 sm:h-40 bg-brand-300 rounded-full mb-6 flex items-center justify-center text-brand-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 sm:h-20 sm:w-20 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+           <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-4">Connect with Me</h3>
+           <div class="flex flex-wrap gap-3 justify-center">
+             {profile.socials.map((social) => (
+                <a
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-link inline-flex items-center px-3 py-1.5 rounded-full bg-white text-brand-700 hover:bg-brand-700 hover:text-white transition-all duration-300 shadow-sm border border-brand-200 group"
+                  aria-label={`Visit my ${social.platform} profile`}
+                >
+                  {/* Placeholder Icon */}
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                  <span class="font-['Montserrat_Variable'] text-xs font-medium">{social.platform}</span>
+                </a>
+              ))}
+           </div>
+         </div>
+      </div>
+    </section>
+
+    <!-- Beyond Code Section -->
+    <section class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 text-center py-16 sm:py-20 lg:py-24 animate-on-scroll fade-in-up">
+       <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-6">
+         Beyond the Code
+       </h2>
+       <p class="text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed max-w-3xl mx-auto mb-10"> {/* Changed text color */}
+         When I step away from the keyboard, I often find myself behind a camera lens. Photography is a passion that allows me to capture moments and see the world from different perspectives. I also enjoy exploring new technologies and occasionally contributing to open-source projects.
+       </p>
+       <a href="/gallery/" class="inline-block text-brand-700 hover:text-brand-900 font-medium font-['Montserrat_Variable'] group transition-all duration-300 text-base">
+         View my photography gallery
+         <span class="inline-block ml-1.5 transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+       </a>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="bg-gradient-to-r from-brand-700 to-brand-800 text-white py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 text-center animate-on-scroll fade-in-up">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold font-['Red_Hat_Display_Variable'] mb-5">
+          Let's Connect
+        </h2>
+        <p class="text-lg sm:text-xl font-light font-['Montserrat_Variable'] mb-10 opacity-90">
+          Have a project in mind, a question, or just want to chat about tech or photography? Feel free to reach out.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
+          <a
+            href="/contact/"
+            class="inline-block w-full sm:w-auto bg-white text-brand-700 px-8 py-3.5 rounded-lg font-semibold font-['Montserrat_Variable'] text-base hover:bg-brand-50 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          >
+            Get in Touch
+          </a>
+          <a
+            href="/articles/"
+            class="inline-block w-full sm:w-auto bg-transparent border-2 border-white text-white px-8 py-3.5 rounded-lg font-semibold font-['Montserrat_Variable'] text-base hover:bg-white hover:text-brand-700 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          >
+            Read My Articles
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>
+
+<style>
+  /* Basic fade-in animation */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .fade-in-left {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .fade-in-right {
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  /* Corrected selectors: Combine .visible with the animation class */
+  .visible.fade-in-up,
+  .visible.fade-in-left,
+  .visible.fade-in-right {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  /* Add slight delay for staggered effect if needed */
+  .animate-on-scroll:nth-child(odd) { transition-delay: 0.1s; }
+  .animate-on-scroll:nth-child(even) { transition-delay: 0.2s; }
+
+  /* Ensure smooth scrolling for anchor links if any */
+  html {
+    scroll-behavior: smooth;
+  }
+</style>
+
+<script>
+  // Simple Intersection Observer for scroll animations
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Optional: Unobserve after animation to save resources
+          // observer.unobserve(entry.target);
+        }
+        // Optional: Remove 'visible' class if element scrolls out of view
+        // else {
+        //   entry.target.classList.remove('visible');
+        // }
+      });
+    }, {
+      threshold: 0.1, // Trigger when 10% of the element is visible
+      rootMargin: '0px 0px -50px 0px' // Adjust trigger point slightly
+    });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(element => {
+      observer.observe(element);
+    });
+  });
+
+  // Re-run observer logic on Astro page transitions
+  document.addEventListener('astro:page-load', () => {
+     const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(element => {
+       // Reset visibility state on page load before observing
+       element.classList.remove('visible');
+       observer.observe(element);
+    });
+  });
+</script>

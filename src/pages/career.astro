@@ -121,6 +121,17 @@ const siteUrl = new URL(
       url: siteUrl,
       image: `${siteUrl.replace(/\/$/, "")}/favicon.svg`,
       description: profile.summary,
+      address: { // Added address
+        "@type": "PostalAddress",
+        addressLocality: "Bengaluru",
+        addressRegion: "KA",
+        addressCountry: "IN"
+      },
+      alumniOf: profile.education.map(edu => ({ // Added alumniOf
+        "@type": "EducationalOrganization",
+        name: edu.institution
+      })),
+      knowsLanguage: profile.languages.map(lang => lang.name), // Added knowsLanguage
       sameAs: profile.socials.map((social: Social) => social.url),
     }}
   />

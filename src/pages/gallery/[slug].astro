@@ -5,6 +5,15 @@ import Lightbox from "../../components/gallery/lightbox.astro";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
+import type { ImageObject as SchemaImageObject } from "schema-dts"; // Import type
+
+// Define interfaces needed for profile data
+interface Social { platform: string; url: string; }
+interface ProfileData { name: string; socials: Social[]; /* Add other fields if needed */ }
+
+// Fetch profile data
+const profileEntry = await getCollection("profile");
+const profile = profileEntry[0].data as ProfileData;
 
 export async function getStaticPaths() {
   const galleries = await getCollection("gallery");
@@ -20,24 +29,27 @@ const { title, description, featured_image, featured_image_alt, tags, images } =
   gallery.data;
 
 const page_info = {
-  title: `${title} - Rishi Chawda`,
+  title: `${title} - ${profile.name}`, // Use profile name
   description: description,
   image: featured_image,
-  keywords: `photography, ${title.toLowerCase()}, portfolio, Rishi Chawda`,
+  keywords: `photography, ${title.toLowerCase()}, portfolio, ${profile.name}`, // Use profile name
 };
 
-// Prepare image array for JSON-LD
-const galleryImageUrls =
+// Prepare image array for JSON-LD and explicitly type it
+const galleryImageUrls: SchemaImageObject[] =
   images?.map((img) => {
-    return {
+    // Construct the ImageObject ensuring all required fields are present
+    const imageObject: SchemaImageObject = {
       "@type": "ImageObject",
       contentUrl: new URL(
-        img.src.src,
+        img.src.src, // Assuming img.src has a src property
         Astro.site || "https://rishikc.com",
       ).toString(),
       name: img.caption || img.alt || `${title} image`,
       description: img.caption || img.alt || `Image from ${title} gallery`,
+      // Potentially add 'thumbnailUrl' or other properties if available/needed
     };
+    return imageObject;
   }) || [];
 
 const pageUrl = new URL(
@@ -58,21 +70,16 @@ const pageUrl = new URL(
       image: featured_image.src,
       author: {
         "@type": "Person",
-        name: "Rishi Chawda",
+        name: profile.name, // Use profile name
         url: "https://rishikc.com",
-        sameAs: [
-					"https://github.com/rishichawda",
-					"https://www.linkedin.com/in/rkrishi/",
-					"https://www.instagram.com/rishiikc",
-					"https://twitter.com/rishiikc",
-					"https://dribbble.com/rishikc",
-				],
+        sameAs: profile.socials.map((social: Social) => social.url), // Use fetched socials
       },
       mainEntityOfPage: {
         "@type": "WebPage",
         "@id": pageUrl,
       },
       keywords: tags?.join(", "),
+      associatedMedia: galleryImageUrls, // Use the explicitly typed array
     }}
   />
   <main

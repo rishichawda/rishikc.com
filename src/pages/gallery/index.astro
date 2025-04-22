@@ -1,19 +1,27 @@
 ---
 import BaseLayout from "../../layouts/base_layout.astro";
-import GalleryGrid from "../../components/gallery/gallery_grid.astro";
 import "../../styles/global.css";
-import { Schema } from "astro-seo-schema";
-
-import logo from "../../../content/assets/logo/Group 489.svg";
-import { Image } from "astro:assets";
+import GalleryGrid from "../../components/gallery/gallery_grid.astro";
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import { Schema } from "astro-seo-schema";
+import type { ListItem, ImageGallery as SchemaImageGallery } from "schema-dts"; // Import types
+import logo from "../../../content/assets/logo/Group 489.svg";
+
+// Define interfaces needed for profile data
+interface Social { platform: string; url: string; }
+interface ProfileData { name: string; socials: Social[]; /* Add other fields if needed */ }
+
+// Fetch profile data
+const profileEntry = await getCollection("profile");
+const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
-  title: "Gallery - Rishi Chawda",
+  title: `Gallery - ${profile.name}`, // Use profile name
   description:
-    "Photography portfolio showcasing various projects and moments captured by Rishi Chawda",
+    `Photography portfolio showcasing various projects and moments captured by ${profile.name}`, // Use profile name
   image: "/favicon.svg",
-  keywords: "photography, portfolio, gallery, Rishi Chawda",
+  keywords: `photography, portfolio, gallery, ${profile.name}`, // Use profile name
 };
 
 // Get gallery collection for structured data
@@ -25,7 +33,8 @@ const pageUrl = new URL(
 
 // Create gallery items for JSON-LD
 const galleryItems = galleries.map((gallery) => {
-  return {
+  // Ensure the object conforms to ImageGallery type expected by ListItem
+  const gallerySchema: SchemaImageGallery = {
     "@type": "ImageGallery",
     name: gallery.data.title,
     description: gallery.data.description,
@@ -33,8 +42,21 @@ const galleryItems = galleries.map((gallery) => {
       `/gallery/${gallery.data.directory}/`,
       Astro.site || "https://rishikc.com",
     ).toString(),
+    // Add other required ImageGallery properties if necessary, e.g., image
+    image: new URL(
+      gallery.data.featured_image.src, // Assuming featured_image has a src property
+      Astro.site || "https://rishikc.com",
+    ).toString(),
   };
+  return gallerySchema;
 });
+
+// Explicitly type the itemListElement array
+const itemListElements: ListItem<SchemaImageGallery>[] = galleryItems.map((gallerySchema, index) => ({
+  "@type": "ListItem",
+  position: index + 1,
+  item: gallerySchema,
+}));
 ---
 
 <BaseLayout page_info={page_info}>
@@ -45,38 +67,16 @@ const galleryItems = galleries.map((gallery) => {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
       name: "Photography Gallery",
-      description:
-        "Photography portfolio showcasing various projects and moments captured by Rishi Chawda",
+      description: page_info.description,
       mainEntity: {
         "@type": "ItemList",
-        itemListElement: galleryItems.map((gallery, index) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          item: {
-            "@type": "ImageGallery",
-            name: gallery.name,
-            description: gallery.description,
-            url: gallery.url,
-            image: {
-              "@type": "ImageObject",
-              url: gallery.url,
-              width: 800,
-              height: 600,
-            },
-          },
-        })),
+        itemListElement: itemListElements, // Use the explicitly typed array
       },
       author: {
         "@type": "Person",
-        name: "Rishi Chawda",
+        name: profile.name, // Use profile name
         url: "https://rishikc.com",
-        sameAs: [
-					"https://github.com/rishichawda",
-					"https://www.linkedin.com/in/rkrishi/",
-					"https://www.instagram.com/rishiikc",
-					"https://twitter.com/rishiikc",
-					"https://dribbble.com/rishikc",
-				],
+        sameAs: profile.socials.map((social: Social) => social.url), // Use fetched socials
       },
       url: pageUrl,
     }}

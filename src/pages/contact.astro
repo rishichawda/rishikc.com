@@ -2,13 +2,22 @@
 import BaseLayout from "../layouts/base_layout.astro";
 import "../styles/global.css";
 import { Schema } from "astro-seo-schema";
+import { getCollection } from "astro:content"; // Import getCollection
+
+// Define interfaces needed for profile data
+interface Social { platform: string; url: string; }
+interface ProfileData { name: string; socials: Social[]; /* Add other fields if needed */ }
+
+// Fetch profile data
+const profileEntry = await getCollection("profile");
+const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
-  title: "Contact - Rishi Chawda",
+  title: `Contact - ${profile.name}`, // Use profile name
   description:
-    "Get in touch with Rishi Chawda for collaborations, job opportunities, or general inquiries",
+    `Get in touch with ${profile.name} for collaborations, job opportunities, or general inquiries`, // Use profile name
   image: "/favicon.svg",
-  keywords: "contact, email, collaboration, Rishi Chawda, software engineer",
+  keywords: `contact, email, collaboration, ${profile.name}, software engineer`, // Use profile name
 };
 
 // Access environment variables securely on the server
@@ -29,23 +38,16 @@ const pageUrl = new URL(
     item={{
       "@context": "https://schema.org",
       "@type": "ContactPage",
-      name: "Contact Rishi Chawda",
-      description:
-        "Get in touch with Rishi Chawda for collaborations, job opportunities, or general inquiries",
+      name: `Contact ${profile.name}`, // Use profile name
+      description: page_info.description,
       url: pageUrl,
       mainEntity: {
         "@type": "Person",
-        name: "Rishi Chawda",
-        email: "mailto:hello@rishikc.com",
+        name: profile.name,
+        email: "mailto:hello@rishikc.com", // Keep specific contact detail
         url: "https://rishikc.com",
         contactType: "Professional Inquiries",
-        sameAs: [
-					"https://github.com/rishichawda",
-					"https://www.linkedin.com/in/rkrishi/",
-					"https://www.instagram.com/rishiikc",
-					"https://twitter.com/rishiikc",
-					"https://dribbble.com/rishikc",
-				],
+        sameAs: profile.socials.map((social: Social) => social.url), // Use fetched socials
       },
     }}
   />
