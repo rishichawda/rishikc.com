@@ -10,8 +10,8 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
 ---
 
 <div class="lg:sticky top-4 py-4 max-w-xs max-h-[calc(100vh-2rem)] overflow-y-auto">
-    <nav class="flex flex-col w-full rounded-lg border border-slate-200 overflow-hidden p-4 bg-white/80 backdrop-blur-md shadow-sm dark:bg-slate-800/80 dark:border-slate-700">
-        <h2 class="mb-3 text-lg font-semibold text-slate-800 dark:text-slate-200">On this page</h2>
+    <nav class="flex flex-col w-full rounded-lg border border-slate-200 overflow-hidden p-4 bg-white/80 backdrop-blur-md shadow-sm">
+        <h2 class="mb-3 text-lg font-semibold text-slate-800">On this page</h2>
         <ul class="space-y-1">
             {
                 filteredHeadings.map((item) => (
@@ -22,7 +22,7 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
                         role="listitem"
                     >
                         <a
-                            class="flex items-center rounded px-2 py-1.5 transition-colors duration-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+                            class="flex items-center rounded px-2 py-1.5 transition-colors duration-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                             role="link"
                             href={`#${item.slug}`}
                         >
