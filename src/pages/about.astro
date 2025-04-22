@@ -22,7 +22,7 @@ const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
   title: `About | ${profile.name}`,
-  description: profile.summary || `Learn more about ${profile.name}, ${profile.title}.`,
+  description: profile.summary || `Learn more about ${profile.name, profile.title}.`,
   image: "/favicon.svg", // Use a relevant image if available
   keywords: `Rishi Chawda, About Me, Software Engineer, ${profile.skills.join(', ')}`,
 };
@@ -113,9 +113,9 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       </div>
       <div class="md:col-span-2 animate-on-scroll fade-in-right">
          {/* Enhanced Connect Box */}
-         <div class="bg-gradient-to-br from-brand-100/80 to-brand-200/40 p-8 rounded-xl shadow-lg border border-brand-200/60 aspect-square flex flex-col justify-center items-center text-center relative overflow-hidden connect-box"> {/* Adjusted gradient, border, added relative/overflow */}
+         <div class="bg-gradient-to-br from-brand-100/80 to-brand-200/40 p-10 rounded-xl gap-y-4 shadow-lg border border-brand-200/60 flex flex-col justify-center items-center text-center relative overflow-hidden connect-box"> {/* Adjusted padding, added gap-y, removed aspect-square */}
             {/* Image */}
-            <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full mb-6 overflow-hidden border-4 border-white shadow-lg"> {/* Increased shadow */}
+            <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-white shadow-lg"> {/* Removed aspect-square */}
               <Image
                 src={profileImage}
                 alt={`Profile picture of ${profile.name}`}
@@ -124,7 +124,7 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
                 class="w-full h-full object-cover"
               />
             </div>
-           <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-5">Connect with Me</h3> {/* Increased margin-bottom */}
+           <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-1">Connect with Me</h3> {/* Adjusted margin-bottom */}
            <div class="flex flex-wrap gap-3 justify-center">
              {profile.socials.map((social) => (
                 <a
