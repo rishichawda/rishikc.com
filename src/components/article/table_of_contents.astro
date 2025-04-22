@@ -9,24 +9,26 @@ const { headings } = Astro.props;
 let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.length > 10 ? 2 : 4));
 ---
 
-<div class="lg:sticky top-0 py-4 max-w-xs max-h-[calc(100vh)]">
-    <nav class="flex flex-col w-full rounded-lg overflow-hidden p-3 bg-white/60 backdrop-blur-sm shadow-sm">
-        <h2 class="mb-3 text-md font-medium text-brand-950">Table of Contents</h2>
-        <ul class="pt-1 font-normal space-y-2">
+<div class="lg:sticky top-4 py-4 max-w-xs max-h-[calc(100vh-2rem)] overflow-y-auto">
+    <nav class="flex flex-col w-full rounded-lg border border-slate-200 overflow-hidden p-4 bg-white/80 backdrop-blur-md shadow-sm dark:bg-slate-800/80 dark:border-slate-700">
+        <h2 class="mb-3 text-lg font-semibold text-slate-800 dark:text-slate-200">On this page</h2>
+        <ul class="space-y-1">
             {
                 filteredHeadings.map((item) => (
-                    <li 
-                        class={`pl-${item.depth} mb-1 list-none last-of-type:mb-0`} 
-                        aria-label={item.text} 
+                    <li
+                        class="list-none"
+                        style={`padding-left: ${(item.depth - 1) * 1.25}rem;`}
+                        aria-label={item.text}
                         role="listitem"
                     >
-                        <a 
-                            class="flex items-center rounded px-2 py-1 transition-all duration-200 text-slate-700 hover:bg-gray-50 hover:text-brand-500"} 
-                            role="listitem" 
+                        <a
+                            class="flex items-center rounded px-2 py-1.5 transition-colors duration-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+                            role="link"
                             href={`#${item.slug}`}
                         >
-                            <span class="flex-1 text-sm line-clamp-2" title={item.text}>
-                                {item.depth > 2 && "– "}{item.text}
+                            {/* Conditionally apply smaller text size for deeper levels */}
+                            <span class:list={["flex-1", item.depth > 2 ? "text-xs" : "text-sm"]} title={item.text}>
+                                {item.text}
                             </span>
                         </a>
                     </li>

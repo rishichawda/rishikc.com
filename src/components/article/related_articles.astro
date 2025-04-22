@@ -66,26 +66,30 @@ function formatDate(date: Date): string {
           href={article.data.path}
           class="group flex flex-col hover:-scale-[97%] transition-all"
         >
-          <div class="aspect-square mb-3 sm:mb-4">
+          <div class="aspect-square mb-3 sm:mb-4 overflow-hidden rounded-lg"> {/* Added overflow-hidden and moved rounded-lg here */}
             <Image
               src={article.data.hero_image}
               alt={article.data.hero_image_alt || article.data.title}
-              class="object-cover rounded-lg aspect-square"
+              class="object-cover aspect-square group-hover:opacity-90 transition-opacity duration-300" {/* Removed rounded-lg, added hover effect */}
               transition:name={`${article.data.path}-image`}
             />
           </div>
-          <div class="flex flex-col h-full justify-between">
-            <h3 transition:name={`${article.data.path}-title`} class="text-lg sm:text-xl font-medium text-brand-800 mb-1 sm:mb-2 line-clamp-2 font-['Red_Hat_Display_Variable']">
-              {article.data.title}
-            </h3>
-            <div>
-              <p transition:name={`${article.data.path}-date`} class="font-['Red_Hat_Display_Variable'] text-brand-400 mb-1 sm:mb-2 text-xs sm:text-sm">
+          <div class="flex flex-col justify-between">
+            {/* Use div for title block to manage spacing better */}
+            <div> {/* This div wraps title, date, and description */}
+              <h3 transition:name={`${article.data.path}-title`} class="text-lg sm:text-xl font-semibold text-brand-800 mb-1 sm:mb-1.5 line-clamp-2 font-['Red_Hat_Display_Variable'] group-hover:text-brand-900 transition-colors">
+                {article.data.title}
+              </h3>
+              <p transition:name={`${article.data.path}-date`} class="font-['Red_Hat_Display_Variable'] text-brand-500 mb-2 sm:mb-3 text-xs sm:text-sm font-medium">
                 {formatDate(article.data.date)}
               </p>
-              <p class="font-['Red_Hat_Display_Variable'] text-brand-700 mb-3 sm:mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3">
+              <p class="font-['Red_Hat_Display_Variable'] text-brand-700 font-normal leading-relaxed text-sm sm:text-base line-clamp-3"> {/* Removed mb-3 sm:mb-4 */}
                 {article.data.description}
               </p>
-              <div class="text-brand-700 font-['Montserrat_Variable'] hover:text-brand-900 hover:cursor-pointer font-medium text-sm sm:text-base inline-flex items-center gap-x-1">
+            </div>
+            {/* Keep Read Article link at the bottom */}
+            <div> {/* This div wraps the "Read article" link */}
+              <div class="text-brand-600 font-['Montserrat_Variable'] group-hover:text-brand-800 group-hover:underline font-medium text-sm sm:text-base inline-flex items-center gap-x-1 transition-colors mt-2"> {/* Added mt-2 for spacing */}
                 Read article
                 <svg
                   width="17"
@@ -93,10 +97,11 @@ function formatDate(date: Date): string {
                   viewBox="0 0 17 17"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  class="inline-block"
                 >
                   <path
                     d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
-                    stroke="#737FAE"
+                    stroke="currentColor"
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -109,4 +114,4 @@ function formatDate(date: Date): string {
       ))
     }
   </div>
-</section> 
+</section>

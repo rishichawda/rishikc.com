@@ -33,7 +33,7 @@ const imageUrl = content.hero_image?.src
 	: "";
 ---
 
-<article class="max-w-[90%] flex flex-col mx-auto items-center pt-10">
+<article class="max-w-[90%] flex flex-col mx-auto items-center pt-16">
 	<!-- Article JSON-LD Schema -->
 	<Schema
 		item={{
@@ -63,16 +63,16 @@ const imageUrl = content.hero_image?.src
 			keywords: content.tags?.join(", "),
 		}}
 	/>
-	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-2">
+	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-4">
 		<h1
 			transition:name={`${content.path}-title`}
-			class="justify-start text-black text-3xl text-center font-semibold font-['Red_Hat_Display_Variable'] leading-7"
+			class="justify-start text-black text-3xl md:text-4xl text-center font-semibold font-['Red_Hat_Display_Variable'] leading-tight mb-2"
 		>
 			{content.title}
 		</h1>
 		{
 			content.subtitle && (
-				<h2 class="justify-start text-black text-center text-base font-normal font-['Red_Hat_Display_Variable'] leading-normal">
+				<h2 class="justify-start text-gray-700 text-center text-lg md:text-xl font-normal font-['Red_Hat_Display_Variable'] leading-normal mt-1">
 					{content.subtitle}
 				</h2>
 			)
@@ -80,25 +80,25 @@ const imageUrl = content.hero_image?.src
 	</div>
 	<small
 		transition:name={`${content.path}-date`}
-		class="justify-start text-black text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-2 mt-7"
+		class="justify-start text-gray-600 text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-8"
 	>
 		{date}
 	</small>
-	<div class="w-full md:max-w-[790px] mb-7">
+	<div class="w-full md:max-w-[790px] mb-10">
 		<Image
-			class="w-full rounded-xl"
+			class="w-full rounded-xl shadow-md"
 			src={content.hero_image}
 			alt={content.hero_image_alt || `${content.title}`}
 			transition:name={`${content.path}-image`}
 		/>
-		<div class="inline-flex w-full px-2 mt-4 justify-between items-start">
+		<div class="inline-flex w-full px-2 mt-5 justify-between items-center">
 			<div
-				class="inline-flex justify-start items-start gap-[5px] max-w-3/4 flex-wrap"
+				class="inline-flex justify-start items-center gap-2 max-w-3/4 flex-wrap"
 			>
 				{
 					content.tags.map((tag: string) => (
-						<div class="px-3 py-0.5 bg-brand-500 rounded-[5px] inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
-							<span class="justify-start bg-brand-500 text-white text-sm font-normal font-['Montserrat_Variable'] leading-tight">
+						<div class="px-3 py-1 bg-brand-500 rounded-md inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
+							<span class="justify-start bg-brand-500 text-white text-xs font-medium font-['Montserrat_Variable'] leading-tight">
 								{tag}
 							</span>
 						</div>
@@ -106,7 +106,7 @@ const imageUrl = content.hero_image?.src
 				}
 			</div>
 			<small
-				class="justify-start text-gray-500 text-xs font-normal font-['Montserrat_Variable'] leading-tight"
+				class="justify-end text-gray-500 text-xs font-normal font-['Montserrat_Variable'] leading-tight flex-shrink-0 ml-2"
 			>
 				{frontmatter.minutesRead}
 			</small>
