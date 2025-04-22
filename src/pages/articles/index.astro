@@ -93,14 +93,14 @@ function getSearchableContent(article: any): string {
         </div>
 
         <div
-            class="flex flex-col lg:grid lg:grid-cols-[2fr_1fr] gap-8 lg:gap-16"
+            class="flex flex-col lg:grid lg:grid-cols-[2fr_1fr] gap-12 lg:gap-20"
         >
             <!-- Sidebar - Moved to top on mobile -->
             <div class="order-first lg:order-last">
                 <!-- Quote box -->
                 <a
                     href="/reads/"
-                    class="block mb-8 sm:mb-12 p-4 sm:p-6 bg-[#F8F9FE] rounded-lg hover:bg-[#F0F2FC] transition-colors"
+                    class="block mb-8 sm:mb-12 p-4 sm:p-6 bg-[#F8F9FE] rounded-lg hover:bg-[#F0F2FC] transition-colors border border-gray-200"
                 >
                     <p
                         class="text-gray-600 text-sm font-['Montserrat_Variable']"
@@ -152,12 +152,12 @@ function getSearchableContent(article: any): string {
                         type="text"
                         id="search"
                         placeholder="Search by title, description, keywords, or tags"
-                        class="font-['Montserrat_Variable'] peer w-full px-4 sm:px-6 py-3 sm:py-4 rounded-lg bg-[#F8F9FE] border-none text-gray-700 placeholder-gray-500 text-sm sm:text-base focus:ring-0 focus:outline-none"
+                        class="font-['Montserrat_Variable'] peer w-full px-4 sm:px-6 py-3 sm:py-4 rounded-lg bg-[#F8F9FE] border border-gray-200 text-gray-700 placeholder-gray-500 text-sm sm:text-base focus:ring-2 focus:ring-[#6B7AB0]/50 focus:border-[#6B7AB0] focus:outline-none transition-colors duration-200"
                     />
                 </div>
 
                 <!-- Articles list -->
-                <div class="space-y-12 sm:space-y-8 flex-1">
+                <div class="space-y-0 sm:space-y-2 flex-1">
                     {
                         sortedArticles.map((article) => (
                             <article
@@ -168,9 +168,9 @@ function getSearchableContent(article: any): string {
                             >
                                 <a
                                     href={article.data.path}
-                                    class="flex flex-row gap-4 sm:gap-6"
+                                    class="flex flex-row gap-4 sm:gap-6 p-4 rounded-lg hover:bg-gray-50 transition-colors duration-150"
                                 >
-                                    <div class="basis-1/3 md:basis-1/6 lg:basis-2/12">
+                                    <div class="basis-1/3 md:basis-1/6 lg:basis-2/12 flex-shrink-0">
                                         <Image
                                             src={article.data.hero_image}
                                             alt={
@@ -178,18 +178,18 @@ function getSearchableContent(article: any): string {
                                                 article.data.title
                                             }
                                             width={200}
-                                            class="aspect-square rounded-lg object-cover"
+                                            class="aspect-square rounded-lg object-cover w-full"
                                             transition:name={`${article.data.path}-image`}
                                         />
                                     </div>
-                                    <div class="basis-2/3 md:basis-5/6 lg:basis-10/12 flex flex-col gap-2 sm:gap-0 sm:py-1">
+                                    <div class="basis-2/3 md:basis-5/6 lg:basis-10/12 flex flex-col gap-1 sm:gap-1.5">
                                         <h2 transition:name={`${article.data.path}-title`} class="font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-[#6B7AB0] transition-colors">
                                             {article.data.title}
                                         </h2>
-                                        <small transition:name={`${article.data.path}-date`} class="font-['Montserrat_Variable'] text-xs text-gray-500 align-text-top sm:mt-2">
+                                        <small transition:name={`${article.data.path}-date`} class="font-['Montserrat_Variable'] text-xs text-gray-500">
                                             {formatDate(article.data.date)}
                                         </small>
-                                        <p class="font-['Montserrat_Variable'] text-sm text-gray-600 line-clamp-2 sm:mt-2">
+                                        <p class="font-['Montserrat_Variable'] text-sm text-gray-600 line-clamp-2 mt-1 sm:mt-1.5">
                                             {article.data.description}
                                         </p>
                                     </div>
@@ -201,7 +201,7 @@ function getSearchableContent(article: any): string {
 
                 <!-- Pagination -->
                 <div
-                    class="mt-8 sm:mt-12 flex items-center gap-2 justify-center"
+                    class="mt-12 sm:mt-16 flex items-center gap-2 justify-center"
                 >
                     <button
                         class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
