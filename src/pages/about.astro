@@ -112,7 +112,7 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       </div>
       <div class="md:col-span-2 animate-on-scroll fade-in-right">
          {/* Enhanced Connect Box */}
-         <div class="bg-gradient-to-br from-brand-100/80 to-brand-200/40 p-10 rounded-xl gap-y-4 shadow-lg border border-brand-200/60 flex flex-col justify-center items-center text-center relative overflow-hidden connect-box"> {/* Adjusted padding, added gap-y, removed aspect-square */}
+         <div class="bg-gradient-to-br from-brand-100/80 to-brand-200/40 p-10 rounded-xl gap-y-4 shadow-lg border border-brand-200/60 flex flex-col justify-center items-center text-center relative overflow-hidden"> {/* Adjusted padding, added gap-y, removed aspect-square */}
             {/* Image */}
             <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-white shadow-lg"> {/* Removed aspect-square */}
               <Image
@@ -226,6 +226,32 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
   .animate-on-scroll:nth-child(odd) { transition-delay: 0.1s; }
   .animate-on-scroll:nth-child(even) { transition-delay: 0.2s; }
 
+  /* Failsafe: Make content visible after 1.5 seconds regardless of JS execution */
+  @media (prefers-reduced-motion: no-preference) {
+    .animate-on-scroll {
+      animation: fallbackFadeIn 1.5s forwards 1.5s;
+    }
+    
+    @keyframes fallbackFadeIn {
+      to {
+        opacity: 1;
+        transform: translate(0, 0);
+      }
+    }
+  }
+
+  /* Users who prefer reduced motion should see content immediately */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in-up,
+    .fade-in-left,
+    .fade-in-right {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+
   /* Ensure smooth scrolling for anchor links if any */
   html {
     scroll-behavior: smooth;
@@ -242,70 +268,56 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Soft shadow */
   }
 
-  /* Optional: Add a subtle glow/shine effect to connect box */
-  .connect-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 60%);
-    transform: translate(-25%, -25%) scale(0.8);
-    opacity: 0;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    pointer-events: none; /* Ensure it doesn't block interactions */
-  }
-
-  .connect-box:hover::before {
-    opacity: 1;
-    transform: translate(-25%, -25%) scale(1);
-  }
-
 </style>
 
 <script>
-  // Simple Intersection Observer for scroll animations
+  function scrollObserver() {
+    try {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+
+      document.querySelectorAll('.animate-on-scroll').forEach(element => {
+        // Reset visibility state on page load before observing
+        element.classList.remove('visible');
+        observer.observe(element);
+      });
+    } catch (error) {
+      // Fallback: If observer fails, make all elements visible
+      console.error('Animation observer error:', error);
+      document.querySelectorAll('.animate-on-scroll').forEach(element => {
+        element.classList.add('visible');
+      });
+    }
+  }
+
+  // Function to ensure all content is visible regardless of animation status
+  function ensureContentVisibility() {
+    // After 2 seconds, force visibility of all animated elements
+    setTimeout(() => {
+      document.querySelectorAll('.animate-on-scroll').forEach(element => {
+        if (!element.classList.contains('visible')) {
+          element.classList.add('visible');
+        }
+      });
+    }, 2000);
+  }
+
+  // Run our observers
   document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          // Optional: Unobserve after animation to save resources
-          // observer.unobserve(entry.target);
-        }
-        // Optional: Remove 'visible' class if element scrolls out of view
-        // else {
-        //   entry.target.classList.remove('visible');
-        // }
-      });
-    }, {
-      threshold: 0.1, // Trigger when 10% of the element is visible
-      rootMargin: '0px 0px -50px 0px' // Adjust trigger point slightly
-    });
-
-    document.querySelectorAll('.animate-on-scroll').forEach(element => {
-      observer.observe(element);
-    });
+    scrollObserver();
+    ensureContentVisibility();
   });
-
-  // Re-run observer logic on Astro page transitions
+  
   document.addEventListener('astro:page-load', () => {
-     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
-
-    document.querySelectorAll('.animate-on-scroll').forEach(element => {
-       // Reset visibility state on page load before observing
-       element.classList.remove('visible');
-       observer.observe(element);
-    });
+    scrollObserver();
+    ensureContentVisibility();
   });
 </script>
