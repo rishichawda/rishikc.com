@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
 import { Schema } from "astro-seo-schema";
 import favicon from "../../content/assets/logo/Group 489.png";
+import { fetchMetadata, type WebsiteMeta } from "../utils/metadataFetcher";
+import LinkCard from "../components/LinkCard.astro"; // Import the new component
 
 // Define TypeScript interfaces for profile data
 interface Language {
@@ -22,6 +24,8 @@ interface Position {
   location?: string;
   description?: string;
   responsibilities?: string[];
+  links?: string[]; // Add links property
+  linksMeta?: WebsiteMeta[]; // Add linksMeta property
 }
 
 // Define interface for ClubPosition within ExtraCurricular
@@ -40,18 +44,21 @@ interface ExtraCurricular {
   positions: ClubPosition[];
 }
 
+// Remove the WebsiteMeta interface definition here
+
 interface Experience {
   company: string;
   duration: string;
   positions: Position[];
-  website?: string[]; // Added website
+  website?: string[];
+  websitesMeta?: WebsiteMeta[];
 }
 
 interface Education {
   institution: string;
   degree: string;
   period: string;
-  extra_curriculars?: ExtraCurricular[]; // Added optional extra_curriculars
+  extra_curriculars?: ExtraCurricular[];
 }
 
 // Add Certification interface
@@ -77,27 +84,49 @@ interface ProfileData {
   socials: Social[];
 }
 
-// Get profile data - using proper type handling with better null safety
+// Get profile data
 const profileEntry = await getCollection("profile");
-// Assuming profile.json is the single entry in the 'profile' collection
-// Access the nested 'data' object within the JSON file
-const profileData = profileEntry[0].data as ProfileData; 
+const profileData = profileEntry[0].data as ProfileData;
 const profile = profileData;
 
-// Format experience duration
-function formatExperienceDuration(duration: string): string {
-  return duration;
-}
+// --- Metadata Fetching Logic ---
+const experiencesWithMeta = await Promise.all(
+  profile.experience.map(async (exp): Promise<Experience> => {
+    // Fetch company website metadata
+    let companyWebsitesMeta: WebsiteMeta[] = [];
+    if (exp.website && exp.website.length > 0) {
+      companyWebsitesMeta = await Promise.all(
+        exp.website.map((url) => fetchMetadata(url)),
+      );
+    }
 
-// Format date range for readability 
-function formatDateRange(period: string): string {
-  return period;
-}
+    // Fetch position links metadata
+    const positionsWithMeta = await Promise.all(
+      exp.positions.map(async (pos): Promise<Position> => {
+        if (pos.links && pos.links.length > 0) {
+          const linksMeta = await Promise.all(
+            pos.links.map((url) => fetchMetadata(url)),
+          );
+          return { ...pos, linksMeta };
+        }
+        return pos;
+      }),
+    );
+
+    return {
+      ...exp,
+      websitesMeta: companyWebsitesMeta,
+      positions: positionsWithMeta,
+    };
+  }),
+);
+// --- End Metadata Fetching Logic ---
 
 const page_info = {
   title: "About | Rishi Chawda",
   description: "About Rishi Chawda - Senior Software Engineer",
-  keywords: "Rishi Chawda, Software Engineer, Developer, About, Experience, Skills",
+  keywords:
+    "Rishi Chawda, Software Engineer, Developer, About, Experience, Skills",
 };
 
 // Define site URL for structured data
@@ -122,24 +151,28 @@ const siteUrl = new URL(
       url: siteUrl,
       image: `${siteUrl.replace(/\/$/, "")}/${favicon.src}`,
       description: profile.summary,
-      address: { // Added address
+      address: {
         "@type": "PostalAddress",
         addressLocality: "Bengaluru",
         addressRegion: "KA",
-        addressCountry: "IN"
+        addressCountry: "IN",
       },
-      alumniOf: profile.education.map(edu => ({ // Added alumniOf
+      alumniOf: profile.education.map((edu) => ({
         "@type": "EducationalOrganization",
-        name: edu.institution
+        name: edu.institution,
       })),
-      knowsLanguage: profile.languages.map(lang => lang.name), // Added knowsLanguage
+      knowsLanguage: profile.languages.map((lang) => lang.name),
       sameAs: profile.socials.map((social: Social) => social.url),
     }}
   />
-  
-  <main class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 lg:py-20"> 
-    <div class="flex flex-row justify-between items-center mb-12 sm:mb-16"> 
-      <h1 class="text-3xl sm:text-4xl lg:text-[2.5rem] font-medium text-gray-900"> 
+
+  <main
+    class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 lg:py-20"
+  >
+    <div class="flex flex-row justify-between items-center mb-12 sm:mb-16">
+      <h1
+        class="text-3xl sm:text-4xl lg:text-[2.5rem] font-medium text-gray-900"
+      >
         About Me
       </h1>
       <a
@@ -157,271 +190,409 @@ const siteUrl = new URL(
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          ></path>
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         Back to Home
       </a>
     </div>
 
     <!-- Profile Section -->
-    <div class="mb-20 md:mb-24"> 
-      <div class="bg-[#F8F9FE] rounded-lg p-8 sm:p-10 lg:p-12"> 
-        <div class="flex flex-col md:flex-row gap-10 md:gap-12"> 
+    <div class="mb-20 md:mb-24">
+      <div class="bg-[#F8F9FE] rounded-lg p-8 sm:p-10 lg:p-12">
+        <div class="flex flex-col md:flex-row gap-10 md:gap-12">
           <div class="md:w-2/3">
-            <h2 class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-2"> 
+            <h2
+              class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-2"
+            >
               {profile.name}
             </h2>
-            <p class="text-gray-600 font-['Montserrat_Variable'] text-lg mb-5"> 
+            <p class="text-gray-600 font-['Montserrat_Variable'] text-lg mb-5">
               {profile.title}
             </p>
-            <p class="text-gray-700 font-['Montserrat_Variable'] mb-8 leading-relaxed"> 
+            <p
+              class="text-gray-700 font-['Montserrat_Variable'] mb-8 leading-relaxed"
+            >
               {profile.bio}
             </p>
-            
+
             <!-- Location -->
             <div class="flex items-center mb-4 text-gray-600">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 location-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2 location-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
-              <span class="font-['Montserrat_Variable'] text-sm location-text">{profile.location}</span>
+              <span class="font-['Montserrat_Variable'] text-sm location-text"
+                >{profile.location}</span
+              >
             </div>
-            
+
             <!-- Contact Information -->
             <div class="flex items-center mb-6 text-gray-600 contact-item">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 linkedin-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 9h4v12H2z" />
-                <circle cx="4" cy="4" r="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2 linkedin-icon"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                ></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M2 9h4v12H2z"></path>
+                <circle
+                  cx="4"
+                  cy="4"
+                  r="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"></circle>
               </svg>
-              <a href={profile.contact.linkedin} target="_blank" rel="noopener noreferrer" class="font-['Montserrat_Variable'] text-sm hover:text-[#6B7AB0] transition-colors link-underline shine-effect">
+              <a
+                href={profile.contact.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-['Montserrat_Variable'] text-sm hover:text-[#6B7AB0] transition-colors link-underline shine-effect"
+              >
                 LinkedIn Profile
               </a>
             </div>
-            
+
             <!-- Social Links -->
             <div class="flex flex-wrap gap-3 social-links-container">
-              {profile.socials.map((social) => (
-                <a
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="social-link inline-flex items-center px-4 py-2 rounded-full bg-white text-gray-700 hover:bg-[#6B7AB0] hover:text-white transition-all shadow-sm border border-gray-100"
-                >
-                  <span class="font-['Montserrat_Variable'] text-sm">{social.platform}</span>
-                </a>
-              ))}
+              {
+                profile.socials.map((social) => (
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social-link inline-flex items-center px-4 py-2 rounded-full bg-white text-gray-700 hover:bg-[#6B7AB0] hover:text-white transition-all shadow-sm border border-gray-100"
+                  >
+                    <span class="font-['Montserrat_Variable'] text-sm">
+                      {social.platform}
+                    </span>
+                  </a>
+                ))
+              }
             </div>
           </div>
           <div class="md:w-1/3">
-            <div class="bg-white rounded-lg p-8 shadow-sm border border-gray-100 h-full"> 
-              <h3 class="text-xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5"> 
+            <div
+              class="bg-white rounded-lg p-8 shadow-sm border border-gray-100 h-full"
+            >
+              <h3
+                class="text-xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5"
+              >
                 Skills
               </h3>
-              <div class="flex flex-wrap gap-2 mb-8"> 
-                {profile.skills.map((skill) => (
-                  <span class="inline-block px-3 py-1 rounded-full bg-[#F0F2FC] text-[#6B7AB0] text-xs font-['Montserrat_Variable']">
-                    {skill}
-                  </span>
-                ))}
+              <div class="flex flex-wrap gap-2 mb-8">
+                {
+                  profile.skills.map((skill) => (
+                    <span class="inline-block px-3 py-1 rounded-full bg-[#F0F2FC] text-[#6B7AB0] text-xs font-['Montserrat_Variable']">
+                      {skill}
+                    </span>
+                  ))
+                }
               </div>
-              {profile.certifications && profile.certifications.length > 0 && (
-                <>
-                  <h3 class="text-xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mt-8 mb-5"> 
-                    Certifications
-                  </h3>
-                  <ul class="space-y-3"> 
-                    {profile.certifications.map((certification) => (
-                      <li class="border-l-2 border-[#6B7AB0] pl-3 py-1"> 
-                        <p class="text-sm font-medium text-gray-800 font-['Montserrat_Variable']"> 
-                          {certification.title} 
-                        </p>
-                        <p class="text-xs text-gray-500 font-['Montserrat_Variable']"> 
-                          {certification.institution}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
+              {
+                profile.certifications && profile.certifications.length > 0 && (
+                  <>
+                    <h3 class="text-xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mt-8 mb-5">
+                      Certifications
+                    </h3>
+                    <ul class="space-y-3">
+                      {profile.certifications.map((certification) => (
+                        <li class="border-l-2 border-[#6B7AB0] pl-3 py-1">
+                          <p class="text-sm font-medium text-gray-800 font-['Montserrat_Variable']">
+                            {certification.title}
+                          </p>
+                          <p class="text-xs text-gray-500 font-['Montserrat_Variable']">
+                            {certification.institution}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )
+              }
             </div>
           </div>
         </div>
       </div>
     </div>
     <!-- Experience Timeline Section -->
-    <div class="mb-20 md:mb-24"> 
-      <h2 class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-12"> 
+    <div class="mb-20 md:mb-24">
+      <h2
+        class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-12"
+      >
         Work Experience
       </h2>
       <div class="relative">
-        <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 transform md:translate-x-[-1px]"></div> 
-        <div class="space-y-12">
-          {profile.experience.map((exp, index) => (
-            <div class={`relative flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} timeline-item-container`}>
-              {/* Timeline Dot */}
-              <div class={`absolute left-0 md:left-1/2 top-8 w-4 h-4 bg-[#6B7AB0] rounded-full transform -translate-x-1/2 md:translate-x-[-7px] z-10 timeline-dot`}></div>
-
-              {/* Company Info */}
-              <div class={`mb-4 ml-8 md:ml-0 md:mb-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16 text-left md:text-right' : 'md:pl-16 text-left'} company-info`}>
-                <h3 class="text-xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-1">
-                  {exp.company}
-                  {exp.website && exp.website.length > 0 && (
-                    <span class="ml-2">
-                      {exp.website.map((url, urlIndex) => (
-                        <a href={url} target="_blank" rel="noopener noreferrer" class="text-[#6B7AB0] hover:text-[#55639a] transition-colors text-sm" title={`Visit ${exp.company} website`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          {exp.website.length > 1 ? ` (${urlIndex + 1})` : ''}
-                        </a>
-                      ))}
-                    </span>
-                  )}
-                </h3>
-                <p class="text-sm text-gray-500 font-['Montserrat_Variable']">
-                  {exp.duration}
-                </p>
-              </div>
-
-              {/* Position Details */}
-              <div class={`pl-8 ${index % 2 === 0 ? 'pr-0' : 'pl-0'} md:w-1/2 md:px-8 timeline-item`}>
-                <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 transition-shadow duration-300 hover:shadow-lg">
-                  {exp.positions.map((position) => (
-                    <div class="mb-6 last:mb-0">
-                      <h4 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-1"> 
-                        {position.title}
-                      </h4>
-                      <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-3"> 
-                        {position.period} ({position.duration})
-                      </p>
-                      {position.location && (
-                        <p class="text-sm text-gray-600 font-['Montserrat_Variable'] mb-3 flex items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                          {position.location}
-                        </p>
-                      )}
-                      {position.description && (
-                        <p class="text-sm text-gray-700 font-['Montserrat_Variable'] mb-4 leading-relaxed"> 
-                          {position.description}
-                        </p>
-                      )}
-                      {position.responsibilities && position.responsibilities.length > 0 && (
-                        <div class="mt-4 bg-gray-50 p-4 rounded-md"> 
-                          <h5 class="text-sm font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-2">Responsibilities:</h5> 
-                          <ul class="list-disc pl-5 space-y-1.5"> 
-                            {position.responsibilities.map((item) => (
-                              <li class="text-sm text-gray-600 font-['Montserrat_Variable']"> 
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
+        <div
+          class="absolute left-0 md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 transform md:translate-x-[-1px]"
+        >
         </div>
-      </div>
-    </div>
-    <!-- Education Section -->
-    <div class="mb-20 md:mb-24"> 
-      <h2 class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-10"> 
-        Education
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-8"> {/* Changed to single column grid */}
-        {profile.education.map((edu) => (
-          <div class="bg-white rounded-lg p-8 shadow-sm border border-gray-100 transition-shadow duration-300 hover:shadow-md"> 
-            <h3 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-2"> 
-              {edu.institution}
-            </h3>
-            <p class="text-sm text-gray-700 font-['Montserrat_Variable'] mb-2">
-              {edu.degree}
-            </p>
-            <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-6"> {/* Added margin bottom */}
-              {edu.period}
-            </p>
+        <div class="space-y-12">
+          {/* Use the processed experiencesWithMeta array */}
+          {
+            experiencesWithMeta.map((exp, index) => (
+              <div
+                class={`relative flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} timeline-item-container`}
+              >
+                {/* Timeline Dot */}
+                <div
+                  class={`absolute left-0 md:left-1/2 top-8 w-4 h-4 bg-[#6B7AB0] rounded-full transform -translate-x-1/2 md:translate-x-[-7px] z-10 timeline-dot`}
+                />
 
-            {/* Display Extra Curricular Activities */}
-            {edu.extra_curriculars && edu.extra_curriculars.length > 0 && (
-              <div class="mt-6 border-t border-gray-200 pt-6">
-                <h4 class="text-md font-semibold text-gray-800 font-['Red_Hat_Display_Variable'] mb-4">
-                  Extra-Curricular Activities
-                </h4>
-                {edu.extra_curriculars.map((activity) => (
-                  <div class="mb-6 last:mb-0">
-                    <h5 class="text-base font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-3">
-                      {activity.club}
-                    </h5>
-                    {activity.positions.map((position) => (
-                      <div class="pl-4 border-l-2 border-gray-200 mb-4 last:mb-0">
-                        <h6 class="text-sm font-semibold text-gray-800 font-['Montserrat_Variable'] mb-1">
+                {/* Company Info */}
+                <div
+                  class={`mb-4 ml-8 md:ml-0 md:mb-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-16 text-left md:text-right" : "md:pl-16 text-left"} company-info`}
+                >
+                  <h3 class="text-xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-1">
+                    {exp.company}
+                  </h3>
+                  <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-4">
+                    {exp.duration}
+                  </p>
+
+                  {exp.websitesMeta && exp.websitesMeta.length > 0 && (
+                    <div
+                      class={`flex flex-col gap-3 ${index % 2 === 0 ? "md:items-end" : "md:items-start"}`}
+                    >
+                      {exp.websitesMeta.map((site) => (
+                        <LinkCard
+                          {...site}
+                          altText={`${site.title || exp.company} preview`}
+                          errorTitle={`Visit ${exp.company} website`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Position Details */}
+                <div
+                  class={`pl-8 ${index % 2 === 0 ? "pr-0" : "pl-0"} md:w-1/2 md:px-8 timeline-item`}
+                >
+                  <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 transition-shadow duration-300 hover:shadow-lg">
+                    {exp.positions.map((position) => (
+                      <div class="mb-6 last:mb-0">
+                        <h4 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-1">
                           {position.title}
-                        </h6>
-                        <p class="text-xs text-gray-500 font-['Montserrat_Variable'] mb-2">
+                        </h4>
+                        <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-3">
                           {position.period} ({position.duration})
                         </p>
                         {position.location && (
-                          <p class="text-xs text-gray-500 font-['Montserrat_Variable'] mb-2 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <p class="text-sm text-gray-600 font-['Montserrat_Variable'] mb-3 flex items-center">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-4 w-4 mr-1.5 text-gray-400"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                              />
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
                             </svg>
                             {position.location}
                           </p>
                         )}
                         {position.description && (
-                          <p class="text-xs text-gray-600 font-['Montserrat_Variable'] mb-3 italic">
+                          <p class="text-sm text-gray-700 font-['Montserrat_Variable'] mb-4 leading-relaxed">
                             {position.description}
                           </p>
                         )}
-                        {position.responsibilities && position.responsibilities.length > 0 && (
-                          <div class="mt-2 bg-gray-50 p-3 rounded-md">
-                            <h6 class="text-xs font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-1.5">Responsibilities:</h6>
-                            <ul class="list-disc pl-4 space-y-1">
-                              {position.responsibilities.map((item) => (
-                                <li class="text-xs text-gray-600 font-['Montserrat_Variable']">
-                                  {item}
-                                </li>
-                              ))}
-                            </ul>
+
+                        {/* Render Position Links Metadata - Use Component */}
+                        {position.linksMeta && position.linksMeta.length > 0 && (
+                          <div class="mt-4 space-y-3">
+                            <h5 class="text-sm font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-2">
+                              Related Links:
+                            </h5>
+                            {position.linksMeta.map((site) => (
+                              <LinkCard {...site} />
+                            ))}
                           </div>
                         )}
+
+                        {position.responsibilities &&
+                          position.responsibilities.length > 0 && (
+                            <div class="mt-4 bg-gray-50 p-4 rounded-md">
+                              <h5 class="text-sm font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-2">
+                                Responsibilities:
+                              </h5>
+                              <ul class="list-disc pl-5 space-y-1.5">
+                                {position.responsibilities.map((item) => (
+                                  <li class="text-sm text-gray-600 font-['Montserrat_Variable']">
+                                    {item}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                       </div>
                     ))}
                   </div>
-                ))}
+                </div>
               </div>
-            )}
-          </div>
-        ))}
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    <!-- Education Section -->
+    <div class="mb-20 md:mb-24">
+      <h2
+        class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-10"
+      >
+        Education
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-1 gap-8">
+        {/* Changed to single column grid */}
+        {
+          profile.education.map((edu) => (
+            <div class="bg-white rounded-lg p-8 shadow-sm border border-gray-100 transition-shadow duration-300 hover:shadow-md">
+              <h3 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-2">
+                {edu.institution}
+              </h3>
+              <p class="text-sm text-gray-700 font-['Montserrat_Variable'] mb-2">
+                {edu.degree}
+              </p>
+              <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-6">
+                &nbsp;
+                {edu.period}
+              </p>
+
+              {/* Display Extra Curricular Activities */}
+              {edu.extra_curriculars && edu.extra_curriculars.length > 0 && (
+                <div class="mt-6 border-t border-gray-200 pt-6">
+                  <h4 class="text-md font-semibold text-gray-800 font-['Red_Hat_Display_Variable'] mb-4">
+                    Extra-Curricular Activities
+                  </h4>
+                  {edu.extra_curriculars.map((activity) => (
+                    <div class="mb-6 last:mb-0">
+                      <h5 class="text-base font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-3">
+                        {activity.club}
+                      </h5>
+                      {activity.positions.map((position) => (
+                        <div class="pl-4 border-l-2 border-gray-200 mb-4 last:mb-0">
+                          <h6 class="text-sm font-semibold text-gray-800 font-['Montserrat_Variable'] mb-1">
+                            {position.title}
+                          </h6>
+                          <p class="text-xs text-gray-500 font-['Montserrat_Variable'] mb-2">
+                            {position.period} ({position.duration})
+                          </p>
+                          {position.location && (
+                            <p class="text-xs text-gray-500 font-['Montserrat_Variable'] mb-2 flex items-center">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-3 w-3 mr-1 text-gray-400"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                />
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                />
+                              </svg>
+                              {position.location}
+                            </p>
+                          )}
+                          {position.description && (
+                            <p class="text-xs text-gray-600 font-['Montserrat_Variable'] mb-3 italic">
+                              {position.description}
+                            </p>
+                          )}
+                          {position.responsibilities &&
+                            position.responsibilities.length > 0 && (
+                              <div class="mt-2 bg-gray-50 p-3 rounded-md">
+                                <h6 class="text-xs font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-1.5">
+                                  Responsibilities:
+                                </h6>
+                                <ul class="list-disc pl-4 space-y-1">
+                                  {position.responsibilities.map((item) => (
+                                    <li class="text-xs text-gray-600 font-['Montserrat_Variable']">
+                                      {item}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))
+        }
       </div>
     </div>
     <!-- Call To Action -->
-    <div class="bg-gray-100 rounded-lg p-10 md:p-12 text-center"> 
-      <h2 class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5"> 
+    <div class="bg-gray-100 rounded-lg p-10 md:p-12 text-center">
+      <h2
+        class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5"
+      >
         Let's Connect
       </h2>
-      <p class="text-gray-700 font-['Montserrat_Variable'] mb-8 max-w-2xl mx-auto text-lg"> 
-        Whether you're interested in working together or just want to say hello, I'd love to hear from you!
+      <p
+        class="text-gray-700 font-['Montserrat_Variable'] mb-8 max-w-2xl mx-auto text-lg"
+      >
+        Whether you're interested in working together or just want to say hello,
+        I'd love to hear from you!
       </p>
       <div class="flex flex-wrap justify-center gap-4">
         <a
           href="/contact/"
-          class="inline-flex items-center px-8 py-3 rounded-lg bg-[#6B7AB0] text-white hover:bg-[#5A6A9F] transition-colors text-base font-medium" 
+          class="inline-flex items-center px-8 py-3 rounded-lg bg-[#6B7AB0] text-white hover:bg-[#5A6A9F] transition-colors text-base font-medium"
         >
           <span class="font-['Montserrat_Variable']">Contact Me</span>
         </a>
         <a
           href="/articles/"
-          class="inline-flex items-center px-8 py-3 rounded-lg bg-white text-[#6B7AB0] border border-[#6B7AB0] hover:bg-[#F0F2FC] transition-colors text-base font-medium" 
+          class="inline-flex items-center px-8 py-3 rounded-lg bg-white text-[#6B7AB0] border border-[#6B7AB0] hover:bg-[#F0F2FC] transition-colors text-base font-medium"
         >
           <span class="font-['Montserrat_Variable']">Read My Articles</span>
         </a>
@@ -432,71 +603,83 @@ const siteUrl = new URL(
 
 <style>
   .timeline-dot {
-    transition: transform 0.3s ease, box-shadow 0.3s ease; 
-    box-shadow: 0 0 0 0 rgba(90, 106, 159, 0.7); 
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+    box-shadow: 0 0 0 0 rgba(90, 106, 159, 0.7);
   }
-  
-  .timeline-item-container:hover .timeline-dot { 
+
+  .timeline-item-container:hover .timeline-dot {
     transform: scale(1.1);
-    animation: pulse 1.5s infinite cubic-bezier(0.66, 0, 0, 1); 
+    animation: pulse 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
   }
 
   @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(90, 106, 159, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(90, 106, 159, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(90, 106, 159, 0); }
+    0% {
+      box-shadow: 0 0 0 0 rgba(90, 106, 159, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(90, 106, 159, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(90, 106, 159, 0);
+    }
   }
-  
+
   a {
     transition: all 0.2s ease-in-out;
   }
-  
-  @media (min-width: 768px) {
-    .timeline-item:hover {
-      transform: translateY(-5px);
-      transition: transform 0.3s ease;
-    }
-  }
-  
+
   .social-link {
     position: relative;
     overflow: hidden;
-    transition: color 0.3s ease, background-color 0.3s ease;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease;
   }
-  
+
   .social-link::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    background: radial-gradient(circle, transparent 70%, rgba(255, 255, 255, 0.3) 100%);
+    background: radial-gradient(
+      circle,
+      transparent 70%,
+      rgba(255, 255, 255, 0.3) 100%
+    );
     opacity: 0;
     transition: opacity 0.3s ease;
   }
-  
+
   .social-link:hover::after {
     opacity: 1;
   }
-  
+
   .shine-effect {
     position: relative;
     overflow: hidden;
   }
-  
+
   .shine-effect::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -75%;
     width: 50%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
     transform: skewX(-25deg);
     transition: all 0.7s ease;
   }
-  
+
   .shine-effect:hover::before {
     left: 125%;
   }
@@ -505,28 +688,41 @@ const siteUrl = new URL(
     transition: box-shadow 0.3s ease-in-out;
   }
   .md\:w-1\/3 > div:hover {
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); 
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
   }
 
   .list-disc li {
     word-break: break-word;
   }
+
+  .description-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
-    
-    document.querySelectorAll('.animate-on-scroll').forEach(element => {
+  document.addEventListener("DOMContentLoaded", () => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      },
+    );
+
+    document.querySelectorAll(".animate-on-scroll").forEach((element) => {
       observer.observe(element);
     });
   });
