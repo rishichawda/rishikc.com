@@ -135,10 +135,12 @@ const pageUrl = new URL(
         }
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      {/* Masonry Grid Container */}
+      <div class="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 space-y-4 py-4 sm:space-y-6">
         {
           images.map((image, index) => (
-            <div class="gallery-image group relative aspect-[4/3] overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+            // Add 'break-inside-avoid' to prevent items from breaking across columns
+            <div class="gallery-image group relative aspect-auto overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 break-inside-avoid">
               <Image
                 src={image.src}
                 alt={image.alt || `${title} photo ${index + 1}`}
