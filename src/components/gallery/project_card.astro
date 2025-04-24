@@ -12,21 +12,23 @@ const { title, description, featured_image, featured_image_alt, tags } = project
 
 <a
   href={project.data.path}
-  class="group relative aspect-[4/3] overflow-hidden rounded-lg shadow-lg"
+  class="group relative block aspect-[4/3] overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
 >
   <Image
     src={featured_image}
     alt={featured_image_alt || title}
-    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+    class="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+    widths={[400, 800, 1200]}
+    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
   />
-  <div class="absolute inset-0 bg-gradient-to-t from-brand-950/90 via-brand-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-    <div class="absolute bottom-0 left-0 right-0 p-6">
-      <h3 transition:name={`${project.id}-title`} class="text-xl font-light text-white mb-3">{title}</h3>
-      <p transition:name={`${project.id}-description`} class="text-white/90 text-sm mb-3">{description}</p>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end">
+    <div class="p-4 md:p-6 transform translate-y-0 transition-transform duration-300 ease-in-out">
+      <h3 transition:name={`${project.id}-title`} class="text-lg md:text-xl font-medium text-white mb-1 md:mb-2">{title}</h3>
+      <p transition:name={`${project.id}-description`} class="text-white/80 text-sm mb-3 line-clamp-2">{description}</p>
       {tags && tags.length > 0 && (
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-1.5">
           {tags.map((tag) => (
-            <span transition:name={`${project.id}-${tag}`} class="text-xs bg-white/15 text-white px-3 py-1.5 rounded-full tracking-[0.05em] uppercase">
+            <span transition:name={`${project.id}-${tag}`} class="text-xs bg-white/20 text-white/90 px-2.5 py-1 rounded-full tracking-wide font-light">
               {tag}
             </span>
           ))}
@@ -34,4 +36,4 @@ const { title, description, featured_image, featured_image_alt, tags } = project
       )}
     </div>
   </div>
-</a> 
+</a>

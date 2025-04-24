@@ -1,101 +1,87 @@
 <div 
   id="lightbox" 
-  class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300 ease-in-out"
+  class="fixed inset-0 z-[100] hidden opacity-0 transition-opacity duration-300 ease-in-out"
   aria-hidden="true"
   role="dialog"
   aria-modal="true"
   aria-label="Image lightbox"
+  tabindex="-1"
 >
   <!-- Backdrop with blur effect -->
-  <div class="absolute inset-0 bg-brand-950/80 backdrop-blur-sm"></div>
+  <div class="absolute inset-0 bg-black/85 backdrop-blur-md"></div>
   
   <!-- Main lightbox container -->
-  <div class="relative h-full flex flex-col items-center justify-center p-4">
+  <div class="relative h-full flex flex-col items-center justify-center p-4 sm:p-6">
+    <!-- Escape key hint -->
+    <div id="esc-hint" class="absolute top-3 sm:top-4 left-1/2 -translate-x-1/2 bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/60 text-[11px] font-['Montserrat_Variable'] tracking-wide z-20"> 
+      Press <kbd class="px-1 py-0 mx-0.5 text-[10px] font-semibold text-gray-700 bg-gray-200 border border-gray-300 rounded">Esc</kbd> to close
+    </div>
+
     <!-- Loading indicator -->
     <div id="lightbox-loader" class="absolute z-10 hidden">
-      <div class="h-12 w-12 rounded-full border-4 border-brand-300 border-t-brand-700 animate-spin"></div>
+      <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-4 border-white/30 border-t-white animate-spin"></div>
     </div>
     
     <!-- Image container with transition -->
-    <div class="relative max-h-[85vh] max-w-[90vw] transform transition-transform duration-300 ease-out scale-95 opacity-0" id="image-container">
+    <div class="relative max-h-[80vh] sm:max-h-[85vh] max-w-[95vw] sm:max-w-[90vw] transform transition-all duration-300 ease-out scale-95 opacity-0" id="image-container">
       <img
         id="lightbox-image"
         src=""
         alt=""
-        class="max-h-[85vh] max-w-[90vw] object-contain rounded-lg shadow-2xl"
+        class="block max-h-[80vh] sm:max-h-[85vh] max-w-full object-contain rounded-md shadow-xl"
         onload="this.parentElement.classList.remove('scale-95', 'opacity-0'); this.parentElement.classList.add('scale-100', 'opacity-100'); document.getElementById('lightbox-loader').classList.add('hidden');"
       />
     </div>
     
     <!-- Caption area -->
-    <div id="lightbox-caption" class="mt-4 max-w-[90vw] text-white text-center font-['Montserrat_Variable'] opacity-80 hidden">
-      <p id="caption-text" class="text-sm md:text-base"></p>
+    <div id="lightbox-caption" class="mt-2 sm:mt-3 max-w-[80vw] sm:max-w-[65vw] text-white/75 text-center font-['Montserrat_Variable'] hidden transition-opacity duration-300 opacity-0"> 
+      <p id="caption-text" class="text-xs sm:text-sm leading-normal"></p> 
     </div>
     
     <!-- Counter -->
-    <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-brand-900/60 backdrop-blur-sm px-4 py-1.5 rounded-full text-white font-['Montserrat_Variable'] text-sm tracking-wide">
+    <div id="lightbox-counter" class="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-black/40 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-white/80 font-['Montserrat_Variable'] text-[11px] sm:text-xs tracking-wide transition-opacity duration-300 opacity-0"> 
       <span id="image-current">1</span> / <span id="image-total">1</span>
     </div>
     
-    <!-- Close button -->
-    <button
-      id="close-lightbox"
-      class="absolute top-4 right-4 text-white p-2 bg-brand-900/40 hover:bg-brand-900/60 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-brand-300"
-      aria-label="Close lightbox"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
     
     <!-- Navigation buttons -->
-    <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 sm:px-6">
+    <div class="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-2 sm:px-4">
       <button
         id="prev-image"
-        class="group text-white p-2 bg-brand-900/40 hover:bg-brand-900/60 rounded-full transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-300"
+        class="group text-white/80 hover:text-white p-2 sm:p-3 bg-black/40 hover:bg-black/60 rounded-full transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50"
         aria-label="Previous image"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 transition-transform group-hover:-translate-x-0.5"
+          class="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:-translate-x-0.5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          stroke-width="2"
         >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
             d="M15 19l-7-7 7-7"></path>
         </svg>
       </button>
       
       <button
         id="next-image"
-        class="group text-white p-2 bg-brand-900/40 hover:bg-brand-900/60 rounded-full transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-300"
+        class="group text-white/80 hover:text-white p-2 sm:p-3 bg-black/40 hover:bg-black/60 rounded-full transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50"
         aria-label="Next image"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 transition-transform group-hover:translate-x-0.5"
+          class="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:translate-x-0.5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          stroke-width="2"
         >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
             d="M9 5l7 7-7 7"></path>
         </svg>
       </button>
@@ -109,20 +95,22 @@
     const lightboxImage = document.getElementById("lightbox-image");
     const imageContainer = document.getElementById("image-container");
     const lightboxLoader = document.getElementById("lightbox-loader");
-    const closeButton = document.getElementById("close-lightbox");
+    const escHint = document.getElementById("esc-hint"); // Get hint element
     const prevButton = document.getElementById("prev-image");
     const nextButton = document.getElementById("next-image");
     const currentCounter = document.getElementById("image-current");
     const totalCounter = document.getElementById("image-total");
+    const counterContainer = document.getElementById("lightbox-counter"); // Get counter container
     const captionContainer = document.getElementById("lightbox-caption");
     const captionText = document.getElementById("caption-text");
 
     let currentImageIndex = 0;
     let images = [];
     let captions = [];
+    let hintTimeout; // Timeout for hiding the hint
 
     function openLightbox(imageElement) {
-      if (!lightbox || !lightboxImage) return;
+      if (!lightbox || !lightboxImage || !imageElement) return;
 
       // Get all images in the current project
       const projectImages = Array.from(
@@ -130,8 +118,13 @@
       );
       
       images = projectImages.map(img => img.src);
-      captions = projectImages.map(img => img.alt || img.getAttribute('data-caption') || '');
+      captions = projectImages.map(img => img.getAttribute('data-caption') || img.alt || '');
       currentImageIndex = projectImages.findIndex(img => img === imageElement);
+
+      if (currentImageIndex === -1) {
+        console.error("Lightbox: Clicked image not found in gallery images.");
+        return;
+      }
       
       // Show loader before image loads
       if (lightboxLoader) {
@@ -156,7 +149,6 @@
       lightbox.classList.remove("hidden");
       setTimeout(() => {
         lightbox.classList.add("opacity-100");
-        // Set focus to the lightbox for keyboard navigation
         lightbox.focus();
       }, 10);
       
@@ -169,20 +161,23 @@
       
       // Fade out lightbox
       lightbox.classList.remove("opacity-100");
+      // Hide hint, caption, counter immediately on close intent
+      if (captionContainer) captionContainer.classList.add('opacity-0');
+      if (counterContainer) counterContainer.classList.add('opacity-0');
+      clearTimeout(hintTimeout); // Clear hint timeout
       
       setTimeout(() => {
         lightbox.classList.add("hidden");
-        // Reset image for memory management
         lightboxImage.src = "";
-        // Restore body scrolling
         document.body.style.overflow = "";
-      }, 300); // Match the duration in the CSS transition
+      }, 300);
     }
 
     function updateImageCounter() {
-      if (currentCounter && totalCounter) {
+      if (currentCounter && totalCounter && counterContainer) {
         currentCounter.textContent = (currentImageIndex + 1).toString();
         totalCounter.textContent = images.length.toString();
+        counterContainer.classList.remove('opacity-0'); // Ensure counter is visible
       }
     }
     
@@ -190,10 +185,11 @@
       if (captionContainer && captionText) {
         const caption = captions[currentImageIndex];
         if (caption && caption.trim() !== '') {
-          captionText.textContent = caption;
-          captionContainer.classList.remove('hidden');
+          captionText.textContent = caption.trim();
+          captionContainer.classList.remove('hidden', 'opacity-0'); // Show caption
         } else {
-          captionContainer.classList.add('hidden');
+          captionContainer.classList.add('hidden', 'opacity-0'); // Hide caption
+          captionText.textContent = '';
         }
       }
     }
@@ -232,26 +228,36 @@
     }
 
     // Event listeners
-    closeButton?.addEventListener("click", closeLightbox);
+    
+    // Attach main navigation listeners directly
     prevButton?.addEventListener("click", showPrevImage);
     nextButton?.addEventListener("click", showNextImage);
+
+    // Close lightbox on any click within its bounds
+    lightbox?.addEventListener("click", closeLightbox);
 
     // Close on escape key
     document.addEventListener("keydown", (e) => {
       if (!lightbox || lightbox.classList.contains('hidden')) return;
       
       if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowLeft") showPrevImage();
-      if (e.key === "ArrowRight") showNextImage();
+      // Keep arrow key navigation, but stop propagation so it doesn't also trigger the lightbox click listener
+      if (e.key === "ArrowLeft") {
+        e.stopPropagation(); 
+        showPrevImage();
+      }
+      if (e.key === "ArrowRight") {
+        e.stopPropagation();
+        showNextImage();
+      }
     });
 
-    // Close on click outside image
-    lightbox?.addEventListener("click", (e) => {
-      if (e.target === lightbox) closeLightbox();
+    prevButton?.addEventListener("click", (e) => {
+      // showPrevImage is already attached directly
+      e.stopPropagation();
     });
-
-    // Prevent closing when clicking on the image container
-    imageContainer?.addEventListener("click", (e) => {
+    nextButton?.addEventListener("click", (e) => {
+      // showNextImage is already attached directly
       e.stopPropagation();
     });
 
@@ -277,5 +283,10 @@
   #image-container.scale-100 {
     transform: scale(1);
     opacity: 1;
+  }
+
+  /* Ensure lightbox is focusable */
+  #lightbox:focus {
+    outline: none;
   }
 </style>

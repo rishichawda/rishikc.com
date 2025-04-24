@@ -31,7 +31,7 @@ const { title, description, featured_image, featured_image_alt, tags, images } =
 const page_info = {
   title: `${title} - ${profile.name}`, // Use profile name
   description: description,
-  image: featured_image,
+  image: featured_image.src, // Use .src for Schema
   keywords: `photography, ${title.toLowerCase()}, portfolio, ${profile.name}`, // Use profile name
 };
 
@@ -67,7 +67,7 @@ const pageUrl = new URL(
       "@type": "ImageGallery",
       headline: title,
       description: description,
-      image: featured_image.src,
+      image: featured_image.src, // Ensure this is a URL string
       author: {
         "@type": "Person",
         name: profile.name, // Use profile name
@@ -83,12 +83,12 @@ const pageUrl = new URL(
     }}
   />
   <main
-    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]"
+    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gray-50 dark:bg-gray-900"
   >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20"> {/* Adjusted padding */}
       <a
         href="/gallery/"
-        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 mb-20 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
+        class="inline-flex items-center text-brand-700 dark:text-brand-300 hover:text-brand-900 dark:hover:text-brand-100 mb-12 sm:mb-16 group text-sm tracking-widest uppercase transition-colors duration-300 font-medium"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -106,26 +106,26 @@ const pageUrl = new URL(
         Back to Gallery
       </a>
 
-      <div class="max-w-3xl mx-auto text-center mb-24">
+      <div class="max-w-3xl mx-auto text-center mb-16 sm:mb-20"> {/* Adjusted margin */}
         <h1
           transition:name={`${gallery.id}-title`}
-          class="text-6xl font-light text-brand-950 mb-10 tracking-[-0.02em] leading-tight"
+          class="text-4xl sm:text-5xl lg:text-6xl font-light text-brand-900 dark:text-white mb-6 sm:mb-8 tracking-tight leading-tight"
         >
           {title}
         </h1>
         <p
           transition:name={`${gallery.id}-description`}
-          class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto tracking-wide"
+          class="text-brand-700 dark:text-gray-300 text-lg sm:text-xl leading-relaxed font-light max-w-2xl mx-auto"
         >
           {description}
         </p>
         {
           tags && tags.length > 0 && (
-            <div class="flex flex-wrap gap-3 justify-center mt-12">
+            <div class="flex flex-wrap gap-2 sm:gap-3 justify-center mt-8 sm:mt-10"> {/* Adjusted gap and margin */}
               {tags.map((tag) => (
                 <span
                   transition:name={`${gallery.id}-${tag}`}
-                  class="text-[13px] bg-brand-950/10 text-brand-950 px-5 py-2 rounded-full tracking-[0.15em] uppercase hover:bg-brand-950/20 transition-colors duration-300 shadow-sm"
+                  class="text-xs bg-brand-950/10 text-brand-950 px-5 py-2 rounded-full tracking-wider uppercase font-medium hover:bg-brand-950/20 transition-colors duration-300 shadow-sm"
                 >
                   {tag}
                 </span>
@@ -135,34 +135,36 @@ const pageUrl = new URL(
         }
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {
           images.map((image, index) => (
-            <div class="gallery-image group relative aspect-[4/3] overflow-hidden rounded-lg shadow-lg">
+            <div class="gallery-image group relative aspect-[4/3] overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
               <Image
                 src={image.src}
                 alt={image.alt || `${title} photo ${index + 1}`}
                 data-caption={image.caption}
-                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                class="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+                widths={[400, 800, 1200]}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-              <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-950/10 to-brand-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <button
-                  class="text-white p-4 rounded-full bg-brand-700/30 hover:bg-brand-700/50 transition-all duration-300 transform scale-0 group-hover:scale-100 hover:scale-110 shadow-lg backdrop-blur-sm"
+                  class="text-white p-3 rounded-full bg-black/40 hover:bg-black/60 transition-all duration-300 transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 hover:scale-110 shadow-lg backdrop-blur-sm"
                   onclick="openLightbox(this.closest('.gallery-image').querySelector('img'))"
                   aria-label="View image in fullscreen"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
+                    class="h-5 w-5 sm:h-6 sm:w-6"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
+                    stroke-width="1.5"
                   >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 10m-7 0a7 7 0 1014 0 7 7 0 00-14 0z"
                     />
                   </svg>
                 </button>
