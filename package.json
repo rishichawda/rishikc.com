@@ -17,6 +17,8 @@
     "@unpic/astro": "^1.0.0",
     "astro": "^5.5.5",
     "astro-seo-schema": "^5.0.0",
+    "imagesloaded": "^5.0.0",
+    "masonry-layout": "^4.2.2",
     "schema-dts": "^1.1.5"
   },
   "devDependencies": {

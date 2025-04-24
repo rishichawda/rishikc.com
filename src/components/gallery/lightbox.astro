@@ -114,7 +114,7 @@
 
       // Get all images in the current project
       const projectImages = Array.from(
-        document.querySelectorAll(".gallery-image img")
+        document.querySelectorAll(".grid-item img")
       );
       
       images = projectImages.map(img => img.src);
@@ -122,7 +122,7 @@
       currentImageIndex = projectImages.findIndex(img => img === imageElement);
 
       if (currentImageIndex === -1) {
-        console.error("Lightbox: Clicked image not found in gallery images.");
+        console.error("Lightbox: Clicked image not found in gallery images. Check selector '.grid-item img'.");
         return;
       }
       

@@ -6,6 +6,8 @@ import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
 import type { ImageObject as SchemaImageObject } from "schema-dts"; // Import type
+import masonry from "masonry-layout/dist/masonry.pkgd.min?url";
+import imagesloaded from "imagesloaded/imagesloaded.pkgd.min?url";
 
 // Define interfaces needed for profile data
 interface Social { platform: string; url: string; }
@@ -25,8 +27,22 @@ export async function getStaticPaths() {
 
 const { gallery } = Astro.props;
 
-const { title, description, featured_image, featured_image_alt, tags, images } =
+const { title, description, featured_image, tags, images: unsortedImages } =
   gallery.data;
+
+// Sort images: featured image first, then by date (newest first)
+const images = unsortedImages?.sort((a, b) => {
+  const isAFeatured = a.src.src === featured_image.src; // Compare source paths
+  const isBFeatured = b.src.src === featured_image.src; // Compare source paths
+
+  if (isAFeatured) return -1; // a comes first
+  if (isBFeatured) return 1;  // b comes first
+
+  // If neither is featured, sort by date descending
+  const dateA = a.date ? new Date(a.date) : new Date(0);
+  const dateB = b.date ? new Date(b.date) : new Date(0);
+  return dateB.getTime() - dateA.getTime();
+}) || [];
 
 const page_info = {
   title: `${title} - ${profile.name}`, // Use profile name
@@ -136,11 +152,10 @@ const pageUrl = new URL(
       </div>
 
       {/* Masonry Grid Container */}
-      <div class="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 space-y-4 py-4 sm:space-y-6">
+      <div id="masonry-grid" class="relative py-4"> 
         {
           images.map((image, index) => (
-            // Add 'break-inside-avoid' to prevent items from breaking across columns
-            <div class="gallery-image group relative aspect-auto overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 break-inside-avoid">
+            <div class="grid-item group relative aspect-auto overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 mb-4 sm:mb-6"> 
               <Image
                 src={image.src}
                 alt={image.alt || `${title} photo ${index + 1}`}
@@ -152,7 +167,7 @@ const pageUrl = new URL(
               <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <button
                   class="text-white p-3 rounded-full bg-black/40 hover:bg-black/60 transition-all duration-300 transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 hover:scale-110 shadow-lg backdrop-blur-sm"
-                  onclick="openLightbox(this.closest('.gallery-image').querySelector('img'))"
+                  onclick="openLightbox(this.closest('.grid-item').querySelector('img'))"
                   aria-label="View image in fullscreen"
                 >
                   <svg
@@ -178,4 +193,83 @@ const pageUrl = new URL(
     </div>
   </main>
   <Lightbox />
+
+  {/* Add Masonry library script */}
+  <script src={masonry} is:inline></script>
+  {/* Add imagesLoaded library script for better layout handling */}
+  <script src={imagesloaded} is:inline></script>
+
+  <script is:inline>
+    document.addEventListener('astro:page-load', () => {
+      const grid = document.querySelector('#masonry-grid');
+      if (grid) {
+        // Initialize imagesLoaded
+        const imgLoad = imagesLoaded(grid);
+        
+        // Initialize Masonry after images have loaded
+        imgLoad.on('always', function() {
+          const msnry = new Masonry(grid, {
+            itemSelector: '.grid-item',
+            // Use columnWidth to help Masonry calculate positioning, especially useful for responsive layouts
+            // This selector targets the items themselves to determine width
+            columnWidth: '.grid-item', 
+            percentPosition: true,
+            gutter: 16 // Set gutter based on desired base spacing (e.g., 1rem = 16px)
+          });
+
+          // Recalculate gutter on resize if needed (optional, depends on design)
+          window.addEventListener('resize', () => {
+            // Example: Adjust gutter based on viewport width
+            let newGutter = 16; // Default 1rem
+            if (window.innerWidth >= 640 && window.innerWidth < 1024) { // sm to lg
+              newGutter = 24; // 1.5rem
+            } else if (window.innerWidth >= 1024) { // lg and up
+              newGutter = 24; // 1.5rem
+            }
+            msnry.options.gutter = newGutter;
+            msnry.layout(); // Re-layout Masonry with the new gutter
+          });
+          
+          // Initial layout might need a slight delay or re-layout after styles apply
+          setTimeout(() => msnry.layout(), 100); 
+        });
+      }
+    });
+  </script>
 </BaseLayout>
+
+<style>
+  /* Ensure grid items have appropriate width for Masonry calculation */
+  /* Masonry will handle horizontal spacing via the 'gutter' option */
+  .grid-item {
+    width: 100%; /* Base width for single column */
+    margin-bottom: 1rem; /* Vertical spacing (gap-4) */
+  }
+
+  @media (min-width: 640px) { /* sm breakpoint */
+    .grid-item {
+      width: calc(50% - 8px); /* 50% width minus half the gutter (16px / 2) */
+      margin-bottom: 1.5rem; /* Vertical spacing (sm:gap-6) */
+    }
+    /* Adjust width if gutter changes */
+    @media (min-width: 640px) and (max-width: 1023px) {
+       .grid-item {
+         width: calc(50% - 12px); /* Half of 24px gutter */
+       }
+    }
+  }
+
+  @media (min-width: 1024px) { /* lg breakpoint */
+    .grid-item {
+      width: calc(33.333% - 16px * 2 / 3); /* 33.333% width minus two-thirds of the gutter (16px * 2/3) */
+      /* If gutter is 24px at this breakpoint: */
+      width: calc(33.333% - 16px); /* 33.333% width minus two-thirds of the gutter (24px * 2/3) */
+       margin-bottom: 1.5rem; /* Vertical spacing (lg:gap-6) */
+    }
+  }
+
+  /* Remove negative margins previously used for gutter simulation */
+  #masonry-grid {
+     margin: 0; 
+  }
+</style>
