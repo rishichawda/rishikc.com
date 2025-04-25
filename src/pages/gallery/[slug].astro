@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../../layouts/base_layout.astro";
 import "../../styles/global.css";
-import Lightbox from "../../components/gallery/lightbox.astro";
+// Remove Lightbox import
+// import Lightbox from "../../components/gallery/lightbox.astro";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
@@ -10,8 +11,14 @@ import masonry from "masonry-layout/dist/masonry.pkgd.min?url";
 import imagesloaded from "imagesloaded/imagesloaded.pkgd.min?url";
 
 // Define interfaces needed for profile data
-interface Social { platform: string; url: string; }
-interface ProfileData { name: string; socials: Social[]; /* Add other fields if needed */ }
+interface Social {
+  platform: string;
+  url: string;
+}
+interface ProfileData {
+  name: string;
+  socials: Social[] /* Add other fields if needed */;
+}
 
 // Fetch profile data
 const profileEntry = await getCollection("profile");
@@ -27,22 +34,28 @@ export async function getStaticPaths() {
 
 const { gallery } = Astro.props;
 
-const { title, description, featured_image, tags, images: unsortedImages } =
-  gallery.data;
+const {
+  title,
+  description,
+  featured_image,
+  tags,
+  images: unsortedImages,
+} = gallery.data;
 
 // Sort images: featured image first, then by date (newest first)
-const images = unsortedImages?.sort((a, b) => {
-  const isAFeatured = a.src.src === featured_image.src; // Compare source paths
-  const isBFeatured = b.src.src === featured_image.src; // Compare source paths
+const images =
+  unsortedImages?.sort((a, b) => {
+    const isAFeatured = a.src.src === featured_image.src; // Compare source paths
+    const isBFeatured = b.src.src === featured_image.src; // Compare source paths
 
-  if (isAFeatured) return -1; // a comes first
-  if (isBFeatured) return 1;  // b comes first
+    if (isAFeatured) return -1; // a comes first
+    if (isBFeatured) return 1; // b comes first
 
-  // If neither is featured, sort by date descending
-  const dateA = a.date ? new Date(a.date) : new Date(0);
-  const dateB = b.date ? new Date(b.date) : new Date(0);
-  return dateB.getTime() - dateA.getTime();
-}) || [];
+    // If neither is featured, sort by date descending
+    const dateA = a.date ? new Date(a.date) : new Date(0);
+    const dateB = b.date ? new Date(b.date) : new Date(0);
+    return dateB.getTime() - dateA.getTime();
+  }) || [];
 
 const page_info = {
   title: `${title} - ${profile.name}`, // Use profile name
@@ -101,7 +114,8 @@ const pageUrl = new URL(
   <main
     class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gray-50 dark:bg-gray-900"
   >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20"> {/* Adjusted padding */}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+      {/* Adjusted padding */}
       <a
         href="/gallery/"
         class="inline-flex items-center text-brand-700 dark:text-brand-300 hover:text-brand-900 dark:hover:text-brand-100 mb-12 sm:mb-16 group text-sm tracking-widest uppercase transition-colors duration-300 font-medium"
@@ -122,7 +136,8 @@ const pageUrl = new URL(
         Back to Gallery
       </a>
 
-      <div class="max-w-3xl mx-auto text-center mb-16 sm:mb-20"> {/* Adjusted margin */}
+      <div class="max-w-3xl mx-auto text-center mb-16 sm:mb-20">
+        {/* Adjusted margin */}
         <h1
           transition:name={`${gallery.id}-title`}
           class="text-4xl sm:text-5xl lg:text-6xl font-light text-brand-900 dark:text-white mb-6 sm:mb-8 tracking-tight leading-tight"
@@ -137,7 +152,9 @@ const pageUrl = new URL(
         </p>
         {
           tags && tags.length > 0 && (
-            <div class="flex flex-wrap gap-2 sm:gap-3 justify-center mt-8 sm:mt-10"> {/* Adjusted gap and margin */}
+            <div class="flex flex-wrap gap-2 sm:gap-3 justify-center mt-8 sm:mt-10">
+              {" "}
+              {/* Adjusted gap and margin */}
               {tags.map((tag) => (
                 <span
                   transition:name={`${gallery.id}-${tag}`}
@@ -150,12 +167,33 @@ const pageUrl = new URL(
           )
         }
       </div>
+      <div
+        class="mt-6 flex items-start p-4 rounded-lg bg-brand-100/[0.5] dark:bg-brand-900/30 border border-brand-200 dark:border-brand-700/50 mx-auto shadow-sm"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 text-brand-700 dark:text-brand-400 flex-shrink-0 mr-3 mt-0.5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+        </svg>
+        <p class="text-sm text-brand-800 dark:text-brand-200">
+          <strong class="font-medium">Heads up!</strong> I'm currently sorting through
+          and uploading lots of new photos to this gallery. It's a slow process,
+          but please feel free to check back often to see the latest additions. Enjoy
+          the photos that have been uploaded so far!
+        </p>
+      </div>
 
       {/* Masonry Grid Container */}
-      <div id="masonry-grid" class="relative py-4"> 
+      <div id="masonry-grid" class="relative py-4">
         {
           images.map((image, index) => (
-            <div class="grid-item group relative aspect-auto overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 mb-4 sm:mb-6"> 
+            <div class="grid-item group relative aspect-auto overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 mb-4 sm:mb-6">
               <Image
                 src={image.src}
                 alt={image.alt || `${title} photo ${index + 1}`}
@@ -164,6 +202,8 @@ const pageUrl = new URL(
                 widths={[400, 800, 1200]}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
+              {/* Remove the overlay div and button that triggered the lightbox */}
+              {/* 
               <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <button
                   class="text-white p-3 rounded-full bg-black/40 hover:bg-black/60 transition-all duration-300 transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 hover:scale-110 shadow-lg backdrop-blur-sm"
@@ -185,14 +225,26 @@ const pageUrl = new URL(
                     />
                   </svg>
                 </button>
-              </div>
+              </div> 
+              */}
             </div>
           ))
         }
       </div>
+
+      {/* Copyright Notice */}
+      <p
+        class="text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-12 sm:mt-16 font-light"
+      >
+        All photographs displayed in this gallery are the intellectual property
+        of {profile.name}. Any reproduction, distribution, or use of these
+        images, in whole or in part, without explicit written permission from
+        the copyright holder is strictly prohibited.
+      </p>
     </div>
   </main>
-  <Lightbox />
+  {/* Remove Lightbox component instance */}
+  {/* <Lightbox /> */}
 
   {/* Add Masonry library script */}
   <script src={masonry} is:inline></script>
@@ -200,38 +252,40 @@ const pageUrl = new URL(
   <script src={imagesloaded} is:inline></script>
 
   <script is:inline>
-    document.addEventListener('astro:page-load', () => {
-      const grid = document.querySelector('#masonry-grid');
+    document.addEventListener("astro:page-load", () => {
+      const grid = document.querySelector("#masonry-grid");
       if (grid) {
         // Initialize imagesLoaded
         const imgLoad = imagesLoaded(grid);
-        
+
         // Initialize Masonry after images have loaded
-        imgLoad.on('always', function() {
+        imgLoad.on("always", function () {
           const msnry = new Masonry(grid, {
-            itemSelector: '.grid-item',
+            itemSelector: ".grid-item",
             // Use columnWidth to help Masonry calculate positioning, especially useful for responsive layouts
             // This selector targets the items themselves to determine width
-            columnWidth: '.grid-item', 
+            columnWidth: ".grid-item",
             percentPosition: true,
-            gutter: 16 // Set gutter based on desired base spacing (e.g., 1rem = 16px)
+            gutter: 16, // Set gutter based on desired base spacing (e.g., 1rem = 16px)
           });
 
           // Recalculate gutter on resize if needed (optional, depends on design)
-          window.addEventListener('resize', () => {
+          window.addEventListener("resize", () => {
             // Example: Adjust gutter based on viewport width
             let newGutter = 16; // Default 1rem
-            if (window.innerWidth >= 640 && window.innerWidth < 1024) { // sm to lg
+            if (window.innerWidth >= 640 && window.innerWidth < 1024) {
+              // sm to lg
               newGutter = 24; // 1.5rem
-            } else if (window.innerWidth >= 1024) { // lg and up
+            } else if (window.innerWidth >= 1024) {
+              // lg and up
               newGutter = 24; // 1.5rem
             }
             msnry.options.gutter = newGutter;
             msnry.layout(); // Re-layout Masonry with the new gutter
           });
-          
+
           // Initial layout might need a slight delay or re-layout after styles apply
-          setTimeout(() => msnry.layout(), 100); 
+          setTimeout(() => msnry.layout(), 100);
         });
       }
     });
@@ -246,30 +300,36 @@ const pageUrl = new URL(
     margin-bottom: 1rem; /* Vertical spacing (gap-4) */
   }
 
-  @media (min-width: 640px) { /* sm breakpoint */
+  @media (min-width: 640px) {
+    /* sm breakpoint */
     .grid-item {
       width: calc(50% - 8px); /* 50% width minus half the gutter (16px / 2) */
       margin-bottom: 1.5rem; /* Vertical spacing (sm:gap-6) */
     }
     /* Adjust width if gutter changes */
     @media (min-width: 640px) and (max-width: 1023px) {
-       .grid-item {
-         width: calc(50% - 12px); /* Half of 24px gutter */
-       }
+      .grid-item {
+        width: calc(50% - 12px); /* Half of 24px gutter */
+      }
     }
   }
 
-  @media (min-width: 1024px) { /* lg breakpoint */
+  @media (min-width: 1024px) {
+    /* lg breakpoint */
     .grid-item {
-      width: calc(33.333% - 16px * 2 / 3); /* 33.333% width minus two-thirds of the gutter (16px * 2/3) */
+      width: calc(
+        33.333% - 16px * 2 / 3
+      ); /* 33.333% width minus two-thirds of the gutter (16px * 2/3) */
       /* If gutter is 24px at this breakpoint: */
-      width: calc(33.333% - 16px); /* 33.333% width minus two-thirds of the gutter (24px * 2/3) */
-       margin-bottom: 1.5rem; /* Vertical spacing (lg:gap-6) */
+      width: calc(
+        33.333% - 16px
+      ); /* 33.333% width minus two-thirds of the gutter (24px * 2/3) */
+      margin-bottom: 1.5rem; /* Vertical spacing (lg:gap-6) */
     }
   }
 
   /* Remove negative margins previously used for gutter simulation */
   #masonry-grid {
-     margin: 0; 
+    margin: 0;
   }
 </style>
