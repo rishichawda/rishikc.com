@@ -6,7 +6,7 @@ type Props = {
 };
 
 const { headings } = Astro.props;
-let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.length > 10 ? 2 : 4));
+let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.length > 10 ? 3 : 4));
 ---
 
 <div class="lg:sticky top-4 py-4 max-w-xs max-h-[calc(100vh-2rem)] overflow-y-auto">
@@ -17,7 +17,7 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
                 filteredHeadings.map((item) => (
                     <li
                         class="list-none"
-                        style={`padding-left: ${(item.depth - 1) * 1.25}rem;`}
+                        style={`padding-left: ${(item.depth - 2) * 1.25}rem;`}
                         aria-label={item.text}
                         role="listitem"
                     >
@@ -27,7 +27,7 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
                             href={`#${item.slug}`}
                         >
                             {/* Conditionally apply smaller text size for deeper levels */}
-                            <span class:list={["flex-1", item.depth > 2 ? "text-xs" : "text-sm"]} title={item.text}>
+                            <span class:list={["flex-1", item.depth > 3 ? "text-xs" : "text-sm"]} title={item.text}>
                                 {item.text}
                             </span>
                         </a>
