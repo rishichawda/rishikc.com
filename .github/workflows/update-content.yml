@@ -1,0 +1,29 @@
+name: Update Content Submodule and Trigger Deployment
+
+on:
+  repository_dispatch:
+    types:
+      - content-update
+
+jobs:
+  update-content-submodule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.CONTENT_UPDATE_PAT }}
+          persist-credentials: false
+
+      - name: Authorize Git
+        run: |
+          git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --global user.name "$GITHUB_ACTOR"
+          
+      - name: Update content submodule
+        run: |
+          git submodule update --remote --recursive
+          git add content
+          git commit -m "Update content submodule" || echo "No changes to commit"
+          git push origin main
