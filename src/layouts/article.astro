@@ -61,6 +61,34 @@ const imageUrl = content.hero_image?.src
 				"@id": articleUrl,
 			},
 			keywords: content.tags?.join(", "),
+			potentialAction: [
+				{
+					"@type": "ReadAction",
+					target: articleUrl,
+					name: "Read Article"
+				},
+				{
+					"@type": "ShareAction",
+					target: [
+						{
+							"@type": "EntryPoint",
+							urlTemplate: `https://twitter.com/intent/tweet?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(content.title)}`,
+							actionPlatform: "https://schema.org/DesktopWebPlatform"
+						},
+						{
+							"@type": "EntryPoint",
+							urlTemplate: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`,
+							actionPlatform: "https://schema.org/DesktopWebPlatform"
+						}
+					],
+					name: "Share Article"
+				},
+				{
+					"@type": "BookmarkAction",
+					target: articleUrl,
+					name: "Bookmark Article"
+				}
+			]
 		}}
 	/>
 	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-4">

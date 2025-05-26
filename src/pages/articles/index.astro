@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
+import { Schema } from "astro-seo-schema";
 
 const page_info = {
     title: "Articles | Rishi Chawda",
@@ -58,9 +59,54 @@ function getSearchableContent(article: any): string {
         .join(" ")
         .toLowerCase();
 }
+
+// Get current page URL for schema
+const pageUrl = new URL(
+  Astro.url.pathname,
+  Astro.site || "https://rishikc.com",
+).toString();
 ---
 
 <Layout page_info={page_info}>
+    <!-- CollectionPage JSON-LD Schema for Articles Index -->
+    <Schema
+        slot="head"
+        item={{
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Articles by Rishi Chawda",
+            description: "Technical articles, tutorials, and insights on web development, engineering, and technology",
+            url: pageUrl,
+            mainEntity: {
+                "@type": "ItemList",
+                numberOfItems: sortedArticles.length,
+                itemListElement: sortedArticles.slice(0, 10).map((article, index) => ({
+                    "@type": "ListItem",
+                    position: index + 1,
+                    item: {
+                        "@type": "BlogPosting",
+                        headline: article.data.title,
+                        description: article.data.description,
+                        url: new URL(article.data.path, Astro.site || "https://rishikc.com").toString(),
+                        datePublished: article.data.date.toISOString(),
+                        keywords: article.data.tags.join(", ")
+                    }
+                }))
+            },
+            potentialAction: [
+                {
+                    "@type": "ReadAction",
+                    target: pageUrl,
+                    name: "Browse Articles"
+                },
+                {
+                    "@type": "BookmarkAction", 
+                    target: pageUrl,
+                    name: "Bookmark Articles Page"
+                }
+            ]
+        }}
+    />
     <main
         class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16"
     >
@@ -274,18 +320,18 @@ function getSearchableContent(article: any): string {
         const selectedTags = new Set();
 
         // DOM Elements
-        const searchInput = document.getElementById("search");
-        const articleElements = document.querySelectorAll("[data-tags]");
-        const articles = [...articleElements].map((el) => el);
+        const searchInput = document.getElementById("search") as HTMLInputElement;
+        const articleElements = document.querySelectorAll("[data-tags]") as NodeListOf<HTMLElement>;
+        const articles = [...articleElements];
 
-        const tagButtonElements = document.querySelectorAll("[data-tag]");
-        const tagButtons = [...tagButtonElements].map((el) => el);
+        const tagButtonElements = document.querySelectorAll("[data-tag]") as NodeListOf<HTMLButtonElement>;
+        const tagButtons = [...tagButtonElements];
 
-        const pageButtonElements = document.querySelectorAll("[data-page]");
-        const pageButtons = [...pageButtonElements].map((el) => el);
+        const pageButtonElements = document.querySelectorAll("[data-page]") as NodeListOf<HTMLButtonElement>;
+        const pageButtons = [...pageButtonElements];
 
-        const prevButton = document.querySelector("[data-prev]");
-        const nextButton = document.querySelector("[data-next]");
+        const prevButton = document.querySelector("[data-prev]") as HTMLButtonElement;
+        const nextButton = document.querySelector("[data-next]") as HTMLButtonElement;
 
         // Filter and pagination logic
         function updateArticlesVisibility() {
@@ -295,13 +341,13 @@ function getSearchableContent(article: any): string {
 
             let visibleCount = 0;
             articles.forEach((article) => {
-                const matchesSearch = article.dataset.search.includes(searchTerm);
+                const matchesSearch = (article.dataset.search || "").includes(searchTerm);
                 const matchesTags =
                     selectedTags.size === 0 ||
                     Array.from(selectedTags).every((tag) =>
-                        article.dataset.tags
+                        (article.dataset.tags || "")
                             .toLowerCase()
-                            .includes(tag.toLowerCase()),
+                            .includes((tag as string).toLowerCase()),
                     );
 
                 const isVisible = matchesSearch && matchesTags;
@@ -342,7 +388,7 @@ function getSearchableContent(article: any): string {
 
         tagButtons.forEach((button) => {
             button.addEventListener("click", () => {
-                const tag = button.dataset.tag;
+                const tag = button.dataset.tag as string;
                 if (selectedTags.has(tag)) {
                     selectedTags.delete(tag);
                     button.dataset.selected = "false";

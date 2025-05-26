@@ -41,10 +41,42 @@ const canonicalURL = new URL(
     name: "Rishi Chawda",
     url: canonicalURL.toString(),
     description: description,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${canonicalURL.origin}/search?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
+    potentialAction: [
+      {
+        "@type": "ViewAction",
+        target: `${canonicalURL.origin}/articles/`,
+        name: "Browse Articles"
+      },
+      {
+        "@type": "ViewAction",
+        target: `${canonicalURL.origin}/gallery/`,
+        name: "View Photography Gallery"
+      },
+      {
+        "@type": "ViewAction",
+        target: `${canonicalURL.origin}/about/`,
+        name: "About Rishi"
+      },
+      {
+        "@type": "ViewAction",
+        target: `${canonicalURL.origin}/career/`,
+        name: "Career Information"
+      },
+      {
+        "@type": "ViewAction",
+        target: `${canonicalURL.origin}/contact/`,
+        name: "Contact"
+      },
+      {
+        "@type": "ViewAction",
+        target: `${canonicalURL.origin}/reads/`,
+        name: "Reading Collection"
+      },
+      {
+        "@type": "SearchAction",
+        target: `${canonicalURL.origin}/search?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      }
+    ]
   }}
 />

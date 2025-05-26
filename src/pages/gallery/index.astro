@@ -90,6 +90,29 @@ const itemListElements: ListItem<SchemaImageGallery>[] = galleryItems.map(
         sameAs: profile.socials.map((social: Social) => social.url), // Use fetched socials
       },
       url: pageUrl,
+      potentialAction: [
+        {
+          "@type": "ViewAction",
+          target: pageUrl,
+          name: "Browse Photography Portfolio"
+        },
+        {
+          "@type": "ShareAction",
+          target: [
+            {
+              "@type": "EntryPoint",
+              urlTemplate: `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(`Check out ${profile.name}'s Photography Portfolio`)}`,
+              actionPlatform: "https://schema.org/DesktopWebPlatform"
+            },
+            {
+              "@type": "EntryPoint",
+              urlTemplate: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`,
+              actionPlatform: "https://schema.org/DesktopWebPlatform"
+            }
+          ],
+          name: "Share Gallery"
+        }
+      ]
     }}
   />
   <main

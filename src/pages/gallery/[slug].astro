@@ -109,6 +109,29 @@ const pageUrl = new URL(
       },
       keywords: tags?.join(", "),
       associatedMedia: galleryImageUrls, // Use the explicitly typed array
+      potentialAction: [
+        {
+          "@type": "ViewAction",
+          target: pageUrl,
+          name: "View Gallery"
+        },
+        {
+          "@type": "ShareAction",
+          target: [
+            {
+              "@type": "EntryPoint",
+              urlTemplate: `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(`Check out ${title} by ${profile.name}`)}`,
+              actionPlatform: "https://schema.org/DesktopWebPlatform"
+            },
+            {
+              "@type": "EntryPoint", 
+              urlTemplate: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`,
+              actionPlatform: "https://schema.org/DesktopWebPlatform"
+            }
+          ],
+          name: "Share Gallery"
+        }
+      ]
     }}
   />
   <main

@@ -48,6 +48,18 @@ const pageUrl = new URL(
         contactType: "Professional Inquiries",
         sameAs: profile.socials.map((social: Social) => social.url), // Use fetched socials
       },
+      potentialAction: {
+        "@type": "ContactAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: pageUrl,
+          actionPlatform: [
+            "https://schema.org/DesktopWebPlatform", 
+            "https://schema.org/MobileWebPlatform"
+          ]
+        },
+        name: "Contact Rishi"
+      }
     }}
   />
 
