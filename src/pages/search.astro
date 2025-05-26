@@ -2,7 +2,6 @@
 // Now SSG compatible - no server-side query parameter handling
 import { getCollection } from "astro:content";
 import Layout from "../layouts/base_layout.astro";
-import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
 
 const page_info = {
@@ -46,6 +45,7 @@ const searchIndex = {
             article.data.keywords,
             article.data.tags.join(" "),
             article.data.category,
+            article.body, // Added article body to searchable content
         ].filter(Boolean).join(" ").toLowerCase()
     })),
     gallery: allGallery.map(gallery => ({
@@ -101,17 +101,17 @@ const pageUrl = new URL(
         }}
     />
 
-    <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-brand-50/50 via-brand-100/20 to-brand-200/10">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 pt-12 sm:pt-16">
+    <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-brand-50/30 via-white to-brand-100/20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 pt-8 sm:pt-12">
             <!-- Header -->
-            <div class="mb-12 sm:mb-16">
+            <div class="mb-16 sm:mb-20 text-center">
                 <a
                     href="/"
-                    class="inline-flex items-center text-brand-700 hover:text-brand-900 mb-8 group text-sm sm:text-[15px] tracking-[0.15em] sm:tracking-[0.2em] uppercase transition-colors duration-300 font-medium"
+                    class="inline-flex items-center text-brand-600 hover:text-brand-800 mb-8 group text-sm sm:text-[15px] tracking-[0.15em] sm:tracking-[0.2em] uppercase transition-all duration-300 font-medium hover:gap-3 gap-2"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-2 transition-transform duration-300 group-hover:-translate-x-1"
+                        class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -122,79 +122,110 @@ const pageUrl = new URL(
                     Back to Home
                 </a>
 
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-medium text-brand-900 mb-4 tracking-[-0.02em] leading-tight">
-                    <span id="page-title">Search</span>
-                </h1>
-                
-                <p id="search-results-info" class="text-brand-700 text-lg sm:text-xl leading-relaxed font-normal max-w-3xl font-['Montserrat_Variable'] hidden">
-                    <span id="results-count">0</span> result<span id="results-plural">s</span> found for <span class="font-medium">"<span id="search-query-display"></span>"</span>
-                </p>
-                
-                <p id="search-description" class="text-brand-700 text-lg sm:text-xl leading-relaxed font-normal max-w-3xl font-['Montserrat_Variable']">
-                    Search across articles, photography galleries, and quotes
-                </p>
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-900 mb-6 tracking-[-0.025em] leading-tight">
+                        <span id="page-title" class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 bg-clip-text text-transparent">Search</span>
+                    </h1>
+                    
+                    <p id="search-results-info" class="text-lg sm:text-xl leading-relaxed font-medium max-w-3xl mx-auto font-['Montserrat_Variable'] hidden flex flex-col sm:flex-row items-center justify-center text-center gap-x-2 gap-y-1 bg-brand-100/60 dark:bg-brand-900/20 p-4 rounded-xl shadow">
+                        <span class="inline-flex items-center gap-1.5 text-brand-700 dark:text-brand-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-600 dark:text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>
+                                <span id="results-count" class="font-semibold text-brand-800 dark:text-brand-100">0</span> result<span id="results-plural">s</span> found
+                            </span>
+                        </span>
+                        <span class="text-brand-600 dark:text-brand-400 font-normal">
+                            for "<span class="font-semibold text-brand-800 dark:text-brand-100" id="search-query-display"></span>"
+                        </span>
+                    </p>
+                    
+                    <p id="search-description" class="text-brand-600 text-xl sm:text-2xl leading-relaxed font-normal max-w-3xl mx-auto font-['Montserrat_Variable']">
+                        Discover articles, photography galleries, and inspiring quotes
+                    </p>
+                </div>
             </div>
 
             <!-- Search Form -->
-            <div class="mb-12 sm:mb-16">
-                <form class="relative" id="search-form">
-                    <input
-                        type="text"
-                        name="q"
-                        placeholder="Search articles, gallery, quotes... (Press / to focus)"
-                        class="w-full px-6 py-4 text-lg rounded-xl border border-brand-200 bg-white/80 backdrop-blur-sm focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 focus:outline-none transition-all duration-200 font-['Montserrat_Variable'] text-brand-900 placeholder-brand-400"
-                        autocomplete="off"
-                        id="search-input"
-                    />
-                    <button
-                        type="submit"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-brand-600 hover:bg-brand-700 text-white p-3 rounded-lg transition-colors duration-200"
-                        aria-label="Search"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                        </svg>
-                    </button>
-                </form>
+            <div class="mb-16 sm:mb-20">
+                <div class="max-w-2xl mx-auto">
+                    <form class="relative group" id="search-form">
+                        <div class="absolute inset-0 bg-gradient-to-r from-brand-400/20 to-brand-600/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-300"></div>
+                        <div class="relative">
+                            <input
+                                type="text"
+                                name="q"
+                                placeholder="Search articles, gallery, quotes..."
+                                class="w-full px-8 py-6 text-lg sm:text-xl rounded-2xl border-2 border-brand-200/50 bg-white/90 backdrop-blur-sm focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none transition-all duration-300 font-['Montserrat_Variable'] text-brand-900 placeholder-brand-400 shadow-lg shadow-brand-100/50"
+                                autocomplete="off"
+                                id="search-input"
+                            />
+                            <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-3">
+                                <kbd class="hidden sm:inline-flex items-center px-2 py-1 text-xs font-mono text-brand-500 bg-brand-100 rounded border border-brand-200">
+                                    Press / to focus
+                                </kbd>
+                                <button
+                                    type="submit"
+                                    class="bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white p-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                                    aria-label="Search"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="h-6 w-6"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <!-- No Results Message -->
-            <div id="no-results" class="text-center py-16 hidden">
-                <div class="text-6xl mb-6">🔍</div>
-                <h2 class="text-2xl font-medium text-brand-900 mb-4">No results found</h2>
-                <p class="text-brand-600 font-['Montserrat_Variable'] mb-8">
-                    Try searching with different keywords or browse our content sections
-                </p>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <a href="/articles" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium">
-                        Browse Articles
-                    </a>
-                    <a href="/gallery" class="bg-brand-100 hover:bg-brand-200 text-brand-800 px-6 py-3 rounded-lg transition-colors duration-200 font-medium">
-                        View Gallery
-                    </a>
-                    <a href="/reads" class="bg-brand-100 hover:bg-brand-200 text-brand-800 px-6 py-3 rounded-lg transition-colors duration-200 font-medium">
-                        Explore Quotes
-                    </a>
+            <div id="no-results" class="text-center py-20 hidden">
+                <div class="max-w-md mx-auto">
+                    <div class="text-8xl mb-8 opacity-60">🔍</div>
+                    <h2 class="text-3xl font-bold text-brand-900 mb-6">No results found</h2>
+                    <p class="text-brand-600 font-['Montserrat_Variable'] mb-12 text-lg leading-relaxed">
+                        We couldn't find what you're looking for. Try different keywords or explore our content sections below.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <a href="/articles/" class="bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap text-sm sm:text-base">
+                            Browse Articles
+                        </a>
+                        <a href="/gallery/" class="bg-white hover:bg-brand-50 text-brand-700 border-2 border-brand-200 hover:border-brand-300 px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap text-sm sm:text-base">
+                            View Gallery
+                        </a>
+                        <a href="/reads/" class="bg-white hover:bg-brand-50 text-brand-700 border-2 border-brand-200 hover:border-brand-300 px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap text-sm sm:text-base">
+                            Explore Quotes
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <!-- Search Results Container -->
-            <div id="search-results" class="space-y-12 hidden">
+            <div id="search-results" class="space-y-16 hidden">
                 <!-- Articles Results -->
                 <section id="articles-section" class="hidden">
-                    <h2 class="text-2xl font-medium text-brand-900 mb-6 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
-                        Articles (<span id="articles-count">0</span>)
-                    </h2>
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-3xl font-bold text-brand-900 flex items-center">
+                            <div class="w-12 h-12 bg-gradient-to-r from-brand-500 to-brand-600 rounded-xl flex items-center justify-center mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                </svg>
+                            </div>
+                            Articles
+                        </h2>
+                        <span class="bg-brand-100 text-brand-700 px-4 py-2 rounded-full text-lg font-semibold">
+                            <span id="articles-count">0</span>
+                        </span>
+                    </div>
                     <div id="articles-container" class="space-y-6">
                         <!-- Articles will be populated by JavaScript -->
                     </div>
@@ -202,26 +233,40 @@ const pageUrl = new URL(
 
                 <!-- Gallery Results -->
                 <section id="gallery-section" class="hidden">
-                    <h2 class="text-2xl font-medium text-brand-900 mb-6 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                        Photography Galleries (<span id="gallery-count">0</span>)
-                    </h2>
-                    <div id="gallery-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-3xl font-bold text-brand-900 flex items-center">
+                            <div class="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                </svg>
+                            </div>
+                            Photography
+                        </h2>
+                        <span class="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-lg font-semibold">
+                            <span id="gallery-count">0</span>
+                        </span>
+                    </div>
+                    <div id="gallery-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
                         <!-- Gallery items will be populated by JavaScript -->
                     </div>
                 </section>
 
                 <!-- Quotes Results -->
                 <section id="quotes-section" class="hidden">
-                    <h2 class="text-2xl font-medium text-brand-900 mb-6 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-                        </svg>
-                        Quotes (<span id="quotes-count">0</span>)
-                    </h2>
-                    <div id="quotes-container" class="space-y-4">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-3xl font-bold text-brand-900 flex items-center">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+                                </svg>
+                            </div>
+                            Quotes
+                        </h2>
+                        <span class="bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg font-semibold">
+                            <span id="quotes-count">0</span>
+                        </span>
+                    </div>
+                    <div id="quotes-container" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Quotes will be populated by JavaScript -->
                     </div>
                 </section>
@@ -272,39 +317,40 @@ const pageUrl = new URL(
      */
     const SEARCH_STYLES = {
         article: {
-            container: 'bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-brand-200 hover:shadow-lg transition-all duration-200',
-            link: 'group',
-            flexWrapper: 'flex gap-6',
-            imageContainer: 'flex-shrink-0',
-            image: 'rounded-lg object-cover',
+            container: 'bg-white/95 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-brand-200/50 hover:shadow-2xl hover:shadow-brand-100/50 transition-all duration-300 transform hover:-translate-y-1 group',
+            link: 'block',
+            flexWrapper: 'flex flex-col sm:flex-row gap-6 sm:gap-8 sm:min-h-[1px]',
+            imageContainer: 'flex-shrink-0 w-full sm:w-auto',
+            image: 'rounded-xl object-cover w-full h-48 sm:h-full sm:w-[140px]',
             contentContainer: 'flex-1 min-w-0',
-            title: 'text-xl font-medium text-brand-900 mb-2 group-hover:text-brand-700 transition-colors',
-            description: 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm mb-3 line-clamp-2',
-            metaContainer: 'flex items-center justify-between',
-            date: 'text-brand-500 text-sm font-[\'Montserrat_Variable\']',
-            tagsContainer: 'flex gap-2',
-            tag: 'bg-brand-100 text-brand-700 px-2 py-1 rounded text-xs font-medium'
+            title: 'text-xl sm:text-2xl font-bold text-brand-900 mb-3 group-hover:text-brand-700 transition-colors line-clamp-2',
+            description: 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm sm:text-base mb-4 sm:mb-6 line-clamp-3 leading-relaxed',
+            metaContainer: 'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0',
+            date: 'text-brand-500 text-sm font-[\'Montserrat_Variable\'] font-medium',
+            tagsContainer: 'flex gap-2 flex-wrap',
+            tag: 'bg-gradient-to-r from-brand-100 to-brand-50 text-brand-700 px-3 py-1 rounded-full text-sm font-medium border border-brand-200/50'
         },
         gallery: {
-            container: 'bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden border border-brand-200 hover:shadow-lg transition-all duration-200',
-            link: 'group',
-            imageContainer: 'aspect-video overflow-hidden',
-            image: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300',
+            container: 'bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden border border-brand-200/50 hover:shadow-2xl hover:shadow-brand-100/50 transition-all duration-300 transform hover:-translate-y-1 group',
+            link: 'block h-full',
+            imageContainer: 'aspect-[4/3] overflow-hidden',
+            image: 'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500',
             contentContainer: 'p-6',
-            title: 'text-lg font-medium text-brand-900 mb-2 group-hover:text-brand-700 transition-colors',
-            description: 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm mb-3 line-clamp-2',
-            metaContainer: 'flex items-center justify-between',
-            location: 'text-brand-500 text-sm font-[\'Montserrat_Variable\']',
-            count: 'text-brand-500 text-sm font-[\'Montserrat_Variable\']'
+            title: 'text-xl font-bold text-brand-900 mb-3 group-hover:text-brand-700 transition-colors line-clamp-2',
+            description: 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm mb-4 line-clamp-2 leading-relaxed',
+            metaContainer: 'flex items-center justify-between text-sm',
+            location: 'text-brand-500 font-[\'Montserrat_Variable\'] font-medium flex items-center gap-1',
+            count: 'text-brand-500 font-[\'Montserrat_Variable\'] font-medium bg-brand-50 px-2 py-1 rounded-full'
         },
         quote: {
-            container: 'bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-brand-200 hover:shadow-lg transition-all duration-200',
-            text: 'text-brand-800 font-[\'Montserrat_Variable\'] text-lg italic mb-4',
-            cite: 'text-brand-600 font-medium'
+            container: 'bg-gradient-to-br from-white/95 to-brand-50/30 backdrop-blur-sm rounded-2xl p-8 border border-brand-200/50 hover:shadow-2xl hover:shadow-brand-100/50 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden',
+            text: 'text-brand-800 font-[\'Montserrat_Variable\'] text-lg italic mb-6 relative z-10 leading-relaxed',
+            cite: 'text-brand-600 font-semibold relative z-10',
+            decoration: 'absolute top-4 right-4 text-6xl text-brand-200/50 leading-none'
         },
         dimensions: {
-            article: { image: { width: 120, height: 80 } },
-            gallery: { image: { width: 400, height: 225 } }
+            article: { image: { width: 140, height: 100 } },
+            gallery: { image: { width: 400, height: 300 } }
         }
     };
 
@@ -651,6 +697,11 @@ const pageUrl = new URL(
             
             // Create main container
             const blockquoteEl = createElement('blockquote', styles.container);
+            
+            // Add decorative quote mark
+            const decorationEl = createElement('div', styles.decoration);
+            decorationEl.innerHTML = '"';
+            blockquoteEl.appendChild(decorationEl);
             
             // Create quote text
             const quoteTextEl = createElement('p', styles.text);
