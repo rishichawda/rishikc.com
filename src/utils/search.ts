@@ -153,14 +153,21 @@ export class ClientSideSearch {
         }
     }
     
-    private initializeFromURL(): void {
+    public initializeFromURL(): void {
         const urlParams = new URLSearchParams(window.location.search);
         const rawQuery = urlParams.get('q') || '';
         const query = this.sanitizeInput(rawQuery);
         this.searchInput.value = query;
         
+        // Ensure we've loaded the search index before proceeding
+        if (!window.searchIndex) {
+            console.warn('Search index not available when initializing from URL');
+            return;
+        }
+        
         if (query) {
-            this.performSearch(false); // Don't update URL since we're initializing from it
+            // Small delay to ensure DOM is ready, especially on page reload
+            setTimeout(() => this.performSearch(false), 10); // Don't update URL since we're initializing from it
         } else {
             this.renderer.showDefaultState();
         }
@@ -266,9 +273,7 @@ export class ClientSideSearch {
                         year: "numeric",
         });
     }
-}
-
-// Singleton initialization function to prevent multiple instances
+}    // Singleton initialization function to prevent multiple instances
 export function initializeSearch(renderer: SearchRenderer): ClientSideSearch | null {
     // Clean up existing instance if it exists
     if (window.clientSideSearchInstance) {

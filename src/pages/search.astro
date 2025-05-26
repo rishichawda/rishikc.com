@@ -254,6 +254,80 @@ const pageUrl = new URL(
         type QuoteItem 
     } from '../utils/search.ts';
     
+    /**
+     * SEARCH STYLES CONFIGURATION
+     * 
+     * This centralized configuration makes it easy to maintain and customize
+     * the styling of search result elements. To modify styles:
+     * 
+     * 1. Update class strings in the relevant section below
+     * 2. Add new style properties to any section as needed
+     * 3. Dimensions can be adjusted in the 'dimensions' section
+     * 
+     * Structure:
+     * - article: Styles for article search results
+     * - gallery: Styles for gallery search results  
+     * - quote: Styles for quote search results
+     * - dimensions: Image dimensions and other size constraints
+     */
+    const SEARCH_STYLES = {
+        article: {
+            container: 'bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-brand-200 hover:shadow-lg transition-all duration-200',
+            link: 'group',
+            flexWrapper: 'flex gap-6',
+            imageContainer: 'flex-shrink-0',
+            image: 'rounded-lg object-cover',
+            contentContainer: 'flex-1 min-w-0',
+            title: 'text-xl font-medium text-brand-900 mb-2 group-hover:text-brand-700 transition-colors',
+            description: 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm mb-3 line-clamp-2',
+            metaContainer: 'flex items-center justify-between',
+            date: 'text-brand-500 text-sm font-[\'Montserrat_Variable\']',
+            tagsContainer: 'flex gap-2',
+            tag: 'bg-brand-100 text-brand-700 px-2 py-1 rounded text-xs font-medium'
+        },
+        gallery: {
+            container: 'bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden border border-brand-200 hover:shadow-lg transition-all duration-200',
+            link: 'group',
+            imageContainer: 'aspect-video overflow-hidden',
+            image: 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300',
+            contentContainer: 'p-6',
+            title: 'text-lg font-medium text-brand-900 mb-2 group-hover:text-brand-700 transition-colors',
+            description: 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm mb-3 line-clamp-2',
+            metaContainer: 'flex items-center justify-between',
+            location: 'text-brand-500 text-sm font-[\'Montserrat_Variable\']',
+            count: 'text-brand-500 text-sm font-[\'Montserrat_Variable\']'
+        },
+        quote: {
+            container: 'bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-brand-200 hover:shadow-lg transition-all duration-200',
+            text: 'text-brand-800 font-[\'Montserrat_Variable\'] text-lg italic mb-4',
+            cite: 'text-brand-600 font-medium'
+        },
+        dimensions: {
+            article: { image: { width: 120, height: 80 } },
+            gallery: { image: { width: 400, height: 225 } }
+        }
+    };
+
+    /**
+     * Helper function to create DOM elements with classes and attributes
+     * This reduces boilerplate and makes the code more maintainable
+     * 
+     * @param tag - HTML tag name (e.g., 'div', 'img', 'a')
+     * @param className - CSS classes to apply to the element
+     * @param attributes - Key-value pairs of attributes to set
+     * @returns HTMLElement with applied classes and attributes
+     */
+    function createElement(tag: string, className?: string, attributes?: Record<string, string | number>): HTMLElement {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        if (attributes) {
+            Object.entries(attributes).forEach(([key, value]) => {
+                element.setAttribute(key, value.toString());
+            });
+        }
+        return element;
+    }
+
     // Create SearchRenderer implementation
     class DOMSearchRenderer implements SearchRenderer {
         private pageTitle!: HTMLElement;
@@ -284,28 +358,48 @@ const pageUrl = new URL(
         }
         
         private initializeElements(): void {
-            this.pageTitle = document.getElementById('page-title') as HTMLElement;
-            this.searchResultsInfo = document.getElementById('search-results-info') as HTMLElement;
-            this.searchDescription = document.getElementById('search-description') as HTMLElement;
-            this.noResultsEl = document.getElementById('no-results') as HTMLElement;
-            this.searchResults = document.getElementById('search-results') as HTMLElement;
+            // Check if elements exist, otherwise wait for them to be available
+            const checkElements = () => {
+                if (!document.getElementById('page-title')) {
+                    // Elements not ready yet, try again in a moment
+                    setTimeout(checkElements, 50);
+                    return;
+                }
+                
+                this.pageTitle = document.getElementById('page-title') as HTMLElement;
+                this.searchResultsInfo = document.getElementById('search-results-info') as HTMLElement;
+                this.searchDescription = document.getElementById('search-description') as HTMLElement;
+                this.noResultsEl = document.getElementById('no-results') as HTMLElement;
+                this.searchResults = document.getElementById('search-results') as HTMLElement;
+                
+                // Result containers
+                this.articlesSection = document.getElementById('articles-section') as HTMLElement;
+                this.articlesContainer = document.getElementById('articles-container') as HTMLElement;
+                this.articlesCount = document.getElementById('articles-count') as HTMLElement;
+                
+                this.gallerySection = document.getElementById('gallery-section') as HTMLElement;
+                this.galleryContainer = document.getElementById('gallery-container') as HTMLElement;
+                this.galleryCount = document.getElementById('gallery-count') as HTMLElement;
+                
+                this.quotesSection = document.getElementById('quotes-section') as HTMLElement;
+                this.quotesContainer = document.getElementById('quotes-container') as HTMLElement;
+                this.quotesCount = document.getElementById('quotes-count') as HTMLElement;
+                
+                this.resultsCount = document.getElementById('results-count') as HTMLElement;
+                this.resultsPlural = document.getElementById('results-plural') as HTMLElement;
+                this.searchQueryDisplay = document.getElementById('search-query-display') as HTMLElement;
+                
+                // Re-run initialization if needed
+                if (window.location.search.includes('q=')) {
+                    const searchInstance = window.clientSideSearchInstance;
+                    if (searchInstance) {
+                        searchInstance.initializeFromURL();
+                    }
+                }
+            };
             
-            // Result containers
-            this.articlesSection = document.getElementById('articles-section') as HTMLElement;
-            this.articlesContainer = document.getElementById('articles-container') as HTMLElement;
-            this.articlesCount = document.getElementById('articles-count') as HTMLElement;
-            
-            this.gallerySection = document.getElementById('gallery-section') as HTMLElement;
-            this.galleryContainer = document.getElementById('gallery-container') as HTMLElement;
-            this.galleryCount = document.getElementById('gallery-count') as HTMLElement;
-            
-            this.quotesSection = document.getElementById('quotes-section') as HTMLElement;
-            this.quotesContainer = document.getElementById('quotes-container') as HTMLElement;
-            this.quotesCount = document.getElementById('quotes-count') as HTMLElement;
-            
-            this.resultsCount = document.getElementById('results-count') as HTMLElement;
-            this.resultsPlural = document.getElementById('results-plural') as HTMLElement;
-            this.searchQueryDisplay = document.getElementById('search-query-display') as HTMLElement;
+            // Start checking for elements
+            checkElements();
         }
         
         showDefaultState(): void {
@@ -409,60 +503,61 @@ const pageUrl = new URL(
         
         private createArticleElement(article: ArticleItem): HTMLElement {
             const searchInstance = window.clientSideSearchInstance;
-            if (!searchInstance) throw new Error('Search instance not available');
+            if (!searchInstance) {
+                console.error('Search instance not available for article element creation');
+                // Create a fallback element with minimal functionality rather than throwing an error
+                const fallbackEl = createElement('article', 'bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-brand-200');
+                fallbackEl.textContent = article.title;
+                return fallbackEl;
+            }
             
-            const articleEl = document.createElement('article');
-            articleEl.className = 'bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-brand-200 hover:shadow-lg transition-all duration-200';
+            const styles = SEARCH_STYLES.article;
+            const dims = SEARCH_STYLES.dimensions.article;
             
-            const linkEl = document.createElement('a');
-            linkEl.href = searchInstance.escapeForAttribute(article.path);
-            linkEl.className = 'group';
+            // Create main container
+            const articleEl = createElement('article', styles.container);
             
-            const flexEl = document.createElement('div');
-            flexEl.className = 'flex gap-6';
+            // Create link wrapper
+            const linkEl = createElement('a', styles.link, {
+                href: searchInstance.escapeForAttribute(article.path)
+            });
             
-            // Image container
-            const imgContainer = document.createElement('div');
-            imgContainer.className = 'flex-shrink-0';
+            // Create flex container
+            const flexEl = createElement('div', styles.flexWrapper);
             
-            const imgEl = document.createElement('img');
-            imgEl.src = searchInstance.escapeForAttribute(article.hero_image.src);
-            imgEl.alt = searchInstance.escapeForAttribute(article.hero_image_alt);
-            imgEl.width = 120;
-            imgEl.height = 80;
-            imgEl.className = 'rounded-lg object-cover';
-            
+            // Create image section
+            const imgContainer = createElement('div', styles.imageContainer);
+            const imgEl = createElement('img', styles.image, {
+                src: searchInstance.escapeForAttribute(article.hero_image.src),
+                alt: searchInstance.escapeForAttribute(article.hero_image_alt),
+                width: dims.image.width.toString(),
+                height: dims.image.height.toString()
+            });
             imgContainer.appendChild(imgEl);
             
-            // Content container
-            const contentEl = document.createElement('div');
-            contentEl.className = 'flex-1 min-w-0';
+            // Create content section
+            const contentEl = createElement('div', styles.contentContainer);
             
-            const titleEl = document.createElement('h3');
-            titleEl.className = 'text-xl font-medium text-brand-900 mb-2 group-hover:text-brand-700 transition-colors';
+            const titleEl = createElement('h3', styles.title);
             titleEl.textContent = article.title;
             
-            const descEl = document.createElement('p');
-            descEl.className = 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm mb-3 line-clamp-2';
+            const descEl = createElement('p', styles.description);
             descEl.textContent = article.description;
             
-            const metaEl = document.createElement('div');
-            metaEl.className = 'flex items-center justify-between';
+            // Create meta section
+            const metaEl = createElement('div', styles.metaContainer);
             
-            const timeEl = document.createElement('time');
-            timeEl.className = 'text-brand-500 text-sm font-[\'Montserrat_Variable\']';
+            const timeEl = createElement('time', styles.date);
             timeEl.textContent = searchInstance.formatDate(article.date);
             
-            const tagsEl = document.createElement('div');
-            tagsEl.className = 'flex gap-2';
-            
+            const tagsEl = createElement('div', styles.tagsContainer);
             article.tags.slice(0, 3).forEach(tag => {
-                const tagEl = document.createElement('span');
-                tagEl.className = 'bg-brand-100 text-brand-700 px-2 py-1 rounded text-xs font-medium';
+                const tagEl = createElement('span', styles.tag);
                 tagEl.textContent = tag;
                 tagsEl.appendChild(tagEl);
             });
             
+            // Assemble the structure
             metaEl.appendChild(timeEl);
             metaEl.appendChild(tagsEl);
             
@@ -481,62 +576,67 @@ const pageUrl = new URL(
         
         private createGalleryElement(item: GalleryItem): HTMLElement {
             const searchInstance = window.clientSideSearchInstance;
-            if (!searchInstance) throw new Error('Search instance not available');
+            if (!searchInstance) {
+                console.error('Search instance not available for gallery element creation');
+                // Create a fallback element with minimal functionality rather than throwing an error
+                const fallbackEl = createElement('article', 'bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-brand-200');
+                fallbackEl.textContent = item.title;
+                return fallbackEl;
+            }
             
-            const articleEl = document.createElement('article');
-            articleEl.className = 'bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden border border-brand-200 hover:shadow-lg transition-all duration-200';
+            const styles = SEARCH_STYLES.gallery;
+            const dims = SEARCH_STYLES.dimensions.gallery;
             
-            const linkEl = document.createElement('a');
-            linkEl.href = `/gallery/${searchInstance.escapeForAttribute(item.directory)}/`;
-            linkEl.className = 'group';
+            // Create main container
+            const articleEl = createElement('article', styles.container);
             
-            // Image container
-            const imgContainerEl = document.createElement('div');
-            imgContainerEl.className = 'aspect-video overflow-hidden';
+            // Create link wrapper
+            const linkEl = createElement('a', styles.link, {
+                href: `/gallery/${searchInstance.escapeForAttribute(item.directory)}/`
+            });
             
-            const imgEl = document.createElement('img');
-            imgEl.src = searchInstance.escapeForAttribute(item.featured_image.src);
-            imgEl.alt = searchInstance.escapeForAttribute(item.featured_image_alt);
-            imgEl.width = 400;
-            imgEl.height = 225;
-            imgEl.className = 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300';
-            
+            // Create image section
+            const imgContainerEl = createElement('div', styles.imageContainer);
+            const imgEl = createElement('img', styles.image, {
+                src: searchInstance.escapeForAttribute(item.featured_image.src),
+                alt: searchInstance.escapeForAttribute(item.featured_image_alt),
+                width: dims.image.width.toString(),
+                height: dims.image.height.toString()
+            });
             imgContainerEl.appendChild(imgEl);
             
-            // Content container
-            const contentEl = document.createElement('div');
-            contentEl.className = 'p-6';
+            // Create content section
+            const contentEl = createElement('div', styles.contentContainer);
             
-            const titleEl = document.createElement('h3');
-            titleEl.className = 'text-lg font-medium text-brand-900 mb-2 group-hover:text-brand-700 transition-colors';
+            const titleEl = createElement('h3', styles.title);
             titleEl.textContent = item.title;
-            
             contentEl.appendChild(titleEl);
             
+            // Add description if available
             if (item.description) {
-                const descEl = document.createElement('p');
-                descEl.className = 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm mb-3 line-clamp-2';
+                const descEl = createElement('p', styles.description);
                 descEl.textContent = item.description;
                 contentEl.appendChild(descEl);
             }
             
-            const metaEl = document.createElement('div');
-            metaEl.className = 'flex items-center justify-between';
+            // Create meta section
+            const metaEl = createElement('div', styles.metaContainer);
             
+            // Add location or empty span for layout
             if (item.location) {
-                const locationEl = document.createElement('span');
-                locationEl.className = 'text-brand-500 text-sm font-[\'Montserrat_Variable\']';
+                const locationEl = createElement('span', styles.location);
                 locationEl.textContent = `📍 ${item.location}`;
                 metaEl.appendChild(locationEl);
             } else {
-                metaEl.appendChild(document.createElement('span'));
+                metaEl.appendChild(createElement('span'));
             }
             
-            const countEl = document.createElement('span');
-            countEl.className = 'text-brand-500 text-sm font-[\'Montserrat_Variable\']';
+            // Add photo count
+            const countEl = createElement('span', styles.count);
             countEl.textContent = `${item.images_count} photos`;
             metaEl.appendChild(countEl);
             
+            // Assemble the structure
             contentEl.appendChild(metaEl);
             
             linkEl.appendChild(imgContainerEl);
@@ -547,18 +647,19 @@ const pageUrl = new URL(
         }
         
         private createQuoteElement(quote: QuoteItem): HTMLElement {
-            const blockquoteEl = document.createElement('blockquote');
-            blockquoteEl.className = 'bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-brand-200 hover:shadow-lg transition-all duration-200';
+            const styles = SEARCH_STYLES.quote;
             
-            const quoteTextEl = document.createElement('p');
-            quoteTextEl.className = 'text-brand-800 font-[\'Montserrat_Variable\'] text-lg italic mb-4';
+            // Create main container
+            const blockquoteEl = createElement('blockquote', styles.container);
+            
+            // Create quote text
+            const quoteTextEl = createElement('p', styles.text);
             quoteTextEl.textContent = `"${quote.quote}"`;
-            
             blockquoteEl.appendChild(quoteTextEl);
             
+            // Add citation if available
             if (quote.info) {
-                const citeEl = document.createElement('cite');
-                citeEl.className = 'text-brand-600 font-medium';
+                const citeEl = createElement('cite', styles.cite);
                 citeEl.textContent = `— ${quote.info}`;
                 blockquoteEl.appendChild(citeEl);
             }
@@ -569,8 +670,22 @@ const pageUrl = new URL(
     
     // Initialize search when page loads
     document.addEventListener('DOMContentLoaded', () => {
-        const renderer = new DOMSearchRenderer();
-        initializeSearch(renderer);
+        // Make sure search index is available first
+        if (window.searchIndex) {
+            const renderer = new DOMSearchRenderer();
+            initializeSearch(renderer);
+        } else {
+            console.warn('Search index not available on DOMContentLoaded, will retry');
+            // If search index isn't available yet, check again after a short delay
+            setTimeout(() => {
+                if (window.searchIndex) {
+                    const renderer = new DOMSearchRenderer();
+                    initializeSearch(renderer);
+                } else {
+                    console.error('Search index still not available after delay');
+                }
+            }, 100);
+        }
     });
     
     // Also initialize on Astro page load for SPA navigation
