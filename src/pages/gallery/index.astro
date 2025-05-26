@@ -61,7 +61,7 @@ const galleryItems = galleries.map((gallery) => {
 });
 
 // Explicitly type the itemListElement array
-const itemListElements: ListItem<SchemaImageGallery>[] = galleryItems.map(
+const itemListElements: ListItem[] = galleryItems.map(
   (gallerySchema, index) => ({
     "@type": "ListItem",
     position: index + 1,
