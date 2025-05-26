@@ -142,6 +142,26 @@ const pageUrl = new URL(
         >
             <!-- Sidebar - Moved to top on mobile -->
             <div class="order-first lg:order-last">
+                <!-- Global Search Link -->
+                <a
+                    href="/search/"
+                    class="block mb-6 p-4 sm:p-6 bg-gradient-to-r from-brand-500/10 to-brand-600/10 rounded-lg hover:from-brand-500/20 hover:to-brand-600/20 transition-all border border-brand-200/50 group"
+                >
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-brand-600 group-hover:text-brand-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                        </svg>
+                        <div>
+                            <p class="text-brand-800 font-medium text-sm font-['Red_Hat_Display_Variable'] mb-1">
+                                Global Search
+                            </p>
+                            <p class="text-brand-600 text-xs font-['Montserrat_Variable']">
+                                Search across articles, gallery, and quotes
+                            </p>
+                        </div>
+                    </div>
+                </a>
+
                 <!-- Quote box -->
                 <a
                     href="/reads/"

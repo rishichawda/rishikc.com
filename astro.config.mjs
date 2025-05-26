@@ -78,7 +78,6 @@ export default defineConfig({
   })],
 
   site: siteMetadata.siteUrl,
-  // trailingSlash: getEnv('NODE_ENV') == 'development' ? 'ignore' : 'always',
   trailingSlash: 'always',
   compressHTML: true,
   security: {

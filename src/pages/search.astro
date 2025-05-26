@@ -1,0 +1,581 @@
+---
+// Now SSG compatible - no server-side query parameter handling
+import { getCollection } from "astro:content";
+import Layout from "../layouts/base_layout.astro";
+import { Image } from "astro:assets";
+import { Schema } from "astro-seo-schema";
+
+const page_info = {
+    title: "Search | Rishi Chawda",
+    description: "Search articles, gallery, and content on Rishi Chawda's website",
+    keywords: "search, articles, gallery, photography, development",
+};
+
+// Get all content collections to create search index
+const allArticles = await getCollection("articles");
+const allGallery = await getCollection("gallery");
+const allQuotes = await getCollection("quotes");
+
+// Format date
+function formatDate(date: Date): string {
+    return new Date(date).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
+}
+
+// Create search index for client-side search
+const searchIndex = {
+    articles: allArticles.map(article => ({
+        id: article.id,
+        title: article.data.title,
+        description: article.data.description,
+        subtitle: article.data.subtitle || "",
+        keywords: article.data.keywords || "",
+        tags: article.data.tags || [],
+        category: article.data.category || "",
+        path: article.data.path,
+        date: article.data.date.toISOString(),
+        hero_image: article.data.hero_image,
+        hero_image_alt: article.data.hero_image_alt || article.data.title,
+        searchableContent: [
+            article.data.title,
+            article.data.description,
+            article.data.subtitle,
+            article.data.keywords,
+            article.data.tags.join(" "),
+            article.data.category,
+        ].filter(Boolean).join(" ").toLowerCase()
+    })),
+    gallery: allGallery.map(gallery => ({
+        id: gallery.id,
+        title: gallery.data.title,
+        description: gallery.data.description || "",
+        location: gallery.data.location || "",
+        tags: gallery.data.tags || [],
+        directory: gallery.data.directory,
+        featured_image: gallery.data.featured_image,
+        featured_image_alt: gallery.data.featured_image_alt || gallery.data.title,
+        images_count: gallery.data.images?.length || 0,
+        searchableContent: [
+            gallery.data.title,
+            gallery.data.description,
+            gallery.data.location,
+            gallery.data.tags?.join(" "),
+            gallery.data.directory,
+        ].filter(Boolean).join(" ").toLowerCase()
+    })),
+    quotes: allQuotes[1]?.data ? allQuotes[1].data.map((quote: any, index: number) => ({
+        id: `quote-${index}`,
+        quote: quote.quote,
+        info: quote.info || "",
+        searchableContent: [quote.quote, quote.info].filter(Boolean).join(" ").toLowerCase()
+    })) : []
+};
+
+// Get current page URL for schema
+const pageUrl = new URL(
+  Astro.url.pathname,
+  Astro.site || "https://rishikc.com",
+).toString();
+---
+
+<Layout page_info={page_info}>
+    <!-- SearchResultsPage JSON-LD Schema -->
+    <Schema
+        slot="head"
+        item={{
+            "@context": "https://schema.org",
+            "@type": "SearchResultsPage",
+            name: page_info.title,
+            description: page_info.description,
+            url: pageUrl,
+            potentialAction: [
+                {
+                    "@type": "SearchAction",
+                    target: `${new URL(Astro.url.pathname, Astro.site || "https://rishikc.com").toString()}?q={search_term_string}`,
+                    "query-input": "required name=search_term_string"
+                }
+            ]
+        }}
+    />
+
+    <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-brand-50/50 via-brand-100/20 to-brand-200/10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 pt-12 sm:pt-16">
+            <!-- Header -->
+            <div class="mb-12 sm:mb-16">
+                <a
+                    href="/"
+                    class="inline-flex items-center text-brand-700 hover:text-brand-900 mb-8 group text-sm sm:text-[15px] tracking-[0.15em] sm:tracking-[0.2em] uppercase transition-colors duration-300 font-medium"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 mr-2 transition-transform duration-300 group-hover:-translate-x-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back to Home
+                </a>
+
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-medium text-brand-900 mb-4 tracking-[-0.02em] leading-tight">
+                    <span id="page-title">Search</span>
+                </h1>
+                
+                <p id="search-results-info" class="text-brand-700 text-lg sm:text-xl leading-relaxed font-normal max-w-3xl font-['Montserrat_Variable'] hidden">
+                    <span id="results-count">0</span> result<span id="results-plural">s</span> found for <span class="font-medium">"<span id="search-query-display"></span>"</span>
+                </p>
+                
+                <p id="search-description" class="text-brand-700 text-lg sm:text-xl leading-relaxed font-normal max-w-3xl font-['Montserrat_Variable']">
+                    Search across articles, photography galleries, and quotes
+                </p>
+            </div>
+
+            <!-- Search Form -->
+            <div class="mb-12 sm:mb-16">
+                <form class="relative" id="search-form">
+                    <input
+                        type="text"
+                        name="q"
+                        placeholder="Search articles, gallery, quotes... (Press / to focus)"
+                        class="w-full px-6 py-4 text-lg rounded-xl border border-brand-200 bg-white/80 backdrop-blur-sm focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 focus:outline-none transition-all duration-200 font-['Montserrat_Variable'] text-brand-900 placeholder-brand-400"
+                        autocomplete="off"
+                        id="search-input"
+                    />
+                    <button
+                        type="submit"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-brand-600 hover:bg-brand-700 text-white p-3 rounded-lg transition-colors duration-200"
+                        aria-label="Search"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <!-- No Results Message -->
+            <div id="no-results" class="text-center py-16 hidden">
+                <div class="text-6xl mb-6">🔍</div>
+                <h2 class="text-2xl font-medium text-brand-900 mb-4">No results found</h2>
+                <p class="text-brand-600 font-['Montserrat_Variable'] mb-8">
+                    Try searching with different keywords or browse our content sections
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="/articles" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-lg transition-colors duration-200 font-medium">
+                        Browse Articles
+                    </a>
+                    <a href="/gallery" class="bg-brand-100 hover:bg-brand-200 text-brand-800 px-6 py-3 rounded-lg transition-colors duration-200 font-medium">
+                        View Gallery
+                    </a>
+                    <a href="/reads" class="bg-brand-100 hover:bg-brand-200 text-brand-800 px-6 py-3 rounded-lg transition-colors duration-200 font-medium">
+                        Explore Quotes
+                    </a>
+                </div>
+            </div>
+
+            <!-- Search Results Container -->
+            <div id="search-results" class="space-y-12 hidden">
+                <!-- Articles Results -->
+                <section id="articles-section" class="hidden">
+                    <h2 class="text-2xl font-medium text-brand-900 mb-6 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                        </svg>
+                        Articles (<span id="articles-count">0</span>)
+                    </h2>
+                    <div id="articles-container" class="space-y-6">
+                        <!-- Articles will be populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Gallery Results -->
+                <section id="gallery-section" class="hidden">
+                    <h2 class="text-2xl font-medium text-brand-900 mb-6 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                        </svg>
+                        Photography Galleries (<span id="gallery-count">0</span>)
+                    </h2>
+                    <div id="gallery-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Gallery items will be populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Quotes Results -->
+                <section id="quotes-section" class="hidden">
+                    <h2 class="text-2xl font-medium text-brand-900 mb-6 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+                        </svg>
+                        Quotes (<span id="quotes-count">0</span>)
+                    </h2>
+                    <div id="quotes-container" class="space-y-4">
+                        <!-- Quotes will be populated by JavaScript -->
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pass search index to JavaScript -->
+    <script define:vars={{ searchIndex }}>
+        window.searchIndex = searchIndex;
+    </script>
+</Layout>
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
+<script>
+    import { 
+        initializeSearch, 
+        type SearchRenderer, 
+        type SearchResults, 
+        type ArticleItem, 
+        type GalleryItem, 
+        type QuoteItem 
+    } from '../utils/search.ts';
+    
+    // Create SearchRenderer implementation
+    class DOMSearchRenderer implements SearchRenderer {
+        private pageTitle!: HTMLElement;
+        private searchResultsInfo!: HTMLElement;
+        private searchDescription!: HTMLElement;
+        private noResultsEl!: HTMLElement;
+        private searchResults!: HTMLElement;
+        
+        // Result containers
+        private articlesSection!: HTMLElement;
+        private articlesContainer!: HTMLElement;
+        private articlesCount!: HTMLElement;
+        
+        private gallerySection!: HTMLElement;
+        private galleryContainer!: HTMLElement;
+        private galleryCount!: HTMLElement;
+        
+        private quotesSection!: HTMLElement;
+        private quotesContainer!: HTMLElement;
+        private quotesCount!: HTMLElement;
+        
+        private resultsCount!: HTMLElement;
+        private resultsPlural!: HTMLElement;
+        private searchQueryDisplay!: HTMLElement;
+        
+        constructor() {
+            this.initializeElements();
+        }
+        
+        private initializeElements(): void {
+            this.pageTitle = document.getElementById('page-title') as HTMLElement;
+            this.searchResultsInfo = document.getElementById('search-results-info') as HTMLElement;
+            this.searchDescription = document.getElementById('search-description') as HTMLElement;
+            this.noResultsEl = document.getElementById('no-results') as HTMLElement;
+            this.searchResults = document.getElementById('search-results') as HTMLElement;
+            
+            // Result containers
+            this.articlesSection = document.getElementById('articles-section') as HTMLElement;
+            this.articlesContainer = document.getElementById('articles-container') as HTMLElement;
+            this.articlesCount = document.getElementById('articles-count') as HTMLElement;
+            
+            this.gallerySection = document.getElementById('gallery-section') as HTMLElement;
+            this.galleryContainer = document.getElementById('gallery-container') as HTMLElement;
+            this.galleryCount = document.getElementById('gallery-count') as HTMLElement;
+            
+            this.quotesSection = document.getElementById('quotes-section') as HTMLElement;
+            this.quotesContainer = document.getElementById('quotes-container') as HTMLElement;
+            this.quotesCount = document.getElementById('quotes-count') as HTMLElement;
+            
+            this.resultsCount = document.getElementById('results-count') as HTMLElement;
+            this.resultsPlural = document.getElementById('results-plural') as HTMLElement;
+            this.searchQueryDisplay = document.getElementById('search-query-display') as HTMLElement;
+        }
+        
+        showDefaultState(): void {
+            this.pageTitle.textContent = 'Search';
+            this.searchResultsInfo.classList.add('hidden');
+            this.searchDescription.classList.remove('hidden');
+            this.noResultsEl.classList.add('hidden');
+            this.searchResults.classList.add('hidden');
+            this.hideAllSections();
+        }
+        
+        displayResults(query: string, results: SearchResults): void {
+            const { articles, gallery, quotes } = results;
+            const totalResults = articles.length + gallery.length + quotes.length;
+            
+            // Update header
+            this.pageTitle.textContent = 'Search Results';
+            this.searchQueryDisplay.textContent = query;
+            this.resultsCount.textContent = totalResults.toString();
+            this.resultsPlural.textContent = totalResults === 1 ? '' : 's';
+            this.searchResultsInfo.classList.remove('hidden');
+            this.searchDescription.classList.add('hidden');
+            
+            if (totalResults === 0) {
+                this.noResultsEl.classList.remove('hidden');
+                this.searchResults.classList.add('hidden');
+                return;
+            }
+            
+            // Show results
+            this.noResultsEl.classList.add('hidden');
+            this.searchResults.classList.remove('hidden');
+            
+            this.displayArticles(articles);
+            this.displayGallery(gallery);
+            this.displayQuotes(quotes);
+        }
+        
+        hideAllSections(): void {
+            this.articlesSection.classList.add('hidden');
+            this.gallerySection.classList.add('hidden');
+            this.quotesSection.classList.add('hidden');
+        }
+        
+        displayArticles(articles: ArticleItem[]): void {
+            if (articles.length === 0) {
+                this.articlesSection.classList.add('hidden');
+                return;
+            }
+            
+            this.articlesCount.textContent = articles.length.toString();
+            this.articlesSection.classList.remove('hidden');
+            
+            // Clear existing content
+            this.articlesContainer.innerHTML = '';
+            
+            // Create articles using DOM methods to prevent XSS
+            articles.forEach((article: ArticleItem) => {
+                const articleEl = this.createArticleElement(article);
+                this.articlesContainer.appendChild(articleEl);
+            });
+        }
+        
+        displayGallery(gallery: GalleryItem[]): void {
+            if (gallery.length === 0) {
+                this.gallerySection.classList.add('hidden');
+                return;
+            }
+            
+            this.galleryCount.textContent = gallery.length.toString();
+            this.gallerySection.classList.remove('hidden');
+            
+            // Clear existing content
+            this.galleryContainer.innerHTML = '';
+            
+            // Create gallery items using DOM methods to prevent XSS
+            gallery.forEach((item: GalleryItem) => {
+                const galleryEl = this.createGalleryElement(item);
+                this.galleryContainer.appendChild(galleryEl);
+            });
+        }
+        
+        displayQuotes(quotes: QuoteItem[]): void {
+            if (quotes.length === 0) {
+                this.quotesSection.classList.add('hidden');
+                return;
+            }
+            
+            this.quotesCount.textContent = quotes.length.toString();
+            this.quotesSection.classList.remove('hidden');
+            
+            // Clear existing content
+            this.quotesContainer.innerHTML = '';
+            
+            // Create quotes using DOM methods to prevent XSS
+            quotes.forEach((quote: QuoteItem) => {
+                const quoteEl = this.createQuoteElement(quote);
+                this.quotesContainer.appendChild(quoteEl);
+            });
+        }
+        
+        private createArticleElement(article: ArticleItem): HTMLElement {
+            const searchInstance = window.clientSideSearchInstance;
+            if (!searchInstance) throw new Error('Search instance not available');
+            
+            const articleEl = document.createElement('article');
+            articleEl.className = 'bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-brand-200 hover:shadow-lg transition-all duration-200';
+            
+            const linkEl = document.createElement('a');
+            linkEl.href = searchInstance.escapeForAttribute(article.path);
+            linkEl.className = 'group';
+            
+            const flexEl = document.createElement('div');
+            flexEl.className = 'flex gap-6';
+            
+            // Image container
+            const imgContainer = document.createElement('div');
+            imgContainer.className = 'flex-shrink-0';
+            
+            const imgEl = document.createElement('img');
+            imgEl.src = searchInstance.escapeForAttribute(article.hero_image.src);
+            imgEl.alt = searchInstance.escapeForAttribute(article.hero_image_alt);
+            imgEl.width = 120;
+            imgEl.height = 80;
+            imgEl.className = 'rounded-lg object-cover';
+            
+            imgContainer.appendChild(imgEl);
+            
+            // Content container
+            const contentEl = document.createElement('div');
+            contentEl.className = 'flex-1 min-w-0';
+            
+            const titleEl = document.createElement('h3');
+            titleEl.className = 'text-xl font-medium text-brand-900 mb-2 group-hover:text-brand-700 transition-colors';
+            titleEl.textContent = article.title;
+            
+            const descEl = document.createElement('p');
+            descEl.className = 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm mb-3 line-clamp-2';
+            descEl.textContent = article.description;
+            
+            const metaEl = document.createElement('div');
+            metaEl.className = 'flex items-center justify-between';
+            
+            const timeEl = document.createElement('time');
+            timeEl.className = 'text-brand-500 text-sm font-[\'Montserrat_Variable\']';
+            timeEl.textContent = searchInstance.formatDate(article.date);
+            
+            const tagsEl = document.createElement('div');
+            tagsEl.className = 'flex gap-2';
+            
+            article.tags.slice(0, 3).forEach(tag => {
+                const tagEl = document.createElement('span');
+                tagEl.className = 'bg-brand-100 text-brand-700 px-2 py-1 rounded text-xs font-medium';
+                tagEl.textContent = tag;
+                tagsEl.appendChild(tagEl);
+            });
+            
+            metaEl.appendChild(timeEl);
+            metaEl.appendChild(tagsEl);
+            
+            contentEl.appendChild(titleEl);
+            contentEl.appendChild(descEl);
+            contentEl.appendChild(metaEl);
+            
+            flexEl.appendChild(imgContainer);
+            flexEl.appendChild(contentEl);
+            
+            linkEl.appendChild(flexEl);
+            articleEl.appendChild(linkEl);
+            
+            return articleEl;
+        }
+        
+        private createGalleryElement(item: GalleryItem): HTMLElement {
+            const searchInstance = window.clientSideSearchInstance;
+            if (!searchInstance) throw new Error('Search instance not available');
+            
+            const articleEl = document.createElement('article');
+            articleEl.className = 'bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden border border-brand-200 hover:shadow-lg transition-all duration-200';
+            
+            const linkEl = document.createElement('a');
+            linkEl.href = `/gallery/${searchInstance.escapeForAttribute(item.directory)}/`;
+            linkEl.className = 'group';
+            
+            // Image container
+            const imgContainerEl = document.createElement('div');
+            imgContainerEl.className = 'aspect-video overflow-hidden';
+            
+            const imgEl = document.createElement('img');
+            imgEl.src = searchInstance.escapeForAttribute(item.featured_image.src);
+            imgEl.alt = searchInstance.escapeForAttribute(item.featured_image_alt);
+            imgEl.width = 400;
+            imgEl.height = 225;
+            imgEl.className = 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-300';
+            
+            imgContainerEl.appendChild(imgEl);
+            
+            // Content container
+            const contentEl = document.createElement('div');
+            contentEl.className = 'p-6';
+            
+            const titleEl = document.createElement('h3');
+            titleEl.className = 'text-lg font-medium text-brand-900 mb-2 group-hover:text-brand-700 transition-colors';
+            titleEl.textContent = item.title;
+            
+            contentEl.appendChild(titleEl);
+            
+            if (item.description) {
+                const descEl = document.createElement('p');
+                descEl.className = 'text-brand-600 font-[\'Montserrat_Variable\'] text-sm mb-3 line-clamp-2';
+                descEl.textContent = item.description;
+                contentEl.appendChild(descEl);
+            }
+            
+            const metaEl = document.createElement('div');
+            metaEl.className = 'flex items-center justify-between';
+            
+            if (item.location) {
+                const locationEl = document.createElement('span');
+                locationEl.className = 'text-brand-500 text-sm font-[\'Montserrat_Variable\']';
+                locationEl.textContent = `📍 ${item.location}`;
+                metaEl.appendChild(locationEl);
+            } else {
+                metaEl.appendChild(document.createElement('span'));
+            }
+            
+            const countEl = document.createElement('span');
+            countEl.className = 'text-brand-500 text-sm font-[\'Montserrat_Variable\']';
+            countEl.textContent = `${item.images_count} photos`;
+            metaEl.appendChild(countEl);
+            
+            contentEl.appendChild(metaEl);
+            
+            linkEl.appendChild(imgContainerEl);
+            linkEl.appendChild(contentEl);
+            articleEl.appendChild(linkEl);
+            
+            return articleEl;
+        }
+        
+        private createQuoteElement(quote: QuoteItem): HTMLElement {
+            const blockquoteEl = document.createElement('blockquote');
+            blockquoteEl.className = 'bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-brand-200 hover:shadow-lg transition-all duration-200';
+            
+            const quoteTextEl = document.createElement('p');
+            quoteTextEl.className = 'text-brand-800 font-[\'Montserrat_Variable\'] text-lg italic mb-4';
+            quoteTextEl.textContent = `"${quote.quote}"`;
+            
+            blockquoteEl.appendChild(quoteTextEl);
+            
+            if (quote.info) {
+                const citeEl = document.createElement('cite');
+                citeEl.className = 'text-brand-600 font-medium';
+                citeEl.textContent = `— ${quote.info}`;
+                blockquoteEl.appendChild(citeEl);
+            }
+            
+            return blockquoteEl;
+        }
+    }
+    
+    // Initialize search when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        const renderer = new DOMSearchRenderer();
+        initializeSearch(renderer);
+    });
+    
+    // Also initialize on Astro page load for SPA navigation
+    document.addEventListener('astro:page-load', () => {
+        const renderer = new DOMSearchRenderer();
+        initializeSearch(renderer);
+    });
+</script>

@@ -1,5 +1,57 @@
-<div>
-  <div class="flex-shrink-0 w-[470px] h-[3.125rem] rounded-[0.3125rem] bg-[#f7f9ff]" />
-  <div class="text-[#a2a2a2] font-family-['Montserrat-Variable'] leading-[normal]">Search by keywords</div>
+---
+interface Props {
+  placeholder?: string;
+  size?: 'small' | 'medium' | 'large';
+  redirectToSearch?: boolean;
+}
+
+const { 
+  placeholder = "Search articles, gallery, quotes...", 
+  size = 'medium',
+  redirectToSearch = true 
+} = Astro.props;
+
+const sizeClasses = {
+  small: 'px-4 py-2 text-sm',
+  medium: 'px-6 py-3 text-base',
+  large: 'px-6 py-4 text-lg'
+};
+---
+
+<div class="search-bar-container">
+  <form 
+    method="GET" 
+    action={redirectToSearch ? "/search" : "#"}
+    class="relative max-w-md mx-auto"
+  >
+    <input
+      type="text"
+      name="q"
+      placeholder={placeholder}
+      class={`
+        w-full rounded-lg border border-brand-200 bg-white/90 backdrop-blur-sm 
+        focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 focus:outline-none 
+        transition-all duration-200 font-['Montserrat_Variable'] text-brand-900 
+        placeholder-brand-400 ${sizeClasses[size]}
+      `}
+      autocomplete="off"
+    />
+    <button
+      type="submit"
+      class="absolute right-2 top-1/2 -translate-y-1/2 bg-brand-600 hover:bg-brand-700 text-white p-2 rounded-md transition-colors duration-200"
+      aria-label="Search"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+      </svg>
+    </button>
+  </form>
 </div>
 
