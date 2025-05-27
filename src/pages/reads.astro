@@ -6,7 +6,7 @@ import { Schema } from "astro-seo-schema";
 
 // Fetch quotes data
 const quotesData = await getCollection("quotes");
-const quotes = quotesData[1].data;
+const allQuotes = quotesData[1].data;
 
 // Get current date for "last updated"
 const currentDate = new Date(quotesData[0].data);
@@ -27,6 +27,10 @@ const pageUrl = new URL(
   Astro.url.pathname,
   Astro.site || "https://rishikc.com",
 ).toString();
+
+// Prepare quotes for initial render
+const featuredQuote = allQuotes.length > 0 ? allQuotes[0] : null;
+const remainingQuotes = allQuotes.length > 0 ? allQuotes.slice(1) : [];
 ---
 
 <BaseLayout page_info={page_info}>
@@ -42,8 +46,8 @@ const pageUrl = new URL(
       url: pageUrl,
       mainEntity: {
         "@type": "ItemList",
-        numberOfItems: quotes.length,
-        itemListElement: quotes.map((quote, index) => ({
+        numberOfItems: allQuotes.length, // Use allQuotes here
+        itemListElement: allQuotes.map((quote, index) => ({ // Use allQuotes here
           "@type": "ListItem",
           position: index + 1,
           item: {
@@ -99,13 +103,58 @@ const pageUrl = new URL(
         </p>
       </div>
 
+      <!-- Shuffle Button -->
+      <div class="mb-10 text-center">
+        <button
+          id="shuffle-button"
+          class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-['Montserrat_Variable'] text-sm rounded-lg shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 inline-flex items-center"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 13.5V21m0 0l2.5-2.5M16 21l-2.5-2.5M8 10.5V3m0 0l2.5 2.5M8 3L5.5 5.5M18.5 5.5l-13 13" />
+          </svg>
+          Shuffle Quotes
+        </button>
+      </div>
+
+      <!-- Featured Quote Section -->
+      {
+        featuredQuote && (
+          <div id="featured-quote-section" class="mb-12 md:mb-16">
+            <div id="featured-quote-card-container">
+              {/* Astro renders the initial featured quote here */}
+              <div
+                class="quote-card relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden mx-auto max-w-2xl"
+                transition:animate="fade"
+              >
+                <span
+                  class="absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none"
+                  aria-hidden="true"
+                >
+                  “
+                </span>
+                <blockquote class="mb-5 z-10">
+                  <p class="quote-text text-center sm:text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable']">
+                    {featuredQuote.quote}
+                  </p>
+                </blockquote>
+                {featuredQuote.info && (
+                  <cite class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
+                    — {featuredQuote.info}
+                  </cite>
+                )}
+              </div>
+            </div>
+          </div>
+        )
+      }
+
       <!-- Quotes Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+      <div id="quotes-grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
         {
-          quotes.map((quote, index) => (
+          remainingQuotes.map((quote, index) => (
             <div
               class="quote-card relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden"
-              style={`--index: ${index};`}
+              style={`--index: ${index};`} /* Index relative to remainingQuotes */
               transition:animate="fade"
             >
               <span class="absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none" aria-hidden="true">“</span>
@@ -126,6 +175,100 @@ const pageUrl = new URL(
     </div>
   </main>
 </BaseLayout>
+
+<script define:vars={{ allQuotes }}>
+  const shuffleButton = document.getElementById('shuffle-button');
+  const featuredQuoteSection = document.getElementById('featured-quote-section');
+  const featuredQuoteCardContainer = document.getElementById('featured-quote-card-container');
+  const quotesGridContainer = document.getElementById('quotes-grid-container');
+
+  let currentQuotes = [...allQuotes];
+
+  // --- DOM Element References ---
+  let featuredQuoteCardElement = null;
+  let featuredQuoteTextElement = null;
+  let featuredQuoteAuthorElement = null;
+
+  if (featuredQuoteCardContainer) {
+    featuredQuoteCardElement = featuredQuoteCardContainer.querySelector('.quote-card');
+    if (featuredQuoteCardElement) {
+      featuredQuoteTextElement = featuredQuoteCardElement.querySelector('.quote-text');
+      featuredQuoteAuthorElement = featuredQuoteCardElement.querySelector('.quote-author');
+    }
+  }
+
+  const gridCardDOMElements = quotesGridContainer ? Array.from(quotesGridContainer.querySelectorAll('.quote-card')) : [];
+  const gridQuoteTextDOMElements = gridCardDOMElements.map(card => card.querySelector('.quote-text'));
+  const gridQuoteAuthorDOMElements = gridCardDOMElements.map(card => card.querySelector('.quote-author'));
+  
+  const allAnimatedCardElements = [featuredQuoteCardElement, ...gridCardDOMElements].filter(el => el);
+  // --- End DOM Element References ---
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function _updateCardContent(textEl, authorEl, quoteData) {
+    if (textEl) {
+      textEl.textContent = quoteData.quote;
+    }
+    if (authorEl) {
+      authorEl.textContent = quoteData.info ? `— ${quoteData.info}` : '';
+      authorEl.style.display = quoteData.info ? '' : 'none';
+    }
+  }
+
+  function displayQuotes() {
+    allAnimatedCardElements.forEach(card => card.style.animation = 'none');
+    allAnimatedCardElements.forEach(card => void card.offsetWidth); // Force reflow
+
+    if (!currentQuotes || currentQuotes.length === 0) {
+      if (featuredQuoteSection) featuredQuoteSection.style.display = 'none';
+      if (featuredQuoteCardElement) featuredQuoteCardElement.style.display = 'none';
+      gridCardDOMElements.forEach(card => card.style.display = 'none');
+      
+      if (quotesGridContainer && allQuotes.length === 0) {
+         quotesGridContainer.innerHTML = '<p class="col-span-full text-center text-brand-700/80">No quotes available to display.</p>';
+      }
+      return;
+    }
+
+    if (featuredQuoteSection) featuredQuoteSection.style.display = 'block';
+    if (featuredQuoteCardElement) {
+        featuredQuoteCardElement.style.display = '';
+        _updateCardContent(featuredQuoteTextElement, featuredQuoteAuthorElement, currentQuotes[0]);
+    }
+
+    const newGridQuotesData = currentQuotes.slice(1);
+    gridCardDOMElements.forEach((cardElement, index) => {
+      const quoteData = newGridQuotesData[index];
+      if (quoteData) {
+        cardElement.style.display = '';
+        _updateCardContent(gridQuoteTextDOMElements[index], gridQuoteAuthorDOMElements[index], quoteData);
+      } else {
+        cardElement.style.display = 'none';
+      }
+    });
+    
+    allAnimatedCardElements.forEach(card => card.style.animation = ''); // Reapply animation
+  }
+
+  // Initial setup: Shuffle and display. displayQuotes handles empty state.
+  shuffleArray(currentQuotes);
+  displayQuotes();
+
+  if (shuffleButton) {
+    shuffleButton.addEventListener('click', () => {
+      shuffleArray(currentQuotes);
+      displayQuotes();
+    });
+  } else {
+    console.error("Shuffle button not found.");
+  }
+</script>
 
 <style>
   /* 1. Staggered Entry Animation (Fallback) */
