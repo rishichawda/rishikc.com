@@ -402,7 +402,7 @@ const siteUrl = new URL(
                           {position.title}
                         </h4>
                         <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-3">
-                          {position.period} ({position.duration})
+                          {position.period} { position.duration.length > 0 ? `(${position.duration})` : "" }
                         </p>
                         {position.location && (
                           <p class="text-sm text-gray-600 font-['Montserrat_Variable'] mb-3 flex items-center">
