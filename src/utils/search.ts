@@ -84,8 +84,7 @@ export class ClientSideSearch {
         const searchForm = document.getElementById('search-form') as HTMLFormElement;
         
         if (!searchInput || !searchForm) {
-            console.warn('Required search elements not found');
-            return;
+            throw new Error('Required search elements not found');
         }
         
         this.searchInput = searchInput;
