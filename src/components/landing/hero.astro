@@ -2,8 +2,6 @@
 import { Image } from "astro:assets";
 
 const navItems = [
-  // { label: "about me", path: "/about" },
-  // { label: "services", path: "#services" },
   { label: "articles", path: "/articles/" },
   { label: "gallery", path: "/gallery/" },
 ];
@@ -13,13 +11,11 @@ import logo from "../../../content/assets/logo/Group 489.svg";
 <section
   class="relative max-w-[1319px] rounded-b-3xl w-full min-h-[617px] mx-auto overflow-hidden px-4 sm:px-6 lg:px-8 pb-8 lg:pb-0"
 >
-  <!-- Split Background -->
   <div class="absolute inset-0 flex">
     <div class="w-0 lg:w-1/2 bg-[#98a5db]/[0.88]"></div>
     <div class="w-full lg:w-1/2 bg-[#8592c8]"></div>
   </div>
 
-  <!-- Navigation -->
   <div class="relative z-10 pt-4">
     <div class="flex justify-between items-center gap-4">
       <div
@@ -40,7 +36,6 @@ import logo from "../../../content/assets/logo/Group 489.svg";
           ))
         }
         
-        <!-- Search Icon and Input -->
         <div class="relative">
           <button
             id="search-icon-btn"
@@ -59,7 +54,6 @@ import logo from "../../../content/assets/logo/Group 489.svg";
             </svg>
           </button>
           
-          <!-- Search Input Form (initially hidden) -->
           <form
             id="search-form"
             method="GET"
@@ -98,11 +92,9 @@ import logo from "../../../content/assets/logo/Group 489.svg";
     </div>
   </div>
 
-  <!-- Main Content -->
   <div
     class="relative z-10 flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-12 mt-12 lg:mt-16"
   >
-    <!-- Left Content -->
     <div class="w-full lg:w-[520px] space-y-6 order-1">
       <h1
         class="font-['Red_Hat_Display_Variable'] text-3xl sm:text-3xl lg:text-[2rem] font-light text-white leading-snug"
@@ -157,7 +149,6 @@ import logo from "../../../content/assets/logo/Group 489.svg";
       <Image alt="logo" src={logo} transition:name="hero-logo-image" />
     </div>
 
-    <!-- Right Social Icons -->
     <div class="flex order-3 flex-row lg:flex-col gap-6 lg:gap-8 mt-8 lg:mt-0 items-center">
       <a
         href="https://github.com/rishichawda"
@@ -224,7 +215,6 @@ import logo from "../../../content/assets/logo/Group 489.svg";
     </div>
   </div>
 
-  <!-- Get in Touch Button -->
   <div class="relative z-20 mt-12 lg:mt-16 w-fit mx-auto mb-8 lg:mb-12">
     <a
       transition:name="hero-cta-button"
@@ -247,24 +237,21 @@ import logo from "../../../content/assets/logo/Group 489.svg";
       searchIconBtn.addEventListener('click', function(e) {
         e.preventDefault();
         
-        // Show the search form with animation
         searchForm.classList.remove('hidden');
         searchForm.style.opacity = '0';
         searchForm.style.transform = 'translateY(-10px)';
         
-        // Animate in
         requestAnimationFrame(() => {
           searchForm.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
           searchForm.style.opacity = '1';
           searchForm.style.transform = 'translateY(0)';
         });
         
-        // Focus on the input field
         setTimeout(() => searchInput.focus(), 100);
       });
       
-      // Function to close search form
       function closeSearchForm() {
+        if (!searchForm) return;
         searchForm.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
         searchForm.style.opacity = '0';
         searchForm.style.transform = 'translateY(-10px)';
@@ -275,7 +262,6 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         }, 200);
       }
       
-      // Handle clicking outside to close the search form
       document.addEventListener('click', function(e) {
         const target = e.target as Node;
         if (!searchForm.contains(target) && !searchIconBtn.contains(target)) {
@@ -283,7 +269,6 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         }
       });
       
-      // Handle form submission
       searchForm.addEventListener('submit', function(e) {
         const query = searchInput.value.trim();
         if (!query) {
@@ -291,11 +276,9 @@ import logo from "../../../content/assets/logo/Group 489.svg";
           return;
         }
         e.preventDefault();
-        // Always navigate to /search?q=... (absolute path)
         window.location.href = `/search/?q=${encodeURIComponent(query)}`;
       });
       
-      // Handle escape key to close search
       searchInput.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
           closeSearchForm();

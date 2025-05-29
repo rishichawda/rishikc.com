@@ -26,7 +26,6 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
                             role="link"
                             href={`#${item.slug}`}
                         >
-                            {/* Conditionally apply smaller text size for deeper levels */}
                             <span class:list={["flex-1", item.depth > 3 ? "text-xs" : "text-sm"]} title={item.text}>
                                 {item.text}
                             </span>

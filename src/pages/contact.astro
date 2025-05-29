@@ -2,24 +2,21 @@
 import BaseLayout from "../layouts/base_layout.astro";
 import "../styles/global.css";
 import { Schema } from "astro-seo-schema";
-import { getCollection } from "astro:content"; // Import getCollection
+import { getCollection } from "astro:content";
 
-// Define interfaces needed for profile data
 interface Social { platform: string; url: string; }
-interface ProfileData { name: string; socials: Social[]; /* Add other fields if needed */ }
+interface ProfileData { name: string; socials: Social[]; }
 
-// Fetch profile data
 const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
-  title: `Contact - ${profile.name}`, // Use profile name
+  title: `Contact - ${profile.name}`,
   description:
-    `Get in touch with ${profile.name} for collaborations, job opportunities, or general inquiries`, // Use profile name
-  keywords: `contact, email, collaboration, ${profile.name}, software engineer`, // Use profile name
+    `Get in touch with ${profile.name} for collaborations, job opportunities, or general inquiries`,
+  keywords: `contact, email, collaboration, ${profile.name}, software engineer`,
 };
 
-// Access environment variables securely on the server
 const emailJSPublicKey = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
 const emailJSServiceID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
 const emailJSTemplateID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
@@ -31,35 +28,22 @@ const pageUrl = new URL(
 ---
 
 <BaseLayout page_info={page_info}>
-  <!-- ContactPage JSON-LD Schema -->
   <Schema
     slot="head"
     item={{
       "@context": "https://schema.org",
       "@type": "ContactPage",
-      name: `Contact ${profile.name}`, // Use profile name
+      name: `Contact ${profile.name}`,
       description: page_info.description,
       url: pageUrl,
       mainEntity: {
         "@type": "Person",
         name: profile.name,
-        email: "mailto:hello@rishikc.com", // Keep specific contact detail
+        email: "mailto:hello@rishikc.com",
         url: "https://rishikc.com",
-        contactType: "Professional Inquiries",
-        sameAs: profile.socials.map((social: Social) => social.url), // Use fetched socials
+        sameAs: profile.socials.map((social: Social) => social.url),
       },
-      potentialAction: {
-        "@type": "ContactAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: pageUrl,
-          actionPlatform: [
-            "https://schema.org/DesktopWebPlatform", 
-            "https://schema.org/MobileWebPlatform"
-          ]
-        },
-        name: "Contact Rishi"
-      }
+    }}
     }}
   />
 

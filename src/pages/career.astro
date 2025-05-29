@@ -4,9 +4,7 @@ import BaseLayout from "../layouts/base_layout.astro";
 import { Schema } from "astro-seo-schema";
 import favicon from "../../content/assets/logo/Group 489.png";
 import { fetchMetadata, type WebsiteMeta } from "../utils/metadataFetcher";
-import LinkCard from "../components/LinkCard.astro"; // Import the new component
-
-// Define TypeScript interfaces for profile data
+import LinkCard from "../components/LinkCard.astro";
 interface Language {
   name: string;
   level: string;
@@ -24,11 +22,10 @@ interface Position {
   location?: string;
   description?: string;
   responsibilities?: string[];
-  links?: string[]; // Add links property
-  linksMeta?: WebsiteMeta[]; // Add linksMeta property
+  links?: string[];
+  linksMeta?: WebsiteMeta[];
 }
 
-// Define interface for ClubPosition within ExtraCurricular
 interface ClubPosition {
   title: string;
   period: string;
@@ -38,13 +35,10 @@ interface ClubPosition {
   responsibilities?: string[];
 }
 
-// Define interface for ExtraCurricular activities
 interface ExtraCurricular {
   club: string;
   positions: ClubPosition[];
 }
-
-// Remove the WebsiteMeta interface definition here
 
 interface Experience {
   company: string;
@@ -61,7 +55,6 @@ interface Education {
   extra_curriculars?: ExtraCurricular[];
 }
 
-// Add Certification interface
 interface Certification {
   institution: string;
   title: string;
@@ -78,13 +71,12 @@ interface ProfileData {
   };
   skills: string[];
   languages: Language[];
-  certifications: Certification[]; // Updated type
+  certifications: Certification[];
   experience: Experience[];
   education: Education[];
   socials: Social[];
 }
 
-// Get profile data
 const profileEntry = await getCollection("profile");
 const profileData = profileEntry[0].data as ProfileData;
 const profile = profileData;
@@ -92,7 +84,6 @@ const profile = profileData;
 // --- Metadata Fetching Logic ---
 const experiencesWithMeta = await Promise.all(
   profile.experience.map(async (exp): Promise<Experience> => {
-    // Fetch company website metadata
     let companyWebsitesMeta: WebsiteMeta[] = [];
     if (exp.website && exp.website.length > 0) {
       companyWebsitesMeta = await Promise.all(
@@ -100,7 +91,6 @@ const experiencesWithMeta = await Promise.all(
       );
     }
 
-    // Fetch position links metadata
     const positionsWithMeta = await Promise.all(
       exp.positions.map(async (pos): Promise<Position> => {
         if (pos.links && pos.links.length > 0) {
@@ -120,7 +110,6 @@ const experiencesWithMeta = await Promise.all(
     };
   }),
 );
-// --- End Metadata Fetching Logic ---
 
 const page_info = {
   title: "About | Rishi Chawda",
@@ -129,7 +118,6 @@ const page_info = {
     "Rishi Chawda, Software Engineer, Developer, About, Experience, Skills",
 };
 
-// Define site URL for structured data
 const siteUrl = new URL(
   Astro.url.pathname,
   Astro.site || "https://rishikc.com",
@@ -146,7 +134,7 @@ const siteUrl = new URL(
       jobTitle: profile.title,
       worksFor: {
         "@type": "Organization",
-        name: profile.experience[0]?.company || "Unknown Company", // Use dynamic company name
+        name: profile.experience[0]?.company || "Unknown Company",
       },
       url: siteUrl,
       image: `${siteUrl.replace(/\/$/, "")}/${favicon.src}`,
@@ -193,10 +181,7 @@ const siteUrl = new URL(
             d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         Back to Home
-      </a>
-    </div>
-
-    <!-- Profile Section -->
+      </a>    </div>
     <div class="mb-20 md:mb-24">
       <div class="bg-[#F8F9FE] rounded-lg p-8 sm:p-10 lg:p-12">
         <div class="flex flex-col md:flex-row gap-10 md:gap-12">
@@ -215,7 +200,6 @@ const siteUrl = new URL(
               {profile.bio}
             </p>
 
-            <!-- Location -->
             <div class="flex items-center mb-4 text-gray-600">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -241,7 +225,6 @@ const siteUrl = new URL(
               >
             </div>
 
-            <!-- Contact Information -->
             <div class="flex items-center mb-6 text-gray-600 contact-item">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +262,6 @@ const siteUrl = new URL(
               </a>
             </div>
 
-            <!-- Social Links -->
             <div class="flex flex-wrap gap-3 social-links-container">
               {
                 profile.socials.map((social) => (
@@ -341,7 +323,6 @@ const siteUrl = new URL(
         </div>
       </div>
     </div>
-    <!-- Experience Timeline Section -->
     <div class="mb-20 md:mb-24">
       <h2
         class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-12"
@@ -354,18 +335,14 @@ const siteUrl = new URL(
         >
         </div>
         <div class="space-y-12">
-          {/* Use the processed experiencesWithMeta array */}
-          {
-            experiencesWithMeta.map((exp, index) => (
+          {experiencesWithMeta.map((exp, index) => (
               <div
                 class={`relative flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} timeline-item-container`}
               >
-                {/* Timeline Dot */}
                 <div
                   class={`absolute left-0 md:left-1/2 top-8 w-4 h-4 bg-[#6B7AB0] rounded-full transform -translate-x-1/2 md:translate-x-[-7px] z-10 timeline-dot`}
                 />
 
-                {/* Company Info */}
                 <div
                   class={`mb-4 ml-8 md:ml-0 md:mb-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-16 text-left md:text-right" : "md:pl-16 text-left"} company-info`}
                 >
@@ -391,7 +368,6 @@ const siteUrl = new URL(
                   )}
                 </div>
 
-                {/* Position Details */}
                 <div
                   class={`pl-8 ${index % 2 === 0 ? "pr-0" : "pl-0"} md:w-1/2 md:px-8 timeline-item`}
                 >
@@ -435,7 +411,6 @@ const siteUrl = new URL(
                           </p>
                         )}
 
-                        {/* Render Position Links Metadata - Use Component */}
                         {position.linksMeta && position.linksMeta.length > 0 && (
                           <div class="mt-4 space-y-3">
                             <h5 class="text-sm font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-2">
@@ -472,7 +447,6 @@ const siteUrl = new URL(
         </div>
       </div>
     </div>
-    <!-- Education Section -->
     <div class="mb-20 md:mb-24">
       <h2
         class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-10"
@@ -480,7 +454,6 @@ const siteUrl = new URL(
         Education
       </h2>
       <div class="grid grid-cols-1 md:grid-cols-1 gap-8">
-        {/* Changed to single column grid */}
         {
           profile.education.map((edu) => (
             <div class="bg-white rounded-lg p-8 shadow-sm border border-gray-100 transition-shadow duration-300 hover:shadow-md">
@@ -495,7 +468,6 @@ const siteUrl = new URL(
                 {edu.period}
               </p>
 
-              {/* Display Extra Curricular Activities */}
               {edu.extra_curriculars && edu.extra_curriculars.length > 0 && (
                 <div class="mt-6 border-t border-gray-200 pt-6">
                   <h4 class="text-md font-semibold text-gray-800 font-['Red_Hat_Display_Variable'] mb-4">
@@ -570,7 +542,6 @@ const siteUrl = new URL(
         }
       </div>
     </div>
-    <!-- Call To Action -->
     <div class="bg-gray-100 rounded-lg p-10 md:p-12 text-center">
       <h2
         class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5"

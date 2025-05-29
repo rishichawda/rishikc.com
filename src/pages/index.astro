@@ -13,7 +13,6 @@ const page_info = {
 	keywords: "Rishi Chawda - Software Engineer",
 };
 
-// Define site URL for structured data
 const siteUrl = new URL(
 	Astro.url.pathname,
 	Astro.site || "https://rishikc.com",
@@ -21,7 +20,6 @@ const siteUrl = new URL(
 ---
 
 <BaseLayout page_info={page_info}>
-	<!-- Person JSON-LD Schema -->
 	<Schema
 		slot="head"
 		item={{
@@ -48,7 +46,6 @@ const siteUrl = new URL(
 	/>
 	<main>
 		<Hero />
-		<!-- <Services /> -->
 		<ArticlesPreview />
 		<CallToAction />
 	</main>	

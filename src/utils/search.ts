@@ -1,6 +1,5 @@
 import DOMPurify from 'dompurify';
 
-// TypeScript interfaces for the search data
 export interface SearchableItem {
     searchableContent: string;
 }
@@ -46,7 +45,6 @@ export interface SearchIndex {
     quotes: QuoteItem[];
 }
 
-// DOM renderer interface - to be implemented by the UI layer
 export interface SearchRenderer {
     showDefaultState(): void;
     displayResults(query: string, results: SearchResults): void;
@@ -126,27 +124,18 @@ export class ClientSideSearch {
     }
     
     private setupEventListeners(): void {
-        // Form submission
         this.searchForm.addEventListener('submit', this.boundFormSubmit);
-        
-        // Real-time search as user types (with debounce)
         this.searchInput.addEventListener('input', this.boundInputHandler);
-        
-        // Keyboard shortcuts
         document.addEventListener('keydown', this.boundKeydownHandler);
-        
-        // Handle browser back/forward
         window.addEventListener('popstate', this.boundPopstateHandler);
     }
     
     public destroy(): void {
-        // Clean up event listeners
         this.searchForm.removeEventListener('submit', this.boundFormSubmit);
         this.searchInput.removeEventListener('input', this.boundInputHandler);
         document.removeEventListener('keydown', this.boundKeydownHandler);
         window.removeEventListener('popstate', this.boundPopstateHandler);
         
-        // Clear timeout
         if (this.searchTimeout) {
             clearTimeout(this.searchTimeout);
             this.searchTimeout = null;

@@ -4,11 +4,9 @@ import { getCollection } from "astro:content";
 import "../styles/global.css";
 import { Schema } from "astro-seo-schema";
 
-// Fetch quotes data
 const quotesData = await getCollection("quotes");
 const allQuotes = quotesData[1].data;
 
-// Get current date for "last updated"
 const currentDate = new Date(quotesData[0].data);
 const formattedDate = currentDate.toLocaleDateString("en-US", {
   year: "numeric",
@@ -28,7 +26,6 @@ const pageUrl = new URL(
   Astro.site || "https://rishikc.com",
 ).toString();
 
-// Prepare quotes for initial render
 const featuredQuote = allQuotes.length > 0 ? allQuotes[0] : null;
 const remainingQuotes = allQuotes.length > 0 ? allQuotes.slice(1) : [];
 
@@ -36,7 +33,6 @@ console.log("Featured Quote:", featuredQuote);
 ---
 
 <BaseLayout page_info={page_info}>
-  <!-- Reads Page JSON-LD Schema -->
   <Schema
     slot="head"
     item={{
@@ -48,8 +44,8 @@ console.log("Featured Quote:", featuredQuote);
       url: pageUrl,
       mainEntity: {
         "@type": "ItemList",
-        numberOfItems: allQuotes.length, // Use allQuotes here
-        itemListElement: allQuotes.map((quote, index) => ({ // Use allQuotes here
+        numberOfItems: allQuotes.length,
+        itemListElement: allQuotes.map((quote: any, index: number) => ({
           "@type": "ListItem",
           position: index + 1,
           item: {
@@ -105,7 +101,6 @@ console.log("Featured Quote:", featuredQuote);
         </p>
       </div>
 
-      <!-- Shuffle Button -->
       <div class="mb-10 text-center">
         <button
           id="shuffle-button"
@@ -118,59 +113,52 @@ console.log("Featured Quote:", featuredQuote);
         </button>
       </div>
 
-      <!-- Featured Quote Section -->
-      {
-        featuredQuote && (
-          <div id="featured-quote-section" class="mb-12 md:mb-16">
-            <div id="featured-quote-card-container">
-              {/* Astro renders the initial featured quote here */}
-              <div
-                class="quote-card relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden mx-auto max-w-2xl"
-                transition:animate="fade"
-              >
-                <span
-                  class="absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none"
-                  aria-hidden="true"
-                >
-                  “
-                </span>
-                <blockquote class="mb-5 z-10">
-                  <p class="quote-text text-center sm:text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable']">
-                    {featuredQuote.quote}
-                  </p>
-                </blockquote>
-                <cite style={`display: ${featuredQuote.info ? '' : 'none'};`} class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
-                  {featuredQuote.info ? `— ${featuredQuote.info}` : ''}
-                </cite>
-              </div>
-            </div>
-          </div>
-        )
-      }
-
-      <!-- Quotes Grid -->
-      <div id="quotes-grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-        {
-          remainingQuotes.map((quote, index) => (
+      {featuredQuote && (
+        <div id="featured-quote-section" class="mb-12 md:mb-16">
+          <div id="featured-quote-card-container">
             <div
-              class="quote-card relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden"
-              style={`--index: ${index};`} /* Index relative to remainingQuotes */
+              class="quote-card relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden mx-auto max-w-2xl"
               transition:animate="fade"
             >
-              <span class="absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none" aria-hidden="true">“</span>
+              <span
+                class="absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none"
+                aria-hidden="true"
+              >
+                “
+              </span>
               <blockquote class="mb-5 z-10">
                 <p class="quote-text text-center sm:text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable']">
-                  {quote.quote}
+                  {featuredQuote.quote}
                 </p>
               </blockquote>
-              {quote.info && (
-                <cite class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
-                  — {quote.info}
-                </cite>
-              )}
+              <cite style={`display: ${featuredQuote.info ? '' : 'none'};`} class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
+                {featuredQuote.info ? `— ${featuredQuote.info}` : ''}
+              </cite>
             </div>
-          ))
-        }
+          </div>
+        </div>
+      )}
+
+      <div id="quotes-grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+        {remainingQuotes.map((quote: any, index: number) => (
+          <div
+            class="quote-card relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden"
+            style={`--index: ${index};`}
+            transition:animate="fade"
+          >
+            <span class="absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none" aria-hidden="true">“</span>
+            <blockquote class="mb-5 z-10">
+              <p class="quote-text text-center sm:text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable']">
+                {quote.quote}
+              </p>
+            </blockquote>
+            {quote.info && (
+              <cite class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
+                — {quote.info}
+              </cite>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   </main>
@@ -184,7 +172,6 @@ console.log("Featured Quote:", featuredQuote);
 
   let currentQuotes = [...allQuotes];
 
-  // --- DOM Element References ---
   let featuredQuoteCardElement = null;
   let featuredQuoteTextElement = null;
   let featuredQuoteAuthorElement = null;
@@ -202,7 +189,6 @@ console.log("Featured Quote:", featuredQuote);
   const gridQuoteAuthorDOMElements = gridCardDOMElements.map(card => card.querySelector('.quote-author'));
   
   const allAnimatedCardElements = [featuredQuoteCardElement, ...gridCardDOMElements].filter(el => el);
-  // --- End DOM Element References ---
 
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -223,7 +209,7 @@ console.log("Featured Quote:", featuredQuote);
 
   function displayQuotes() {
     allAnimatedCardElements.forEach(card => card.style.animation = 'none');
-    allAnimatedCardElements.forEach(card => void card.offsetWidth); // Force reflow
+    allAnimatedCardElements.forEach(card => void card.offsetWidth);
 
     if (!currentQuotes || currentQuotes.length === 0) {
       if (featuredQuoteSection) featuredQuoteSection.style.display = 'none';
@@ -253,10 +239,9 @@ console.log("Featured Quote:", featuredQuote);
       }
     });
     
-    allAnimatedCardElements.forEach(card => card.style.animation = ''); // Reapply animation
+    allAnimatedCardElements.forEach(card => card.style.animation = '');
   }
 
-  // Initial setup: Shuffle and display. displayQuotes handles empty state.
   shuffleArray(currentQuotes);
   displayQuotes();
 
@@ -271,7 +256,6 @@ console.log("Featured Quote:", featuredQuote);
 </script>
 
 <style>
-  /* 1. Staggered Entry Animation (Fallback) */
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -282,8 +266,6 @@ console.log("Featured Quote:", featuredQuote);
       transform: translateY(0) scale(1);
     }
   }
-
-  /* 2. Elegant Hover Effects */
   .quote-card {
     transition:
       transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -292,14 +274,11 @@ console.log("Featured Quote:", featuredQuote);
     backface-visibility: hidden;
     perspective: 1000px;
   }
-
   .quote-card:hover {
     transform: translateY(-5px) scale(1.015);
     box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.12);
     background-color: rgba(var(--color-brand-50), 0.5);
   }
-
-  /* 3. Scroll-Triggered Animations - View Transitions */
   @media (prefers-reduced-motion: no-preference) {
     .quote-card {
       opacity: 0;
@@ -311,7 +290,6 @@ console.log("Featured Quote:", featuredQuote);
       animation-timeline: --card-reveal;
       animation-range: entry 5% cover 35%;
     }
-
     @keyframes revealCard {
       from {
         opacity: 0;
@@ -322,7 +300,6 @@ console.log("Featured Quote:", featuredQuote);
         transform: translateY(0) scale(1);
       }
     }
-
     @supports not (animation-timeline: --card-reveal) {
       .quote-card {
         animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -330,8 +307,6 @@ console.log("Featured Quote:", featuredQuote);
       }
     }
   }
-
-  /* 6. Page Background Animation */
   .reads-page-background {
     background: linear-gradient(
       135deg,
@@ -345,7 +320,6 @@ console.log("Featured Quote:", featuredQuote);
     position: relative;
     z-index: 0;
   }
-
   .reads-page-background::after {
     content: "";
     position: fixed;
@@ -358,7 +332,6 @@ console.log("Featured Quote:", featuredQuote);
     z-index: -1;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   }
-
   @keyframes gradientFloat {
     0% { background-position: 0% 50%; }
     25% { background-position: 50% 25%; }
@@ -366,23 +339,17 @@ console.log("Featured Quote:", featuredQuote);
     75% { background-position: 50% 75%; }
     100% { background-position: 0% 50%; }
   }
-
-  /* 7. Quote Author Reveal */
   .quote-author {
     opacity: 0.6;
     transform: translateY(5px);
     transition: all 0.4s ease;
   }
-
-  /* Typography Refinements */
   .quote-text {
     line-height: 1.7;
   }
-
   .quote-author {
     letter-spacing: 0.01em;
   }
-
   @media (prefers-reduced-motion: reduce) {
     .quote-card,
     .quote-author,
@@ -391,7 +358,6 @@ console.log("Featured Quote:", featuredQuote);
       animation: none !important;
       transition: none !important;
     }
-
     .quote-card {
       opacity: 1 !important;
       transform: none !important;

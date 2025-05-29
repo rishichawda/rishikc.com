@@ -2,21 +2,19 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
 import { Schema } from "astro-seo-schema";
-import { Image } from "astro:assets"; // Assuming you might want an image later
-import profileImage from "../../content/assets/me.jpg"; // Import the image
+import { Image } from "astro:assets";
+import profileImage from "../../content/assets/me.jpg";
 
-// Define interfaces based on profile.json structure
 interface Language { name: string; level: string; }
 interface Social { platform: string; url: string; }
 interface Position { title: string; period: string; duration: string; location?: string; description?: string; responsibilities?: string[]; }
 interface ClubPosition { title: string; period: string; duration: string; location?: string; description?: string; responsibilities?: string[]; }
 interface ExtraCurricular { club: string; positions: ClubPosition[]; }
-interface Experience { company: string; duration: string; positions: Position[]; website?: string[]; } // Added website
+interface Experience { company: string; duration: string; positions: Position[]; website?: string[]; }
 interface Education { institution: string; degree: string; period: string; extra_curriculars?: ExtraCurricular[]; }
 interface Certification { institution: string; title: string; }
 interface ProfileData { name: string; title: string; location: string; summary: string; bio: string; contact: { linkedin: string; }; skills: string[]; languages: Language[]; certifications: Certification[]; experience: Experience[]; education: Education[]; socials: Social[]; }
 
-// Fetch profile data
 const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
@@ -29,13 +27,11 @@ const page_info = {
 const siteUrl = new URL(Astro.url.pathname, Astro.site || "https://rishikc.com").toString();
 const profileImageUrl = `${siteUrl.replace(/\/$/, "")}/${profileImage.src}`;
 
-// Helper function for simple pluralization
 function pluralize(count: number, singular: string, plural: string): string {
   return count === 1 ? `1 ${singular}` : `${count} ${plural}`;
 }
 
-// Calculate years of experience (approximate)
-const firstJobStartDate = new Date("2018-07-01"); // Approx start date from profile.json (Internship)
+const firstJobStartDate = new Date("2018-07-01");
 const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear();
 ---
 
@@ -49,7 +45,7 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       jobTitle: profile.title,
       worksFor: {
         "@type": "Organization",
-        name: profile.experience[0]?.company || "Unknown Company", // Use dynamic company name
+        name: profile.experience[0]?.company || "Unknown Company",
       },
       url: siteUrl,
       image: profileImageUrl,
@@ -69,19 +65,18 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     }}
   />
 
-  <main class="bg-white"> {/* Add a base background */}
-    <!-- Header Section -->
-    <section class="text-center py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 animate-on-scroll fade-in-up bg-gradient-to-b from-brand-50/70 via-white to-white"> {/* Adjusted gradient and padding */}
-      <a href="/" class="inline-block mb-10 text-brand-700 hover:text-brand-900 transition-colors duration-300 text-sm tracking-widest uppercase font-medium font-['Montserrat_Variable'] group"> {/* Added group class */}
+  <main class="bg-white">
+    <section class="text-center py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 animate-on-scroll fade-in-up bg-gradient-to-b from-brand-50/70 via-white to-white">
+      <a href="/" class="inline-block mb-10 text-brand-700 hover:text-brand-900 transition-colors duration-300 text-sm tracking-widest uppercase font-medium font-['Montserrat_Variable'] group">
         <span class="inline-block transition-transform duration-300 group-hover:-translate-x-1">&larr;</span> Back to Home
       </a>
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-900 mb-5 leading-tight sm:leading-tight lg:leading-tight"> {/* Adjusted margin, added leading */}
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-900 mb-5 leading-tight sm:leading-tight lg:leading-tight">
         Hi, I'm Rishi
       </h1>
-      <p class="text-lg sm:text-xl lg:text-2xl font-light font-['Montserrat_Variable'] text-brand-700 max-w-3xl mx-auto leading-relaxed"> {/* Added leading */}
+      <p class="text-lg sm:text-xl lg:text-2xl font-light font-['Montserrat_Variable'] text-brand-700 max-w-3xl mx-auto leading-relaxed">
         {profile.title}
       </p>
-      <p class="text-base font-light font-['Montserrat_Variable'] text-brand-600 mt-5 max-w-3xl mx-auto flex items-center justify-center"> {/* Adjusted size/margin */}
+      <p class="text-base font-light font-['Montserrat_Variable'] text-brand-600 mt-5 max-w-3xl mx-auto flex items-center justify-center">
          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -90,13 +85,12 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       </p>
     </section>
 
-    <!-- Introduction Section -->
-    <section class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-5 gap-12 sm:gap-16 lg:gap-20 items-start"> {/* Changed items-center to items-start */}
+    <section class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-5 gap-12 sm:gap-16 lg:gap-20 items-start">
       <div class="md:col-span-3 animate-on-scroll fade-in-left">
-        <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-8 leading-snug"> {/* Added leading */}
+        <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-8 leading-snug">
           A bit about me..
         </h2>
-        <div class="space-y-6 text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed sm:leading-relaxed"> {/* Ensured leading */}
+        <div class="space-y-6 text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed sm:leading-relaxed">
           <p>{profile.bio}</p>
           <p>
             With over <strong class="font-medium text-brand-800">{pluralize(yearsExperience, 'year', 'years')}</strong> of experience in the tech industry, I've had the privilege of working on diverse projects, from developing scalable web applications to contributing to DevSecOps tooling at <a href={profile.experience[0]?.website?.[0] || '#'} target="_blank" rel="noopener noreferrer" class="text-brand-700 hover:text-brand-900 underline decoration-brand-300 hover:decoration-brand-500 transition duration-300">{profile.experience[0]?.company || 'my current role'}</a>.
@@ -105,16 +99,14 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
             My journey in software development is driven by a curiosity for technology and a desire to build things that are not only functional but also elegant and user-friendly.
           </p>
         </div>
-        <a href="/career/" class="inline-flex items-center mt-10 text-brand-700 hover:text-brand-900 font-medium font-['Montserrat_Variable'] group transition-all duration-300 text-base"> {/* Made inline-flex */}
+        <a href="/career/" class="inline-flex items-center mt-10 text-brand-700 hover:text-brand-900 font-medium font-['Montserrat_Variable'] group transition-all duration-300 text-base">
           Explore my career journey
           <svg class="w-5 h-5 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
         </a>
       </div>
       <div class="md:col-span-2 animate-on-scroll fade-in-right">
-         {/* Enhanced Connect Box */}
-         <div class="bg-gradient-to-br from-brand-100/80 to-brand-200/40 p-10 rounded-xl gap-y-4 shadow-lg border border-brand-200/60 flex flex-col justify-center items-center text-center relative overflow-hidden"> {/* Adjusted padding, added gap-y, removed aspect-square */}
-            {/* Image */}
-            <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-white shadow-lg"> {/* Removed aspect-square */}
+         <div class="bg-gradient-to-br from-brand-100/80 to-brand-200/40 p-10 rounded-xl gap-y-4 shadow-lg border border-brand-200/60 flex flex-col justify-center items-center text-center relative overflow-hidden">
+            <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-white shadow-lg">
               <Image
                 src={profileImage}
                 alt={`Profile picture of ${profile.name}`}
@@ -123,14 +115,14 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
                 class="w-full h-full object-cover"
               />
             </div>
-           <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-1">Connect with Me</h3> {/* Adjusted margin-bottom */}
+           <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-1">Connect with Me</h3>
            <div class="flex flex-wrap gap-3 justify-center">
              {profile.socials.map((social) => (
                 <a
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="social-link inline-flex items-center px-3 py-1.5 rounded-full bg-white text-brand-700 hover:bg-brand-700 hover:text-white transition-all duration-300 shadow-sm border border-brand-200/80 group" /* Adjusted border */
+                  class="social-link inline-flex items-center px-3 py-1.5 rounded-full bg-white text-brand-700 hover:bg-brand-700 hover:text-white transition-all duration-300 shadow-sm border border-brand-200/80 group"
                   aria-label={`Visit my ${social.platform} profile`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -144,37 +136,35 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       </div>
     </section>
 
-    <!-- Beyond Code Section -->
     <section class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 text-center py-16 sm:py-20 lg:py-24 animate-on-scroll fade-in-up">
-       <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-6 leading-snug"> {/* Added leading */}
+       <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-6 leading-snug">
          Beyond the Code
        </h2>
-       <p class="text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed sm:leading-relaxed max-w-3xl mx-auto mb-10"> {/* Ensured leading */}
+       <p class="text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed sm:leading-relaxed max-w-3xl mx-auto mb-10">
          When I step away from the keyboard, I often find myself behind a camera lens. Photography is a passion that allows me to capture moments and see the world from different perspectives.
        </p>
-       <a href="/gallery/" class="inline-flex items-center text-brand-700 hover:text-brand-900 font-medium font-['Montserrat_Variable'] group transition-all duration-300 text-base"> {/* Made inline-flex */}
-         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"> {/* Added Camera Icon */}
+       <a href="/gallery/" class="inline-flex items-center text-brand-700 hover:text-brand-900 font-medium font-['Montserrat_Variable'] group transition-all duration-300 text-base">
+         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
            <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
          </svg>
          View my photography gallery
-         <svg class="w-5 h-5 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg> {/* Replaced arrow entity */}
+         <svg class="w-5 h-5 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
        </a>
     </section>
 
-    <!-- Call to Action Section -->
-    <section class="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 text-center animate-on-scroll fade-in-up bg-gray-50/50"> {/* Added subtle background */}
-      <div class="max-w-xl mx-auto bg-white p-10 md:p-12 rounded-lg shadow-lg border border-gray-200/80"> {/* Increased shadow, adjusted border */}
-        <h2 class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5 leading-snug"> {/* Added leading */}
+    <section class="py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 text-center animate-on-scroll fade-in-up bg-gray-50/50">
+      <div class="max-w-xl mx-auto bg-white p-10 md:p-12 rounded-lg shadow-lg border border-gray-200/80">
+        <h2 class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5 leading-snug">
           Let's Connect
         </h2>
-        <p class="text-gray-600 font-['Montserrat_Variable'] mb-8 leading-relaxed"> {/* Added leading */}
+        <p class="text-gray-600 font-['Montserrat_Variable'] mb-8 leading-relaxed">
           Have a project in mind, a question, or just want to chat about tech or photography? Feel free to reach out.
         </p>
         <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-5">
           <a
             href="/contact/"
-            class="inline-flex items-center justify-center w-full sm:w-auto bg-brand-700 text-white px-8 py-3 rounded-lg font-semibold font-['Montserrat_Variable'] text-base hover:bg-brand-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500" /* Adjusted shadow/hover */
+            class="inline-flex items-center justify-center w-full sm:w-auto bg-brand-700 text-white px-8 py-3 rounded-lg font-semibold font-['Montserrat_Variable'] text-base hover:bg-brand-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
           >
              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -198,7 +188,6 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
 </BaseLayout>
 
 <style>
-  /* Basic fade-in animation */
   .fade-in-up {
     opacity: 0;
     transform: translateY(20px);
@@ -214,24 +203,18 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     transform: translateX(20px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
   }
-  /* Corrected selectors: Combine .visible with the animation class */
   .visible.fade-in-up,
   .visible.fade-in-left,
   .visible.fade-in-right {
     opacity: 1;
     transform: translate(0, 0);
   }
-
-  /* Add slight delay for staggered effect if needed */
   .animate-on-scroll:nth-child(odd) { transition-delay: 0.1s; }
   .animate-on-scroll:nth-child(even) { transition-delay: 0.2s; }
-
-  /* Failsafe: Make content visible after 1.5 seconds regardless of JS execution */
   @media (prefers-reduced-motion: no-preference) {
     .animate-on-scroll {
       animation: fallbackFadeIn 1.5s forwards 1.5s;
     }
-    
     @keyframes fallbackFadeIn {
       to {
         opacity: 1;
@@ -239,8 +222,6 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       }
     }
   }
-
-  /* Users who prefer reduced motion should see content immediately */
   @media (prefers-reduced-motion: reduce) {
     .fade-in-up,
     .fade-in-left,
@@ -251,23 +232,17 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       animation: none !important;
     }
   }
-
-  /* Ensure smooth scrolling for anchor links if any */
   html {
     scroll-behavior: smooth;
   }
-
-  /* Social Link Hover Effect */
   .social-link {
     position: relative;
-    overflow: hidden; /* Keep overflow hidden */
+    overflow: hidden;
   }
-
   .social-link:hover {
-     transform: translateY(-2px); /* Subtle lift effect */
-     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Soft shadow */
+     transform: translateY(-2px);
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   }
-
 </style>
 
 <script>
@@ -285,12 +260,10 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       });
 
       document.querySelectorAll('.animate-on-scroll').forEach(element => {
-        // Reset visibility state on page load before observing
         element.classList.remove('visible');
         observer.observe(element);
       });
     } catch (error) {
-      // Fallback: If observer fails, make all elements visible
       console.error('Animation observer error:', error);
       document.querySelectorAll('.animate-on-scroll').forEach(element => {
         element.classList.add('visible');
@@ -298,9 +271,7 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     }
   }
 
-  // Function to ensure all content is visible regardless of animation status
   function ensureContentVisibility() {
-    // After 2 seconds, force visibility of all animated elements
     setTimeout(() => {
       document.querySelectorAll('.animate-on-scroll').forEach(element => {
         if (!element.classList.contains('visible')) {
@@ -310,7 +281,6 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     }, 2000);
   }
 
-  // Run our observers
   document.addEventListener('DOMContentLoaded', () => {
     scrollObserver();
     ensureContentVisibility();

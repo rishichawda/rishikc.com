@@ -16,13 +16,9 @@ let {
 
 const seo = {
 	title: title || "title",
-	// title: title || defaultSiteMetadata.title,
 	description: description || "description",
-	// description: description || defaultSiteMetadata.description,
 	image: `siteUrl${image || "image"}`,
-	// image: `${defaultSiteMetadata.siteUrl}${image || icon}`,
 	type: "WebSite",
-	// type: type || "WebSite",
 	keywords: keywords || "keywords",
 };
 ---
@@ -32,7 +28,6 @@ const seo = {
 	<head>
 		<SEO page_info={seo} />
 		<ClientRouter />
-		<!-- Slot for page-specific JSON-LD and other head elements -->
 		<slot name="head" />
 	</head>
 	<body class="max-w-screen">

@@ -7,22 +7,17 @@
   aria-label="Image lightbox"
   tabindex="-1"
 >
-  <!-- Backdrop with blur effect -->
   <div class="absolute inset-0 bg-black/85 backdrop-blur-md"></div>
   
-  <!-- Main lightbox container -->
   <div class="relative h-full flex flex-col items-center justify-center p-4 sm:p-6">
-    <!-- Escape key hint -->
     <div id="esc-hint" class="absolute top-3 sm:top-4 left-1/2 -translate-x-1/2 bg-black/40 backdrop-blur-sm px-2 py-0.5 rounded-full text-white/60 text-[11px] font-['Montserrat_Variable'] tracking-wide z-20"> 
       Press <kbd class="px-1 py-0 mx-0.5 text-[10px] font-semibold text-gray-700 bg-gray-200 border border-gray-300 rounded">Esc</kbd> to close
     </div>
 
-    <!-- Loading indicator -->
     <div id="lightbox-loader" class="absolute z-10 hidden">
       <div class="h-10 w-10 sm:h-12 sm:w-12 rounded-full border-4 border-white/30 border-t-white animate-spin"></div>
     </div>
     
-    <!-- Image container with transition -->
     <div class="relative max-h-[80vh] sm:max-h-[85vh] max-w-[95vw] sm:max-w-[90vw] transform transition-all duration-300 ease-out scale-95 opacity-0" id="image-container">
       <img
         id="lightbox-image"
@@ -33,18 +28,15 @@
       />
     </div>
     
-    <!-- Caption area -->
     <div id="lightbox-caption" class="mt-2 sm:mt-3 max-w-[80vw] sm:max-w-[65vw] text-white/75 text-center font-['Montserrat_Variable'] hidden transition-opacity duration-300 opacity-0"> 
       <p id="caption-text" class="text-xs sm:text-sm leading-normal"></p> 
     </div>
     
-    <!-- Counter -->
     <div id="lightbox-counter" class="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-white/80 font-['Montserrat_Variable'] text-[11px] sm:text-xs tracking-wide transition-opacity duration-300 opacity-0"> 
       <span id="image-current">1</span> / <span id="image-total">1</span>
     </div>
     
     
-    <!-- Navigation buttons -->
     <div class="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-2 sm:px-4">
       <button
         id="prev-image"
@@ -95,24 +87,23 @@
     const lightboxImage = document.getElementById("lightbox-image");
     const imageContainer = document.getElementById("image-container");
     const lightboxLoader = document.getElementById("lightbox-loader");
-    const escHint = document.getElementById("esc-hint"); // Get hint element
+    const escHint = document.getElementById("esc-hint");
     const prevButton = document.getElementById("prev-image");
     const nextButton = document.getElementById("next-image");
     const currentCounter = document.getElementById("image-current");
     const totalCounter = document.getElementById("image-total");
-    const counterContainer = document.getElementById("lightbox-counter"); // Get counter container
+    const counterContainer = document.getElementById("lightbox-counter");
     const captionContainer = document.getElementById("lightbox-caption");
     const captionText = document.getElementById("caption-text");
 
     let currentImageIndex = 0;
     let images = [];
     let captions = [];
-    let hintTimeout; // Timeout for hiding the hint
+    let hintTimeout;
 
     function openLightbox(imageElement) {
       if (!lightbox || !lightboxImage || !imageElement) return;
 
-      // Get all images in the current project
       const projectImages = Array.from(
         document.querySelectorAll(".grid-item img")
       );
@@ -126,45 +117,36 @@
         return;
       }
       
-      // Show loader before image loads
       if (lightboxLoader) {
         lightboxLoader.classList.remove("hidden");
       }
       
-      // Set initial image
       lightboxImage.src = imageElement.src;
       lightboxImage.alt = imageElement.alt || '';
       
-      // Reset image container animation state
       imageContainer.classList.add('scale-95', 'opacity-0');
       imageContainer.classList.remove('scale-100', 'opacity-100');
       
-      // Update image counter
       updateImageCounter();
       
-      // Show caption if available
       updateCaption();
       
-      // Show the lightbox with fade-in
       lightbox.classList.remove("hidden");
       setTimeout(() => {
         lightbox.classList.add("opacity-100");
         lightbox.focus();
       }, 10);
       
-      // Prevent body scrolling
       document.body.style.overflow = "hidden";
     }
 
     function closeLightbox() {
       if (!lightbox) return;
       
-      // Fade out lightbox
       lightbox.classList.remove("opacity-100");
-      // Hide hint, caption, counter immediately on close intent
       if (captionContainer) captionContainer.classList.add('opacity-0');
       if (counterContainer) counterContainer.classList.add('opacity-0');
-      clearTimeout(hintTimeout); // Clear hint timeout
+      clearTimeout(hintTimeout);
       
       setTimeout(() => {
         lightbox.classList.add("hidden");
@@ -177,7 +159,7 @@
       if (currentCounter && totalCounter && counterContainer) {
         currentCounter.textContent = (currentImageIndex + 1).toString();
         totalCounter.textContent = images.length.toString();
-        counterContainer.classList.remove('opacity-0'); // Ensure counter is visible
+        counterContainer.classList.remove('opacity-0');
       }
     }
     
@@ -186,9 +168,9 @@
         const caption = captions[currentImageIndex];
         if (caption && caption.trim() !== '') {
           captionText.textContent = caption.trim();
-          captionContainer.classList.remove('hidden', 'opacity-0'); // Show caption
+          captionContainer.classList.remove('hidden', 'opacity-0');
         } else {
-          captionContainer.classList.add('hidden', 'opacity-0'); // Hide caption
+          captionContainer.classList.add('hidden', 'opacity-0');
           captionText.textContent = '';
         }
       }
@@ -197,25 +179,19 @@
     function showImage(index) {
       if (!lightboxImage || images.length === 0) return;
       
-      // Show loading indicator
       if (lightboxLoader) {
         lightboxLoader.classList.remove("hidden");
       }
       
-      // Reset image container animation state
       imageContainer.classList.add('scale-95', 'opacity-0');
       imageContainer.classList.remove('scale-100', 'opacity-100');
       
-      // Update index with wrapping
       currentImageIndex = (index + images.length) % images.length;
       
-      // Update image
       lightboxImage.src = images[currentImageIndex];
       
-      // Update counter
       updateImageCounter();
       
-      // Update caption
       updateCaption();
     }
 
@@ -226,22 +202,16 @@
     function showNextImage() {
       showImage(currentImageIndex + 1);
     }
-
-    // Event listeners
     
-    // Attach main navigation listeners directly
     prevButton?.addEventListener("click", showPrevImage);
     nextButton?.addEventListener("click", showNextImage);
 
-    // Close lightbox on any click within its bounds
     lightbox?.addEventListener("click", closeLightbox);
 
-    // Close on escape key
     document.addEventListener("keydown", (e) => {
       if (!lightbox || lightbox.classList.contains('hidden')) return;
       
       if (e.key === "Escape") closeLightbox();
-      // Keep arrow key navigation, but stop propagation so it doesn't also trigger the lightbox click listener
       if (e.key === "ArrowLeft") {
         e.stopPropagation(); 
         showPrevImage();

@@ -52,9 +52,7 @@ const articles = allArticles
         </svg>
       </button>
 
-      <!-- Carousel viewport -->
       <div class="relative overflow-hidden w-full mx-4" id="carousel-viewport">
-        <!-- Carousel container -->
         <div
           class="flex gap-6 sm:gap-8 lg:gap-10 transition-transform duration-300 ease-in-out"
           id="carousel-container"
@@ -135,7 +133,6 @@ const articles = allArticles
       </button>
     </div>
     <div class="flex justify-center gap-2 mt-6 sm:mt-8" id="carousel-dots">
-      <!-- Dots will be added dynamically via JavaScript -->
     </div>
   </div>
 </section>
@@ -157,7 +154,6 @@ const articles = allArticles
       nextBtn &&
       dotsContainer
     ) {
-      // Store event handlers so we can remove them later
       const eventHandlers: {
         prevBtn: (() => void) | null;
         nextBtn: (() => void) | null;
@@ -173,24 +169,20 @@ const articles = allArticles
       const items = container.children;
       let currentIndex = 0;
 
-      // Calculate the layout based on viewport width and number of items
       function calculateLayout() {
         if (!viewport) return { itemWidth: 200, itemsPerView: 1, totalSlides: 1, gap: 24 };
         
         const viewportWidth = viewport.offsetWidth;
         const gap =
-          window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40; // gap-6, gap-8, gap-10
-        const minItemWidth = 200; // Minimum width for an item
-        const maxItemWidth = 230; // Maximum width for an item
+          window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40;
+        const minItemWidth = 200;
+        const maxItemWidth = 230;
 
-        // Calculate how many items can fit in the viewport
         let itemsPerView = Math.floor(viewportWidth / (minItemWidth + gap));
-        itemsPerView = Math.max(1, Math.min(itemsPerView, items.length)); // Ensure at least 1 item and not more than total items
+        itemsPerView = Math.max(1, Math.min(itemsPerView, items.length));
 
-        // Calculate the actual item width to fit items evenly
         let itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
 
-        // If the calculated width exceeds maxItemWidth, reduce itemsPerView
         if (itemWidth > maxItemWidth) {
           itemsPerView = Math.floor(viewportWidth / (maxItemWidth + gap));
           itemsPerView = Math.max(1, Math.min(itemsPerView, items.length));
@@ -234,11 +226,9 @@ const articles = allArticles
         (prevBtn as HTMLElement).classList.toggle("opacity-50", currentIndex === 0);
         (nextBtn as HTMLElement).classList.toggle("opacity-50", currentIndex >= totalSlides - 1);
 
-        // Update dots
         updateDots(totalSlides);
       }
 
-      // Clean up existing event listeners before adding new ones
       function cleanup() {
         if (eventHandlers.prevBtn) (prevBtn as HTMLElement).removeEventListener("click", eventHandlers.prevBtn);
         if (eventHandlers.nextBtn) (nextBtn as HTMLElement).removeEventListener("click", eventHandlers.nextBtn);
@@ -246,7 +236,6 @@ const articles = allArticles
         if (eventHandlers.resize) window.removeEventListener("resize", eventHandlers.resize);
       }
 
-      // Clean up on navigation
       document.addEventListener('astro:before-preparation', cleanup, { once: true });
       
       // Set up new event handlers

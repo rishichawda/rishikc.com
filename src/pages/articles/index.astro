@@ -381,7 +381,6 @@ const pageUrl = new URL(
                 }
             });
 
-            // Update pagination visibility
             const totalPages = Math.ceil(visibleCount / itemsPerPage);
             pageButtons.forEach((button) => {
                 const page = parseInt(button.dataset.page || "1", 10);
@@ -391,7 +390,6 @@ const pageUrl = new URL(
                 button.classList.toggle("text-gray-600", page !== currentPage);
             });
 
-            // Update arrow buttons
             if (prevButton) {
                 prevButton.disabled = currentPage === 1;
             }
@@ -400,7 +398,6 @@ const pageUrl = new URL(
             }
         }
 
-        // Event Listeners
         searchInput?.addEventListener("input", () => {
             currentPage = 1;
             updateArticlesVisibility();

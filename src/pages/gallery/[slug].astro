@@ -1,26 +1,22 @@
 ---
 import BaseLayout from "../../layouts/base_layout.astro";
 import "../../styles/global.css";
-// Remove Lightbox import
-// import Lightbox from "../../components/gallery/lightbox.astro";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
-import type { ImageObject as SchemaImageObject } from "schema-dts"; // Import type
+import type { ImageObject as SchemaImageObject } from "schema-dts";
 import masonry from "masonry-layout/dist/masonry.pkgd.min?url";
 import imagesloaded from "imagesloaded/imagesloaded.pkgd.min?url";
 
-// Define interfaces needed for profile data
 interface Social {
   platform: string;
   url: string;
 }
 interface ProfileData {
   name: string;
-  socials: Social[] /* Add other fields if needed */;
+  socials: Social[];
 }
 
-// Fetch profile data
 const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
@@ -225,37 +221,11 @@ const pageUrl = new URL(
                 widths={[400, 800, 1200]}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-              {/* Remove the overlay div and button that triggered the lightbox */}
-              {/* 
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <button
-                  class="text-white p-3 rounded-full bg-black/40 hover:bg-black/60 transition-all duration-300 transform scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 hover:scale-110 shadow-lg backdrop-blur-sm"
-                  onclick="openLightbox(this.closest('.grid-item').querySelector('img'))"
-                  aria-label="View image in fullscreen"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 sm:h-6 sm:w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 10m-7 0a7 7 0 1014 0 7 7 0 00-14 0z"
-                    />
-                  </svg>
-                </button>
-              </div> 
-              */}
             </div>
           ))
         }
       </div>
 
-      {/* Copyright Notice */}
       <p
         class="text-center text-xs sm:text-sm text-gray-500 mt-12 sm:mt-16 font-light"
       >
@@ -266,12 +236,8 @@ const pageUrl = new URL(
       </p>
     </div>
   </main>
-  {/* Remove Lightbox component instance */}
-  {/* <Lightbox /> */}
 
-  {/* Add Masonry library script */}
   <script src={masonry} is:inline></script>
-  {/* Add imagesLoaded library script for better layout handling */}
   <script src={imagesloaded} is:inline></script>
 
   <script is:inline>
@@ -304,10 +270,9 @@ const pageUrl = new URL(
               newGutter = 24; // 1.5rem
             }
             msnry.options.gutter = newGutter;
-            msnry.layout(); // Re-layout Masonry with the new gutter
+            msnry.layout();
           });
 
-          // Initial layout might need a slight delay or re-layout after styles apply
           setTimeout(() => msnry.layout(), 100);
         });
       }
@@ -316,42 +281,32 @@ const pageUrl = new URL(
 </BaseLayout>
 
 <style>
-  /* Ensure grid items have appropriate width for Masonry calculation */
-  /* Masonry will handle horizontal spacing via the 'gutter' option */
   .grid-item {
-    width: 100%; /* Base width for single column */
-    margin-bottom: 1rem; /* Vertical spacing (gap-4) */
+    width: 100%;
+    margin-bottom: 1rem;
   }
 
   @media (min-width: 640px) {
-    /* sm breakpoint */
     .grid-item {
-      width: calc(50% - 8px); /* 50% width minus half the gutter (16px / 2) */
-      margin-bottom: 1.5rem; /* Vertical spacing (sm:gap-6) */
+      width: calc(50% - 8px);
+      margin-bottom: 1.5rem;
     }
-    /* Adjust width if gutter changes */
     @media (min-width: 640px) and (max-width: 1023px) {
       .grid-item {
-        width: calc(50% - 12px); /* Half of 24px gutter */
+        width: calc(50% - 12px);
       }
     }
   }
 
   @media (min-width: 1024px) {
-    /* lg breakpoint */
     .grid-item {
       width: calc(
-        33.333% - 16px * 2 / 3
-      ); /* 33.333% width minus two-thirds of the gutter (16px * 2/3) */
-      /* If gutter is 24px at this breakpoint: */
-      width: calc(
         33.333% - 16px
-      ); /* 33.333% width minus two-thirds of the gutter (24px * 2/3) */
-      margin-bottom: 1.5rem; /* Vertical spacing (lg:gap-6) */
+      );
+      margin-bottom: 1.5rem;
     }
   }
 
-  /* Remove negative margins previously used for gutter simulation */
   #masonry-grid {
     margin: 0;
   }

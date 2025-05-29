@@ -9,26 +9,21 @@ interface Props {
 
 let { currentArticle, allArticles } = Astro.props;
 
-// Function to calculate similarity score between two articles
 function calculateSimilarity(article1: CollectionEntry<"articles">, article2: CollectionEntry<"articles">): number {
-  // Skip if it's the same article
   if (article1.id === article2.id) return 0;
 
   let score = 0;
   
-  // Check for matching tags
   const commonTags = article1.data.tags.filter(tag => article2.data.tags.includes(tag));
-  score += commonTags.length * 2; // Each matching tag adds 2 points
+  score += commonTags.length * 2;
 
-  // Check for matching keywords
   const keywords1 = article1.data.keywords.split(",").map(k => k.trim());
   const keywords2 = article2.data.keywords.split(",").map(k => k.trim());
   const commonKeywords = keywords1.filter(k => keywords2.includes(k));
-  score += commonKeywords.length; // Each matching keyword adds 1 point
+  score += commonKeywords.length;
 
-  // Check for matching category
   if (article1.data.category && article2.data.category && article1.data.category === article2.data.category) {
-    score += 2; // Matching category adds 3 points
+    score += 2;
   }
 
   return score;
@@ -41,10 +36,9 @@ const relatedArticles = allArticles
     similarity: calculateSimilarity(currentArticle, article)
   }))
   .sort((a, b) => b.similarity - a.similarity)
-  .slice(0, 6) // Get top 3 related articles
+  .slice(0, 6)
   .map(({ article }) => article);
 
-// Format date
 function formatDate(date: Date): string {
   return new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
@@ -66,30 +60,28 @@ function formatDate(date: Date): string {
           href={article.data.path}
           class="group flex flex-col hover:-scale-[97%] transition-all"
         >
-          <div class="aspect-square mb-3 sm:mb-4 overflow-hidden rounded-lg"> {/* Added overflow-hidden and moved rounded-lg here */}
+          <div class="aspect-square mb-3 sm:mb-4 overflow-hidden rounded-lg">
             <Image
               src={article.data.hero_image}
               alt={article.data.hero_image_alt || article.data.title}
-              class="object-cover aspect-square group-hover:opacity-90 transition-opacity duration-300" {/* Removed rounded-lg, added hover effect */}
+              class="object-cover aspect-square group-hover:opacity-90 transition-opacity duration-300"
               transition:name={`${article.data.path}-image`}
             />
           </div>
           <div class="flex flex-col justify-between">
-            {/* Use div for title block to manage spacing better */}
-            <div> {/* This div wraps title, date, and description */}
+            <div>
               <h3 transition:name={`${article.data.path}-title`} class="text-lg sm:text-xl font-semibold text-brand-800 mb-1 sm:mb-1.5 line-clamp-2 font-['Red_Hat_Display_Variable'] group-hover:text-brand-900 transition-colors">
                 {article.data.title}
               </h3>
               <p transition:name={`${article.data.path}-date`} class="font-['Red_Hat_Display_Variable'] text-brand-500 mb-2 sm:mb-3 text-xs sm:text-sm font-medium">
                 {formatDate(article.data.date)}
               </p>
-              <p class="font-['Red_Hat_Display_Variable'] text-brand-700 font-normal leading-relaxed text-sm sm:text-base line-clamp-3"> {/* Removed mb-3 sm:mb-4 */}
+              <p class="font-['Red_Hat_Display_Variable'] text-brand-700 font-normal leading-relaxed text-sm sm:text-base line-clamp-3">
                 {article.data.description}
               </p>
             </div>
-            {/* Keep Read Article link at the bottom */}
-            <div> {/* This div wraps the "Read article" link */}
-              <div class="text-brand-600 font-['Montserrat_Variable'] group-hover:text-brand-800 group-hover:underline font-medium text-sm sm:text-base inline-flex items-center gap-x-1 transition-colors mt-2"> {/* Added mt-2 for spacing */}
+            <div>
+              <div class="text-brand-600 font-['Montserrat_Variable'] group-hover:text-brand-800 group-hover:underline font-medium text-sm sm:text-base inline-flex items-center gap-x-1 transition-colors mt-2">
                 Read article
                 <svg
                   width="17"

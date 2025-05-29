@@ -52,7 +52,6 @@ const AnchorLinkIcon = h(
   )
 )
 
-// https://astro.build/config
 export default defineConfig({
   integrations: [mdx({
     syntaxHighlight: 'shiki',

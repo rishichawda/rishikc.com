@@ -1,5 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-import { glob, file } from 'astro/loaders'; // Not available with legacy API
+import { glob, file } from 'astro/loaders';
 
 const articles = defineCollection({
     loader: glob({ pattern: "**/*.{md,mdx}", base: "./content/articles" }),
@@ -32,7 +32,6 @@ const gallery = defineCollection({
     loader: glob({ pattern: "**/gallery.json", base: "./content/gallery" }),
     schema: ({ image }) =>
         z.object({
-            // Gallery metadata
             title: z.string(),
             description: z.string().optional(),
             date: z.coerce.date().optional(),
@@ -41,17 +40,14 @@ const gallery = defineCollection({
             camera: z.string().optional(),
             settings: z.string().optional(),
             
-            // Featured image
             featured_image: image(),
             featured_image_alt: z.string().optional(),
             featured_image_caption: z.string().optional(),
             featured_image_credit: z.string().optional(),
             
-            // Directory information
             directory: z.string(),
             path: z.string(),
             
-            // Gallery images
             images: z.array(z.object({
                 src: image(),
                 alt: z.string().optional(),

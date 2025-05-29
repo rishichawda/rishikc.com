@@ -1,13 +1,11 @@
 ---
 import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
-import { getCollection } from "astro:content"; // Import getCollection
+import { getCollection } from "astro:content";
 
-// Define interfaces needed for profile data
 interface Social { platform: string; url: string; }
-interface ProfileData { name: string; socials: Social[]; /* Add other fields if needed */ }
+interface ProfileData { name: string; socials: Social[]; }
 
-// Fetch profile data
 const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
@@ -19,7 +17,6 @@ const date = new Date(content.date).toLocaleDateString("en-us", {
 	day: "numeric",
 });
 
-// Format date for ISO format for JSON-LD
 const isoDate = content.date ? new Date(content.date).toISOString() : "";
 const articleUrl = new URL(
 	content.path || Astro.url.pathname,
@@ -34,7 +31,6 @@ const imageUrl = content.hero_image?.src
 ---
 
 <article class="max-w-[90%] flex flex-col mx-auto items-center pt-16">
-	<!-- Article JSON-LD Schema -->
 	<Schema
 		item={{
 			"@context": "https://schema.org",
@@ -46,15 +42,15 @@ const imageUrl = content.hero_image?.src
 			dateModified: isoDate,
 			author: {
 				"@type": "Person",
-				name: profile.name, // Use profile name
+				name: profile.name,
 				url: "https://rishikc.com",
-				sameAs: profile.socials.map((social: Social) => social.url), // Use fetched socials
+				sameAs: profile.socials.map((social: Social) => social.url),
 			},
 			publisher: {
 				"@type": "Person",
-				name: profile.name, // Use profile name
+				name: profile.name,
 				url: "https://rishikc.com",
-				sameAs: profile.socials.map((social: Social) => social.url), // Use fetched socials
+				sameAs: profile.socials.map((social: Social) => social.url),
 			},
 			mainEntityOfPage: {
 				"@type": "WebPage",

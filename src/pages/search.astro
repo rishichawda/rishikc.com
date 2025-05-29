@@ -82,7 +82,6 @@ const pageUrl = new URL(
 ---
 
 <Layout page_info={page_info}>
-    <!-- SearchResultsPage JSON-LD Schema -->
     <Schema
         slot="head"
         item={{
@@ -103,7 +102,6 @@ const pageUrl = new URL(
 
     <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-brand-50/30 via-white to-brand-100/20">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 pt-8 sm:pt-12">
-            <!-- Header -->
             <div class="mb-16 sm:mb-20 text-center">
                 <a
                     href="/"
@@ -147,7 +145,6 @@ const pageUrl = new URL(
                 </div>
             </div>
 
-            <!-- Search Form -->
             <div class="mb-16 sm:mb-20">
                 <div class="max-w-2xl mx-auto">
                     <form class="relative group" id="search-form">
@@ -404,10 +401,8 @@ const pageUrl = new URL(
         }
         
         private initializeElements(): void {
-            // Check if elements exist, otherwise wait for them to be available
             const checkElements = () => {
                 if (!document.getElementById('page-title')) {
-                    // Elements not ready yet, try again in a moment
                     setTimeout(checkElements, 50);
                     return;
                 }
@@ -418,7 +413,6 @@ const pageUrl = new URL(
                 this.noResultsEl = document.getElementById('no-results') as HTMLElement;
                 this.searchResults = document.getElementById('search-results') as HTMLElement;
                 
-                // Result containers
                 this.articlesSection = document.getElementById('articles-section') as HTMLElement;
                 this.articlesContainer = document.getElementById('articles-container') as HTMLElement;
                 this.articlesCount = document.getElementById('articles-count') as HTMLElement;
@@ -499,10 +493,8 @@ const pageUrl = new URL(
             this.articlesCount.textContent = articles.length.toString();
             this.articlesSection.classList.remove('hidden');
             
-            // Clear existing content
             this.articlesContainer.innerHTML = '';
             
-            // Create articles using DOM methods to prevent XSS
             articles.forEach((article: ArticleItem) => {
                 const articleEl = this.createArticleElement(article);
                 this.articlesContainer.appendChild(articleEl);
@@ -518,10 +510,8 @@ const pageUrl = new URL(
             this.galleryCount.textContent = gallery.length.toString();
             this.gallerySection.classList.remove('hidden');
             
-            // Clear existing content
             this.galleryContainer.innerHTML = '';
             
-            // Create gallery items using DOM methods to prevent XSS
             gallery.forEach((item: GalleryItem) => {
                 const galleryEl = this.createGalleryElement(item);
                 this.galleryContainer.appendChild(galleryEl);
@@ -537,10 +527,8 @@ const pageUrl = new URL(
             this.quotesCount.textContent = quotes.length.toString();
             this.quotesSection.classList.remove('hidden');
             
-            // Clear existing content
             this.quotesContainer.innerHTML = '';
             
-            // Create quotes using DOM methods to prevent XSS
             quotes.forEach((quote: QuoteItem) => {
                 const quoteEl = this.createQuoteElement(quote);
                 this.quotesContainer.appendChild(quoteEl);
