@@ -113,6 +113,9 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
                 width={160}
                 height={160}
                 class="w-full h-full object-cover"
+                loading="eager"
+                decoding="async"
+                format="webp"
               />
             </div>
            <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-1">Connect with Me</h3>
@@ -190,30 +193,34 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
 <style>
   .fade-in-up {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(15px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    will-change: opacity, transform;
   }
   .fade-in-left {
     opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateX(-15px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    will-change: opacity, transform;
   }
   .fade-in-right {
     opacity: 0;
-    transform: translateX(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateX(15px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    will-change: opacity, transform;
   }
   .visible.fade-in-up,
   .visible.fade-in-left,
   .visible.fade-in-right {
     opacity: 1;
     transform: translate(0, 0);
+    will-change: auto;
   }
-  .animate-on-scroll:nth-child(odd) { transition-delay: 0.1s; }
-  .animate-on-scroll:nth-child(even) { transition-delay: 0.2s; }
+  .animate-on-scroll:nth-child(odd) { transition-delay: 0.05s; }
+  .animate-on-scroll:nth-child(even) { transition-delay: 0.1s; }
   @media (prefers-reduced-motion: no-preference) {
     .animate-on-scroll {
-      animation: fallbackFadeIn 1.5s forwards 1.5s;
+      animation: fallbackFadeIn 1s forwards 0.8s;
     }
     @keyframes fallbackFadeIn {
       to {
@@ -238,6 +245,7 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
   .social-link {
     position: relative;
     overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   .social-link:hover {
      transform: translateY(-2px);
@@ -252,21 +260,32 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
+            // Remove will-change after animation completes
+            setTimeout(() => {
+              (entry.target as HTMLElement).style.willChange = 'auto';
+            }, 400);
           }
         });
       }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.15,
+        rootMargin: '0px 0px -30px 0px'
       });
 
-      document.querySelectorAll('.animate-on-scroll').forEach(element => {
-        element.classList.remove('visible');
-        observer.observe(element);
+      // Use requestAnimationFrame to batch DOM operations
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.animate-on-scroll').forEach(element => {
+          element.classList.remove('visible');
+          observer.observe(element);
+        });
       });
     } catch (error) {
       console.error('Animation observer error:', error);
-      document.querySelectorAll('.animate-on-scroll').forEach(element => {
-        element.classList.add('visible');
+      // Fallback: show all content immediately
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.animate-on-scroll').forEach(element => {
+          element.classList.add('visible');
+          (element as HTMLElement).style.willChange = 'auto';
+        });
       });
     }
   }
@@ -276,18 +295,16 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       document.querySelectorAll('.animate-on-scroll').forEach(element => {
         if (!element.classList.contains('visible')) {
           element.classList.add('visible');
+          (element as HTMLElement).style.willChange = 'auto';
         }
       });
-    }, 2000);
+    }, 1500);
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    scrollObserver();
-    ensureContentVisibility();
-  });
+  // Use passive event listeners for better performance
+  document.addEventListener('DOMContentLoaded', scrollObserver, { passive: true });
+  document.addEventListener('astro:page-load', scrollObserver, { passive: true });
   
-  document.addEventListener('astro:page-load', () => {
-    scrollObserver();
-    ensureContentVisibility();
-  });
+  // Delay ensureContentVisibility to reduce initial load impact
+  setTimeout(ensureContentVisibility, 100);
 </script>
