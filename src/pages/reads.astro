@@ -31,6 +31,8 @@ const pageUrl = new URL(
 // Prepare quotes for initial render
 const featuredQuote = allQuotes.length > 0 ? allQuotes[0] : null;
 const remainingQuotes = allQuotes.length > 0 ? allQuotes.slice(1) : [];
+
+console.log("Featured Quote:", featuredQuote);
 ---
 
 <BaseLayout page_info={page_info}>
@@ -137,11 +139,9 @@ const remainingQuotes = allQuotes.length > 0 ? allQuotes.slice(1) : [];
                     {featuredQuote.quote}
                   </p>
                 </blockquote>
-                {featuredQuote.info && (
-                  <cite class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
-                    — {featuredQuote.info}
-                  </cite>
-                )}
+                <cite style={`display: ${featuredQuote.info ? '' : 'none'};`} class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
+                  {featuredQuote.info ? `— ${featuredQuote.info}` : ''}
+                </cite>
               </div>
             </div>
           </div>
