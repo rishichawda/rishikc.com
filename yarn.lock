@@ -2258,6 +2258,11 @@ fdir@^6.4.3:
   resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.4.3.tgz#011cdacf837eca9b811c89dbb902df714273db72"
   integrity sha512-PMXmW2y1hDDfTSRc9gaXIuCCRpuoz3Kaz8cUelp3smouvfT632ozg2vrT6lJsHKKOF59YLbOGfAWGUcKEfRMQw==
 
+fdir@^6.4.4:
+  version "6.4.5"
+  resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.4.5.tgz#328e280f3a23699362f95f2e82acf978a0c0cb49"
+  integrity sha512-4BG7puHpVsIYxZUbiUE3RqGloLaSSwzYie5jvasC4LWuBWzZawynvYouhjbQKw2JuIGYdm0DzIxl8iVidKlUEw==
+
 file-type@17.1.1:
   version "17.1.1"
   resolved "https://registry.yarnpkg.com/file-type/-/file-type-17.1.1.tgz#24c59bc663df0c0c181b31dfacde25e06431afbe"
@@ -5177,6 +5182,14 @@ tinyglobby@^0.2.12:
     fdir "^6.4.3"
     picomatch "^4.0.2"
 
+tinyglobby@^0.2.13:
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/tinyglobby/-/tinyglobby-0.2.14.tgz#5280b0cf3f972b050e74ae88406c0a6a58f4079d"
+  integrity sha512-tX5e7OM1HnYr2+a2C/4V0htOcSQcoSTH9KgJnVvNm5zm/cyEWKJ7j7YutsH9CxMdtOkkLFy2AHrMci9IM8IPZQ==
+  dependencies:
+    fdir "^6.4.4"
+    picomatch "^4.0.2"
+
 to-regex-range@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/to-regex-range/-/to-regex-range-5.0.1.tgz#1648c44aae7c8d988a326018ed72f5b4dd0392e4"
@@ -5436,16 +5449,16 @@ vfile@^6.0.0, vfile@^6.0.3:
     vfile-message "^4.0.0"
 
 vite@^6.2.6:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-6.3.1.tgz#6b080ff907308ca691c5639c095ab6d938734c0d"
-  integrity sha512-kkzzkqtMESYklo96HKKPE5KKLkC1amlsqt+RjFMlX2AvbRB/0wghap19NdBxxwGZ+h/C6DLCrcEphPIItlGrRQ==
+  version "6.3.5"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-6.3.5.tgz#fec73879013c9c0128c8d284504c6d19410d12a3"
+  integrity sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==
   dependencies:
     esbuild "^0.25.0"
-    fdir "^6.4.3"
+    fdir "^6.4.4"
     picomatch "^4.0.2"
     postcss "^8.5.3"
     rollup "^4.34.9"
-    tinyglobby "^0.2.12"
+    tinyglobby "^0.2.13"
   optionalDependencies:
     fsevents "~2.3.3"
 
