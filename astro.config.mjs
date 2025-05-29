@@ -64,10 +64,14 @@ export default defineConfig({
     remarkRehype: { footnoteLabel: 'Footnotes' },
     gfm: true,
   }), sitemap(), playformCompress({
-    CSS: false,
+    CSS: true,
     HTML: {
       "html-minifier-terser": {
         removeAttributeQuotes: false,
+        collapseWhitespace: true,
+        removeComments: true,
+        minifyCSS: true,
+        minifyJS: true,
       },
     },
     Image: true,
@@ -79,6 +83,27 @@ export default defineConfig({
   site: siteMetadata.siteUrl,
   trailingSlash: 'always',
   compressHTML: true,
+  vite: {
+    build: {
+      // Enable CSS code splitting for better loading performance
+      cssCodeSplit: true,
+      // Increase chunk size warning limit
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          // Better chunk splitting
+          manualChunks: {
+            'vendor': ['astro'],
+            'fonts': ['@fontsource-variable/inter', '@fontsource-variable/red-hat-display', '@fontsource-variable/red-hat-text', '@fontsource-variable/montserrat']
+          }
+        }
+      }
+    },
+    ssr: {
+      // Optimize SSR performance
+      noExternal: ['@fontsource-variable/*']
+    }
+  },
   security: {
     checkOrigin: true
   },
