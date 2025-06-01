@@ -65,7 +65,7 @@ interface ProfileData {
   title: string;
   location: string;
   summary: string;
-  bio: string;
+  bio: string | string[];
   contact: {
     linkedin: string;
   };
@@ -74,6 +74,7 @@ interface ProfileData {
   certifications: Certification[];
   experience: Experience[];
   education: Education[];
+  interests: string[];
   socials: Social[];
 }
 
@@ -112,10 +113,9 @@ const experiencesWithMeta = await Promise.all(
 );
 
 const page_info = {
-  title: "About | Rishi Chawda",
-  description: "About Rishi Chawda - Senior Software Engineer",
-  keywords:
-    "Rishi Chawda, Software Engineer, Developer, About, Experience, Skills",
+  title: `Career | ${profile.name}`,
+  description: `Explore ${profile.name}'s professional journey as a ${profile.title}. Learn about work experience, skills, and career achievements.`,
+  keywords: `${profile.name}, Career, Software Engineer, Experience, Skills, ${profile.skills.join(', ')}`,
 };
 
 const siteUrl = new URL(
@@ -159,13 +159,13 @@ const siteUrl = new URL(
   >
     <div class="flex flex-row justify-between items-center mb-12 sm:mb-16">
       <h1
-        class="text-3xl sm:text-4xl lg:text-[2.5rem] font-medium text-gray-900"
+        class="text-3xl sm:text-4xl lg:text-[2.5rem] font-medium text-gray-900 font-['Red_Hat_Display_Variable']"
       >
-        About Me
+        My Career Journey
       </h1>
       <a
         href="/"
-        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300"
+        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300 font-['Montserrat_Variable']"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -181,9 +181,10 @@ const siteUrl = new URL(
             d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         Back to Home
-      </a>    </div>
-    <div class="mb-20 md:mb-24">
-      <div class="bg-[#F8F9FE] rounded-lg p-8 sm:p-10 lg:p-12">
+      </a>
+    </div>
+    <div class="mb-20 md:mb-24 animate-on-scroll fade-in-up">
+      <div class="bg-[#F8F9FE] rounded-lg p-8 sm:p-10 lg:p-12 shadow-sm">
         <div class="flex flex-col md:flex-row gap-10 md:gap-12">
           <div class="md:w-2/3">
             <h2
@@ -194,11 +195,22 @@ const siteUrl = new URL(
             <p class="text-gray-600 font-['Montserrat_Variable'] text-lg mb-5">
               {profile.title}
             </p>
-            <p
-              class="text-gray-700 font-['Montserrat_Variable'] mb-8 leading-relaxed"
-            >
-              {profile.bio}
-            </p>
+            
+            {Array.isArray(profile.bio) ? (
+              <div class="space-y-4 mb-8">
+                {profile.bio.map((paragraph) => (
+                  <p class="text-gray-700 font-['Montserrat_Variable'] leading-relaxed">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <p
+                class="text-gray-700 font-['Montserrat_Variable'] mb-8 leading-relaxed"
+              >
+                {profile.bio}
+              </p>
+            )}
 
             <div class="flex items-center mb-4 text-gray-600">
               <svg
@@ -318,12 +330,29 @@ const siteUrl = new URL(
                   </>
                 )
               }
+              
+              {
+                profile.interests && profile.interests.length > 0 && (
+                  <>
+                    <h3 class="text-xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mt-8 mb-5">
+                      Interests & Hobbies
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                      {profile.interests.map((interest) => (
+                        <span class="inline-block px-3 py-1.5 rounded-full bg-[#F0F2FC] text-[#6B7AB0] text-xs font-['Montserrat_Variable'] border border-[#6B7AB0]/20">
+                          {interest}
+                        </span>
+                      ))}
+                    </div>
+                  </>
+                )
+              }
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="mb-20 md:mb-24">
+    <div class="mb-20 md:mb-24 animate-on-scroll fade-in-up">
       <h2
         class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-12"
       >
@@ -447,7 +476,7 @@ const siteUrl = new URL(
         </div>
       </div>
     </div>
-    <div class="mb-20 md:mb-24">
+    <div class="mb-20 md:mb-24 animate-on-scroll fade-in-up">
       <h2
         class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-10"
       >
@@ -542,30 +571,35 @@ const siteUrl = new URL(
         }
       </div>
     </div>
-    <div class="bg-gray-100 rounded-lg p-10 md:p-12 text-center">
+    <div class="bg-gray-50 rounded-lg p-10 md:p-12 text-center">
       <h2
         class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5"
       >
         Let's Connect
       </h2>
       <p
-        class="text-gray-700 font-['Montserrat_Variable'] mb-8 max-w-2xl mx-auto text-lg"
+        class="text-gray-700 font-['Montserrat_Variable'] mb-8 max-w-2xl mx-auto text-lg leading-relaxed"
       >
-        Whether you're interested in working together or just want to say hello,
-        I'd love to hear from you!
+        Interested in my work or have a project in mind? I'd love to discuss opportunities to collaborate and create something amazing together.
       </p>
-      <div class="flex flex-wrap justify-center gap-4">
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-5">
         <a
           href="/contact/"
-          class="inline-flex items-center px-8 py-3 rounded-lg bg-[#6B7AB0] text-white hover:bg-[#5A6A9F] transition-colors text-base font-medium"
+          class="inline-flex items-center justify-center w-full sm:w-auto bg-brand-700 text-white px-8 py-3 rounded-lg font-semibold font-['Montserrat_Variable'] text-base hover:bg-brand-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
         >
-          <span class="font-['Montserrat_Variable']">Contact Me</span>
+           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+             <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+           </svg>
+          Get in Touch
         </a>
         <a
-          href="/articles/"
-          class="inline-flex items-center px-8 py-3 rounded-lg bg-white text-[#6B7AB0] border border-[#6B7AB0] hover:bg-[#F0F2FC] transition-colors text-base font-medium"
+          href="/about/"
+          class="inline-flex items-center justify-center w-full sm:w-auto bg-white text-brand-700 border border-gray-300 px-8 py-3 rounded-lg font-semibold font-['Montserrat_Variable'] text-base hover:bg-gray-50 transition-colors duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
         >
-          <span class="font-['Montserrat_Variable']">Read My Articles</span>
+           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+             <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+           </svg>
+          Learn More About Me
         </a>
       </div>
     </div>
@@ -573,6 +607,20 @@ const siteUrl = new URL(
 </BaseLayout>
 
 <style>
+  /* Animation Classes */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    will-change: opacity, transform;
+  }
+  
+  .visible.fade-in-up {
+    opacity: 1;
+    transform: translate(0, 0);
+    will-change: auto;
+  }
+
   .timeline-dot {
     transition:
       transform 0.3s ease,
@@ -675,26 +723,81 @@ const siteUrl = new URL(
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  /* Staggered animation delays */
+  .animate-on-scroll:nth-child(odd) { transition-delay: 0.1s; }
+  .animate-on-scroll:nth-child(even) { transition-delay: 0.2s; }
+
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in-up {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+    .social-link,
+    .timeline-item-container {
+      transition: none !important;
+    }
+    .social-link:hover,
+    .timeline-item-container:hover * {
+      transform: none !important;
+    }
+  }
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+  function scrollObserver() {
+    try {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
+            entry.target.classList.add('visible');
+            // Remove will-change after animation completes
+            setTimeout(() => {
+              (entry.target as HTMLElement).style.willChange = 'auto';
+            }, 400);
           }
         });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px",
-      },
-    );
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -30px 0px'
+      });
 
-    document.querySelectorAll(".animate-on-scroll").forEach((element) => {
-      observer.observe(element);
-    });
-  });
+      // Use requestAnimationFrame to batch DOM operations
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.animate-on-scroll').forEach(element => {
+          element.classList.remove('visible');
+          observer.observe(element);
+        });
+      });
+    } catch (error) {
+      console.error('Animation observer error:', error);
+      // Fallback: show all content immediately
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.animate-on-scroll').forEach(element => {
+          element.classList.add('visible');
+          (element as HTMLElement).style.willChange = 'auto';
+        });
+      });
+    }
+  }
+
+  function ensureContentVisibility() {
+    setTimeout(() => {
+      document.querySelectorAll('.animate-on-scroll').forEach(element => {
+        if (!element.classList.contains('visible')) {
+          element.classList.add('visible');
+        }
+      });
+    }, 1500);
+  }
+
+  // Use passive event listeners for better performance
+  document.addEventListener('DOMContentLoaded', scrollObserver, { passive: true });
+  document.addEventListener('astro:page-load', scrollObserver, { passive: true });
+  
+  // Delay ensureContentVisibility to reduce initial load impact
+  setTimeout(ensureContentVisibility, 100);
 </script>
