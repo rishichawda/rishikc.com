@@ -13,7 +13,7 @@ interface ExtraCurricular { club: string; positions: ClubPosition[]; }
 interface Experience { company: string; duration: string; positions: Position[]; website?: string[]; }
 interface Education { institution: string; degree: string; period: string; extra_curriculars?: ExtraCurricular[]; }
 interface Certification { institution: string; title: string; }
-interface ProfileData { name: string; title: string; location: string; summary: string; bio: string; contact: { linkedin: string; }; skills: string[]; languages: Language[]; certifications: Certification[]; experience: Experience[]; education: Education[]; socials: Social[]; }
+interface ProfileData { name: string; title: string; location: string; summary: string; bio: string | string[]; contact: { linkedin: string; }; skills: string[]; languages: Language[]; certifications: Certification[]; experience: Experience[]; education: Education[]; interests: string[]; socials: Social[]; }
 
 const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
@@ -85,57 +85,167 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       </p>
     </section>
 
-    <section class="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-5 gap-12 sm:gap-16 lg:gap-20 items-start">
-      <div class="md:col-span-3 animate-on-scroll fade-in-left">
-        <h2 class="text-3xl sm:text-4xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-8 leading-snug">
-          A bit about me..
-        </h2>
-        <div class="space-y-6 text-base sm:text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed sm:leading-relaxed">
-          <p>{profile.bio}</p>
-          <p>
-            With over <strong class="font-medium text-brand-800">{pluralize(yearsExperience, 'year', 'years')}</strong> of experience in the tech industry, I've had the privilege of working on diverse projects, from developing scalable web applications to contributing to DevSecOps tooling at <a href={profile.experience[0]?.website?.[0] || '#'} target="_blank" rel="noopener noreferrer" class="text-brand-700 hover:text-brand-900 underline decoration-brand-300 hover:decoration-brand-500 transition duration-300">{profile.experience[0]?.company || 'my current role'}</a>.
-          </p>
-          <p>
-            My journey in software development is driven by a curiosity for technology and a desire to build things that are not only functional but also elegant and user-friendly.
-          </p>
-        </div>
-        <a href="/career/" class="inline-flex items-center mt-10 text-brand-700 hover:text-brand-900 font-medium font-['Montserrat_Variable'] group transition-all duration-300 text-base">
-          Explore my career journey
-          <svg class="w-5 h-5 ml-1.5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-        </a>
-      </div>
-      <div class="md:col-span-2 animate-on-scroll fade-in-right">
-         <div class="bg-gradient-to-br from-brand-100/80 to-brand-200/40 p-10 rounded-xl gap-y-4 shadow-lg border border-brand-200/60 flex flex-col justify-center items-center text-center relative overflow-hidden">
-            <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-white shadow-lg">
-              <Image
-                src={profileImage}
-                alt={`Profile picture of ${profile.name}`}
-                width={160}
-                height={160}
-                class="w-full h-full object-cover"
-                loading="eager"
-                decoding="async"
-                format="webp"
-              />
+    <!-- About Me Section -->
+    <section class="relative bg-gradient-to-b from-white via-brand-25/30 to-white py-20 sm:py-24 lg:py-32">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <!-- Profile Card -->
+          <div class="lg:col-span-4 animate-on-scroll fade-in-left">
+            <div class="relative group">
+              <!-- Decorative background -->
+              <div class="absolute inset-0 bg-gradient-to-br from-brand-500/20 via-brand-600/10 to-brand-700/20 rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-500"></div>
+              
+              <!-- Main card -->
+              <div class="relative bg-white/90 backdrop-blur-sm p-8 lg:p-10 rounded-2xl shadow-xl border border-brand-100/60 hover:shadow-2xl transition-all duration-500">
+                <!-- Profile Image -->
+                <div class="relative mb-8">
+                  <div class="w-48 h-48 mx-auto rounded-2xl overflow-hidden border-4 border-white shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
+                    <Image
+                      src={profileImage}
+                      alt={`Profile picture of ${profile.name}`}
+                      width={192}
+                      height={192}
+                      class="w-full h-full object-cover"
+                      loading="eager"
+                      decoding="async"
+                      format="webp"
+                    />
+                  </div>
+                  <!-- Decorative elements -->
+                  <div class="absolute -top-2 -right-2 w-6 h-6 bg-brand-500 rounded-full animate-pulse"></div>
+                  <div class="absolute -bottom-2 -left-2 w-4 h-4 bg-brand-600 rounded-full animate-pulse delay-700"></div>
+                </div>
+
+                <!-- Profile Info -->
+                <div class="text-center space-y-4">
+                  <h3 class="text-2xl font-bold font-['Red_Hat_Display_Variable'] text-brand-900">
+                    {profile.name}
+                  </h3>
+                  <p class="text-brand-700 font-medium font-['Montserrat_Variable']">
+                    {profile.title}
+                  </p>
+                  <div class="flex items-center justify-center text-brand-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="font-['Montserrat_Variable']">{profile.location}</span>
+                  </div>
+                </div>
+
+                <!-- Interests & Hobbies -->
+                <div class="mt-8 p-4 bg-gradient-to-r from-brand-50 to-brand-100/50 rounded-xl border border-brand-200/50">
+                  <h5 class="text-lg font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-3 text-center">
+                    Interests & Hobbies
+                  </h5>
+                  <div class="flex flex-wrap gap-2 justify-center">
+                    {profile.interests.map((interest) => (
+                      <span class="interest-tag px-3 py-1.5 bg-white text-brand-700 text-sm font-medium font-['Montserrat_Variable'] rounded-full border border-brand-200/60 shadow-xs">
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="mt-8">
+                  <h4 class="text-lg font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-4 text-center">
+                    Connect with Me
+                  </h4>
+                  <div class="flex flex-wrap gap-3 justify-center">
+                    {profile.socials.map((social) => (
+                      <a
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="social-link inline-flex items-center px-4 py-2 rounded-xl bg-white text-brand-700 hover:bg-brand-700 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg border border-brand-200/80 group transform hover:-translate-y-1"
+                        aria-label={`Visit my ${social.platform} profile`}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <span class="font-['Montserrat_Variable'] text-sm font-medium">{social.platform}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-           <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-1">Connect with Me</h3>
-           <div class="flex flex-wrap gap-3 justify-center">
-             {profile.socials.map((social) => (
-                <a
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="social-link inline-flex items-center px-3 py-1.5 rounded-full bg-white text-brand-700 hover:bg-brand-700 hover:text-white transition-all duration-300 shadow-sm border border-brand-200/80 group"
-                  aria-label={`Visit my ${social.platform} profile`}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </div>
+
+          <!-- Content Area -->
+          <div class="lg:col-span-8 animate-on-scroll fade-in-right">
+            <div class="space-y-8">
+              <!-- Bio Section -->
+              <div class="prose prose-lg max-w-none">
+                {Array.isArray(profile.bio) ? (
+                  <div class="space-y-6">
+                    {profile.bio.map((paragraph, index) => (
+                      <div class={`text-xl sm:text-2xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed ${index === 0 ? 'first-letter:text-6xl first-letter:font-bold first-letter:text-brand-700 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none' : ''}`}>
+                        {paragraph}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div class="text-xl sm:text-2xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed mb-8 first-letter:text-6xl first-letter:font-bold first-letter:text-brand-700 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none">
+                    {profile.bio}
+                  </div>
+                )}
+                
+                <div class="space-y-6 text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed">
+                  <p>
+                    With over <strong class="font-medium text-brand-800">{pluralize(yearsExperience, 'year', 'years')}</strong> of experience in the tech industry, I've had the privilege of working on diverse projects, from developing scalable web applications to contributing to DevSecOps tooling at <a href={profile.experience[0]?.website?.[0] || '#'} target="_blank" rel="noopener noreferrer" class="text-brand-700 hover:text-brand-900 underline decoration-brand-300 hover:decoration-brand-500 decoration-1 underline-offset-2 transition-all duration-300 font-medium">{profile.experience[0]?.company || 'my current role'}</a>.
+                  </p>
+                  
+                  <p>
+                    My journey in software development is driven by a curiosity for technology and a desire to build things that are not only functional but also elegant and user-friendly. I believe in writing clean, maintainable code and creating experiences that make a difference.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Quick Facts -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
+                <div class="bg-white/60 backdrop-blur-sm p-5 rounded-xl border border-brand-100/60 shadow-md hover:shadow-lg transition-all duration-300 text-center">
+                  <div class="text-2xl font-bold font-['Red_Hat_Display_Variable'] text-brand-700 mb-1">
+                    {pluralize(yearsExperience, 'Year', 'Years')}
+                  </div>
+                  <p class="text-sm font-medium font-['Montserrat_Variable'] text-gray-600">
+                    of Professional Experience
+                  </p>
+                </div>
+
+                <div class="bg-white/60 backdrop-blur-sm p-5 rounded-xl border border-brand-100/60 shadow-md hover:shadow-lg transition-all duration-300 text-center">
+                  <div class="text-2xl font-bold font-['Red_Hat_Display_Variable'] text-brand-700 mb-1">
+                    ∞
+                  </div>
+                  <p class="text-sm font-medium font-['Montserrat_Variable'] text-gray-600">
+                    Cups of Coffee Consumed
+                  </p>
+                </div>
+
+                <div class="bg-white/60 backdrop-blur-sm p-5 rounded-xl border border-brand-100/60 shadow-md hover:shadow-lg transition-all duration-300 text-center">
+                  <div class="text-2xl font-bold font-['Red_Hat_Display_Variable'] text-brand-700 mb-1">
+                    📸
+                  </div>
+                  <p class="text-sm font-medium font-['Montserrat_Variable'] text-gray-600">
+                    Always Ready for Adventure
+                  </p>
+                </div>
+              </div>
+
+              <!-- CTA Button -->
+              <div class="pt-8">
+                <a href="/career/" class="inline-flex items-center px-8 py-4 bg-brand-700 text-white font-semibold font-['Montserrat_Variable'] rounded-xl shadow-lg hover:shadow-xl hover:bg-brand-800 transition-all duration-300 transform hover:-translate-y-1 group">
+                  <span>Explore my career journey</span>
+                  <svg class="w-5 h-5 ml-3 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                   </svg>
-                  <span class="font-['Montserrat_Variable'] text-xs font-medium">{social.platform}</span>
                 </a>
-              ))}
-           </div>
-         </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -191,22 +301,23 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
 </BaseLayout>
 
 <style>
+  /* Animation Classes */
   .fade-in-up {
     opacity: 0;
-    transform: translateY(15px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     will-change: opacity, transform;
   }
   .fade-in-left {
     opacity: 0;
-    transform: translateX(-15px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     will-change: opacity, transform;
   }
   .fade-in-right {
     opacity: 0;
-    transform: translateX(15px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    transform: translateX(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     will-change: opacity, transform;
   }
   .visible.fade-in-up,
@@ -216,11 +327,104 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     transform: translate(0, 0);
     will-change: auto;
   }
-  .animate-on-scroll:nth-child(odd) { transition-delay: 0.05s; }
-  .animate-on-scroll:nth-child(even) { transition-delay: 0.1s; }
+
+  /* Staggered animation delays */
+  .animate-on-scroll:nth-child(odd) { transition-delay: 0.1s; }
+  .animate-on-scroll:nth-child(even) { transition-delay: 0.2s; }
+
+  /* First letter styling */
+  .prose .first-letter\:text-6xl:first-letter {
+    font-family: 'Red Hat Display Variable', sans-serif;
+    line-height: 0.8;
+    margin-right: 0.5rem;
+    margin-top: 0.2rem;
+    float: left;
+  }
+
+  /* Enhanced social links */
+  .social-link {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .social-link:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+  .social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+  }
+  .social-link:hover::before {
+    left: 100%;
+  }
+
+  /* Interest tags styling */
+  .interest-tag {
+    cursor: default;
+  }
+
+  /* Subtle shadow for interest tags */
+  .shadow-xs {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  /* Card hover effects */
+  .group:hover .group-hover\:scale-105 {
+    transform: scale(1.05);
+  }
+  .group:hover .group-hover\:scale-110 {
+    transform: scale(1.1);
+  }
+  .group:hover .group-hover\:rotate-6 {
+    transform: rotate(6deg);
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Pulse animations for decorative elements */
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+  .animate-pulse {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+  .delay-700 {
+    animation-delay: 0.7s;
+  }
+
+  /* Backdrop blur support */
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* Gradient text effects */
+  .bg-gradient-to-r {
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+  }
+
+  /* Enhanced focus states */
+  .focus\:ring-2:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--tw-ring-color);
+  }
+
+  /* Fallback animations for reduced motion preference */
   @media (prefers-reduced-motion: no-preference) {
     .animate-on-scroll {
-      animation: fallbackFadeIn 1s forwards 0.8s;
+      animation: fallbackFadeIn 1s forwards 1s;
     }
     @keyframes fallbackFadeIn {
       to {
@@ -229,6 +433,8 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       }
     }
   }
+
+  /* Respect reduced motion preferences */
   @media (prefers-reduced-motion: reduce) {
     .fade-in-up,
     .fade-in-left,
@@ -238,18 +444,39 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       transition: none !important;
       animation: none !important;
     }
+    .social-link,
+    .group {
+      transition: none !important;
+    }
+    .social-link:hover,
+    .group:hover * {
+      transform: none !important;
+    }
   }
-  html {
-    scroll-behavior: smooth;
+
+  /* Border styles for subtle accent */
+  .border-l-2 {
+    border-left-width: 2px;
+    border-left-style: solid;
   }
-  .social-link {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  /* Enhanced button styles */
+  .transform {
+    transform: translateZ(0); /* Enable hardware acceleration */
   }
-  .social-link:hover {
-     transform: translateY(-2px);
-     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+
+  /* Improved typography */
+  .leading-tight { line-height: 1.25; }
+  .leading-relaxed { line-height: 1.625; }
+  .underline-offset-4 { text-underline-offset: 4px; }
+  .decoration-2 { text-decoration-thickness: 2px; }
+
+  /* Custom grid responsive behavior */
+  @media (min-width: 1024px) {
+    .lg\:col-span-4 { grid-column: span 4 / span 4; }
+    .lg\:col-span-8 { grid-column: span 8 / span 8; }
+    .lg\:col-span-12 { grid-column: span 12 / span 12; }
+    .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
   }
 </style>
 
