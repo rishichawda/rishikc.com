@@ -23,17 +23,20 @@ const articles = allArticles
   }));
 ---
 
-<section class="font-['Red_Hat_Display_Variable'] py-12 sm:py-16 lg:py-20">
-  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
-    <h2
-      class="text-lg sm:text-xl lg:text-2xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-8 sm:mb-12 lg:mb-16"
-    >
-      What I've written about recently..
-    </h2>
+<section class="font-['Red_Hat_Display_Variable'] py-16 sm:py-20 lg:py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-light text-brand-900 mb-4">
+        Latest Thoughts & Insights
+      </h2>
+      <p class="text-lg sm:text-xl text-brand-600 font-['Montserrat_Variable'] font-light max-w-3xl mx-auto">
+        Exploring the intersection of technology, creativity, and human experience through writing
+      </p>
+    </div>
 
     <div class="relative flex flex-row items center" id="blog-carousel">
       <button
-        class="bg-white max-w-fit m-auto rounded-full p-2 shadow-md text-gray-600 hover:text-gray-900 transition-colors sm:block"
+        class="bg-white/80 backdrop-blur-sm max-w-fit m-auto rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 sm:block"
         id="prev-btn"
         aria-label="Previous slide"
       >
@@ -52,60 +55,59 @@ const articles = allArticles
         </svg>
       </button>
 
-      <div class="relative overflow-hidden w-full mx-4" id="carousel-viewport">
+      <div class="relative overflow-hidden w-full mx-2" id="carousel-viewport">
         <div
-          class="flex gap-6 sm:gap-8 lg:gap-10 transition-transform duration-300 ease-in-out"
+          class="flex gap-3 sm:gap-4 lg:gap-5 transition-transform duration-300 ease-in-out"
           id="carousel-container"
         >
           {
             articles.map((article) => (
-              <div class="lg:max-w-[25%] md:max-w-[30%] max-w-[80%] flex-shrink-0 flex flex-col hover:-scale-[97%] transition-all">
-                <a class="hover:cursor-pointer" href={article.link}>
-                  <div class="aspect-square mb-3 sm:mb-4">
+              <div class="lg:max-w-[32%] md:max-w-[48%] max-w-[90%] flex-shrink-0 group">
+                <a 
+                  href={article.link}
+                  class="block bg-white rounded-2xl shadow-sm border border-brand-100/50 group-hover:shadow-xl group-hover:shadow-brand-100/30 transition-all duration-300 overflow-hidden h-full"
+                >
+                  {/* Image Section */}
+                  <div class="aspect-[4/3] overflow-hidden">
                     <Image
                       src={article.image}
                       alt={article.title}
                       width={500}
-                      class="object-cover rounded-lg aspect-square"
+                      class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                </a>
-                <div class="flex flex-col h-full justify-between">
-                  <a class="hover:cursor-pointer" href={article.link}>
-                    <h3 class="text-lg sm:text-xl font-medium text-brand-800 mb-1 sm:mb-2 line-clamp-2 font-['Red_Hat_Display_Variable']">
-                      {article.title}
-                    </h3>
-                  </a>
-                  <div>
-                    <p class="font-['Red_Hat_Display_Variable'] text-brand-400 mb-1 sm:mb-2 text-xs sm:text-sm">
+                  
+                  {/* Content Section */}
+                  <div class="p-6 flex flex-col h-auto">
+                    <p class="font-['Montserrat_Variable'] text-brand-500 mb-2 text-xs sm:text-sm font-medium uppercase tracking-wider">
                       {article.date}
                     </p>
-                    <p class="font-['Red_Hat_Display_Variable'] text-brand-700 mb-3 sm:mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3">
+                    <h3 class="text-lg sm:text-xl font-medium text-brand-900 mb-3 line-clamp-2 font-['Red_Hat_Display_Variable'] group-hover:text-brand-700 transition-colors">
+                      {article.title}
+                    </h3>
+                    <p class="font-['Montserrat_Variable'] text-brand-600 mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3">
                       {article.description}
                     </p>
-                    <a
-                      href={article.link}
-                      class="text-brand-700 font-['Montserrat_Variable'] hover:text-brand-900 hover:cursor-pointer font-medium text-sm sm:text-base inline-flex items-center gap-x-1"
-                    >
-                      Read article
-                      <svg
-                        width="17"
-                        height="17"
-                        viewBox="0 0 17 17"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
-                          stroke="#737FAE"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </a>
+                    <div class="mt-auto">
+                      <span class="text-brand-700 font-['Montserrat_Variable'] hover:text-brand-600 font-medium text-sm sm:text-base inline-flex items-center gap-x-2 group-hover:translate-x-1 transition-transform duration-200">
+                        Read article
+                        <svg
+                          class="w-4 h-4 transition-transform group-hover:translate-x-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </span>
+                    </div>
                   </div>
-                </div>
+                </a>
               </div>
             ))
           }
@@ -113,7 +115,7 @@ const articles = allArticles
       </div>
 
       <button
-        class="bg-white max-w-fit m-auto rounded-full p-2 shadow-md text-gray-600 hover:text-gray-900 transition-colors sm:block"
+        class="bg-white/80 backdrop-blur-sm max-w-fit m-auto rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 sm:block"
         id="next-btn"
         aria-label="Next slide"
       >
@@ -170,22 +172,24 @@ const articles = allArticles
       let currentIndex = 0;
 
       function calculateLayout() {
-        if (!viewport) return { itemWidth: 200, itemsPerView: 1, totalSlides: 1, gap: 24 };
+        if (!viewport) return { itemWidth: 280, itemsPerView: 1, totalSlides: 1, gap: 12 };
         
         const viewportWidth = viewport.offsetWidth;
         const gap =
-          window.innerWidth < 640 ? 24 : window.innerWidth < 1024 ? 32 : 40;
-        const minItemWidth = 200;
-        const maxItemWidth = 230;
+          window.innerWidth < 640 ? 12 : window.innerWidth < 1024 ? 16 : 20;
+        const minItemWidth = 280;
+        const maxItemWidth = 380;
 
         let itemsPerView = Math.floor(viewportWidth / (minItemWidth + gap));
-        itemsPerView = Math.max(1, Math.min(itemsPerView, items.length));
+        // Limit maximum cards per view to 3 for better readability
+        itemsPerView = Math.max(1, Math.min(itemsPerView, Math.min(3, items.length)));
 
         let itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
 
         if (itemWidth > maxItemWidth) {
           itemsPerView = Math.floor(viewportWidth / (maxItemWidth + gap));
-          itemsPerView = Math.max(1, Math.min(itemsPerView, items.length));
+          // Limit maximum cards per view to 3 for better readability  
+          itemsPerView = Math.max(1, Math.min(itemsPerView, Math.min(3, items.length)));
           itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
         }
 
