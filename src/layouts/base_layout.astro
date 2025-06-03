@@ -1,5 +1,6 @@
 ---
 import SEO from "../components/seo.astro";
+import FloatingActionButton from "../components/floating_action_button.astro";
 import "../styles/global.css";
 import "../styles/tailwind.css";
 import "../styles/animations.css";
@@ -32,6 +33,7 @@ const seo = {
 	</head>
 	<body class="max-w-screen">
 		<slot />
+		<FloatingActionButton />
 		<Footer />
 	</body>
 </html>
