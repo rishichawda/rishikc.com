@@ -1,61 +1,64 @@
 ---
-const services = [
-  {
-    title: "Web Applications",
-    description: "Web development expertise infused with experience, curiosity, and no shortage of tenacity!",
-    link: "#",
-  },
-  {
-    title: "Mobile Applications",
-    description: "Crafting pixel-perfect apps for Android and iOS devices.",
-    link: "#",
-  },
-  {
-    title: "Desktop Software",
-    description: "Delivering powerful desktop applications for various platforms.",
-    link: "#",
-  },
-  {
-    title: "Writing Articles",
-    description: "Expressing thoughts through engaging articles and insights.",
-    link: "/articles",
-    linkText: "See Articles"
-  },
-  {
-    title: "Photography",
-    description: "Capturing the beauty of life through a creative lens.",
-    link: "/gallery",
-    linkText: "View Gallery"
-  },
-  {
-    title: "Freelance and Collaborations",
-    description: "Always open to taking on new challenges and collaborations.",
-    link: "#contact",
-    linkText: "Say Hi!"
-  }
-];
+import { getCollection } from 'astro:content';
+
+const servicesData = await getCollection('services');
+const services = servicesData[0]?.data || [];
 ---
 
-<section id="services" class="py-12 sm:py-16 lg:py-20">
-  <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
-    <h2 class="text-lg sm:text-xl lg:text-2xl font-light text-[#6B7AB0] mb-8 sm:mb-12 lg:mb-16">
-      What I do and look forward to..
-    </h2>
+<section id="services" class="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-gray-50/50 to-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-['Red_Hat_Display_Variable'] font-light text-brand-900 mb-4">
+        What I Craft & Create
+      </h2>
+      <p class="text-lg sm:text-xl text-brand-600 font-['Montserrat_Variable'] font-light max-w-3xl mx-auto">
+        Passionate about building meaningful digital experiences through code, design, and storytelling
+      </p>
+    </div>
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12 lg:gap-x-12 lg:gap-y-16">
-      {services.map((service) => (
-        <div class="p-4 sm:p-6 lg:p-0">
-          <h3 class="text-lg sm:text-xl lg:text-[1.25rem] font-medium text-[#6B7AB0] mb-2 sm:mb-3">
-            {service.title}
-          </h3>
-          <p class="text-sm sm:text-base text-[#6B7AB0]/70 mb-3 sm:mb-4 leading-relaxed font-light">
-            {service.description}
-          </p>
-          {service.linkText && (
-            <a href={service.link} class="text-[#6B7AB0] hover:text-[#6B7AB0]/80 font-light inline-flex items-center text-sm sm:text-base">
-              {service.linkText} <span class="ml-1">→</span>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+      {services.map((service: any) => (
+        <div class="group bg-white rounded-2xl p-8 shadow-sm border border-brand-100/50 hover:shadow-xl hover:shadow-brand-100/20 transition-all duration-300 hover:-translate-y-1 relative overflow-hidden flex flex-col h-full">
+          <!-- Subtle gradient overlay on hover -->
+          <div class="absolute inset-0 bg-gradient-to-br from-brand-50/0 to-brand-100/0 group-hover:from-brand-50/30 group-hover:to-brand-100/10 transition-all duration-300 rounded-2xl"></div>
+          
+          <div class="relative z-10 flex flex-col h-full">
+            <div class="flex items-center mb-6">
+              <div class="bg-brand-50 rounded-xl p-3 mr-4 group-hover:bg-brand-100 transition-colors duration-300">
+                <div class="text-brand-700 group-hover:scale-110 transition-transform duration-300" set:html={service.icon}>
+                </div>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-['Red_Hat_Display_Variable'] font-medium text-brand-800 group-hover:text-brand-600 transition-colors">
+                {service.title}
+              </h3>
+            </div>
+            
+            <p class="text-brand-600 font-['Montserrat_Variable'] font-light leading-relaxed mb-6 text-base flex-grow">
+              {service.description}
+            </p>
+            
+            <a
+              href={service.link}
+              class="inline-flex items-center text-brand-700 hover:text-brand-600 font-['Montserrat_Variable'] font-medium text-sm transition-all duration-200 group-hover:translate-x-1"
+              target={service.link.startsWith('http') ? '_blank' : undefined}
+              rel={service.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+            >
+              {service.linkText}
+              <svg
+                class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </a>
-          )}
+          </div>
         </div>
       ))}
     </div>
