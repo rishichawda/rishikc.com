@@ -86,18 +86,18 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     </section>
 
     <!-- About Me Section -->
-    <section class="relative bg-gradient-to-b from-white via-brand-25/30 to-white py-20 sm:py-24 lg:py-32">
+    <section class="relative bg-gradient-to-b from-white via-brand-25/30 to-white py-20 sm:py-24 lg:py-32 overflow-x-hidden">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           <!-- Profile Card -->
           <div class="lg:col-span-4 animate-on-scroll fade-in-left">
-            <div class="relative group">
+            <div class="relative group max-w-full">
               <!-- Decorative background -->
               <div class="absolute inset-0 bg-gradient-to-br from-brand-500/20 via-brand-600/10 to-brand-700/20 rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-500"></div>
               
               <!-- Main card -->
-              <div class="relative bg-white/90 backdrop-blur-sm p-8 lg:p-10 rounded-2xl shadow-xl border border-brand-100/60 hover:shadow-2xl transition-all duration-500">
+              <div class="relative bg-white/90 backdrop-blur-sm p-8 lg:p-10 rounded-2xl border border-brand-100/60 hover:shadow-2xl transition-all duration-500">
                 <!-- Profile Image -->
                 <div class="relative mb-8">
                   <div class="w-48 h-48 mx-auto rounded-2xl overflow-hidden border-4 border-white shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
@@ -431,6 +431,52 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
         opacity: 1;
         transform: translate(0, 0);
       }
+    }
+  }
+
+  /* Prevent horizontal scroll on mobile by disabling hover transforms on smaller screens */
+  @media (max-width: 1023px) {
+    /* Ensure containers don't overflow */
+    .relative.group {
+      overflow: hidden;
+    }
+    
+    /* Disable transform-based hover effects that can cause overflow */
+    .group:hover .group-hover\:scale-105,
+    .group:hover .group-hover\:rotate-6,
+    .social-link:hover {
+      transform: none !important;
+    }
+    .group:hover .group-hover\:scale-110 {
+      transform: none !important;
+    }
+    
+    /* Disable the decorative background rotation on mobile */
+    .group:hover .transform.rotate-3 {
+      transform: rotate(3deg) !important;
+    }
+    
+    /* Keep minimal hover effects for mobile feedback */
+    .social-link:hover {
+      transform: none !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    /* Ensure the main card container stays within bounds */
+    .lg\:col-span-4 {
+      max-width: 100%;
+      overflow: hidden;
+    }
+  }
+
+  /* Additional mobile touch behavior */
+  @media (max-width: 767px) {
+    /* Disable all transform animations on mobile for touch devices */
+    .group:hover .transform,
+    .group:hover [class*="transform"],
+    .group:hover [class*="scale"],
+    .group:hover [class*="rotate"] {
+      transform: none !important;
     }
   }
 
