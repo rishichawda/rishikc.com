@@ -35,7 +35,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
             </a>
           ))
         }
-        
+
         <div class="relative">
           <button
             id="search-icon-btn"
@@ -50,17 +50,22 @@ import logo from "../../../content/assets/logo/Group 489.svg";
               stroke="currentColor"
               stroke-width="2"
             >
-              <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"></path>
             </svg>
           </button>
-          
+
           <form
             id="search-form"
             method="GET"
             action="/search/"
             class="absolute right-0 top-full mt-2 hidden z-50"
           >
-            <div class="flex items-center gap-2 bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-lg border border-white/20 min-w-[280px]">
+            <div
+              class="flex items-center gap-2 bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-lg border border-white/20 min-w-[280px]"
+            >
               <input
                 type="text"
                 name="q"
@@ -82,7 +87,10 @@ import logo from "../../../content/assets/logo/Group 489.svg";
                   stroke="currentColor"
                   stroke-width="2"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"></path>
                 </svg>
               </button>
             </div>
@@ -99,7 +107,8 @@ import logo from "../../../content/assets/logo/Group 489.svg";
       <h1
         class="font-['Red_Hat_Display_Variable'] text-3xl sm:text-3xl lg:text-[2rem] font-light text-white leading-snug"
       >
-        Welcome to <span class="font-semibold">Rishi</span>'s personal corner on the Internet.
+        Welcome to <span class="font-semibold">Rishi</span>'s personal corner on
+        the Internet.
       </h1>
 
       <div class="space-y-5 font-['Montserrat_Variable'] leading-relaxed">
@@ -149,7 +158,9 @@ import logo from "../../../content/assets/logo/Group 489.svg";
       <Image alt="logo" src={logo} transition:name="hero-logo-image" />
     </div>
 
-    <div class="flex order-3 flex-row lg:flex-col gap-6 lg:gap-8 mt-8 lg:mt-0 items-center">
+    <div
+      class="flex order-3 flex-row lg:flex-col gap-6 lg:gap-8 mt-8 lg:mt-0 items-center"
+    >
       <a
         href="https://github.com/rishichawda"
         target="_blank"
@@ -158,15 +169,15 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         aria-label="Visit Rishi's GitHub profile"
       >
         <svg
-          width="32"
-          height="32"
-          viewBox="0 0 32 32"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
           <path
-            d="M12.4905 17.7326C12.4905 19.0932 11.7809 21.3197 10.1013 21.3197C8.42163 21.3197 7.71202 19.0932 7.71202 17.7326C7.71202 16.3719 8.42163 14.1454 10.1013 14.1454C11.7809 14.1454 12.4905 16.3719 12.4905 17.7326ZM31.6241 14.4449C31.6241 16.5217 31.4157 18.7221 30.4848 20.6296C28.0174 25.6164 21.2338 25.4993 16.3771 25.4993C11.4424 25.4993 4.25509 25.675 1.69007 20.6296C0.739572 18.7416 0.375 16.5217 0.375 14.4449C0.375 11.7171 1.27992 9.13907 3.07674 7.04928C2.73821 6.02067 2.57546 4.93997 2.57546 3.8723C2.57546 2.4726 2.89446 1.76949 3.52595 0.5C6.47508 0.5 8.36304 1.08592 10.6091 2.84368C12.497 2.39447 14.4371 2.19266 16.3836 2.19266C18.1414 2.19266 19.9122 2.38145 21.6179 2.7916C23.8313 1.05337 25.7193 0.5 28.6359 0.5C29.2739 1.76949 29.5864 2.4726 29.5864 3.8723C29.5864 4.93997 29.4171 6.00114 29.0851 7.01022C30.8754 9.11953 31.6241 11.7171 31.6241 14.4449ZM27.438 17.7326C27.438 14.8746 25.6998 12.3551 22.653 12.3551C21.4226 12.3551 20.2442 12.5765 19.0073 12.7457C18.0372 12.8955 17.0672 12.9541 16.0711 12.9541C15.0816 12.9541 14.1116 12.8955 13.135 12.7457C11.9176 12.5765 10.7263 12.3551 9.48931 12.3551C6.44253 12.3551 4.7043 14.8746 4.7043 17.7326C4.7043 23.4485 9.93852 24.3274 14.4957 24.3274H17.6336C22.2103 24.3274 27.438 23.455 27.438 17.7326ZM22.0606 14.1454C20.3809 14.1454 19.6713 16.3719 19.6713 17.7326C19.6713 19.0932 20.3809 21.3197 22.0606 21.3197C23.7402 21.3197 24.4498 19.0932 24.4498 17.7326C24.4498 16.3719 23.7402 14.1454 22.0606 14.1454Z"
+            d="M12 0.297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
             fill="white"></path>
         </svg>
       </a>
@@ -174,21 +185,19 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         href="https://www.linkedin.com/in/rkrishi"
         target="_blank"
         rel="noopener noreferrer"
-        class="hover:opacity-80 transition-opacity hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50 rounded"
+        class="fill-white hover:opacity-80 transition-opacity hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50 rounded"
         aria-label="Connect with Rishi on LinkedIn"
       >
         <svg
-          width="26"
-          height="26"
-          viewBox="0 0 26 26"
-          fill="none"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
+          ><path
+            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+          ></path></svg
         >
-          <path
-            d="M23.7143 0.5H2.28013C1.29799 0.5 0.5 1.30915 0.5 2.30246V23.6975C0.5 24.6908 1.29799 25.5 2.28013 25.5H23.7143C24.6964 25.5 25.5 24.6908 25.5 23.6975V2.30246C25.5 1.30915 24.6964 0.5 23.7143 0.5ZM8.0558 21.9286H4.35045V9.99777H8.06138V21.9286H8.0558ZM6.20312 8.3683C5.01451 8.3683 4.05469 7.4029 4.05469 6.21987C4.05469 5.03683 5.01451 4.07143 6.20312 4.07143C7.38616 4.07143 8.35156 5.03683 8.35156 6.21987C8.35156 7.40848 7.39174 8.3683 6.20312 8.3683ZM21.9453 21.9286H18.24V16.125C18.24 14.7411 18.2121 12.9609 16.3147 12.9609C14.3839 12.9609 14.0882 14.4676 14.0882 16.0246V21.9286H10.3828V9.99777H13.9375V11.6272H13.9877C14.4844 10.6897 15.6953 9.70201 17.4978 9.70201C21.2478 9.70201 21.9453 12.1741 21.9453 15.3884V21.9286Z"
-            fill="white"></path>
-        </svg>
       </a>
       <a
         href="https://instagram.com/rishiikc"
@@ -198,19 +207,17 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         aria-label="Follow Rishi on Instagram"
       >
         <svg
-          width="26"
-          height="26"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
           fill="none"
-          id="Layer_1"
-          data-name="Layer 1"
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1000 1000"
           aria-hidden="true"
-          ><path
-            fill="white"
-            d="M295.42,6c-53.2,2.51-89.53,11-121.29,23.48-32.87,12.81-60.73,30-88.45,57.82S40.89,143,28.17,175.92c-12.31,31.83-20.65,68.19-23,121.42S2.3,367.68,2.56,503.46,3.42,656.26,6,709.6c2.54,53.19,11,89.51,23.48,121.28,12.83,32.87,30,60.72,57.83,88.45S143,964.09,176,976.83c31.8,12.29,68.17,20.67,121.39,23s70.35,2.87,206.09,2.61,152.83-.86,206.16-3.39S799.1,988,830.88,975.58c32.87-12.86,60.74-30,88.45-57.84S964.1,862,976.81,829.06c12.32-31.8,20.69-68.17,23-121.35,2.33-53.37,2.88-70.41,2.62-206.17s-.87-152.78-3.4-206.1-11-89.53-23.47-121.32c-12.85-32.87-30-60.7-57.82-88.45S862,40.87,829.07,28.19c-31.82-12.31-68.17-20.7-121.39-23S637.33,2.3,501.54,2.56,348.75,3.4,295.42,6m5.84,903.88c-48.75-2.12-75.22-10.22-92.86-17-23.36-9-40-19.88-57.58-37.29s-28.38-34.11-37.5-57.42c-6.85-17.64-15.1-44.08-17.38-92.83-2.48-52.69-3-68.51-3.29-202s.22-149.29,2.53-202c2.08-48.71,10.23-75.21,17-92.84,9-23.39,19.84-40,37.29-57.57s34.1-28.39,57.43-37.51c17.62-6.88,44.06-15.06,92.79-17.38,52.73-2.5,68.53-3,202-3.29s149.31.21,202.06,2.53c48.71,2.12,75.22,10.19,92.83,17,23.37,9,40,19.81,57.57,37.29s28.4,34.07,37.52,57.45c6.89,17.57,15.07,44,17.37,92.76,2.51,52.73,3.08,68.54,3.32,202s-.23,149.31-2.54,202c-2.13,48.75-10.21,75.23-17,92.89-9,23.35-19.85,40-37.31,57.56s-34.09,28.38-57.43,37.5c-17.6,6.87-44.07,15.07-92.76,17.39-52.73,2.48-68.53,3-202.05,3.29s-149.27-.25-202-2.53m407.6-674.61a60,60,0,1,0,59.88-60.1,60,60,0,0,0-59.88,60.1M245.77,503c.28,141.8,115.44,256.49,257.21,256.22S759.52,643.8,759.25,502,643.79,245.48,502,245.76,245.5,361.22,245.77,503m90.06-.18a166.67,166.67,0,1,1,167,166.34,166.65,166.65,0,0,1-167-166.34"
-            transform="translate(-2.5 -2.5)"></path></svg
         >
+          <path
+            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+            fill="white"></path>
+        </svg>
       </a>
     </div>
   </div>
@@ -229,47 +236,51 @@ import logo from "../../../content/assets/logo/Group 489.svg";
 
 <script>
   function searchInput() {
-    const searchIconBtn = document.getElementById('search-icon-btn');
-    const searchForm = document.getElementById('search-form');
-    const searchInput = document.getElementById('search-input') as HTMLInputElement;
-    
+    const searchIconBtn = document.getElementById("search-icon-btn");
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.getElementById(
+      "search-input",
+    ) as HTMLInputElement;
+
     if (searchIconBtn && searchForm && searchInput) {
-      searchIconBtn.addEventListener('click', function(e) {
+      searchIconBtn.addEventListener("click", function (e) {
         e.preventDefault();
-        
-        searchForm.classList.remove('hidden');
-        searchForm.style.opacity = '0';
-        searchForm.style.transform = 'translateY(-10px)';
-        
+
+        searchForm.classList.remove("hidden");
+        searchForm.style.opacity = "0";
+        searchForm.style.transform = "translateY(-10px)";
+
         requestAnimationFrame(() => {
-          searchForm.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
-          searchForm.style.opacity = '1';
-          searchForm.style.transform = 'translateY(0)';
+          searchForm.style.transition =
+            "opacity 0.2s ease-out, transform 0.2s ease-out";
+          searchForm.style.opacity = "1";
+          searchForm.style.transform = "translateY(0)";
         });
-        
+
         setTimeout(() => searchInput.focus(), 100);
       });
-      
+
       function closeSearchForm() {
         if (!searchForm) return;
-        searchForm.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
-        searchForm.style.opacity = '0';
-        searchForm.style.transform = 'translateY(-10px)';
-        
+        searchForm.style.transition =
+          "opacity 0.2s ease-out, transform 0.2s ease-out";
+        searchForm.style.opacity = "0";
+        searchForm.style.transform = "translateY(-10px)";
+
         setTimeout(() => {
-          searchForm.classList.add('hidden');
-          searchInput.value = '';
+          searchForm.classList.add("hidden");
+          searchInput.value = "";
         }, 200);
       }
-      
-      document.addEventListener('click', function(e) {
+
+      document.addEventListener("click", function (e) {
         const target = e.target as Node;
         if (!searchForm.contains(target) && !searchIconBtn.contains(target)) {
           closeSearchForm();
         }
       });
-      
-      searchForm.addEventListener('submit', function(e) {
+
+      searchForm.addEventListener("submit", function (e) {
         const query = searchInput.value.trim();
         if (!query) {
           e.preventDefault();
@@ -278,14 +289,14 @@ import logo from "../../../content/assets/logo/Group 489.svg";
         e.preventDefault();
         window.location.href = `/search/?q=${encodeURIComponent(query)}`;
       });
-      
-      searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
+
+      searchInput.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
           closeSearchForm();
         }
       });
     }
   }
-  document.addEventListener('DOMContentLoaded', searchInput);
-  document.addEventListener('astro:page-load', searchInput);
+  document.addEventListener("DOMContentLoaded", searchInput);
+  document.addEventListener("astro:page-load", searchInput);
 </script>
