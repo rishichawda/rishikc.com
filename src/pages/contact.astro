@@ -48,12 +48,18 @@ const pageUrl = new URL(
   />
 
   <main
-    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-brand-50/50 via-brand-100/20 to-brand-200/10"
+    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100/50 relative overflow-hidden"
   >
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 pt-12 sm:pt-16">
+    <!-- Background decorative elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-brand-200/20 to-brand-300/10 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-brand-100/20 to-brand-200/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 pt-12 sm:pt-16">
       <a
         href="/"
-        class="inline-flex items-center text-brand-700 hover:text-brand-900 mb-16 sm:mb-20 group text-sm sm:text-[15px] tracking-[0.15em] sm:tracking-[0.2em] uppercase transition-colors duration-300 font-medium"
+        class="inline-flex items-center text-brand-700 hover:text-brand-900 mb-16 sm:mb-20 group text-sm sm:text-[15px] tracking-[0.15em] sm:tracking-[0.2em] uppercase transition-all duration-300 font-medium hover:scale-105"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -71,128 +77,280 @@ const pageUrl = new URL(
         Back to home
       </a>
 
-      <div class="mb-12 sm:mb-16 text-center">
-        <h1
-          class="text-4xl lg:text-5xl font-light text-brand-950 mb-6 sm:mb-8 tracking-tight leading-tight"
-        >
-          Get in Touch
-        </h1>
-        <p
-          class="text-brand-800/80 text-lg sm:text-xl leading-relaxed font-light max-w-2xl mx-auto font-['Montserrat_Variable']"
-        >
-          Have a question, proposal, or just want to say hello? Fill out the
-          form below and I'll get back to you as soon as possible.
-        </p>
-      </div>
+      <div class="grid lg:grid-cols-3 gap-12 lg:gap-16">
+        <!-- Left column - Contact Info -->
+        <div class="lg:col-span-1 space-y-8">
+          <div class="text-center lg:text-left">
+            <h1
+              class="text-4xl lg:text-5xl font-light text-slate-900 mb-6 tracking-tight leading-tight"
+            >
+              Let's Connect
+            </h1>
+            <p
+              class="text-slate-600 text-lg leading-relaxed font-light font-['Montserrat_Variable']"
+            >
+              Have a question, proposal, or just want to say hello? Drop me a message through this page and I'll get back to you as soon as possible.
+            </p>
+          </div>
 
-      <!-- Contact Form -->
-      <div
-        class="bg-white rounded-xl shadow-lg p-6 sm:p-8 lg:p-10 border border-brand-200/50"
-        transition:animate="fade"
-      >
-        <form id="contact-form" class="space-y-6">
-          <div class="grid grid-cols-1 gap-y-6 gap-x-4">
-            <div>
-              <label
-                for="name"
-                class="block text-sm font-medium text-brand-800 mb-1.5 font-['Montserrat_Variable']"
-                >Name</label
-              >
-              <input
-                type="text"
-                id="name"
-                name="from_name"
-                required
-                class="w-full px-4 py-2.5 border border-brand-300 rounded-lg focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition duration-200 ease-in-out font-['Montserrat_Variable'] placeholder-brand-400/70"
-                placeholder="Your name"
-              />
-              <div class="error-text text-red-600 text-xs mt-1.5 hidden font-['Montserrat_Variable']"></div>
+          <!-- Contact Cards -->
+          <div class="space-y-4">
+            <!-- Services & Expertise -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-brand-300/50 group">
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-semibold text-slate-900 font-['Red_Hat_Display_Variable'] mb-2">What I Do</h3>
+                  <div class="space-y-1.5">
+                    <div class="flex items-center text-sm text-slate-600 font-['Montserrat_Variable']">
+                      <div class="w-1.5 h-1.5 bg-brand-500 rounded-full mr-2"></div>
+                      Web Applications
+                    </div>
+                    <div class="flex items-center text-sm text-slate-600 font-['Montserrat_Variable']">
+                      <div class="w-1.5 h-1.5 bg-brand-500 rounded-full mr-2"></div>
+                      Mobile Applications
+                    </div>
+                    <div class="flex items-center text-sm text-slate-600 font-['Montserrat_Variable']">
+                      <div class="w-1.5 h-1.5 bg-brand-500 rounded-full mr-2"></div>
+                      DevSecOps & Consulting
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label
-                for="email"
-                class="block text-sm font-medium text-brand-800 mb-1.5 font-['Montserrat_Variable']"
-                >Email</label
-              >
-              <input
-                type="email"
-                id="email"
-                name="reply_to"
-                required
-                class="w-full px-4 py-2.5 border border-brand-300 rounded-lg focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition duration-200 ease-in-out font-['Montserrat_Variable'] placeholder-brand-400/70"
-                placeholder="your.email@example.com"
-              />
-              <div class="error-text text-red-600 text-xs mt-1.5 hidden font-['Montserrat_Variable']"></div>
+            <!-- Availability Status -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-brand-300/50 group">
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-brand-600 to-brand-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div class="relative">
+                    <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
+                    <div class="absolute top-0 left-0 w-2.5 h-2.5 bg-white rounded-full animate-ping"></div>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-semibold text-slate-900 font-['Red_Hat_Display_Variable']">Availability</h3>
+                  <p class="text-slate-600 font-['Montserrat_Variable']">Open to freelance projects & collaborations</p>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label
-                for="subject"
-                class="block text-sm font-medium text-brand-800 mb-1.5 font-['Montserrat_Variable']"
-                >Subject</label
-              >
-              <select
-                id="subject"
-                name="subject"
-                required
-                class="w-full px-4 py-2.5 border border-brand-300 rounded-lg focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition duration-200 ease-in-out font-['Montserrat_Variable'] text-brand-900 bg-white appearance-none"
-              >
-                <option value="" disabled selected class="text-brand-400/90"
-                  >Please select a subject</option
+            <!-- Quick Navigation -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-brand-300/50 group">
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-brand-700 to-brand-800 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-semibold text-slate-900 font-['Red_Hat_Display_Variable'] mb-3">Learn More</h3>
+                  <div class="space-y-2">
+                    <a href="/about/" class="flex items-center justify-between text-sm text-slate-600 hover:text-brand-600 font-['Montserrat_Variable'] transition-colors duration-200 group/link">
+                      <span>About Me</span>
+                      <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </a>
+                    <a href="/career/" class="flex items-center justify-between text-sm text-slate-600 hover:text-brand-600 font-['Montserrat_Variable'] transition-colors duration-200 group/link">
+                      <span>Career Journey</span>
+                      <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </a>
+                    <a href="/articles/" class="flex items-center justify-between text-sm text-slate-600 hover:text-brand-600 font-['Montserrat_Variable'] transition-colors duration-200 group/link">
+                      <span>Articles & Insights</span>
+                      <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </a>
+                    <a href="/gallery/" class="flex items-center justify-between text-sm text-slate-600 hover:text-brand-600 font-['Montserrat_Variable'] transition-colors duration-200 group/link">
+                      <span>Photography</span>
+                      <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column - Contact Form -->
+        <div class="lg:col-span-2">
+          <div
+            class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-8 sm:p-10 lg:p-12 border border-slate-200/50 hover:shadow-2xl transition-all duration-500"
+            transition:animate="fade"
+          >
+            <div class="mb-8">
+              <h2 class="text-2xl lg:text-3xl font-light text-slate-900 mb-2 font-['Red_Hat_Display_Variable']">
+                Send me a message
+              </h2>
+              <p class="text-slate-600 font-['Montserrat_Variable']">
+                I'd love to hear from you!
+              </p>
+            </div>
+
+            <form id="contact-form" class="space-y-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="group">
+                  <label
+                    for="name"
+                    class="block text-sm font-semibold text-slate-700 mb-3 font-['Montserrat_Variable'] transition-colors duration-200 group-focus-within:text-brand-600"
+                    >Full Name</label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    name="from_name"
+                    required
+                    class="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all duration-300 ease-in-out font-['Montserrat_Variable'] placeholder-slate-400 bg-slate-50/50 focus:bg-white hover:border-slate-300"
+                    placeholder="John Doe"
+                  />
+                  <div class="error-text text-red-500 text-sm mt-2 hidden font-['Montserrat_Variable']">
+                    <div class="flex items-center">
+                      <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span class="error-message"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="group">
+                  <label
+                    for="email"
+                    class="block text-sm font-semibold text-slate-700 mb-3 font-['Montserrat_Variable'] transition-colors duration-200 group-focus-within:text-brand-600"
+                    >Email Address</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="reply_to"
+                    required
+                    class="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all duration-300 ease-in-out font-['Montserrat_Variable'] placeholder-slate-400 bg-slate-50/50 focus:bg-white hover:border-slate-300"
+                    placeholder="john@example.com"
+                  />
+                  <div class="error-text text-red-500 text-sm mt-2 hidden font-['Montserrat_Variable']">
+                    <div class="flex items-center">
+                      <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span class="error-message"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="group">
+                <label
+                  for="subject"
+                  class="block text-sm font-semibold text-slate-700 mb-3 font-['Montserrat_Variable'] transition-colors duration-200 group-focus-within:text-brand-600"
+                  >Subject</label
                 >
-                <option value="General Inquiry">General Inquiry</option>
-                <option value="Job Opportunity">Job Opportunity</option>
-                <option value="Collaboration">Collaboration</option>
-                <option value="Other">Other</option>
-              </select>
-              <div class="error-text text-red-600 text-xs mt-1.5 hidden font-['Montserrat_Variable']"></div>
-            </div>
+                <div class="relative">
+                  <select
+                    id="subject"
+                    name="subject"
+                    required
+                    class="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all duration-300 ease-in-out font-['Montserrat_Variable'] text-slate-700 bg-slate-50/50 focus:bg-white hover:border-slate-300 appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled selected class="text-slate-400"
+                      >Please select a subject</option
+                    >
+                    <option value="General Inquiry">General Inquiry</option>
+                    <option value="Job Opportunity">Job Opportunity</option>
+                    <option value="Collaboration">Collaboration Proposal</option>
+                    <option value="Consulting">Consulting Request</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                    <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="error-text text-red-500 text-sm mt-2 hidden font-['Montserrat_Variable']">
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="error-message"></span>
+                  </div>
+                </div>
+              </div>
 
-            <div>
-              <label
-                for="message"
-                class="block text-sm font-medium text-brand-800 mb-1.5 font-['Montserrat_Variable']"
-                >Message</label
-              >
-              <textarea
-                id="message"
-                name="message"
-                rows="5"
-                required
-                class="w-full px-4 py-2.5 border border-brand-300 rounded-lg focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition duration-200 ease-in-out font-['Montserrat_Variable'] placeholder-brand-400/70"
-                placeholder="Your message here..."></textarea>
-              <div class="error-text text-red-600 text-xs mt-1.5 hidden font-['Montserrat_Variable']"></div>
-            </div>
+              <div class="group">
+                <label
+                  for="message"
+                  class="block text-sm font-semibold text-slate-700 mb-3 font-['Montserrat_Variable'] transition-colors duration-200 group-focus-within:text-brand-600"
+                  >Message</label
+                >
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="6"
+                  required
+                  class="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all duration-300 ease-in-out font-['Montserrat_Variable'] placeholder-slate-400 bg-slate-50/50 focus:bg-white hover:border-slate-300 resize-y min-h-[120px]"
+                  placeholder="Tell me about your project, idea, or opportunity..."></textarea>
+                <div class="error-text text-red-500 text-sm mt-2 hidden font-['Montserrat_Variable']">
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="error-message"></span>
+                  </div>
+                </div>
+              </div>
 
-            <div class="pt-2 text-center">
-              <button
-                type="submit"
-                id="submit-button"
-                class="inline-block bg-brand-700 hover:bg-brand-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 text-white px-7 sm:px-8 py-3 sm:py-3 rounded-lg transition-all duration-300 ease-in-out text-sm sm:text-base font-medium font-['Montserrat_Variable'] shadow-md hover:shadow-lg"
-              >
-                Send Message
-              </button>
-            </div>
+              <div class="pt-4">
+                <button
+                  type="submit"
+                  id="submit-button"
+                  class="group relative w-full sm:w-auto inline-flex items-center justify-center bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 text-white px-8 py-4 rounded-xl transition-all duration-300 ease-in-out text-base font-semibold font-['Montserrat_Variable'] shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1"
+                >
+                  <span class="flex items-center">
+                    <svg class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    Send Message
+                  </span>
+                </button>
+              </div>
+
+              <!-- Form Status Messages -->
+              <div id="form-status" class="text-center mt-6 hidden">
+                <div
+                  id="success-message"
+                  class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-6 py-4 rounded-xl font-medium font-['Montserrat_Variable'] text-sm hidden"
+                >
+                  <div class="flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    Your message has been sent successfully! I'll get back to you soon.
+                  </div>
+                </div>
+                <div
+                  id="error-message"
+                  class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl font-medium font-['Montserrat_Variable'] text-sm hidden"
+                >
+                  <div class="flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    There was an error sending your message. Please try again or contact me directly.
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
-
-          <!-- Form Status Messages -->
-          <div id="form-status" class="text-center mt-6 hidden">
-            <p
-              id="success-message"
-              class="text-green-600 font-medium font-['Montserrat_Variable'] text-sm hidden"
-            >
-              Your message has been sent successfully. I'll get back to you
-              soon!
-            </p>
-            <p
-              id="error-message"
-              class="text-red-600 font-medium font-['Montserrat_Variable'] text-sm hidden"
-            >
-              There was an error sending your message. Please try again later or contact me directly.
-            </p>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   </main>
@@ -270,11 +428,12 @@ const pageUrl = new URL(
       // Only update UI if showError is true
       if (showError) {
         if (!isValid) {
-          errorElement.textContent = message;
+          const errorMessageSpan = errorElement.querySelector('.error-message');
+          errorMessageSpan.textContent = message;
           errorElement.classList.remove("hidden");
           field.classList.add("border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
-          field.classList.remove("border-green-500", "focus:border-green-500", "focus:ring-green-500/50");
-          field.classList.remove("border-brand-300", "focus:border-brand-500", "focus:ring-brand-500/50"); // Remove default focus styles on error
+          field.classList.remove("border-emerald-500", "focus:border-emerald-500", "focus:ring-emerald-500/50");
+          field.classList.remove("border-slate-200", "focus:border-brand-500", "focus:ring-brand-500/30"); // Remove default focus styles on error
 
           // Announce error for screen readers
           field.setAttribute("aria-invalid", "true");
@@ -282,8 +441,8 @@ const pageUrl = new URL(
         } else {
           errorElement.classList.add("hidden");
           field.classList.remove("border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
-          field.classList.add("border-green-500", "focus:border-green-500", "focus:ring-green-500/50"); // Add green border on valid input
-          field.classList.remove("border-brand-300", "focus:border-brand-500", "focus:ring-brand-500/50"); // Remove default focus styles on success
+          field.classList.add("border-emerald-500", "focus:border-emerald-500", "focus:ring-emerald-500/50"); // Add emerald border on valid input
+          field.classList.remove("border-slate-200", "focus:border-brand-500", "focus:ring-brand-500/30"); // Remove default focus styles on success
           field.setAttribute("aria-invalid", "false");
         }
       }
@@ -369,18 +528,22 @@ const pageUrl = new URL(
           form.reset();
           Object.keys(formFields).forEach((fieldId) => {
             const field = document.getElementById(fieldId);
-            field.classList.remove("border-green-500", "focus:border-green-500", "focus:ring-green-500/50", "border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
-            field.classList.add("border-brand-300", "focus:border-brand-500", "focus:ring-brand-500/50"); // Restore default border/focus
+            field.classList.remove("border-emerald-500", "focus:border-emerald-500", "focus:ring-emerald-500/50", "border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
+            field.classList.add("border-slate-200", "focus:border-brand-500", "focus:ring-brand-500/30"); // Restore default border/focus
             field.setAttribute("aria-invalid", "false");
             const errorElement = field.nextElementSibling;
             if (errorElement && errorElement.classList.contains('error-text')) {
                 errorElement.classList.add('hidden');
-                errorElement.textContent = '';
+                const errorMessageSpan = errorElement.querySelector('.error-message');
+                if (errorMessageSpan) {
+                    errorMessageSpan.textContent = '';
+                }
             }
           });
 
           formStatus.classList.remove("hidden");
           successMessage.classList.remove("hidden");
+          successMessage.querySelector('div').classList.add("flex");
           errorMessage.classList.add("hidden");
 
           // Announce success for screen readers
@@ -390,6 +553,7 @@ const pageUrl = new URL(
           setTimeout(function () {
             formStatus.classList.add("hidden");
             successMessage.classList.add("hidden");
+            successMessage.querySelector('div').classList.remove("flex");
             successMessage.removeAttribute("role");
           }, 5000);
         })
@@ -403,6 +567,7 @@ const pageUrl = new URL(
 
           formStatus.classList.remove("hidden");
           errorMessage.classList.remove("hidden");
+          errorMessage.querySelector('div').classList.add("flex");
           successMessage.classList.add("hidden");
 
           // Announce error for screen readers
