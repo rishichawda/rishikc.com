@@ -5,6 +5,7 @@ import { Schema } from "astro-seo-schema";
 import favicon from "../../content/assets/logo/Group 489.png";
 import { fetchMetadata, type WebsiteMeta } from "../utils/metadataFetcher";
 import LinkCard from "../components/LinkCard.astro";
+import { calculateDuration, calculateCompanyDuration } from "../utils/dateUtils";
 interface Language {
   name: string;
   level: string;
@@ -18,6 +19,8 @@ interface Social {
 interface Position {
   title: string;
   period: string;
+  start_date: string;
+  end_date: string | null;
   duration: string;
   location?: string;
   description?: string;
@@ -29,6 +32,8 @@ interface Position {
 interface ClubPosition {
   title: string;
   period: string;
+  start_date: string;
+  end_date: string | null;
   duration: string;
   location?: string;
   description?: string;
@@ -52,6 +57,8 @@ interface Education {
   institution: string;
   degree: string;
   period: string;
+  start_date?: string;
+  end_date?: string;
   extra_curriculars?: ExtraCurricular[];
 }
 
@@ -379,7 +386,10 @@ const siteUrl = new URL(
                     {exp.company}
                   </h3>
                   <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-4">
-                    {exp.duration}
+                    {(() => {
+                      const dynamicDuration = calculateCompanyDuration(exp.positions);
+                      return dynamicDuration || exp.duration;
+                    })()}
                   </p>
 
                   {exp.websitesMeta && exp.websitesMeta.length > 0 && (
@@ -407,7 +417,11 @@ const siteUrl = new URL(
                           {position.title}
                         </h4>
                         <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-3">
-                          {position.period} { position.duration.length > 0 ? `(${position.duration})` : "" }
+                          {position.period} 
+                          {(() => {
+                            const dynamicDuration = calculateDuration(position.start_date, position.end_date);
+                            return dynamicDuration ? `(${dynamicDuration})` : (position.duration ? `(${position.duration})` : "");
+                          })()}
                         </p>
                         {position.location && (
                           <p class="text-sm text-gray-600 font-['Montserrat_Variable'] mb-3 flex items-center">
@@ -513,7 +527,11 @@ const siteUrl = new URL(
                             {position.title}
                           </h6>
                           <p class="text-xs text-gray-500 font-['Montserrat_Variable'] mb-2">
-                            {position.period} ({position.duration})
+                            {position.period} 
+                            {(() => {
+                              const dynamicDuration = calculateDuration(position.start_date, position.end_date);
+                              return dynamicDuration ? `(${dynamicDuration})` : (position.duration ? `(${position.duration})` : "");
+                            })()}
                           </p>
                           {position.location && (
                             <p class="text-xs text-gray-500 font-['Montserrat_Variable'] mb-2 flex items-center">
