@@ -58,13 +58,13 @@ function formatDate(date: Date): string {
       relatedArticles.map((article) => (
         <a
           href={article.data.path}
-          class="group flex flex-col hover:-scale-[97%] transition-all"
+          class="group flex flex-col hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 ease-in-out"
         >
           <div class="aspect-square mb-3 sm:mb-4 overflow-hidden rounded-lg">
             <Image
               src={article.data.hero_image}
               alt={article.data.hero_image_alt || article.data.title}
-              class="object-cover aspect-square group-hover:opacity-90 transition-opacity duration-300"
+              class="object-cover aspect-square group-hover:scale-105 transition-transform duration-300 ease-in-out"
               transition:name={`${article.data.path}-image`}
             />
           </div>
