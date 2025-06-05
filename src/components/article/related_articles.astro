@@ -48,62 +48,146 @@ function formatDate(date: Date): string {
 }
 ---
 
-<section class="max-w-[90%] lg:max-w-[1000px] flex flex-col items-center py-12 sm:py-16 lg:py-20">
-  <h2 class="text-md sm:text-lg lg:text-xl font-medium font-['Red_Hat_Display_Variable'] text-brand-800 mb-6 sm:mb-9 lg:mb-10">
-    You may also be interested in
-  </h2>
+<section class="max-w-[90%] lg:max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+  <!-- Section Header -->
+  <div class="text-center mb-12 sm:mb-16">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-brand-500/10 to-brand-600/10 rounded-2xl mb-6">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-8 h-8 text-brand-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="1.5"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0-1.125.504-1.125 1.125V11.25a9 9 0 00-9-9z"
+        />
+      </svg>
+    </div>
+    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-['Red_Hat_Display_Variable'] text-gray-900 mb-4">
+      Continue Reading
+    </h2>
+    <p class="text-lg text-gray-600 font-['Montserrat_Variable'] max-w-2xl mx-auto leading-relaxed">
+      Discover more insights and stories that you might be interested in.
+    </p>
+  </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 sm:gap-x-6 lg:gap-x-6 gap-y-8 sm:gap-y-10 lg:gap-y-12">
+  <!-- Articles Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
     {
-      relatedArticles.map((article) => (
-        <a
-          href={article.data.path}
-          class="group flex flex-col hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 ease-in-out"
-        >
-          <div class="aspect-square mb-3 sm:mb-4 overflow-hidden rounded-lg">
-            <Image
-              src={article.data.hero_image}
-              alt={article.data.hero_image_alt || article.data.title}
-              class="object-cover aspect-square group-hover:scale-105 transition-transform duration-300 ease-in-out"
-              transition:name={`${article.data.path}-image`}
-            />
-          </div>
-          <div class="flex flex-col justify-between">
-            <div>
-              <h3 transition:name={`${article.data.path}-title`} class="text-lg sm:text-xl font-semibold text-brand-800 mb-1 sm:mb-1.5 line-clamp-2 font-['Red_Hat_Display_Variable'] group-hover:text-brand-900 transition-colors">
+      relatedArticles.map((article, index) => (
+        <article class="group relative">
+          <a
+            href={article.data.path}
+            class="block h-full bg-white rounded-2xl border border-gray-200/50 overflow-hidden hover:shadow-2xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-2 hover:border-brand-300/50"
+          >
+            <!-- Article Image -->
+            <div class="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+              <Image
+                src={article.data.hero_image}
+                alt={article.data.hero_image_alt || article.data.title}
+                class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 ease-out"
+                transition:name={`${article.data.path}-image`}
+                width={400}
+                height={250}
+              />
+              <!-- Gradient Overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+
+            <!-- Article Content -->
+            <div class="p-6">
+              <!-- Date -->
+              <time 
+                class="inline-block px-3 py-1 bg-brand-50 text-brand-700 rounded-full text-xs font-medium font-['Montserrat_Variable'] tracking-wide uppercase mb-4"
+                transition:name={`${article.data.path}-date`}
+              >
+                {formatDate(article.data.date)}
+              </time>
+
+              <!-- Title -->
+              <h3 
+                class="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-brand-700 transition-colors duration-300 font-['Red_Hat_Display_Variable'] line-clamp-2"
+                transition:name={`${article.data.path}-title`}
+              >
                 {article.data.title}
               </h3>
-              <p transition:name={`${article.data.path}-date`} class="font-['Red_Hat_Display_Variable'] text-brand-500 mb-2 sm:mb-3 text-xs sm:text-sm font-medium">
-                {formatDate(article.data.date)}
-              </p>
-              <p class="font-['Red_Hat_Display_Variable'] text-brand-700 font-normal leading-relaxed text-sm sm:text-base line-clamp-3">
+
+              <!-- Description -->
+              <p class="text-gray-600 text-sm font-['Montserrat_Variable'] leading-relaxed line-clamp-3 mb-6">
                 {article.data.description}
               </p>
-            </div>
-            <div>
-              <div class="text-brand-600 font-['Montserrat_Variable'] group-hover:text-brand-800 group-hover:underline font-medium text-sm sm:text-base inline-flex items-center gap-x-1 transition-colors mt-2">
-                Read article
-                <svg
-                  width="17"
-                  height="17"
-                  viewBox="0 0 17 17"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="inline-block"
-                >
-                  <path
-                    d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
+
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-2 mb-6">
+                {article.data.tags.slice(0, 2).map((tag: string) => (
+                  <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium font-['Montserrat_Variable']">
+                    {tag}
+                  </span>
+                ))}
+                {article.data.tags.length > 2 && (
+                  <span class="px-2 py-1 bg-gray-100 text-gray-500 rounded-md text-xs font-medium font-['Montserrat_Variable']">
+                    +{article.data.tags.length - 2}
+                  </span>
+                )}
+              </div>
+
+              <!-- Read More CTA -->
+              <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                <span class="text-brand-600 font-['Montserrat_Variable'] font-semibold text-sm group-hover:text-brand-700 transition-colors duration-300">
+                  Read article
+                </span>
+                <div class="w-8 h-8 bg-brand-50 rounded-full flex items-center justify-center group-hover:bg-brand-100 group-hover:scale-110 transition-all duration-300">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4 text-brand-600 group-hover:translate-x-0.5 transition-transform duration-300"
+                    fill="none"
+                    viewBox="0 0 24 24"
                     stroke="currentColor"
                     stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
-        </a>
+
+            <!-- Hover Effect Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-600/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"></div>
+          </a>
+        </article>
       ))
     }
+  </div>
+
+  <!-- View All Articles CTA -->
+  <div class="text-center mt-12 sm:mt-16">
+    <a
+      href="/articles/"
+      class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-500 text-white font-semibold font-['Montserrat_Variable'] rounded-xl hover:shadow-lg hover:shadow-brand-500/30 hover:scale-105 transition-all duration-300 group"
+    >
+      <span>Explore All Articles</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M17 8l4 4m0 0l-4 4m4-4H3"
+        />
+      </svg>
+    </a>
   </div>
 </section>
