@@ -54,6 +54,7 @@ interface Experience {
 }
 
 interface Education {
+  university: string;
   institution: string;
   degree: string;
   period: string;
@@ -154,7 +155,7 @@ const siteUrl = new URL(
       },
       alumniOf: profile.education.map((edu) => ({
         "@type": "EducationalOrganization",
-        name: edu.institution,
+        name: edu.university,
       })),
       knowsLanguage: profile.languages.map((lang) => lang.name),
       sameAs: profile.socials.map((social: Social) => social.url),
@@ -162,230 +163,265 @@ const siteUrl = new URL(
   />
 
   <main
-    class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 lg:py-20"
+    class="min-h-screen bg-gradient-to-b from-brand-50/30 via-white to-gray-50/50"
   >
-    <div class="flex flex-row justify-between items-center mb-12 sm:mb-16">
-      <h1
-        class="text-3xl sm:text-4xl lg:text-[2.5rem] font-medium text-gray-900 font-['Red_Hat_Display_Variable']"
-      >
-        My Career Journey
-      </h1>
-      <a
-        href="/"
-        class="inline-flex items-center text-brand-800/90 hover:text-brand-950 group text-[15px] tracking-[0.2em] uppercase transition-colors duration-300 font-['Montserrat_Variable']"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-3 group-hover:-translate-x-1 transition-transform"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-        </svg>
-        Back to Home
-      </a>
-    </div>
-    <div class="mb-20 md:mb-24 animate-on-scroll fade-in-up">
-      <div class="bg-[#F8F9FE] rounded-lg p-8 sm:p-10 lg:p-12 shadow-sm">
-        <div class="flex flex-col md:flex-row gap-10 md:gap-12">
-          <div class="md:w-2/3">
-            <h2
-              class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-2"
+    <div class="relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-brand-100/20 opacity-70"></div>
+      <div class="absolute inset-0 bg-pattern opacity-30"></div>
+      
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-16">
+          <div class="space-y-4">
+            <h1
+              class="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 leading-tight font-['Red_Hat_Display_Variable']"
             >
-              {profile.name}
-            </h2>
-            <p class="text-gray-600 font-['Montserrat_Variable'] text-lg mb-5">
-              {profile.title}
+              Career Journey
+            </h1>
+            <p class="text-lg sm:text-xl text-gray-700 font-['Montserrat_Variable'] font-light max-w-2xl">
+              Exploring the path of innovation, growth, and meaningful impact in technology
             </p>
-            
-            {Array.isArray(profile.bio) ? (
-              <div class="space-y-4 mb-8">
-                {profile.bio.map((paragraph) => (
-                  <p class="text-gray-700 font-['Montserrat_Variable'] leading-relaxed">
-                    {paragraph}
+          </div>
+          <a
+            href="/"
+            class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-2 group-hover:-translate-x-0.5 transition-transform duration-200"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    <div class="mb-24 scroll-reveal">
+      <div class="relative group">
+        <div class="absolute inset-0 bg-gradient-to-r from-brand-100/30 via-brand-50/20 to-brand-200/30 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-500"></div>
+        <div class="relative bg-white/95 backdrop-blur-sm rounded-2xl p-8 sm:p-10 lg:p-12 shadow-lg border border-brand-100/30 hover:shadow-xl hover:shadow-brand-100/20 transition-all duration-300">
+          <div class="flex flex-col lg:flex-row gap-12">
+            <div class="lg:w-2/3 space-y-6">
+              <div class="space-y-3">
+                <h2 class="text-3xl sm:text-4xl font-light text-gray-900 font-['Red_Hat_Display_Variable']">
+                  {profile.name}
+                </h2>
+                <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-brand-600 to-brand-300 rounded-full">
+                  <p class="text-white font-['Montserrat_Variable'] text-sm font-medium">
+                    {profile.title}
                   </p>
-                ))}
+                </div>
               </div>
-            ) : (
-              <p
-                class="text-gray-700 font-['Montserrat_Variable'] mb-8 leading-relaxed"
-              >
-                {profile.bio}
-              </p>
-            )}
+              
+              <div class="prose prose-lg max-w-none">
+                {Array.isArray(profile.bio) ? (
+                  <div class="space-y-5">
+                    {profile.bio.map((paragraph, index) => (
+                      <p class={`text-gray-700 font-['Montserrat_Variable'] leading-relaxed font-light ${
+                        index === 0 ? 'text-xl font-medium text-gray-800' : ''
+                      }`}>
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p class="text-gray-700 font-['Montserrat_Variable'] leading-relaxed text-xl font-light">
+                    {profile.bio}
+                  </p>
+                )}
+              </div>
 
-            <div class="flex items-center mb-4 text-gray-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 location-icon"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                ></path>
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
-              <span class="font-['Montserrat_Variable'] text-sm location-text"
-                >{profile.location}</span
-              >
-            </div>
+              <div class="flex flex-col sm:flex-row gap-6 pt-4">
+                <div class="flex items-center text-gray-600 group">
+                  <div class="p-2 bg-gray-50 rounded-xl mr-3 group-hover:bg-gray-100 transition-colors">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-brand-600 group-hover:text-brand-700 transition-colors"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      ></path>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                  </div>
+                  <span class="font-['Montserrat_Variable'] font-medium text-gray-700">{profile.location}</span>
+                </div>
 
-            <div class="flex items-center mb-6 text-gray-600 contact-item">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 linkedin-icon"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-                ></path>
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M2 9h4v12H2z"></path>
-                <circle
-                  cx="4"
-                  cy="4"
-                  r="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"></circle>
-              </svg>
-              <a
-                href={profile.contact.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="font-['Montserrat_Variable'] text-sm hover:text-[#6B7AB0] transition-colors link-underline shine-effect"
-              >
-                LinkedIn Profile
-              </a>
-            </div>
+                <a
+                  href={profile.contact.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center text-gray-600 hover:text-brand-700 group transition-colors"
+                >
+                  <div class="p-2 bg-gray-50 rounded-xl mr-3 group-hover:bg-gray-100 transition-colors">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-brand-600 group-hover:text-brand-700 transition-colors"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                      ></path>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M2 9h4v12H2z"></path>
+                      <circle
+                        cx="4"
+                        cy="4"
+                        r="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"></circle>
+                    </svg>
+                  </div>
+                  <span class="font-['Montserrat_Variable'] font-medium text-gray-700">LinkedIn Profile</span>
+                </a>
+              </div>
 
-            <div class="flex flex-wrap gap-3 social-links-container">
-              {
-                profile.socials.map((social) => (
+              <div class="flex flex-wrap gap-3 pt-4">
+                {profile.socials.map((social) => (
                   <a
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="social-link inline-flex items-center px-4 py-2 rounded-full bg-white text-gray-700 hover:bg-[#6B7AB0] hover:text-white transition-all shadow-sm border border-gray-100"
+                    class="group inline-flex items-center px-4 py-2 bg-gray-50 hover:bg-gradient-to-r hover:from-brand-400 hover:to-brand-700 rounded-xl text-gray-700 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5"
                   >
-                    <span class="font-['Montserrat_Variable'] text-sm">
+                    <span class="font-['Montserrat_Variable'] text-sm font-medium">
                       {social.platform}
                     </span>
                   </a>
-                ))
-              }
-            </div>
-          </div>
-          <div class="md:w-1/3">
-            <div
-              class="bg-white rounded-lg p-8 shadow-sm border border-gray-100 h-full"
-            >
-              <h3
-                class="text-xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5"
-              >
-                Skills
-              </h3>
-              <div class="flex flex-wrap gap-2 mb-8">
-                {
-                  profile.skills.map((skill) => (
-                    <span class="inline-block px-3 py-1 rounded-full bg-[#F0F2FC] text-[#6B7AB0] text-xs font-['Montserrat_Variable']">
-                      {skill}
-                    </span>
-                  ))
-                }
+                ))}
               </div>
-              {
-                profile.certifications && profile.certifications.length > 0 && (
-                  <>
-                    <h3 class="text-xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mt-8 mb-5">
+            </div>
+
+            <div class="lg:w-1/3">
+              <div class="sticky top-8 space-y-8">
+                <div class="bg-gradient-to-br from-brand-50/50 to-white rounded-2xl p-6 border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/20 transition-shadow duration-300">
+                  <h3 class="text-xl font-medium text-gray-900 font-['Red_Hat_Display_Variable'] mb-5 flex items-center">
+                    <div class="w-2 h-8 bg-gradient-to-b from-brand-600 to-brand-700 rounded-full mr-3"></div>
+                    Core Skills
+                  </h3>
+                  <div class="flex flex-wrap gap-2">
+                    {profile.skills.map((skill, index) => (
+                      <span class="inline-block px-3 py-2 rounded-xl text-xs font-medium font-['Montserrat_Variable'] border-1 border-brand-200/50 text-brand-600">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {profile.certifications && profile.certifications.length > 0 && (
+                  <div class="bg-gradient-to-br from-brand-50/50 to-white rounded-2xl p-6 border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/20 transition-shadow duration-300">
+                    <h3 class="text-xl font-medium text-gray-900 font-['Red_Hat_Display_Variable'] mb-5 flex items-center">
+                      <div class="w-2 h-8 bg-gradient-to-b from-brand-500 to-brand-600 rounded-full mr-3"></div>
                       Certifications
                     </h3>
-                    <ul class="space-y-3">
+                    <div class="space-y-4">
                       {profile.certifications.map((certification) => (
-                        <li class="border-l-2 border-[#6B7AB0] pl-3 py-1">
-                          <p class="text-sm font-medium text-gray-800 font-['Montserrat_Variable']">
+                        <div class="group p-3 rounded-xl hover:bg-brand-50 transition-all duration-200">
+                          <p class="text-sm font-semibold font-['Montserrat_Variable'] text-brand-700">
                             {certification.title}
                           </p>
-                          <p class="text-xs text-gray-500 font-['Montserrat_Variable']">
+                          <p class="text-xs text-gray-600 font-['Montserrat_Variable'] mt-1">
                             {certification.institution}
                           </p>
-                        </li>
+                        </div>
                       ))}
-                    </ul>
-                  </>
-                )
-              }
-              
-              {
-                profile.interests && profile.interests.length > 0 && (
-                  <>
-                    <h3 class="text-xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mt-8 mb-5">
+                    </div>
+                  </div>
+                )}
+                
+                {profile.interests && profile.interests.length > 0 && (
+                  <div class="bg-gradient-to-br from-brand-50/50 to-white rounded-2xl p-6 border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/20 transition-shadow duration-300">
+                    <h3 class="text-xl font-medium text-gray-900 font-['Red_Hat_Display_Variable'] mb-5 flex items-center">
+                      <div class="w-2 h-8 bg-gradient-to-b from-brand-400 to-brand-500 rounded-full mr-3"></div>
                       Interests & Hobbies
                     </h3>
                     <div class="flex flex-wrap gap-2">
-                      {profile.interests.map((interest) => (
-                        <span class="inline-block px-3 py-1.5 rounded-full bg-[#F0F2FC] text-[#6B7AB0] text-xs font-['Montserrat_Variable'] border border-[#6B7AB0]/20">
+                      {profile.interests.map((interest, index) => (
+                        <span class="inline-block px-3 py-2 rounded-xl text-xs font-medium font-['Montserrat_Variable']  border-1 border-brand-200/50 text-brand-600">
                           {interest}
                         </span>
                       ))}
                     </div>
-                  </>
-                )
-              }
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="mb-20 md:mb-24 animate-on-scroll fade-in-up">
-      <h2
-        class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-12"
-      >
-        Work Experience
-      </h2>
-      <div class="relative">
-        <div
-          class="absolute left-0 md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 transform md:translate-x-[-1px]"
-        >
-        </div>
-        <div class="space-y-12">
-          {experiencesWithMeta.map((exp, index) => (
-              <div
-                class={`relative flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} timeline-item-container`}
-              >
-                <div
-                  class={`absolute left-0 md:left-1/2 top-8 w-4 h-4 bg-[#6B7AB0] rounded-full transform -translate-x-1/2 md:translate-x-[-7px] z-10 timeline-dot`}
-                />
+    <div class="mb-20 md:mb-32 scroll-reveal">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center justify-center w-16 h-1 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 rounded-full mb-6"></div>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-['Red_Hat_Display_Variable'] font-light text-gray-900 mb-4 tracking-tight">
+          Work Experience
+        </h2>
+        <p class="text-lg text-gray-600 font-['Montserrat_Variable'] font-light max-w-2xl mx-auto">
+          A journey through innovation, growth, and meaningful contributions
+        </p>
+      </div>
 
-                <div
-                  class={`mb-4 ml-8 md:ml-0 md:mb-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-16 text-left md:text-right" : "md:pl-16 text-left"} company-info`}
-                >
-                  <h3 class="text-xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-1">
+      <div class="relative max-w-6xl mx-auto">
+        <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-brand-200 via-brand-300 to-brand-200 transform md:-translate-x-0.5">
+          <div class="absolute inset-0 bg-gradient-to-b from-brand-400/20 via-brand-500/30 to-brand-400/20 blur-sm"></div>
+        </div>
+
+        <div class="space-y-16 md:space-y-20">
+          {experiencesWithMeta.map((exp, index) => (
+            <div
+              class={`relative timeline-item group ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} flex flex-col md:flex md:items-center`}
+            >
+              <div class="absolute left-6 md:left-1/2 top-12 md:top-8 z-20 transform -translate-x-1/2">
+                <div class="relative timeline-dot-container">
+                  <div class="absolute inset-0 w-8 h-8 bg-brand-400/20 rounded-full timeline-pulse-ring"></div>
+                  <div class="absolute inset-0 w-10 h-10 -top-1 -left-1 bg-gradient-to-br from-brand-400/30 to-brand-600/30 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out blur-sm group-hover:scale-110"></div>
+                  <div class="relative w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full shadow-lg timeline-main-dot flex items-center justify-center">
+                    <div class="w-3 h-3 bg-white rounded-full shadow-inner timeline-inner-dot"></div>
+                  </div>
+                  <div class="absolute inset-0 w-8 h-8 border-2 border-white/50 rounded-full timeline-outer-ring"></div>
+                </div>
+              </div>
+
+              <div class={`mb-8 ml-16 md:ml-0 md:mb-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-16 md:text-right" : "md:pl-16 md:text-left"}`}>
+                <div class="space-y-4">
+                  <div class={`inline-flex items-center px-4 py-2 bg-gradient-to-r from-brand-50 to-brand-100/50 rounded-full border border-brand-200/50 ${index % 2 === 0 ? "md:ml-auto" : ""}`}>
+                    <div class="w-2 h-2 bg-brand-500 rounded-full mr-2 timeline-company-dot"></div>
+                    <span class="text-sm font-medium text-brand-700 font-['Montserrat_Variable']">Company</span>
+                  </div>
+
+                  <h3 class="text-2xl md:text-3xl font-medium text-gray-900 font-['Red_Hat_Display_Variable'] tracking-tight">
                     {exp.company}
                   </h3>
-                  <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-4">
+
+                  <p class="text-base text-gray-600 font-['Montserrat_Variable'] font-light">
                     {(() => {
                       const dynamicDuration = calculateCompanyDuration(exp.positions);
                       return dynamicDuration || exp.duration;
@@ -393,9 +429,7 @@ const siteUrl = new URL(
                   </p>
 
                   {exp.websitesMeta && exp.websitesMeta.length > 0 && (
-                    <div
-                      class={`flex flex-col gap-3 ${index % 2 === 0 ? "md:items-end" : "md:items-start"}`}
-                    >
+                    <div class={`flex flex-col gap-4 mt-6 ${index % 2 === 0 ? "md:items-end" : "md:items-start"}`}>
                       {exp.websitesMeta.map((site) => (
                         <LinkCard
                           {...site}
@@ -406,222 +440,311 @@ const siteUrl = new URL(
                     </div>
                   )}
                 </div>
+              </div>
 
-                <div
-                  class={`pl-8 ${index % 2 === 0 ? "pr-0" : "pl-0"} md:w-1/2 md:px-8 timeline-item`}
-                >
-                  <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 transition-shadow duration-300 hover:shadow-lg">
-                    {exp.positions.map((position) => (
-                      <div class="mb-6 last:mb-0">
-                        <h4 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-1">
-                          {position.title}
-                        </h4>
-                        <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-3">
-                          {position.period} 
-                          {(() => {
-                            const dynamicDuration = calculateDuration(position.start_date, position.end_date);
-                            return dynamicDuration ? `(${dynamicDuration})` : (position.duration ? `(${position.duration})` : "");
-                          })()}
-                        </p>
-                        {position.location && (
-                          <p class="text-sm text-gray-600 font-['Montserrat_Variable'] mb-3 flex items-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="h-4 w-4 mr-1.5 text-gray-400"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                              />
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                              />
-                            </svg>
-                            {position.location}
-                          </p>
-                        )}
+              <div class={`ml-16 md:ml-0 md:w-1/2 ${index % 2 === 0 ? "md:pl-16" : "md:pr-16"}`}>
+                <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-white/50 hover:shadow-2xl hover:shadow-brand-200/40 transition-shadow duration-300 group-hover:bg-white/90">
+                  <div class="absolute inset-0 bg-gradient-to-br from-white/40 via-white/30 to-brand-50/20 rounded-3xl backdrop-blur-sm"></div>
+                  
+                  <div class="relative z-10 space-y-8">
+                    {exp.positions.map((position, posIndex) => (
+                      <div class={`${posIndex > 0 ? 'pt-8 border-t border-gray-100' : ''}`}>
+                        <div class="mb-6">
+                          <h4 class="text-xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-2 tracking-tight">
+                            {position.title}
+                          </h4>
+                          
+                          <div class="flex flex-wrap gap-4 text-sm text-gray-600 font-['Montserrat_Variable']">
+                            <span class="inline-flex items-center">
+                              <svg class="w-4 h-4 mr-1.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                              {position.period}
+                              {(() => {
+                                const dynamicDuration = calculateDuration(position.start_date, position.end_date);
+                                return dynamicDuration ? ` (${dynamicDuration})` : (position.duration ? ` (${position.duration})` : "");
+                              })()}
+                            </span>
+                            
+                            {position.location && (
+                              <span class="inline-flex items-center">
+                                <svg class="w-4 h-4 mr-1.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                {position.location}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
                         {position.description && (
-                          <p class="text-sm text-gray-700 font-['Montserrat_Variable'] mb-4 leading-relaxed">
-                            {position.description}
-                          </p>
-                        )}
-
-                        {position.linksMeta && position.linksMeta.length > 0 && (
-                          <div class="mt-4 space-y-3">
-                            <h5 class="text-sm font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-2">
-                              Related Links:
-                            </h5>
-                            {position.linksMeta.map((site) => (
-                              <LinkCard {...site} />
-                            ))}
+                          <div class="mb-6">
+                            <p class="text-gray-700 font-['Montserrat_Variable'] font-light leading-relaxed text-base">
+                              {position.description}
+                            </p>
                           </div>
                         )}
 
-                        {position.responsibilities &&
-                          position.responsibilities.length > 0 && (
-                            <div class="mt-4 bg-gray-50 p-4 rounded-md">
-                              <h5 class="text-sm font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-2">
-                                Responsibilities:
-                              </h5>
-                              <ul class="list-disc pl-5 space-y-1.5">
-                                {position.responsibilities.map((item) => (
-                                  <li class="text-sm text-gray-600 font-['Montserrat_Variable']">
+                        {position.responsibilities && position.responsibilities.length > 0 && (
+                          <div class="mb-6">
+                            <h5 class="text-sm font-semibold text-gray-800 font-['Red_Hat_Display_Variable'] mb-3 uppercase tracking-wide">
+                              Key Responsibilities
+                            </h5>
+                            <ul class="space-y-2">
+                              {position.responsibilities.map((item) => (
+                                <li class="flex items-start">
+                                  <div class="w-1.5 h-1.5 rounded-full bg-brand-500 mt-2.5 mr-3 flex-shrink-0"></div>
+                                  <span class="text-sm text-gray-700 font-['Montserrat_Variable'] font-light leading-relaxed">
                                     {item}
-                                  </li>
-                                ))}
-                              </ul>
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {position.linksMeta && position.linksMeta.length > 0 && (
+                          <div class="mt-6 p-4 bg-gradient-to-br from-brand-50/5 to-brand-100/30 rounded-2xl border border-brand-100/50">
+                            <h5 class="text-sm font-semibold text-gray-800 font-['Red_Hat_Display_Variable'] mb-3 uppercase tracking-wide">
+                              Related Projects
+                            </h5>
+                            <div class="space-y-3">
+                              {position.linksMeta.map((site) => (
+                                <LinkCard {...site} />
+                              ))}
                             </div>
-                          )}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
-            ))
-          }
+            </div>
+          ))}
         </div>
       </div>
     </div>
-    <div class="mb-20 md:mb-24 animate-on-scroll fade-in-up">
-      <h2
-        class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-10"
-      >
-        Education
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-8">
-        {
-          profile.education.map((edu) => (
-            <div class="bg-white rounded-lg p-8 shadow-sm border border-gray-100 transition-shadow duration-300 hover:shadow-md">
-              <h3 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-2">
-                {edu.institution}
-              </h3>
-              <p class="text-sm text-gray-700 font-['Montserrat_Variable'] mb-2">
-                {edu.degree}
-              </p>
-              <p class="text-sm text-gray-500 font-['Montserrat_Variable'] mb-6">
-                &nbsp;
-                {edu.period}
-              </p>
+    <div class="mb-20 md:mb-32 scroll-reveal">
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center justify-center w-16 h-1 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 rounded-full mb-6"></div>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-['Red_Hat_Display_Variable'] font-light text-gray-900 mb-4 tracking-tight">
+          Education
+        </h2>
+        <p class="text-lg text-gray-600 font-['Montserrat_Variable'] font-light max-w-2xl mx-auto">
+          Highlights from my academic journey
+        </p>
+      </div>
 
-              {edu.extra_curriculars && edu.extra_curriculars.length > 0 && (
-                <div class="mt-6 border-t border-gray-200 pt-6">
-                  <h4 class="text-md font-semibold text-gray-800 font-['Red_Hat_Display_Variable'] mb-4">
-                    Extra-Curricular Activities
-                  </h4>
-                  {edu.extra_curriculars.map((activity) => (
-                    <div class="mb-6 last:mb-0">
-                      <h5 class="text-base font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-3">
-                        {activity.club}
-                      </h5>
-                      {activity.positions.map((position) => (
-                        <div class="pl-4 border-l-2 border-gray-200 mb-4 last:mb-0">
-                          <h6 class="text-sm font-semibold text-gray-800 font-['Montserrat_Variable'] mb-1">
-                            {position.title}
-                          </h6>
-                          <p class="text-xs text-gray-500 font-['Montserrat_Variable'] mb-2">
-                            {position.period} 
-                            {(() => {
-                              const dynamicDuration = calculateDuration(position.start_date, position.end_date);
-                              return dynamicDuration ? `(${dynamicDuration})` : (position.duration ? `(${position.duration})` : "");
-                            })()}
-                          </p>
-                          {position.location && (
-                            <p class="text-xs text-gray-500 font-['Montserrat_Variable'] mb-2 flex items-center">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-3 w-3 mr-1 text-gray-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                                />
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                              </svg>
-                              {position.location}
-                            </p>
-                          )}
-                          {position.description && (
-                            <p class="text-xs text-gray-600 font-['Montserrat_Variable'] mb-3 italic">
-                              {position.description}
-                            </p>
-                          )}
-                          {position.responsibilities &&
-                            position.responsibilities.length > 0 && (
-                              <div class="mt-2 bg-gray-50 p-3 rounded-md">
-                                <h6 class="text-xs font-semibold text-gray-700 font-['Red_Hat_Display_Variable'] mb-1.5">
-                                  Responsibilities:
-                                </h6>
-                                <ul class="list-disc pl-4 space-y-1">
-                                  {position.responsibilities.map((item) => (
-                                    <li class="text-xs text-gray-600 font-['Montserrat_Variable']">
-                                      {item}
-                                    </li>
-                                  ))}
-                                </ul>
+      <div class="max-w-4xl mx-auto space-y-8">
+        {profile.education.map((edu, index) => (
+          <div class="group relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-50/30 via-white to-brand-100/20 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-500 opacity-50"></div>
+            
+            <div class="relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-lg border border-white/50 hover:shadow-2xl hover:shadow-brand-200/40 transition-shadow duration-300 group-hover:bg-white/95">
+              <div class="absolute inset-0 bg-gradient-to-br from-white/60 via-white/40 to-brand-50/30 rounded-3xl"></div>
+              
+              <div class="relative z-10">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                  <div>
+                    {/* <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-brand-50 to-brand-100/50 rounded-full border border-brand-200/50 mb-3">
+                      <div class="w-2 h-2 bg-brand-500 rounded-full mr-2"></div>
+                      <span class="text-sm font-medium text-brand-700 font-['Montserrat_Variable']">Education</span>
+                    </div> */}
+                    
+                    <h3 class="text-2xl md:text-3xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-2 tracking-tight">
+                      {edu.university}
+                    </h3>
+                    
+                    <p class="text-base text-gray-600 font-['Montserrat_Variable'] font-medium mb-3">
+                      {edu.institution}
+                    </p>
+                    
+                    <p class="text-lg text-gray-700 font-['Montserrat_Variable'] font-medium mb-2">
+                      {edu.degree}
+                    </p>
+                  </div>
+                  
+                  <div class="flex items-center text-gray-600">
+                    <svg class="w-5 h-5 mr-2 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="font-['Montserrat_Variable'] font-medium">
+                      {edu.period}
+                    </span>
+                  </div>
+                </div>
+
+                {edu.extra_curriculars && edu.extra_curriculars.length > 0 && (
+                  <div class="mt-8 p-6 bg-gradient-to-br from-brand-50/50 to-brand-100/30 rounded-2xl border border-brand-100/50">
+                    <h4 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-6 flex items-center">
+                      <div class="w-2 h-6 bg-gradient-to-b from-brand-500 to-brand-600 rounded-full mr-3"></div>
+                      Extra-Curricular Activities
+                    </h4>
+                    
+                    <div class="space-y-6">
+                      {edu.extra_curriculars.map((activity) => (
+                        <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/50">
+                          <h5 class="text-xl font-medium text-gray-800 font-['Red_Hat_Display_Variable'] mb-4">
+                            {activity.club}
+                          </h5>
+                          
+                          <div class="space-y-4">
+                            {activity.positions.map((position) => (
+                              <div class="pl-4 border-l-2 border-brand-300/50 relative">
+                                <div class="absolute left-[-5px] top-2 w-2 h-2 bg-brand-500 rounded-full"></div>
+                                
+                                <div class="space-y-2">
+                                  <h6 class="text-base font-medium text-gray-800 font-['Montserrat_Variable']">
+                                    {position.title}
+                                  </h6>
+                                  
+                                  <div class="flex flex-wrap gap-4 text-sm text-gray-600 font-['Montserrat_Variable']">
+                                    <span class="inline-flex items-center">
+                                      <svg class="w-4 h-4 mr-1.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                      </svg>
+                                      {position.period}
+                                      {(() => {
+                                        const dynamicDuration = calculateDuration(position.start_date, position.end_date);
+                                        return dynamicDuration ? ` (${dynamicDuration})` : (position.duration ? ` (${position.duration})` : "");
+                                      })()}
+                                    </span>
+                                    
+                                    {position.location && (
+                                      <span class="inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-1.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        {position.location}
+                                      </span>
+                                    )}
+                                  </div>
+                                  
+                                  {position.description && (
+                                    <p class="text-sm text-gray-700 font-['Montserrat_Variable'] font-light leading-relaxed italic">
+                                      {position.description}
+                                    </p>
+                                  )}
+                                  
+                                  {position.responsibilities && position.responsibilities.length > 0 && (
+                                    <div class="mt-3 p-3 bg-white/80 rounded-xl border border-brand-100/30">
+                                      <h6 class="text-xs font-semibold text-gray-800 font-['Red_Hat_Display_Variable'] mb-2 uppercase tracking-wide">
+                                        Key Responsibilities
+                                      </h6>
+                                      <ul class="space-y-1.5">
+                                        {position.responsibilities.map((item) => (
+                                          <li class="flex items-start">
+                                            <div class="w-1 h-1 rounded-full bg-brand-500 mt-2 mr-2 flex-shrink-0"></div>
+                                            <span class="text-xs text-gray-700 font-['Montserrat_Variable'] font-light leading-relaxed">
+                                              {item}
+                                            </span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
-                            )}
+                            ))}
+                          </div>
                         </div>
                       ))}
                     </div>
-                  ))}
-                </div>
-              )}
+                  </div>
+                )}
+              </div>
             </div>
-          ))
-        }
+          </div>
+        ))}
       </div>
     </div>
-    <div class="bg-gray-50 rounded-lg p-10 md:p-12 text-center">
-      <h2
-        class="text-2xl sm:text-3xl font-['Red_Hat_Display_Variable'] font-semibold text-gray-900 mb-5"
-      >
-        Let's Connect
-      </h2>
-      <p
-        class="text-gray-700 font-['Montserrat_Variable'] mb-8 max-w-2xl mx-auto text-lg leading-relaxed"
-      >
-        Interested in my work or have a project in mind? I'd love to discuss opportunities to collaborate and create something amazing together.
-      </p>
-      <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-5">
-        <a
-          href="/contact/"
-          class="inline-flex items-center justify-center w-full sm:w-auto bg-brand-700 text-white px-8 py-3 rounded-lg font-semibold font-['Montserrat_Variable'] text-base hover:bg-brand-800 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
-        >
-           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-             <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-           </svg>
-          Get in Touch
-        </a>
-        <a
-          href="/about/"
-          class="inline-flex items-center justify-center w-full sm:w-auto bg-white text-brand-700 border border-gray-300 px-8 py-3 rounded-lg font-semibold font-['Montserrat_Variable'] text-base hover:bg-gray-50 transition-colors duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
-        >
-           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-             <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-           </svg>
-          Learn More About Me
-        </a>
+    <div class="relative bg-white/60 backdrop-blur-sm rounded-3xl p-12 md:p-16 lg:p-20 text-center border border-white/50 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden">
+      <!-- Background Elements -->
+      <div class="absolute inset-0 bg-gradient-to-br from-brand-50/40 via-white to-brand-100/30"></div>
+      <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-brand-200/20 to-transparent rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-brand-300/15 to-transparent rounded-full blur-2xl"></div>
+      
+      <!-- Main Content -->
+      <div class="relative z-10">
+        <!-- Decorative Line -->
+        <div class="w-16 h-1 bg-gradient-to-r from-brand-400 to-brand-600 rounded-full mx-auto mb-8"></div>
+        
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-['Red_Hat_Display_Variable'] font-light text-gray-900 mb-6 tracking-tight">
+          Let's Connect
+        </h2>
+        
+        <p class="text-gray-600 font-['Montserrat_Variable'] font-light mb-12 max-w-3xl mx-auto text-lg sm:text-xl leading-relaxed">
+          Ready to turn ideas into impactful solutions? Let's explore how we can collaborate and create something extraordinary together.
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-8">
+          <a
+            href="/contact/"
+            class="group relative inline-flex items-center justify-center w-full sm:w-auto overflow-hidden bg-gradient-to-r from-brand-600 to-brand-700 text-white px-10 py-4 rounded-2xl font-['Montserrat_Variable'] font-medium text-base hover:from-brand-700 hover:to-brand-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-brand-500/25 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
+          >
+            <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span class="relative z-10">Get in Touch</span>
+          </a>
+          
+          <a
+            href="/about/"
+            class="group inline-flex items-center justify-center w-full sm:w-auto bg-white/80 backdrop-blur-sm text-gray-700 border-2 border-gray-200/80 px-10 py-4 rounded-2xl font-['Montserrat_Variable'] font-medium text-base hover:bg-white hover:border-brand-300 hover:text-brand-700 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-300"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span>About Me</span>
+          </a>
+        </div>
+        
+        <!-- Subtle Divider -->
+        <div class="mt-12 pt-8 border-t border-gray-200/50">
+          <p class="text-sm text-gray-500 font-['Montserrat_Variable'] font-light">
+            Available for freelance projects and full-time opportunities
+          </p>
+        </div>
       </div>
     </div>
+  </div>
   </main>
+
+  <script>
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, observerOptions);
+
+    // Add scroll reveal to sections
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.scroll-reveal');
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
+
+    // Re-initialize on page load for Astro
+    document.addEventListener('astro:page-load', () => {
+      const sections = document.querySelectorAll('.scroll-reveal');
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
+  </script>
 </BaseLayout>
 
 <style>
@@ -640,10 +763,70 @@ const siteUrl = new URL(
   }
 
   .timeline-dot {
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
-    box-shadow: 0 0 0 0 rgba(90, 106, 159, 0.7);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Smooth Timeline Dot Animations */
+  .timeline-pulse-ring {
+    animation: smooth-pulse 4s ease-in-out infinite;
+  }
+
+  .timeline-main-dot {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .timeline-inner-dot {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .timeline-outer-ring {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .timeline-company-dot {
+    animation: gentle-pulse 3s ease-in-out infinite;
+  }
+
+  /* Hover Effects for Timeline Dots */
+  .timeline-item:hover .timeline-main-dot {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(107, 123, 176, 0.4);
+  }
+
+  .timeline-item:hover .timeline-inner-dot {
+    transform: scale(0.9);
+  }
+
+  .timeline-item:hover .timeline-outer-ring {
+    transform: scale(1.25);
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .timeline-item:hover .timeline-pulse-ring {
+    animation-duration: 2s;
+  }
+
+  /* Smooth Keyframe Animations */
+  @keyframes smooth-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes gentle-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.05);
+    }
   }
 
   .timeline-item-container:hover .timeline-dot {
@@ -755,12 +938,17 @@ const siteUrl = new URL(
       animation: none !important;
     }
     .social-link,
-    .timeline-item-container {
+    .timeline-item-container,
+    .timeline-pulse-ring,
+    .timeline-company-dot {
       transition: none !important;
+      animation: none !important;
     }
     .social-link:hover,
-    .timeline-item-container:hover * {
+    .timeline-item-container:hover *,
+    .timeline-item:hover * {
       transform: none !important;
+      animation: none !important;
     }
   }
 </style>
