@@ -10,16 +10,6 @@ const page_info = {
     keywords: "Articles | Rishi Chawda",
 };
 
-// interface ArticleData {
-//     title: string;
-//     description: string;
-//     hero_image: ImageMetadata;
-//     hero_image_alt?: string;
-//     path: string;
-//     date: Date;
-//     tags: string[];
-// }
-
 // Get all articles
 const allArticles = await getCollection("articles");
 
@@ -107,226 +97,341 @@ const pageUrl = new URL(
             ]
         }}
     />
-    <main
-        class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 lg:py-16"
-    >
-        <div class="flex flex-row justify-between items-center mb-8 sm:mb-12">
-            <h1
-                class="text-2xl sm:text-3xl lg:text-[2rem] font-medium text-gray-900"
-            >
-                Articles
-            </h1>
-            <a
-                href="/"
-                class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    ></path>
-                </svg>
-                Back to home
-            </a>
+
+    <!-- Custom styles for modern design -->
+    <style slot="head">
+        .bg-grid-slate-100 {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(241 245 249 / 0.2)'%3e%3cpath d='m0 .5h32m-32 32v-32'/%3e%3c/svg%3e");
+        }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Enhanced smooth animations */
+        * {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+
+    <main class="min-h-screen bg-gradient-to-br from-brand-50/30 via-white to-brand-100/40">
+        <!-- Hero Section -->
+        <div class="relative overflow-hidden bg-gradient-to-r from-brand-600/5 via-brand-500/5 to-brand-400/5 border-b border-brand-200/30">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]"></div>
+            
+            <div class="relative max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 lg:py-20">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 font-['Red_Hat_Display_Variable'] leading-tight">
+                        <span class="bg-gradient-to-r from-brand-700 via-brand-600 to-brand-500 bg-clip-text text-transparent">
+                            Articles
+                        </span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-gray-600 mb-8 font-['Montserrat_Variable'] leading-relaxed">
+                        Insights on web development, engineering, and technology
+                    </p>
+                    
+                    <!-- Back to home button -->
+                    <a
+                        href="/"
+                        class="group inline-flex items-center px-8 py-4 bg-white/80 backdrop-blur-sm border border-brand-200/50 rounded-2xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                            ></path>
+                        </svg>
+                        Back to home
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div
-            class="flex flex-col lg:grid lg:grid-cols-[2fr_1fr] gap-12 lg:gap-20"
-        >
-            <!-- Sidebar - Moved to top on mobile -->
-            <div class="order-first lg:order-last">
-                <!-- Global Search Link -->
-                <a
-                    href="/search/"
-                    class="block mb-6 p-4 sm:p-6 bg-gradient-to-r from-brand-500/10 to-brand-600/10 rounded-lg hover:from-brand-500/20 hover:to-brand-600/20 transition-all border border-brand-200/50 group"
-                >
-                    <div class="flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-brand-600 group-hover:text-brand-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                        </svg>
-                        <div>
-                            <p class="text-brand-800 font-medium text-sm font-['Red_Hat_Display_Variable'] mb-1">
-                                Global Search
-                            </p>
-                            <p class="text-brand-600 text-xs font-['Montserrat_Variable']">
-                                Search across articles, gallery, and quotes
-                            </p>
+        <!-- Main Content -->
+        <div class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 lg:py-20">
+            <div class="flex flex-col xl:grid xl:grid-cols-[1fr_350px] gap-12 lg:gap-16">
+                <!-- Main content area -->
+                <div class="order-2 xl:order-1">
+                    <!-- Search bar -->
+                    <div class="mb-10">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-brand-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                                </svg>
+                            </div>
+                            <input
+                                type="text"
+                                id="search"
+                                placeholder="Search articles by title, description, or tags..."
+                                class="font-['Montserrat_Variable'] w-full pl-12 pr-6 py-4 rounded-2xl bg-white/70 backdrop-blur-sm border border-brand-200/50 text-gray-700 placeholder-gray-500 text-base focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500/50 focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
+                            />
                         </div>
                     </div>
-                </a>
 
-                <!-- Quote box -->
-                <a
-                    href="/reads/"
-                    class="block mb-8 sm:mb-12 p-4 sm:p-6 bg-[#F8F9FE] rounded-lg hover:bg-[#F0F2FC] transition-colors border border-gray-200"
-                >
-                    <p
-                        class="text-gray-600 text-sm font-['Montserrat_Variable']"
-                    >
-                        Click here to read some of my favourite lines from books
-                        and the internet
-                    </p>
-                </a>
-
-                <!-- Tags -->
-                <div>
-                    <h3
-                        class="text-base font-medium font-['Red_Hat_Display_Variable'] text-gray-900 mb-4"
-                    >
-                        Filter by tags
-                    </h3>
-                    <div class="flex flex-wrap gap-2">
+                    <!-- Articles grid -->
+                    <div class="grid gap-6">
                         {
-                            allTags.map((tag) => (
-                                <button
-                                    class="inline-flex items-center font-['Montserrat_Variable'] px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-sm bg-[#F8F9FE] text-[#6B7AB0] hover:bg-[#6B7AB0]/90 hover:text-white transition-all relative group data-[selected=true]:bg-[#6B7AB0] data-[selected=true]:text-white"
-                                    data-tag={tag}
+                            sortedArticles.map((article) => (
+                                <article
+                                    class="group data-[hidden=true]:hidden"
+                                    data-tags={article.data.tags.join(",")}
+                                    data-title={article.data.title.toLowerCase()}
+                                    data-search={getSearchableContent(article)}
                                 >
-                                    <span>{tag}</span>
-                                    <svg
-                                        class="overflow-hidden w-0 group-data-[selected=true]:w-3 group-data-[selected=true]:ml-4 transition-all"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
+                                    <a
+                                        href={article.data.path}
+                                        class="block bg-white/70 backdrop-blur-sm rounded-2xl border border-brand-200/30 overflow-hidden hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50"
                                     >
-                                        <line x1="18" y1="6" x2="6" y2="18" />
-                                        <line x1="6" y1="6" x2="18" y2="18" />
-                                    </svg>
-                                </button>
+                                        <div class="flex flex-col sm:flex-row">
+                                            <div class="flex-shrink-0">
+                                                <div class="relative h-56 sm:h-full overflow-hidden">
+                                                    <Image
+                                                        src={article.data.hero_image}
+                                                        alt={
+                                                            article.data.hero_image_alt ||
+                                                            article.data.title
+                                                        }
+                                                        width={256}
+                                                        height={160}
+                                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                        transition:name={`${article.data.path}-image`}
+                                                    />
+                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 p-5 flex flex-col justify-between">
+                                                <div>
+                                                    <div class="mb-4">
+                                                        <h2 
+                                                            transition:name={`${article.data.path}-title`} 
+                                                            class="font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-700 transition-colors duration-300 mb-3 line-clamp-2 leading-tight"
+                                                        >
+                                                            {article.data.title}
+                                                        </h2>
+                                                        
+                                                        <p class="font-['Montserrat_Variable'] text-gray-600 line-clamp-2 leading-relaxed text-sm mb-3">
+                                                            {article.data.description}
+                                                        </p>
+
+                                                        <div class="flex flex-wrap gap-1.5">
+                                                            {article.data.tags.map((tag) => (
+                                                                <span class="font-['Montserrat_Variable'] text-xs text-brand-600 border border-brand-200 px-2 py-0.5 rounded-md">
+                                                                    {tag}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="flex items-center justify-between mt-4 pt-3 border-t border-brand-100/50">
+                                                    <time class="font-['Montserrat_Variable'] text-xs font-medium text-gray-400/90 tracking-wide leading-tight whitespace-nowrap">
+                                                        {formatDate(article.data.date)}
+                                                    </time>
+                                                    <span class="font-['Montserrat_Variable'] text-sm font-medium text-brand-600 group-hover:text-brand-700 transition-colors flex items-center">
+                                                        Read article
+                                                        <svg class="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </article>
                             ))
                         }
                     </div>
-                </div>
-            </div>
 
-            <!-- Main content area -->
-            <div class="flex flex-col">
-                <!-- Search bar -->
-                <div class="mb-8 sm:mb-12">
-                    <input
-                        type="text"
-                        id="search"
-                        placeholder="Search by title, description, keywords, or tags"
-                        class="font-['Montserrat_Variable'] peer w-full px-4 sm:px-6 py-3 sm:py-4 rounded-lg bg-[#F8F9FE] border border-gray-200 text-gray-700 placeholder-gray-500 text-sm sm:text-base focus:ring-2 focus:ring-[#6B7AB0]/50 focus:border-[#6B7AB0] focus:outline-none transition-colors duration-200"
-                    />
-                </div>
-
-                <!-- Articles list -->
-                <div class="space-y-0 sm:space-y-2 flex-1">
-                    {
-                        sortedArticles.map((article) => (
-                            <article
-                                class="group data-[hidden=true]:hidden"
-                                data-tags={article.data.tags.join(",")}
-                                data-title={article.data.title.toLowerCase()}
-                                data-search={getSearchableContent(article)}
+                    <!-- Pagination -->
+                    <div class="mt-16 flex justify-center">
+                        <div class="flex items-center space-x-1">
+                            <button
+                                class="flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10 disabled:opacity-40 disabled:hover:bg-white/70 disabled:cursor-not-allowed cursor-pointer"
+                                data-prev
+                                disabled={currentPage === 1}
                             >
-                                <a
-                                    href={article.data.path}
-                                    class="flex flex-row gap-4 sm:gap-6 p-4 rounded-lg hover:bg-gray-50 transition-colors duration-150"
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="rotate-180"
                                 >
-                                    <div class="basis-1/3 md:basis-1/6 lg:basis-2/12 flex-shrink-0">
-                                        <Image
-                                            src={article.data.hero_image}
-                                            alt={
-                                                article.data.hero_image_alt ||
-                                                article.data.title
-                                            }
-                                            width={200}
-                                            class="aspect-square rounded-lg object-cover w-full"
-                                            transition:name={`${article.data.path}-image`}
-                                        />
+                                    <path
+                                        d="M9 5l7 7-7 7"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                            
+                            {
+                                Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                                    (page) => (
+                                        <button
+                                            class:list={[
+                                                "flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 cursor-pointer",
+                                                page === currentPage
+                                                    ? "bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-500/30"
+                                                    : "bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10",
+                                            ]}
+                                            data-page={page}
+                                        >
+                                            {page}
+                                        </button>
+                                    ),
+                                )
+                            }
+                            
+                            <button
+                                class="flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10 disabled:opacity-40 disabled:hover:bg-white/70 disabled:cursor-not-allowed cursor-pointer"
+                                data-next
+                                disabled={currentPage >= totalPages}
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M9 5l7 7-7 7"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="order-1 xl:order-2">
+                    <div class="sticky top-8">
+                        <!-- Global Search Card -->
+                        <div class="mb-8">
+                            <a
+                                href="/search/"
+                                class="block p-6 bg-gradient-to-br from-brand-500/10 via-brand-400/10 to-brand-300/10 rounded-3xl border border-brand-200/50 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50 group"
+                            >
+                                <div class="flex items-start gap-4">
+                                    <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-brand-600 to-brand-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                                        </svg>
                                     </div>
-                                    <div class="basis-2/3 md:basis-5/6 lg:basis-10/12 flex flex-col gap-1 sm:gap-1.5">
-                                        <h2 transition:name={`${article.data.path}-title`} class="font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-semibold text-gray-900 group-hover:text-[#6B7AB0] transition-colors">
-                                            {article.data.title}
-                                        </h2>
-                                        <small transition:name={`${article.data.path}-date`} class="font-['Montserrat_Variable'] text-xs text-gray-500">
-                                            {formatDate(article.data.date)}
-                                        </small>
-                                        <p class="font-['Montserrat_Variable'] text-sm text-gray-600 line-clamp-2 mt-1 sm:mt-1.5">
-                                            {article.data.description}
+                                    <div class="flex-1">
+                                        <h3 class="text-brand-800 font-bold text-lg font-['Red_Hat_Display_Variable'] mb-2 group-hover:text-brand-700 transition-colors">
+                                            Global Search
+                                        </h3>
+                                        <p class="text-brand-600 text-sm font-['Montserrat_Variable'] leading-relaxed">
+                                            Search across articles, gallery, and quotes to find exactly what you're looking for
                                         </p>
                                     </div>
-                                </a>
-                            </article>
-                        ))
-                    }
-                </div>
+                                </div>
+                            </a>
+                        </div>
 
-                <!-- Pagination -->
-                <div
-                    class="mt-12 sm:mt-16 flex items-center gap-2 justify-center"
-                >
-                    <button
-                        class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
-                        data-prev
-                        disabled={currentPage === 1}
-                    >
-                        <svg
-                            width="17"
-                            height="17"
-                            viewBox="0 0 17 17"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="rotate-180"
-                        >
-                            <path
-                                d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
-                                stroke="#737FAE"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"></path>
-                        </svg>
-                    </button>
-                    {
-                        Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                            (page) => (
-                                <button
-                                    class:list={[
-                                        "w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full transition-colors text-sm sm:text-base",
-                                        page === currentPage
-                                            ? "bg-[#6B7AB0] text-white font-medium"
-                                            : "text-gray-600 hover:bg-gray-100",
-                                    ]}
-                                    data-page={page}
-                                >
-                                    {page}
-                                </button>
-                            ),
-                        )
-                    }
-                    <button
-                        class="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-gray-600 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:hover:bg-transparent disabled:cursor-not-allowed"
-                        data-next
-                        disabled={currentPage >= totalPages}
-                    >
-                        <svg
-                            width="17"
-                            height="17"
-                            viewBox="0 0 17 17"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M7.16602 11.8333L10.4993 8.49996L7.16602 5.16663"
-                                stroke="#737FAE"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"></path>
-                        </svg>
-                    </button>
+                        <!-- Quotes Card -->
+                        <div class="mb-10">
+                            <a
+                                href="/reads/"
+                                class="block p-6 bg-white/70 backdrop-blur-sm rounded-3xl border border-brand-200/30 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50 group"
+                            >
+                                <div class="flex items-start gap-4">
+                                    <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-brand-300 via-brand-400 to-brand-700 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="text-gray-800 font-bold text-lg font-['Red_Hat_Display_Variable'] mb-2 group-hover:text-brand-700 transition-colors">
+                                            Favourite Quotes
+                                        </h3>
+                                        <p class="text-gray-600 text-sm font-['Montserrat_Variable'] leading-relaxed">
+                                            Discover inspiring lines from books and the internet that resonated with me
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Tags Filter -->
+                        <div class="bg-white/70 backdrop-blur-sm rounded-3xl border border-brand-200/30 p-6">
+                            <h3 class="text-gray-900 font-bold text-xl font-['Red_Hat_Display_Variable'] mb-6 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                                Filter by Tags
+                            </h3>
+                            <div class="flex flex-wrap gap-2">
+                                {
+                                    allTags.map((tag) => (
+                                        <button
+                                            class="group inline-flex items-center font-['Montserrat_Variable'] px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-50 text-brand-700 border border-brand-200/50 hover:bg-brand-100 hover:text-brand-800 hover:shadow-md transition-all duration-300 data-[selected=true]:bg-gradient-to-r data-[selected=true]:from-brand-600 data-[selected=true]:to-brand-500 data-[selected=true]:text-white data-[selected=true]:shadow-lg data-[selected=true]:shadow-brand-500/30 cursor-pointer"
+                                            data-tag={tag}
+                                        >
+                                            <span>{tag}</span>
+                                            <svg
+                                                class="overflow-hidden w-0 group-data-[selected=true]:w-3 group-data-[selected=true]:ml-1.5 transition-all duration-300"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <line x1="18" y1="6" x2="6" y2="18" />
+                                                <line x1="6" y1="6" x2="18" y2="18" />
+                                            </svg>
+                                        </button>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -386,9 +491,13 @@ const pageUrl = new URL(
             pageButtons.forEach((button) => {
                 const page = parseInt(button.dataset.page || "1", 10);
                 button.classList.toggle("hidden", page > totalPages);
-                button.classList.toggle("bg-[#6B7AB0]", page === currentPage);
-                button.classList.toggle("text-white", page === currentPage);
-                button.classList.toggle("text-gray-600", page !== currentPage);
+                
+                // Update styles for current page
+                if (page === currentPage) {
+                    button.className = "flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-500/30 cursor-pointer";
+                } else {
+                    button.className = "flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10 cursor-pointer";
+                }
             });
 
             if (prevButton) {
