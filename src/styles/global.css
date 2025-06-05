@@ -13,7 +13,6 @@
 }
 
 @layer utilities {
-  /* Modern scroll animations */
   .scroll-reveal {
     opacity: 0;
     transform: translateY(30px);
@@ -66,8 +65,7 @@
       radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.1) 1px, transparent 0);
     background-size: 100px 100px;
   }
-  
-  /* Modern gradient backgrounds */
+
   .gradient-bg {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
