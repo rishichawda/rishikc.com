@@ -13,7 +13,7 @@ interface ExtraCurricular { club: string; positions: ClubPosition[]; }
 interface Experience { company: string; duration: string; positions: Position[]; website?: string[]; }
 interface Education { institution: string; degree: string; period: string; extra_curriculars?: ExtraCurricular[]; }
 interface Certification { institution: string; title: string; }
-interface ProfileData { name: string; title: string; location: string; summary: string; bio: string | string[]; contact: { linkedin: string; }; skills: string[]; languages: Language[]; certifications: Certification[]; experience: Experience[]; education: Education[]; interests: string[]; socials: Social[]; }
+interface ProfileData { name: string; title: string; intro: string; location: string; summary: string; bio: string | string[]; contact: { linkedin: string; }; skills: string[]; languages: Language[]; certifications: Certification[]; experience: Experience[]; education: Education[]; interests: string[]; socials: Social[]; }
 
 const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
@@ -66,7 +66,7 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
   />
 
   <main class="bg-white">
-    <section class="text-center py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 animate-on-scroll fade-in-up bg-brand-50">
+    <section class="text-center py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 animate-on-scroll fade-in-up bg-brand-50/30">
       <a
         href="/"
         class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium mb-10"
@@ -91,7 +91,7 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
         Hi, I'm Rishi
       </h1>
       <p class="text-lg sm:text-xl lg:text-2xl font-light font-['Montserrat_Variable'] text-brand-700 max-w-3xl mx-auto leading-relaxed">
-        {profile.title}
+        {profile.intro}
       </p>
       <p class="text-base font-light font-['Montserrat_Variable'] text-brand-600 mt-5 max-w-3xl mx-auto flex items-center justify-center">
          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
