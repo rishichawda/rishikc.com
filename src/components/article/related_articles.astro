@@ -1,13 +1,14 @@
 ---
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
+import SeriesIndicator from "./series_indicator.astro";
 
 interface Props {
-    currentArticle: CollectionEntry<"articles">;
-    allArticles: CollectionEntry<"articles">[];
+  currentArticle: CollectionEntry<"articles">;
+  allArticles: CollectionEntry<"articles">[];
 }
 
-let { currentArticle, allArticles } = Astro.props;
+const { currentArticle, allArticles } = Astro.props;
 
 function calculateSimilarity(article1: CollectionEntry<"articles">, article2: CollectionEntry<"articles">): number {
   if (article1.id === article2.id) return 0;
@@ -89,7 +90,7 @@ function formatDate(date: Date): string {
               <Image
                 src={article.data.hero_image}
                 alt={article.data.hero_image_alt || article.data.title}
-                class="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 ease-out"
+                class="object-cover object-center w-full h-full group-hover:scale-110 transition-transform duration-700 ease-out"
                 transition:name={`${article.data.path}-image`}
                 width={400}
                 height={250}
@@ -100,13 +101,16 @@ function formatDate(date: Date): string {
 
             <!-- Article Content -->
             <div class="p-6">
-              <!-- Date -->
-              <time 
-                class="inline-block px-3 py-1 bg-brand-50 text-brand-700 rounded-full text-xs font-medium font-['Montserrat_Variable'] tracking-wide uppercase mb-4"
-                transition:name={`${article.data.path}-date`}
-              >
-                {formatDate(article.data.date)}
-              </time>
+              <!-- Date and Series Indicator -->
+              <div class="flex items-center justify-between mb-4">
+                <time 
+                  class="inline-block px-3 py-1 bg-brand-50 text-brand-700 rounded-full text-xs font-medium font-['Montserrat_Variable'] tracking-wide uppercase"
+                  transition:name={`${article.data.path}-date`}
+                >
+                  {formatDate(article.data.date)}
+                </time>
+                <SeriesIndicator article={article} compact={true} />
+              </div>
 
               <!-- Title -->
               <h3 

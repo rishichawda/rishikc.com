@@ -16,6 +16,11 @@ const articles = defineCollection({
             keywords: z.string(),
             tags: z.array(z.string()),
             category: z.enum(['General', 'Technology', 'Photography', 'Engineering and Development', 'Philosophy', 'Muse']).optional(),
+            series: z.object({
+                title: z.string(), // Title of the series
+                currentPart: z.number(), // Which part this article is (1-based)
+                ongoing: z.boolean().optional(),
+            }).optional(),
         }),
 });
 
