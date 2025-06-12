@@ -279,6 +279,39 @@ const pageUrl = new URL(
                         }
                     </div>
 
+                    <!-- No Results Message -->
+                    <div id="no-articles-found" class="text-center py-16 hidden">
+                        <div class="max-w-md mx-auto">
+                            <div class="text-6xl mb-6 opacity-60">📝</div>
+                            <h3 class="text-2xl font-bold text-brand-900 mb-4 font-['Red_Hat_Display_Variable']">
+                                No articles found
+                            </h3>
+                            <p class="text-brand-600 font-['Montserrat_Variable'] mb-8 text-lg leading-relaxed">
+                                We couldn't find any articles matching your search. Try different keywords or browse all articles.
+                            </p>
+                            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                                <button
+                                    id="clear-search"
+                                    class="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white rounded-2xl transition-all duration-300 font-['Montserrat_Variable'] font-medium shadow-lg hover:shadow-xl hover:shadow-brand-500/30 transform hover:-translate-y-0.5 text-nowrap"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    Clear Search
+                                </button>
+                                <a
+                                    href="/search/"
+                                    class="group inline-flex items-center justify-center px-8 py-4 bg-white/80 backdrop-blur-sm border border-brand-200/50 hover:bg-white hover:border-brand-300/50 text-brand-700 hover:text-brand-600 rounded-2xl transition-all duration-300 font-['Montserrat_Variable'] font-medium shadow-lg hover:shadow-xl hover:shadow-brand-500/10 transform hover:-translate-y-0.5 text-nowrap"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                                    </svg>
+                                    Search entire rishikc.com
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Pagination -->
                     <div class="mt-16 flex justify-center">
                         <div class="flex items-center space-x-1">
@@ -448,6 +481,8 @@ const pageUrl = new URL(
         const searchInput = document.getElementById("search") as HTMLInputElement;
         const articleElements = document.querySelectorAll("[data-tags]") as NodeListOf<HTMLElement>;
         const articles = [...articleElements];
+        const noResultsElement = document.getElementById("no-articles-found") as HTMLElement;
+        const clearSearchButton = document.getElementById("clear-search") as HTMLButtonElement;
 
         const tagButtonElements = document.querySelectorAll("[data-tag]") as NodeListOf<HTMLButtonElement>;
         const tagButtons = [...tagButtonElements];
@@ -487,6 +522,14 @@ const pageUrl = new URL(
             });
 
             const totalPages = Math.ceil(visibleCount / itemsPerPage);
+
+            // Show/hide no results message
+            if (visibleCount === 0 && (searchTerm || selectedTags.size > 0)) {
+                noResultsElement.classList.remove("hidden");
+            } else {
+                noResultsElement.classList.add("hidden");
+            }
+
             pageButtons.forEach((button) => {
                 const page = parseInt(button.dataset.page || "1", 10);
                 button.classList.toggle("hidden", page > totalPages);
@@ -504,6 +547,12 @@ const pageUrl = new URL(
             }
             if (nextButton) {
                 nextButton.disabled = currentPage >= totalPages;
+            }
+
+            // Show or hide no results message
+            const noResultsMessage = document.getElementById("no-articles-found");
+            if (noResultsMessage) {
+                noResultsMessage.classList.toggle("hidden", visibleCount > 0);
             }
         }
 
@@ -551,5 +600,18 @@ const pageUrl = new URL(
 
         // Initial display
         updateArticlesVisibility();
+
+        // Clear search functionality
+        clearSearchButton?.addEventListener("click", () => {
+            if (searchInput) {
+                searchInput.value = "";
+            }
+            selectedTags.clear();
+            tagButtons.forEach((button) => {
+                button.dataset.selected = "false";
+            });
+            currentPage = 1;
+            updateArticlesVisibility();
+        });
     });
 </script>
