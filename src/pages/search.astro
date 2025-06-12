@@ -114,130 +114,133 @@ const pageUrl = new URL(
     />
 
     <main
-        class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-brand-50/30 via-white to-brand-100/20"
+        class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-brand-50/20 via-white to-brand-100/10 relative overflow-hidden"
     >
+        <!-- Background decoration -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-brand-200/50 to-transparent rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-brand-300/50 to-transparent rounded-full blur-3xl"></div>
+        </div>
+        
         <div
-            class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 pt-8 sm:pt-12"
+            class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12"
         >
-            <div class="mb-16 sm:mb-20 text-center">
-                <a
-                    href="/"
-                    class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium mb-8"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
+            <!-- Header Section -->
+            <header class="mb-8 sm:mb-12 text-center">
+                <!-- Navigation -->
+                <nav class="mb-8 sm:mb-12">
+                    <a
+                        href="/"
+                        class="group inline-flex items-center px-4 py-2.5 bg-white/80 backdrop-blur-xl border border-brand-200/30 rounded-full text-brand-700 hover:text-brand-800 hover:bg-white/95 hover:border-brand-300/50 hover:shadow-lg hover:shadow-brand-100/25 transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium"
                     >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                        ></path>
-                    </svg>
-                    Back to home
-                </a>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-3.5 w-3.5 mr-2 group-hover:-translate-x-0.5 transition-transform duration-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                            ></path>
+                        </svg>
+                        Back to home
+                    </a>
+                </nav>
 
-                <div class="max-w-4xl mx-auto">
+                <!-- Page Title and Description -->
+                <div class="max-w-4xl mx-auto space-y-6">
                     <h1
-                        class="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-900 mb-6 tracking-[-0.025em] leading-tight"
+                        class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.04em] leading-[0.95]"
                     >
                         <span
                             id="page-title"
-                            class="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 bg-clip-text text-transparent"
+                            class="bg-gradient-to-r from-brand-950 via-brand-900 to-brand-800 bg-clip-text text-transparent"
                             >Search</span
                         >
                     </h1>
 
-                    <p
+                    <!-- Search Results Info -->
+                    <div
                         id="search-results-info"
-                        class="text-lg sm:text-xl leading-relaxed font-medium max-w-3xl mx-auto font-['Montserrat_Variable'] hidden bg-brand-100/60 p-4 rounded-xl shadow"
+                        class="hidden animate-in slide-in-from-top-4 duration-500"
                     >
-                        <span
-                            class="flex flex-col sm:flex-row items-center justify-center text-center gap-x-2 gap-y-1"
-                        >
-                            <span
-                                class="inline-flex items-center gap-1.5 text-brand-700"
-                            >
+                        <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-xl border border-brand-200/40 rounded-2xl px-6 py-4 shadow-lg shadow-brand-100/20">
+                            <div class="flex items-center gap-2 text-brand-700">
+                                <div class="w-2 h-2 bg-brand-600 rounded-full animate-pulse"></div>
+                                <span class="font-semibold text-brand-800" id="results-count">0</span>
+                                <span class="text-brand-600">result<span id="results-plural">s</span> found</span>
+                            </div>
+                            <div class="w-px h-6 bg-brand-200"></div>
+                            <span class="text-brand-600 font-medium">
+                                for "<span class="font-semibold text-brand-800" id="search-query-display"></span>"
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Default Description -->
+                    <p
+                        id="search-description"
+                        class="text-brand-600 text-lg sm:text-xl lg:text-2xl leading-relaxed font-normal max-w-3xl mx-auto font-['Montserrat_Variable'] animate-in fade-in slide-in-from-bottom-4 duration-700"
+                    >
+                        Discover articles, photography galleries, and inspiring quotes
+                    </p>
+                </div>
+            </header>
+
+            <!-- Search Input -->
+            <section class="mb-12 sm:mb-16">
+                <div class="max-w-3xl mx-auto">
+                    <form class="relative group" id="search-form">
+                        <!-- Glow effect -->
+                        <div class="absolute -inset-1 bg-gradient-to-r from-brand-400/20 via-brand-500/20 to-brand-600/20 rounded-3xl blur-lg opacity-0 group-focus-within:opacity-100 group-hover:opacity-50 transition-opacity duration-500"></div>
+                        
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5 text-brand-600"
+                                    class="h-5 w-5 text-brand-400 group-focus-within:text-brand-600 transition-colors duration-300"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
-                                    stroke-width="2"
+                                    stroke-width="2.5"
                                 >
                                     <path
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
-                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
                                     ></path>
                                 </svg>
-                                <span>
-                                    <span
-                                        id="results-count"
-                                        class="font-semibold text-brand-800"
-                                        >0</span
-                                    > result<span id="results-plural">s</span> found
-                                </span>
-                            </span>
-                            <span class="text-brand-600 font-normal">
-                                for "<span
-                                    class="font-semibold text-brand-800"
-                                    id="search-query-display"></span>"
-                            </span>
-                        </span>
-                    </p>
-
-                    <p
-                        id="search-description"
-                        class="text-brand-600 text-xl sm:text-2xl leading-relaxed font-normal max-w-3xl mx-auto font-['Montserrat_Variable']"
-                    >
-                        Discover articles, photography galleries, and inspiring
-                        quotes
-                    </p>
-                </div>
-            </div>
-
-            <div class="mb-16 sm:mb-20">
-                <div class="max-w-2xl mx-auto">
-                    <form class="relative group" id="search-form">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-r from-brand-400/20 to-brand-600/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-300"
-                        >
-                        </div>
-                        <div class="relative">
+                            </div>
+                            
                             <input
                                 type="text"
                                 name="q"
                                 placeholder="Search articles, gallery, quotes..."
-                                class="w-full px-8 py-6 text-lg sm:text-xl rounded-2xl border-2 border-brand-200/50 bg-white/90 backdrop-blur-sm focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none transition-all duration-300 font-['Montserrat_Variable'] text-brand-900 placeholder-brand-400 shadow-lg shadow-brand-100/50"
+                                class="w-full pl-14 pr-32 sm:pr-40 py-5 sm:py-6 text-base sm:text-lg rounded-2xl sm:rounded-3xl border border-brand-200/40 bg-white/85 backdrop-blur-xl focus:ring-4 focus:ring-brand-500/15 focus:border-brand-400/60 focus:outline-none focus:bg-white/95 transition-all duration-300 font-['Montserrat_Variable'] text-brand-900 placeholder-brand-400 shadow-lg shadow-brand-100/20 hover:shadow-xl hover:shadow-brand-100/30"
                                 autocomplete="off"
                                 id="search-input"
                             />
-                            <div
-                                class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-3"
-                            >
-                                <kbd
-                                    class="hidden sm:inline-flex items-center px-2 py-1 text-xs font-mono text-brand-500 bg-brand-100 rounded border border-brand-200"
-                                >
-                                    Press / to focus
+                            
+                            <div class="absolute inset-y-0 right-3 flex items-center gap-3">
+                                <kbd class="hidden sm:inline-flex items-center px-2.5 py-1.5 text-xs font-mono text-brand-500 bg-brand-50/80 backdrop-blur-sm rounded-lg border border-brand-200/50 shadow-sm">
+                                    ⌘K
                                 </kbd>
                                 <button
                                     type="submit"
-                                    class="bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white p-3 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                                    class="bg-gradient-to-r from-brand-700 to-brand-800 hover:from-brand-800 hover:to-brand-900 text-white p-3 sm:p-3.5 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
                                     aria-label="Search"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        class="h-6 w-6"
+                                        class="h-5 w-5"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
-                                        stroke-width="2"
+                                        stroke-width="2.5"
                                     >
                                         <path
                                             stroke-linecap="round"
@@ -250,62 +253,79 @@ const pageUrl = new URL(
                         </div>
                     </form>
                 </div>
-            </div>
+            </section>
 
             <!-- No Results Message -->
-            <div id="no-results" class="text-center py-20 hidden">
-                <div class="max-w-md mx-auto">
-                    <div class="text-8xl mb-8 opacity-60">🔍</div>
-                    <h2 class="text-3xl font-bold text-brand-900 mb-6">
+            <div id="no-results" class="text-center py-16 sm:py-24 hidden animate-in fade-in slide-in-from-bottom-8 duration-700">
+                <div class="max-w-lg mx-auto">
+                    <!-- Icon with subtle animation -->
+                    <div class="relative mb-8">
+                        <div class="text-7xl sm:text-8xl opacity-40 animate-pulse">🔍</div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 border-2 border-brand-200/50 rounded-full animate-ping"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="text-2xl sm:text-3xl font-bold text-brand-900 mb-4">
                         No results found
                     </h2>
-                    <p
-                        class="text-brand-600 font-['Montserrat_Variable'] mb-12 text-lg leading-relaxed"
-                    >
-                        We couldn't find what you're looking for. Try different
-                        keywords or explore our content sections below.
+                    <p class="text-brand-600 font-['Montserrat_Variable'] mb-10 text-base sm:text-lg leading-relaxed">
+                        We couldn't find what you're looking for. Try different keywords or explore our content sections.
                     </p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    
+                    <!-- Action buttons with improved styling -->
+                    <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                         <a
                             href="/articles/"
-                            class="bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap text-sm sm:text-base"
+                            class="group bg-gradient-to-r from-brand-700 to-brand-800 hover:from-brand-800 hover:to-brand-900 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 text-sm sm:text-base"
                         >
-                            Browse Articles
+                            <span class="flex items-center justify-center gap-2 text-nowrap">
+                                📚 Browse Articles
+                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </span>
                         </a>
                         <a
                             href="/gallery/"
-                            class="bg-white hover:bg-brand-50 text-brand-700 border-2 border-brand-200 hover:border-brand-300 px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap text-sm sm:text-base"
+                            class="group bg-white/90 hover:bg-white text-brand-700 border border-brand-200/60 hover:border-brand-300 px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 backdrop-blur-sm text-sm sm:text-base"
                         >
-                            View Gallery
+                            <span class="flex items-center justify-center gap-2 text-nowrap">
+                                📷 View Gallery
+                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </span>
                         </a>
                         <a
                             href="/reads/"
-                            class="bg-white hover:bg-brand-50 text-brand-700 border-2 border-brand-200 hover:border-brand-300 px-6 py-3 sm:px-8 sm:py-4 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap text-sm sm:text-base"
+                            class="group bg-white/90 hover:bg-white text-brand-700 border border-brand-200/60 hover:border-brand-300 px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 backdrop-blur-sm text-sm sm:text-base"
                         >
-                            Explore Quotes
+                            <span class="flex items-center justify-center gap-2 text-nowrap">
+                                💭 Explore Quotes
+                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </span>
                         </a>
                     </div>
                 </div>
             </div>
 
             <!-- Search Results Container -->
-            <div id="search-results" class="space-y-16 hidden">
+            <div id="search-results" class="space-y-8 sm:space-y-10 hidden animate-in fade-in slide-in-from-bottom-8 duration-700">
                 <!-- Articles Results -->
                 <section id="articles-section" class="hidden">
-                    <div class="flex items-center justify-between mb-8">
-                        <h2
-                            class="text-3xl font-bold text-brand-900 flex items-center"
-                        >
-                            <div
-                                class="w-12 h-12 bg-gradient-to-r from-brand-500 to-brand-600 rounded-xl flex items-center justify-center mr-4"
-                            >
+                    <div class="mb-6 sm:mb-8">
+                        <h2 class="text-xl sm:text-2xl font-bold text-brand-900 flex items-center mb-2">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl flex items-center justify-center mr-3 shadow-lg">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="h-6 w-6 text-white"
+                                    class="h-4 w-4 sm:h-5 sm:w-5 text-white"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
-                                    stroke-width="2"
+                                    stroke-width="2.5"
                                 >
                                     <path
                                         stroke-linecap="round"
@@ -315,34 +335,36 @@ const pageUrl = new URL(
                                 </svg>
                             </div>
                             Articles
+                            <span class="ml-3 bg-brand-600/10 text-brand-700 px-2.5 py-0.5 rounded-full text-sm font-medium">
+                                <span id="articles-count">0</span>&nbsp;results
+                            </span>
                         </h2>
-                        <span
-                            class="bg-brand-100 text-brand-700 px-4 py-2 rounded-full text-lg font-semibold"
-                        >
-                            <span id="articles-count">0</span>
-                        </span>
                     </div>
-                    <div id="articles-container" class="space-y-6">
+                    <div id="articles-container" class="space-y-4 sm:space-y-5">
                         <!-- Articles will be populated by JavaScript -->
+                    </div>
+                    <div id="articles-show-more" class="hidden mt-6 text-center">
+                        <button class="inline-flex items-center px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium">
+                            <span>Show more articles</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
                     </div>
                 </section>
 
                 <!-- Gallery Results -->
                 <section id="gallery-section" class="hidden">
-                    <div class="flex items-center justify-between mb-8">
-                        <h2
-                            class="text-3xl font-bold text-brand-900 flex items-center"
-                        >
-                            <div
-                                class="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mr-4"
-                            >
+                    <div class="mb-6 sm:mb-8">
+                        <h2 class="text-xl sm:text-2xl font-bold text-brand-900 flex items-center">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl flex items-center justify-center mr-3 shadow-lg">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="h-6 w-6 text-white"
+                                    class="h-4 w-4 sm:h-5 sm:w-5 text-white"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
-                                    stroke-width="2"
+                                    stroke-width="2.5"
                                 >
                                     <path
                                         stroke-linecap="round"
@@ -352,37 +374,36 @@ const pageUrl = new URL(
                                 </svg>
                             </div>
                             Photography
+                            <span class="ml-3 bg-brand-600/10 text-brand-700 px-2.5 py-0.5 rounded-full text-sm font-medium">
+                                <span id="gallery-count">0</span>&nbsp;results
+                            </span>
                         </h2>
-                        <span
-                            class="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-lg font-semibold"
-                        >
-                            <span id="gallery-count">0</span>
-                        </span>
                     </div>
-                    <div
-                        id="gallery-container"
-                        class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8"
-                    >
+                    <div id="gallery-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                         <!-- Gallery items will be populated by JavaScript -->
+                    </div>
+                    <div id="gallery-show-more" class="hidden mt-6 text-center">
+                        <button class="inline-flex items-center px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium">
+                            <span>Show more galleries</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
                     </div>
                 </section>
 
                 <!-- Quotes Results -->
                 <section id="quotes-section" class="hidden">
-                    <div class="flex items-center justify-between mb-8">
-                        <h2
-                            class="text-3xl font-bold text-brand-900 flex items-center"
-                        >
-                            <div
-                                class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mr-4"
-                            >
+                    <div class="mb-6 sm:mb-8">
+                        <h2 class="text-xl sm:text-2xl font-bold text-brand-900 flex items-center">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl flex items-center justify-center mr-3 shadow-lg">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    class="h-6 w-6 text-white"
+                                    class="h-4 w-4 sm:h-5 sm:w-5 text-white"
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
-                                    stroke-width="2"
+                                    stroke-width="2.5"
                                 >
                                     <path
                                         stroke-linecap="round"
@@ -392,18 +413,21 @@ const pageUrl = new URL(
                                 </svg>
                             </div>
                             Quotes
+                            <span class="ml-3 bg-brand-600/10 text-brand-700 px-2.5 py-0.5 rounded-full text-sm font-medium">
+                                <span id="quotes-count">0</span>&nbsp;results
+                            </span>
                         </h2>
-                        <span
-                            class="bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-lg font-semibold"
-                        >
-                            <span id="quotes-count">0</span>
-                        </span>
                     </div>
-                    <div
-                        id="quotes-container"
-                        class="grid grid-cols-1 lg:grid-cols-2 gap-6"
-                    >
+                    <div id="quotes-container" class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                         <!-- Quotes will be populated by JavaScript -->
+                    </div>
+                    <div id="quotes-show-more" class="hidden mt-6 text-center">
+                        <button class="inline-flex items-center px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium">
+                            <span>Show more quotes</span>
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
                     </div>
                 </section>
             </div>
@@ -423,548 +447,452 @@ const pageUrl = new URL(
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+    
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    /* Custom animations for modern feel */
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slide-in-from-top-4 {
+        from {
+            opacity: 0;
+            transform: translateY(-1rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slide-in-from-bottom-4 {
+        from {
+            opacity: 0;
+            transform: translateY(1rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slide-in-from-bottom-8 {
+        from {
+            opacity: 0;
+            transform: translateY(2rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-in {
+        animation-fill-mode: both;
+    }
+    
+    .fade-in {
+        animation-name: fade-in;
+    }
+    
+    .slide-in-from-top-4 {
+        animation-name: slide-in-from-top-4;
+    }
+    
+    .slide-in-from-bottom-4 {
+        animation-name: slide-in-from-bottom-4;
+    }
+    
+    .slide-in-from-bottom-8 {
+        animation-name: slide-in-from-bottom-8;
+    }
+    
+    .duration-300 {
+        animation-duration: 300ms;
+    }
+    
+    .duration-500 {
+        animation-duration: 500ms;
+    }
+    
+    .duration-700 {
+        animation-duration: 700ms;
+    }
+    
+    /* Enhanced glass morphism effect */
+    .backdrop-blur-xl {
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+    }
+    
+    /* Smooth focus states */
+    input:focus {
+        box-shadow: 
+            0 0 0 4px rgba(137, 152, 208, 0.15),
+            0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* Custom scrollbar for search results */
+    #search-results::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    #search-results::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    #search-results::-webkit-scrollbar-thumb {
+        background: rgba(137, 152, 208, 0.3);
+        border-radius: 3px;
+    }
+    
+    #search-results::-webkit-scrollbar-thumb:hover {
+        background: rgba(137, 152, 208, 0.5);
+    }
 </style>
 
 <script>
-    import {
-        initializeSearch,
-        type SearchRenderer,
-        type SearchResults,
-        type ArticleItem,
-        type GalleryItem,
-        type QuoteItem,
-    } from "../utils/search.ts";
+    import { initializeSearch, type SearchRenderer, type SearchResults, type ArticleItem, type GalleryItem, type QuoteItem } from "../utils/search.ts";
 
-    /**
-     * SEARCH STYLES CONFIGURATION
-     *
-     * This centralized configuration makes it easy to maintain and customize
-     * the styling of search result elements. To modify styles:
-     *
-     * 1. Update class strings in the relevant section below
-     * 2. Add new style properties to any section as needed
-     * 3. Dimensions can be adjusted in the 'dimensions' section
-     *
-     * Structure:
-     * - article: Styles for article search results
-     * - gallery: Styles for gallery search results
-     * - quote: Styles for quote search results
-     * - dimensions: Image dimensions and other size constraints
-     */
-    const SEARCH_STYLES = {
+    const PAGINATION = { articles: { initial: 3, increment: 3 }, gallery: { initial: 3, increment: 3 }, quotes: { initial: 4, increment: 4 } };
+    
+    const STYLES = {
         article: {
-            container:
-                "bg-white/95 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-brand-200/50 hover:shadow-2xl hover:shadow-brand-100/50 transition-all duration-300 transform hover:-translate-y-1 group",
-            link: "block",
-            flexWrapper:
-                "flex flex-col sm:flex-row gap-6 sm:gap-8 sm:min-h-[1px]",
-            imageContainer: "flex-shrink-0 w-full sm:w-auto",
-            image: "rounded-xl object-cover w-full h-48 sm:h-full sm:w-[140px]",
-            contentContainer: "flex-1 min-w-0",
-            title: "text-xl sm:text-2xl font-bold text-brand-900 mb-3 group-hover:text-brand-700 transition-colors line-clamp-2",
-            description:
-                "text-brand-600 font-['Montserrat_Variable'] text-sm sm:text-base mb-4 sm:mb-6 line-clamp-3 leading-relaxed",
-            metaContainer:
-                "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0",
-            date: "text-brand-500 text-sm font-['Montserrat_Variable'] font-medium",
-            tagsContainer: "flex gap-2 flex-wrap",
-            tag: "bg-gradient-to-r from-brand-100 to-brand-50 text-brand-700 px-3 py-1 rounded-full text-sm font-medium border border-brand-200/50",
+            container: "group",
+            link: "block bg-white/70 backdrop-blur-sm rounded-2xl border border-brand-200/30 overflow-hidden hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50",
+            flex: "flex flex-col sm:flex-row",
+            imageContainer: "flex-shrink-0 w-full sm:w-64",
+            imageWrapper: "relative h-48 sm:h-40 overflow-hidden",
+            image: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-700",
+            overlay: "absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent",
+            content: "flex-1 p-5 flex flex-col justify-between",
+            title: "font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-700 transition-colors duration-300 mb-3 line-clamp-2 leading-tight",
+            description: "font-['Montserrat_Variable'] text-gray-600 line-clamp-2 leading-relaxed text-sm mb-3",
+            tags: "flex flex-wrap gap-1.5",
+            tag: "font-['Montserrat_Variable'] text-xs text-brand-600 border border-brand-200 px-2 py-0.5 rounded-md",
+            meta: "flex items-center justify-between mt-4 pt-3 border-t border-brand-100/50",
+            date: "font-['Montserrat_Variable'] text-xs font-medium text-gray-400/90 tracking-wide leading-tight whitespace-nowrap",
+            readMore: "font-['Montserrat_Variable'] text-sm font-medium text-brand-600 group-hover:text-brand-700 transition-colors flex items-center"
         },
         gallery: {
-            container:
-                "bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden border border-brand-200/50 hover:shadow-2xl hover:shadow-brand-100/50 transition-all duration-300 transform hover:-translate-y-1 group",
-            link: "block h-full",
-            imageContainer: "aspect-[4/3] overflow-hidden",
-            image: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-500",
-            contentContainer: "p-6",
-            title: "text-xl font-bold text-brand-900 mb-3 group-hover:text-brand-700 transition-colors line-clamp-2",
-            description:
-                "text-brand-600 font-['Montserrat_Variable'] text-sm mb-4 line-clamp-2 leading-relaxed",
-            metaContainer: "flex items-center justify-between text-sm",
-            location:
-                "text-brand-500 font-['Montserrat_Variable'] font-medium flex items-center gap-1",
-            count: "text-brand-500 font-['Montserrat_Variable'] font-medium bg-brand-50 px-2 py-1 rounded-full",
+            container: "group relative block aspect-[4/3] overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300",
+            image: "w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105",
+            overlay: "absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end",
+            content: "p-4 md:p-6 transform translate-y-0 transition-transform duration-300 ease-in-out",
+            title: "text-lg md:text-xl font-medium text-white mb-1 md:mb-2 line-clamp-2",
+            description: "text-white/80 text-sm mb-3 line-clamp-2",
+            meta: "flex items-center gap-3 text-sm",
+            location: "text-white/70 font-['Montserrat_Variable'] font-light flex items-center gap-1.5 text-xs",
+            count: "text-white/70 font-['Montserrat_Variable'] font-light text-xs",
+            tags: "flex flex-wrap gap-1.5",
+            tag: "text-xs bg-white/20 text-white/90 px-2.5 py-1 rounded-full tracking-wide font-light"
         },
         quote: {
-            container:
-                "bg-gradient-to-br from-white/95 to-brand-50/30 backdrop-blur-sm rounded-2xl p-8 border border-brand-200/50 hover:shadow-2xl hover:shadow-brand-100/50 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden",
-            text: "text-brand-800 font-['Montserrat_Variable'] text-lg italic mb-6 relative z-10 leading-relaxed",
-            cite: "text-brand-600 font-semibold relative z-10",
-            decoration:
-                "absolute top-4 right-4 text-6xl text-brand-200/50 leading-none",
-        },
-        dimensions: {
-            article: { image: { width: 140, height: 100 } },
-            gallery: { image: { width: 400, height: 300 } },
-        },
+            container: "relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden",
+            text: "text-center sm:text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable'] mb-5 z-10",
+            cite: "text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10",
+            decoration: "absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none"
+        }
     };
 
-    /**
-     * Helper function to create DOM elements with classes and attributes
-     * This reduces boilerplate and makes the code more maintainable
-     *
-     * @param tag - HTML tag name (e.g., 'div', 'img', 'a')
-     * @param className - CSS classes to apply to the element
-     * @param attributes - Key-value pairs of attributes to set
-     * @returns HTMLElement with applied classes and attributes
-     */
-    function createElement(
-        tag: string,
-        className?: string,
-        attributes?: Record<string, string | number>,
-    ): HTMLElement {
+    const el = (tag: string, className?: string, attrs?: Record<string, string>) => {
         const element = document.createElement(tag);
         if (className) element.className = className;
-        if (attributes) {
-            Object.entries(attributes).forEach(([key, value]) => {
-                element.setAttribute(key, value.toString());
-            });
-        }
+        if (attrs) Object.entries(attrs).forEach(([k, v]) => element.setAttribute(k, v));
         return element;
-    }
+    };
 
-    // Create SearchRenderer implementation
     class DOMSearchRenderer implements SearchRenderer {
-        private pageTitle!: HTMLElement;
-        private searchResultsInfo!: HTMLElement;
-        private searchDescription!: HTMLElement;
-        private noResultsEl!: HTMLElement;
-        private searchResults!: HTMLElement;
-
-        // Result containers
-        private articlesSection!: HTMLElement;
-        private articlesContainer!: HTMLElement;
-        private articlesCount!: HTMLElement;
-
-        private gallerySection!: HTMLElement;
-        private galleryContainer!: HTMLElement;
-        private galleryCount!: HTMLElement;
-
-        private quotesSection!: HTMLElement;
-        private quotesContainer!: HTMLElement;
-        private quotesCount!: HTMLElement;
-
-        private resultsCount!: HTMLElement;
-        private resultsPlural!: HTMLElement;
-        private searchQueryDisplay!: HTMLElement;
+        private elements: Record<string, HTMLElement> = {};
+        private currentResults: SearchResults = { articles: [], gallery: [], quotes: [] };
+        private displayed = { articles: 0, gallery: 0, quotes: 0 };
 
         constructor() {
-            this.initializeElements();
+            this.initElements();
         }
 
-        private initializeElements(): void {
-            const checkElements = () => {
-                if (!document.getElementById("page-title")) {
-                    setTimeout(checkElements, 50);
-                    return;
-                }
+        private initElements(): void {
+            const init = () => {
+                const ids = ["page-title", "search-results-info", "search-description", "no-results", "search-results", 
+                           "articles-section", "articles-container", "articles-count", "articles-show-more",
+                           "gallery-section", "gallery-container", "gallery-count", "gallery-show-more",
+                           "quotes-section", "quotes-container", "quotes-count", "quotes-show-more",
+                           "results-count", "results-plural", "search-query-display"];
+                
+                if (!document.getElementById("page-title")) return setTimeout(init, 50);
+                
+                ids.forEach(id => this.elements[id] = document.getElementById(id) as HTMLElement);
+                
+                ['articles', 'gallery', 'quotes'].forEach(type => {
+                    const btn = this.elements[`${type}-show-more`]?.querySelector('button');
+                    if (btn) btn.addEventListener('click', () => this.showMore(type));
+                });
 
-                this.pageTitle = document.getElementById(
-                    "page-title",
-                ) as HTMLElement;
-                this.searchResultsInfo = document.getElementById(
-                    "search-results-info",
-                ) as HTMLElement;
-                this.searchDescription = document.getElementById(
-                    "search-description",
-                ) as HTMLElement;
-                this.noResultsEl = document.getElementById(
-                    "no-results",
-                ) as HTMLElement;
-                this.searchResults = document.getElementById(
-                    "search-results",
-                ) as HTMLElement;
-
-                this.articlesSection = document.getElementById(
-                    "articles-section",
-                ) as HTMLElement;
-                this.articlesContainer = document.getElementById(
-                    "articles-container",
-                ) as HTMLElement;
-                this.articlesCount = document.getElementById(
-                    "articles-count",
-                ) as HTMLElement;
-
-                this.gallerySection = document.getElementById(
-                    "gallery-section",
-                ) as HTMLElement;
-                this.galleryContainer = document.getElementById(
-                    "gallery-container",
-                ) as HTMLElement;
-                this.galleryCount = document.getElementById(
-                    "gallery-count",
-                ) as HTMLElement;
-
-                this.quotesSection = document.getElementById(
-                    "quotes-section",
-                ) as HTMLElement;
-                this.quotesContainer = document.getElementById(
-                    "quotes-container",
-                ) as HTMLElement;
-                this.quotesCount = document.getElementById(
-                    "quotes-count",
-                ) as HTMLElement;
-
-                this.resultsCount = document.getElementById(
-                    "results-count",
-                ) as HTMLElement;
-                this.resultsPlural = document.getElementById(
-                    "results-plural",
-                ) as HTMLElement;
-                this.searchQueryDisplay = document.getElementById(
-                    "search-query-display",
-                ) as HTMLElement;
-
-                // Re-run initialization if needed
                 if (window.location.search.includes("q=")) {
-                    const searchInstance = window.clientSideSearchInstance;
-                    if (searchInstance) {
-                        searchInstance.initializeFromURL();
-                    }
+                    window.clientSideSearchInstance?.initializeFromURL();
                 }
             };
+            init();
+        }
 
-            // Start checking for elements
-            checkElements();
+        private showMore(type: string): void {
+            const config = PAGINATION[type as keyof typeof PAGINATION];
+            const newCount = Math.min(this.currentResults[type as keyof SearchResults].length, this.displayed[type as keyof typeof this.displayed] + config.increment);
+            this.displayed[type as keyof typeof this.displayed] = newCount;
+            this[`render${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof this]();
+            if (newCount >= this.currentResults[type as keyof SearchResults].length) {
+                this.elements[`${type}-show-more`].classList.add("hidden");
+            }
         }
 
         showDefaultState(): void {
-            this.pageTitle.textContent = "Search";
-            this.searchResultsInfo.classList.add("hidden");
-            this.searchDescription.classList.remove("hidden");
-            this.noResultsEl.classList.add("hidden");
-            this.searchResults.classList.add("hidden");
-            this.hideAllSections();
+            this.elements["page-title"].textContent = "Search";
+            this.elements["search-results-info"].classList.add("hidden");
+            this.elements["search-description"].classList.remove("hidden");
+            this.elements["no-results"].classList.add("hidden");
+            this.elements["search-results"].classList.add("hidden");
+            ["articles", "gallery", "quotes"].forEach(type => {
+                this.elements[`${type}-section`].classList.add("hidden");
+                this.elements[`${type}-show-more`]?.classList.add("hidden");
+            });
         }
 
         displayResults(query: string, results: SearchResults): void {
-            const { articles, gallery, quotes } = results;
-            const totalResults =
-                articles.length + gallery.length + quotes.length;
+            const total = results.articles.length + results.gallery.length + results.quotes.length;
+            this.currentResults = results;
+            this.displayed = { articles: 0, gallery: 0, quotes: 0 };
 
-            // Update header
-            this.pageTitle.textContent = "Search Results";
-            this.searchQueryDisplay.textContent = query;
-            this.resultsCount.textContent = totalResults.toString();
-            this.resultsPlural.textContent = totalResults === 1 ? "" : "s";
-            this.searchResultsInfo.classList.remove("hidden");
-            this.searchDescription.classList.add("hidden");
+            this.elements["page-title"].textContent = "Search Results";
+            this.elements["search-query-display"].textContent = query;
+            this.elements["results-count"].textContent = total.toString();
+            this.elements["results-plural"].textContent = total === 1 ? "" : "s";
+            this.elements["search-results-info"].classList.remove("hidden");
+            this.elements["search-description"].classList.add("hidden");
 
-            if (totalResults === 0) {
-                this.noResultsEl.classList.remove("hidden");
-                this.searchResults.classList.add("hidden");
+            if (total === 0) {
+                this.elements["no-results"].classList.remove("hidden");
+                this.elements["search-results"].classList.add("hidden");
                 return;
             }
 
-            // Show results
-            this.noResultsEl.classList.add("hidden");
-            this.searchResults.classList.remove("hidden");
-
-            this.displayArticles(articles);
-            this.displayGallery(gallery);
-            this.displayQuotes(quotes);
+            this.elements["no-results"].classList.add("hidden");
+            this.elements["search-results"].classList.remove("hidden");
+            this.displayArticles(results.articles);
+            this.displayGallery(results.gallery);
+            this.displayQuotes(results.quotes);
         }
 
         hideAllSections(): void {
-            this.articlesSection.classList.add("hidden");
-            this.gallerySection.classList.add("hidden");
-            this.quotesSection.classList.add("hidden");
+            ["articles", "gallery", "quotes"].forEach(type => this.elements[`${type}-section`].classList.add("hidden"));
         }
 
-        displayArticles(articles: ArticleItem[]): void {
-            if (articles.length === 0) {
-                this.articlesSection.classList.add("hidden");
+        private displaySection(type: 'articles' | 'gallery' | 'quotes', items: any[]): void {
+            if (items.length === 0) {
+                this.elements[`${type}-section`].classList.add("hidden");
                 return;
             }
+            this.elements[`${type}-count`].textContent = items.length.toString();
+            this.elements[`${type}-section`].classList.remove("hidden");
+            this.displayed[type] = Math.min(items.length, PAGINATION[type].initial);
+            this[`render${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof this]();
+            this.elements[`${type}-show-more`].classList.toggle("hidden", items.length <= PAGINATION[type].initial);
+        }
 
-            this.articlesCount.textContent = articles.length.toString();
-            this.articlesSection.classList.remove("hidden");
+        displayArticles(articles: ArticleItem[]): void { this.displaySection('articles', articles); }
+        displayGallery(gallery: GalleryItem[]): void { this.displaySection('gallery', gallery); }
+        displayQuotes(quotes: QuoteItem[]): void { this.displaySection('quotes', quotes); }
 
-            this.articlesContainer.innerHTML = "";
-
-            articles.forEach((article: ArticleItem) => {
-                const articleEl = this.createArticleElement(article);
-                this.articlesContainer.appendChild(articleEl);
+        private renderArticles(): void {
+            this.elements["articles-container"].innerHTML = "";
+            this.currentResults.articles.slice(0, this.displayed.articles).forEach(article => {
+                this.elements["articles-container"].appendChild(this.createArticleElement(article));
             });
         }
 
-        displayGallery(gallery: GalleryItem[]): void {
-            if (gallery.length === 0) {
-                this.gallerySection.classList.add("hidden");
-                return;
-            }
-
-            this.galleryCount.textContent = gallery.length.toString();
-            this.gallerySection.classList.remove("hidden");
-
-            this.galleryContainer.innerHTML = "";
-
-            gallery.forEach((item: GalleryItem) => {
-                const galleryEl = this.createGalleryElement(item);
-                this.galleryContainer.appendChild(galleryEl);
+        private renderGallery(): void {
+            this.elements["gallery-container"].innerHTML = "";
+            this.currentResults.gallery.slice(0, this.displayed.gallery).forEach(item => {
+                this.elements["gallery-container"].appendChild(this.createGalleryElement(item));
             });
         }
 
-        displayQuotes(quotes: QuoteItem[]): void {
-            if (quotes.length === 0) {
-                this.quotesSection.classList.add("hidden");
-                return;
-            }
-
-            this.quotesCount.textContent = quotes.length.toString();
-            this.quotesSection.classList.remove("hidden");
-
-            this.quotesContainer.innerHTML = "";
-
-            quotes.forEach((quote: QuoteItem) => {
-                const quoteEl = this.createQuoteElement(quote);
-                this.quotesContainer.appendChild(quoteEl);
+        private renderQuotes(): void {
+            this.elements["quotes-container"].innerHTML = "";
+            this.currentResults.quotes.slice(0, this.displayed.quotes).forEach(quote => {
+                this.elements["quotes-container"].appendChild(this.createQuoteElement(quote));
             });
         }
 
         private createArticleElement(article: ArticleItem): HTMLElement {
-            const searchInstance = window.clientSideSearchInstance;
-            if (!searchInstance) {
-                console.error(
-                    "Search instance not available for article element creation",
-                );
-                // Create a fallback element with minimal functionality rather than throwing an error
-                const fallbackEl = createElement(
-                    "article",
-                    "bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-brand-200",
-                );
-                fallbackEl.textContent = article.title;
-                return fallbackEl;
-            }
+            const s = window.clientSideSearchInstance;
+            if (!s) return el("div", "p-4 bg-white rounded border", { innerHTML: article.title });
 
-            const styles = SEARCH_STYLES.article;
-            const dims = SEARCH_STYLES.dimensions.article;
-
-            // Create main container
-            const articleEl = createElement("article", styles.container);
-
-            // Create link wrapper
-            const linkEl = createElement("a", styles.link, {
-                href: searchInstance.escapeForAttribute(article.path),
+            const articleEl = el("article", STYLES.article.container);
+            const linkEl = el("a", STYLES.article.link, { href: s.escapeForAttribute(article.path) });
+            const flexEl = el("div", STYLES.article.flex);
+            
+            const imgContainer = el("div", STYLES.article.imageContainer);
+            const imgWrapper = el("div", STYLES.article.imageWrapper);
+            const imgEl = el("img", STYLES.article.image, { 
+                src: s.escapeForAttribute(article.hero_image.src), 
+                alt: s.escapeForAttribute(article.hero_image_alt),
+                width: "256", height: "160"
             });
+            const overlay = el("div", STYLES.article.overlay);
+            imgWrapper.append(imgEl, overlay);
+            imgContainer.appendChild(imgWrapper);
 
-            // Create flex container
-            const flexEl = createElement("div", styles.flexWrapper);
-
-            // Create image section
-            const imgContainer = createElement("div", styles.imageContainer);
-            const imgEl = createElement("img", styles.image, {
-                src: searchInstance.escapeForAttribute(article.hero_image.src),
-                alt: searchInstance.escapeForAttribute(article.hero_image_alt),
-                width: dims.image.width.toString(),
-                height: dims.image.height.toString(),
-            });
-            imgContainer.appendChild(imgEl);
-
-            // Create content section
-            const contentEl = createElement("div", styles.contentContainer);
-
-            const titleEl = createElement("h3", styles.title);
+            const contentEl = el("div", STYLES.article.content);
+            const titleEl = el("h2", STYLES.article.title);
             titleEl.textContent = article.title;
-
-            const descEl = createElement("p", styles.description);
+            const descEl = el("p", STYLES.article.description);
             descEl.textContent = article.description;
-
-            // Create meta section
-            const metaEl = createElement("div", styles.metaContainer);
-
-            const timeEl = createElement("time", styles.date);
-            timeEl.textContent = searchInstance.formatDate(article.date);
-
-            const tagsEl = createElement("div", styles.tagsContainer);
-            article.tags.slice(0, 3).forEach((tag) => {
-                const tagEl = createElement("span", styles.tag);
+            
+            const tagsEl = el("div", STYLES.article.tags);
+            article.tags.slice(0, 4).forEach(tag => {
+                const tagEl = el("span", STYLES.article.tag);
                 tagEl.textContent = tag;
                 tagsEl.appendChild(tagEl);
             });
 
-            // Assemble the structure
-            metaEl.appendChild(timeEl);
-            metaEl.appendChild(tagsEl);
+            const metaEl = el("div", STYLES.article.meta);
+            const timeEl = el("time", STYLES.article.date);
+            timeEl.textContent = s.formatDate(article.date);
+            const readMoreEl = el("span", STYLES.article.readMore);
+            readMoreEl.innerHTML = `Read article <svg class="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>`;
+            metaEl.append(timeEl, readMoreEl);
 
-            contentEl.appendChild(titleEl);
-            contentEl.appendChild(descEl);
-            contentEl.appendChild(metaEl);
-
-            flexEl.appendChild(imgContainer);
-            flexEl.appendChild(contentEl);
-
+            const wrapper = el("div", "mb-4");
+            wrapper.append(titleEl, descEl, tagsEl);
+            contentEl.append(wrapper, metaEl);
+            flexEl.append(imgContainer, contentEl);
             linkEl.appendChild(flexEl);
             articleEl.appendChild(linkEl);
-
             return articleEl;
         }
 
         private createGalleryElement(item: GalleryItem): HTMLElement {
-            const searchInstance = window.clientSideSearchInstance;
-            if (!searchInstance) {
-                console.error(
-                    "Search instance not available for gallery element creation",
-                );
-                // Create a fallback element with minimal functionality rather than throwing an error
-                const fallbackEl = createElement(
-                    "article",
-                    "bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-brand-200",
-                );
-                fallbackEl.textContent = item.title;
-                return fallbackEl;
-            }
+            const s = window.clientSideSearchInstance;
+            if (!s) return el("div", "p-4 bg-white rounded border", { innerHTML: item.title });
 
-            const styles = SEARCH_STYLES.gallery;
-            const dims = SEARCH_STYLES.dimensions.gallery;
-
-            // Create main container
-            const articleEl = createElement("article", styles.container);
-
-            // Create link wrapper
-            const linkEl = createElement("a", styles.link, {
-                href: `/gallery/${searchInstance.escapeForAttribute(item.directory)}/`,
+            const linkEl = el("a", STYLES.gallery.container, { href: `/gallery/${s.escapeForAttribute(item.directory)}/` });
+            const imgEl = el("img", STYLES.gallery.image, { 
+                src: s.escapeForAttribute(item.featured_image.src), 
+                alt: s.escapeForAttribute(item.featured_image_alt),
+                width: "400", height: "300"
             });
-
-            // Create image section
-            const imgContainerEl = createElement("div", styles.imageContainer);
-            const imgEl = createElement("img", styles.image, {
-                src: searchInstance.escapeForAttribute(item.featured_image.src),
-                alt: searchInstance.escapeForAttribute(item.featured_image_alt),
-                width: dims.image.width.toString(),
-                height: dims.image.height.toString(),
-            });
-            imgContainerEl.appendChild(imgEl);
-
-            // Create content section
-            const contentEl = createElement("div", styles.contentContainer);
-
-            const titleEl = createElement("h3", styles.title);
+            
+            const overlayEl = el("div", STYLES.gallery.overlay);
+            const contentEl = el("div", STYLES.gallery.content);
+            const titleEl = el("h3", STYLES.gallery.title);
             titleEl.textContent = item.title;
             contentEl.appendChild(titleEl);
 
-            // Add description if available
             if (item.description) {
-                const descEl = createElement("p", styles.description);
+                const descEl = el("p", STYLES.gallery.description);
                 descEl.textContent = item.description;
                 contentEl.appendChild(descEl);
             }
 
-            // Create meta section
-            const metaEl = createElement("div", styles.metaContainer);
-
-            // Add location or empty span for layout
-            if (item.location) {
-                const locationEl = createElement("span", styles.location);
-                locationEl.textContent = `📍 ${item.location}`;
-                metaEl.appendChild(locationEl);
-            } else {
-                metaEl.appendChild(createElement("span"));
+            if (item.location || item.images_count > 0) {
+                const metaEl = el("div", STYLES.gallery.meta);
+                if (item.location) {
+                    const locationEl = el("span", STYLES.gallery.location);
+                    locationEl.innerHTML = `<svg class="w-3 h-3 text-white/60 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>${item.location}`;
+                    metaEl.appendChild(locationEl);
+                }
+                if (item.images_count > 0) {
+                    const countEl = el("span", STYLES.gallery.count);
+                    countEl.innerHTML = `<svg class="w-3 h-3 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>${item.images_count} photos`;
+                    metaEl.appendChild(countEl);
+                }
+                contentEl.appendChild(metaEl);
             }
 
-            // Add photo count
-            const countEl = createElement("span", styles.count);
-            countEl.textContent = `${item.images_count} photos`;
-            metaEl.appendChild(countEl);
+            if (item.tags?.length) {
+                const tagsEl = el("div", STYLES.gallery.tags);
+                item.tags.slice(0, 3).forEach(tag => {
+                    const tagEl = el("span", STYLES.gallery.tag);
+                    tagEl.textContent = tag;
+                    tagsEl.appendChild(tagEl);
+                });
+                contentEl.appendChild(tagsEl);
+            }
 
-            // Assemble the structure
-            contentEl.appendChild(metaEl);
-
-            linkEl.appendChild(imgContainerEl);
-            linkEl.appendChild(contentEl);
-            articleEl.appendChild(linkEl);
-
-            return articleEl;
+            overlayEl.appendChild(contentEl);
+            linkEl.append(imgEl, overlayEl);
+            return linkEl;
         }
 
         private createQuoteElement(quote: QuoteItem): HTMLElement {
-            const styles = SEARCH_STYLES.quote;
-
-            // Create main container
-            const blockquoteEl = createElement("blockquote", styles.container);
-
-            // Add decorative quote mark
-            const decorationEl = createElement("div", styles.decoration);
+            const blockquoteEl = el("div", STYLES.quote.container);
+            const decorationEl = el("span", STYLES.quote.decoration, { "aria-hidden": "true" });
             decorationEl.innerHTML = '"';
-            blockquoteEl.appendChild(decorationEl);
-
-            // Create quote text
-            const quoteTextEl = createElement("p", styles.text);
-            quoteTextEl.textContent = `"${quote.quote}"`;
-            blockquoteEl.appendChild(quoteTextEl);
-
-            // Add citation if available
+            
+            const quoteTextEl = el("p", STYLES.quote.text);
+            quoteTextEl.textContent = quote.quote;
+            
+            blockquoteEl.append(decorationEl, quoteTextEl);
+            
             if (quote.info) {
-                const citeEl = createElement("cite", styles.cite);
+                const citeEl = el("cite", STYLES.quote.cite);
                 citeEl.textContent = `— ${quote.info}`;
                 blockquoteEl.appendChild(citeEl);
             }
-
             return blockquoteEl;
         }
     }
 
-    // Initialize search when page loads
-    document.addEventListener("DOMContentLoaded", () => {
-        initializeSearchWithRetry();
-    });
+    const setupKeyboardShortcuts = () => {
+        const searchInput = document.getElementById('search-input') as HTMLInputElement;
+        if (!searchInput) return;
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+            if (e.key === 'Escape' && document.activeElement === searchInput) {
+                searchInput.blur();
+            }
+        });
+    };
 
-    // Also initialize on Astro page load for SPA navigation
-    document.addEventListener("astro:page-load", () => {
-        // Add a small delay to ensure DOM is fully updated
-        setTimeout(() => {
-            initializeSearchWithRetry();
-        }, 50);
-    });
-
-    function initializeSearchWithRetry() {
-        // Make sure search index is available first
+    const initializeSearchWithRetry = () => {
         if (window.searchIndex) {
             const renderer = new DOMSearchRenderer();
-            const searchInstance = initializeSearch(renderer);
-            if (searchInstance) {
-                console.log("Search initialized successfully");
-            } else {
-                console.warn("Search initialization returned null, will retry");
-                // Retry after a short delay if initialization failed
-                setTimeout(() => {
-                    console.log("Retrying search initialization...");
-                    const retryRenderer = new DOMSearchRenderer();
-                    const retryInstance = initializeSearch(retryRenderer);
-                    if (retryInstance) {
-                        console.log(
-                            "Search initialization successful on retry",
-                        );
-                    } else {
-                        console.error("Search initialization failed on retry");
-                    }
-                }, 200);
-            }
+            initializeSearch(renderer);
         } else {
-            console.warn("Search index not available, will retry");
-            // If search index isn't available yet, check again after a short delay
             setTimeout(() => {
                 if (window.searchIndex) {
-                    console.log(
-                        "Search index became available, initializing...",
-                    );
                     const renderer = new DOMSearchRenderer();
-                    const instance = initializeSearch(renderer);
-                    if (instance) {
-                        console.log(
-                            "Search initialization successful after index became available",
-                        );
-                    } else {
-                        console.error(
-                            "Search initialization failed even after index became available",
-                        );
-                    }
-                } else {
-                    console.error(
-                        "Search index still not available after delay",
-                    );
+                    initializeSearch(renderer);
                 }
             }, 100);
         }
-    }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        initializeSearchWithRetry();
+        setupKeyboardShortcuts();
+    });
+
+    document.addEventListener("astro:page-load", () => {
+        setTimeout(() => {
+            initializeSearchWithRetry();
+            setupKeyboardShortcuts();
+        }, 50);
+    });
 </script>

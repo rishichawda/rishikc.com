@@ -21,6 +21,7 @@ export interface GalleryItem extends SearchableItem {
     title: string;
     description: string;
     location: string;
+    tags: string[];
     directory: string;
     featured_image: { src: string };
     featured_image_alt: string;
