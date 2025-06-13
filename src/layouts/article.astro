@@ -34,7 +34,7 @@ const imageUrl = content.hero_image?.src
 	<Schema
 		item={{
 			"@context": "https://schema.org",
-			"@type": "BlogPosting",
+			"@type": content.jsonld_schema || "Article",
 			headline: content.title,
 			description: content.description,
 			image: imageUrl,

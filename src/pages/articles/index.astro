@@ -75,7 +75,7 @@ const pageUrl = new URL(
                     "@type": "ListItem",
                     position: index + 1,
                     item: {
-                        "@type": "BlogPosting",
+                        "@type": article.data.jsonld_schema || "Article",
                         headline: article.data.title,
                         description: article.data.description,
                         url: new URL(article.data.path, Astro.site || "https://rishikc.com").toString(),

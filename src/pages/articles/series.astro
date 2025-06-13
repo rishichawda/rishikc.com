@@ -79,7 +79,7 @@ const pageUrl = new URL(
                         keywords: series.articles.flatMap(article => article.data.tags || []).filter((tag, index, arr) => arr.indexOf(tag) === index).join(", "),
                         genre: "Educational Content",
                         hasPart: series.articles.map(article => ({
-                            "@type": "Article",
+                            "@type": article.data.jsonld_schema || "Article",
                             name: article.data.title,
                             headline: article.data.title,
                             description: article.data.description,
