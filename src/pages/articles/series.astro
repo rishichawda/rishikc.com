@@ -5,6 +5,7 @@ import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
 import { isPartOfSeries, getAllSeries } from "../../utils/seriesUtils";
 import SeriesIndicator from "../../components/article/series_indicator.astro";
+import siteMetadata from "../../../metadata";
 
 const page_info = {
     title: "Article Series | Rishi Chawda",
@@ -43,6 +44,15 @@ const pageUrl = new URL(
             name: "Article Series by Rishi Chawda",
             description: page_info.description,
             url: pageUrl,
+            author: {
+                "@type": "Person",
+                name: siteMetadata.schema.author.name,
+                url: siteMetadata.schema.author.url,
+                sameAs: siteMetadata.schema.author.sameAs
+            },
+            inLanguage: "en-US",
+            dateCreated: allSeries.length > 0 ? allSeries[allSeries.length - 1].articles[0].data.date.toISOString() : undefined,
+            dateModified: allSeries.length > 0 ? allSeries[0].articles[allSeries[0].articles.length - 1].data.date.toISOString() : undefined,
             mainEntity: {
                 "@type": "ItemList",
                 numberOfItems: allSeries.length,
@@ -52,13 +62,54 @@ const pageUrl = new URL(
                     item: {
                         "@type": "CreativeWorkSeries",
                         name: series.seriesTitle,
-                        numberOfEpisodes: series.totalParts,
-                        episode: series.articles.map(article => ({
+                        description: `A ${series.totalParts}-part series on ${series.seriesTitle.toLowerCase()} covering in-depth topics in web development and engineering.`,
+                        author: {
+                            "@type": "Person",
+                            name: siteMetadata.schema.author.name,
+                            url: siteMetadata.schema.author.url
+                        },
+                        publisher: {
+                            "@type": "Person", 
+                            name: siteMetadata.schema.author.name,
+                            url: siteMetadata.schema.author.url
+                        },
+                        inLanguage: "en-US",
+                        startDate: series.articles[0].data.date.toISOString(),
+                        endDate: series.isOngoing ? undefined : series.articles[series.articles.length - 1].data.date.toISOString(),
+                        keywords: series.articles.flatMap(article => article.data.tags || []).filter((tag, index, arr) => arr.indexOf(tag) === index).join(", "),
+                        genre: "Educational Content",
+                        hasPart: series.articles.map(article => ({
                             "@type": "Article",
+                            name: article.data.title,
                             headline: article.data.title,
+                            description: article.data.description,
                             url: new URL(article.data.path, Astro.site || "https://rishikc.com").toString(),
                             datePublished: article.data.date.toISOString(),
-                        }))
+                            dateModified: article.data.date.toISOString(),
+                            author: {
+                                "@type": "Person",
+                                name: siteMetadata.schema.author.name,
+                                url: siteMetadata.schema.author.url
+                            },
+                            publisher: {
+                                "@type": "Person",
+                                name: siteMetadata.schema.author.name,
+                                url: siteMetadata.schema.author.url
+                            },
+                            inLanguage: "en-US",
+                            keywords: (article.data.tags || []).join(", "),
+                            image: article.data.hero_image ? {
+                                "@type": "ImageObject",
+                                url: new URL(article.data.hero_image.src, Astro.site || "https://rishikc.com").toString(),
+                                description: article.data.hero_image_alt || article.data.title
+                            } : undefined,
+                            isPartOf: {
+                                "@type": "CreativeWorkSeries",
+                                name: series.seriesTitle
+                            },
+                            position: article.data.series?.currentPart
+                        })),
+                        url: new URL(`/articles/series/`, Astro.site || "https://rishikc.com").toString()
                     }
                 }))
             }
