@@ -233,6 +233,8 @@ const pageUrl = new URL(
                                                         height={160}
                                                         class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
                                                         transition:name={`${article.data.path}-image`}
+                                                        loading="lazy"
+                                                        decoding="async"
                                                     />
                                                     <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                                                 </div>

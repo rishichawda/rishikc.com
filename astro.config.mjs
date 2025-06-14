@@ -91,10 +91,11 @@ export default defineConfig({
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
-          // Better chunk splitting
+          // Better chunk splitting for LCP optimization
           manualChunks: {
             'vendor': ['astro'],
-            'fonts': ['@fontsource-variable/inter', '@fontsource-variable/red-hat-display', '@fontsource-variable/red-hat-text', '@fontsource-variable/montserrat']
+            'fonts': ['@fontsource-variable/inter', '@fontsource-variable/red-hat-display', '@fontsource-variable/red-hat-text', '@fontsource-variable/montserrat'],
+            'ui': ['astro:assets']
           }
         }
       }

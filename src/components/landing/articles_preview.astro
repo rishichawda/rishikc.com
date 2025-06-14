@@ -73,7 +73,10 @@ const articles = allArticles
                       src={article.image}
                       alt={article.title}
                       width={340}
+                      height={255}
                       class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   

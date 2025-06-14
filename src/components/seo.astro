@@ -2,6 +2,9 @@
 import { Schema } from "astro-seo-schema";
 import favicon from "../../content/assets/logo/Group 489.png";
 
+import redhatdisplay from '@fontsource-variable/red-hat-display/files/red-hat-display-latin-ext-wght-normal.woff2'
+import montserrat from '@fontsource-variable/montserrat/files/montserrat-latin-ext-wght-normal.woff2'
+
 let {
   page_info: { title, description, image, keywords },
 } = Astro.props;
@@ -15,8 +18,24 @@ const canonicalURL = new URL(
 <meta charset="UTF-8" />
 <title>{title}</title>
 <meta name="viewport" content="width=device-width" />
+<!-- Preload hero logo for faster LCP -->
+<link rel="preload" as="image" href={favicon.src} slot="head" />
 <link rel="icon" type="image/png" href={favicon.src} />
 <link rel="sitemap" href="/sitemap-index.xml" />
+
+<!-- Preload critical fonts for better LCP -->
+<link
+  rel="preload"
+  href={redhatdisplay}
+  as="font"
+  type="font/woff2"
+/>
+<link
+  rel="preload"
+  href={montserrat}
+  as="font"
+  type="font/woff2"
+/>
 <meta name="description" content={description} />
 <meta name="image" content={image} />
 {keywords ? <meta name="keywords" content={keywords} /> : null}
@@ -41,38 +60,38 @@ const canonicalURL = new URL(
       {
         "@type": "ViewAction",
         target: `${canonicalURL.origin}/articles/`,
-        name: "Browse Articles"
+        name: "Browse Articles",
       },
       {
         "@type": "ViewAction",
         target: `${canonicalURL.origin}/gallery/`,
-        name: "View Photography Gallery"
+        name: "View Photography Gallery",
       },
       {
         "@type": "ViewAction",
         target: `${canonicalURL.origin}/about/`,
-        name: "About Rishi"
+        name: "About Rishi",
       },
       {
         "@type": "ViewAction",
         target: `${canonicalURL.origin}/career/`,
-        name: "Career Information"
+        name: "Career Information",
       },
       {
         "@type": "ViewAction",
         target: `${canonicalURL.origin}/contact/`,
-        name: "Contact"
+        name: "Contact",
       },
       {
         "@type": "ViewAction",
         target: `${canonicalURL.origin}/reads/`,
-        name: "Reading Collection"
+        name: "Reading Collection",
       },
       {
         "@type": "SearchAction",
         target: `${canonicalURL.origin}/search/?q={search_term_string}`,
         query: "required name=search_term_string",
-      }
-    ]
+      },
+    ],
   }}
 />

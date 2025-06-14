@@ -9,7 +9,7 @@ import logo from "../../../content/assets/logo/Group 489.svg";
 ---
 
 <section
-  class="relative max-w-[1319px] rounded-b-3xl w-full min-h-[617px] mx-auto overflow-hidden px-4 sm:px-6 lg:px-8 pb-8 lg:pb-0"
+  class="hero-section relative max-w-[1319px] rounded-b-3xl w-full min-h-[617px] mx-auto overflow-hidden px-4 sm:px-6 lg:px-8 pb-8 lg:pb-0"
 >
   <!-- Enhanced background with subtle patterns -->
   <div class="absolute inset-0 flex">
@@ -38,9 +38,12 @@ import logo from "../../../content/assets/logo/Group 489.svg";
       >
         <Image 
           alt="Rishi Chawda Logo" 
-          width={40} 
-          class="max-h-auto max-w-10 group-hover:scale-110 transition-transform duration-300" 
-          src={logo} 
+          width={40}
+          height={40}
+          class="hero-logo max-h-auto max-w-10 group-hover:scale-110 transition-transform duration-300" 
+          src={logo}
+          loading="eager"
+          decoding="sync"
         />
       </div>
       <nav class="flex flex-wrap justify-center gap-1 md:gap-4 items-center">
@@ -204,7 +207,10 @@ import logo from "../../../content/assets/logo/Group 489.svg";
           alt="Rishi Chawda Logo" 
           src={logo} 
           transition:name="hero-logo-image"
-          class="relative z-10 drop-shadow-lg"
+          class="hero-logo-large relative z-10 drop-shadow-lg"
+          loading="eager"
+          decoding="sync"
+          fetchpriority="high"
         />
       </div>
     </div>
