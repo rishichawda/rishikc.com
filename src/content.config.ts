@@ -75,4 +75,8 @@ const services = defineCollection({
     loader: file("content/about/services.json", { parser: (text) => JSON.parse(text) })
 })
 
-export const collections = { articles, quotes, logo, gallery, profile, services };
+const projects = defineCollection({
+    loader: file("content/projects/projects.json", { parser: (text) => JSON.parse(text) }),
+})
+
+export const collections = { articles, quotes, logo, gallery, profile, services, projects };

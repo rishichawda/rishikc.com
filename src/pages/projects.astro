@@ -1,0 +1,951 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/base_layout.astro";
+import { Schema } from "astro-seo-schema";
+import favicon from "../../content/assets/logo/Group 489.png";
+
+interface Project {
+    name: string;
+    description: string;
+    longDescription?: string;
+    tags: string[];
+    github: string;
+    demo?: string;
+    npm?: string;
+    stars: number;
+    forks: number;
+    language: string;
+    category: string;
+    featured: boolean;
+    year: string;
+}
+
+interface OpenSourceContribution {
+    name: string;
+    repository: string;
+    description: string;
+    organization?: string;
+    contributions?: string[];
+    technologies: string[];
+    stats: {
+        stars: number;
+        forks: number;
+        pullRequests: number;
+        issues: number;
+        commits: number;
+        totalContributions: number;
+    };
+    dates: {
+        created: string;
+        updated: string;
+        lastPush: string;
+    };
+    topics?: string[];
+}
+
+// Get projects from content collection
+const projectsCollection = await getCollection("projects");
+
+const projects: Project[] = projectsCollection[0].data;
+const openSourceContributions: OpenSourceContribution[] =
+    projectsCollection[1].data;
+
+const openSourceContributionsStats = projectsCollection[2].data;
+
+const featuredProjects = projects.filter((project) => project.featured);
+const otherProjects = projects.filter((project) => !project.featured);
+
+const categories = [...new Set(projects.map((p) => p.category))];
+
+const page_info = {
+    title: "Projects | Rishi Chawda",
+    description:
+        "Explore Rishi Chawda's development projects including React Native components, web applications, developer tools, and open source contributions.",
+    keywords:
+        "Rishi Chawda, Projects, Open Source, React Native, React, TypeScript, JavaScript, Web Development, Mobile Development, Developer Tools",
+};
+
+const siteUrl = new URL(
+    Astro.url.pathname,
+    Astro.site || "https://rishikc.com",
+).toString();
+---
+
+<BaseLayout page_info={page_info}>
+    <Schema
+        slot="head"
+        item={{
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: "Rishi Chawda",
+            jobTitle: "Senior Software Engineer",
+            worksFor: {
+                "@type": "Organization",
+                name: "Progress Chef",
+            },
+            url: siteUrl,
+            image: `${siteUrl.replace(/\/$/, "")}/${favicon.src}`,
+            description:
+                "Senior Software Engineer's development projects and open source contributions",
+        }}
+    />
+
+    <div class="fixed inset-0 -z-10">
+        <div
+            class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-brand-50/30"
+        >
+        </div>
+        <div
+            class="absolute inset-0 opacity-[0.03]"
+            style="background-image: radial-gradient(circle at 2px 2px, rgba(99, 102, 241, 0.15) 1px, transparent 0); background-size: 32px 32px;"
+        >
+        </div>
+    </div>
+
+    <main
+        class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24"
+    >
+        <div class="mb-20 sm:mb-24">
+            <div class="mb-12">
+                <a
+                    href="/"
+                    class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-gray-200/60 rounded-2xl text-gray-700 hover:text-brand-600 hover:bg-white hover:border-brand-200/60 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium"
+                    aria-label="Go back to homepage"
+                >
+                    <svg
+                        class="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    <span
+                        class="group-hover:scale-105 transition-transform duration-300"
+                        >Back to Home</span
+                    >
+                </a>
+            </div>
+
+            <div class="text-center space-y-8">
+                <div class="space-y-4">
+                    <h1
+                        class="font-['Red_Hat_Display_Variable'] text-5xl sm:text-6xl lg:text-7xl font-light text-gray-900 leading-tight"
+                    >
+                        Development
+                        <span
+                            class="inline-block font-medium bg-gradient-to-r from-brand-600 via-brand-700 to-brand-800 bg-clip-text text-transparent"
+                        >
+                            Projects
+                        </span>
+                    </h1>
+
+                    <div
+                        class="mx-auto w-24 h-1 bg-gradient-to-r from-brand-600 to-brand-700 rounded-full"
+                    >
+                    </div>
+                </div>
+
+                <p
+                    class="font-['Montserrat_Variable'] text-xl sm:text-2xl text-gray-600 font-light leading-relaxed max-w-4xl mx-auto"
+                >
+                    A curated collection of my development work showcasing
+                    solutions, open source contributions, and technical
+                    expertise across various domains.
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-3 pt-4">
+                    {
+                        categories.map((category) => (
+                            <span class="inline-flex items-center px-5 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-2xl text-sm font-medium text-gray-700 font-['Montserrat_Variable'] hover:bg-white hover:border-brand-200/60 hover:text-brand-600 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-default">
+                                {category}
+                            </span>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+
+        <section class="mb-20 sm:mb-24">
+            <div class="text-center mb-16">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-brand-600 to-brand-700 rounded-2xl mb-6 shadow-lg"
+                >
+                    <svg
+                        class="w-8 h-8 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                        ></path>
+                    </svg>
+                </div>
+
+                <h2
+                    class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl font-light text-gray-900 mb-4"
+                >
+                    Featured <span class="font-medium text-brand-600"
+                        >Projects</span
+                    >
+                </h2>
+
+                <div
+                    class="mx-auto w-16 h-0.5 bg-gradient-to-r from-brand-600 to-brand-700 rounded-full mb-6"
+                >
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+                {
+                    featuredProjects.map((project) => (
+                        <article class="group relative">
+                            <div class="absolute inset-0 bg-gradient-to-br from-white via-white to-gray-50/50 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-500" />
+
+                            <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl border border-gray-200/60 hover:border-brand-200/60 hover:shadow-2xl hover:shadow-brand-500/10 hover:-translate-y-2 transition-all duration-500 p-8 lg:p-10 overflow-hidden h-full flex flex-col">
+                                <div class="absolute top-0 right-0 w-32 h-32 opacity-5">
+                                    <div class="w-full h-full bg-gradient-to-br from-brand-600 to-brand-700 rounded-full transform translate-x-16 -translate-y-16" />
+                                </div>
+
+                                <div class="relative mb-8">
+                                    <div class="mb-4">
+                                        <h3 class="text-2xl sm:text-3xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] leading-tight">
+                                            {project.name}
+                                        </h3>
+                                    </div>
+
+                                    <div class="flex flex-wrap gap-2 mb-6">
+                                        <span class="px-3 py-1.5 rounded-xl text-xs font-medium bg-gray-100 text-gray-700 font-['Montserrat_Variable'] border border-gray-200 text-nowrap">
+                                            {project.language}
+                                        </span>
+                                        <span class="px-3 py-1.5 rounded-xl text-xs font-medium bg-brand-50 text-brand-700 font-['Montserrat_Variable'] border border-brand-200 text-nowrap">
+                                            {project.category}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-8 space-y-4">
+                                    <p class="text-gray-700 text-lg leading-relaxed font-['Montserrat_Variable']">
+                                        {project.description}
+                                    </p>
+
+                                    {project.longDescription && (
+                                        <p class="text-gray-600 leading-relaxed font-['Montserrat_Variable']">
+                                            {project.longDescription}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div class="mb-8">
+                                    <h4 class="text-sm font-medium text-gray-500 mb-3 font-['Montserrat_Variable'] uppercase tracking-wide">
+                                        Tags
+                                    </h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        {project.tags.map((tag) => (
+                                            <span class="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-50 text-gray-600 border border-gray-200 font-['Montserrat_Variable'] hover:bg-gray-100 hover:border-gray-300 transition-colors duration-200 text-nowrap">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div class="mt-auto">
+                                    <div class="flex flex-wrap gap-4">
+                                        <a
+                                            href={project.github}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="group/btn flex-1 sm:flex-initial flex items-center justify-center px-6 py-3 bg-gray-100 hover:bg-gray-200 border border-gray-200 hover:border-gray-300 rounded-2xl text-gray-700 hover:text-gray-900 transition-all duration-300 font-['Montserrat_Variable'] font-medium text-sm min-w-[120px] hover:shadow-md hover:-translate-y-0.5 text-nowrap"
+                                        >
+                                            <svg
+                                                class="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform duration-200"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                                                    clip-rule="evenodd"
+                                                />
+                                            </svg>
+                                            Source Code
+                                        </a>
+                                        {project.demo && (
+                                            <a
+                                                href={project.demo}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="group/btn flex-1 sm:flex-initial flex items-center justify-center px-6 py-3 bg-brand-600 hover:bg-brand-700 border border-transparent rounded-2xl text-white transition-all duration-300 font-['Montserrat_Variable'] font-medium text-sm min-w-[120px] hover:shadow-lg hover:shadow-brand-500/30 hover:-translate-y-0.5 text-nowrap"
+                                            >
+                                                <svg
+                                                    class="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform duration-200"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                                    />
+                                                </svg>
+                                                Live Demo
+                                            </a>
+                                        )}
+
+                                        {project.npm && (
+                                            <a
+                                                href={project.npm}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="group/btn flex-1 sm:flex-initial flex items-center justify-center px-6 py-3 bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 border border-red-200 hover:border-red-300 rounded-2xl transition-all duration-300 font-['Montserrat_Variable'] font-medium text-sm min-w-[120px] hover:shadow-md hover:-translate-y-0.5 text-nowrap"
+                                            >
+                                                <svg
+                                                    class="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform duration-200"
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                >
+                                                    <path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0H1.763zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113L5.13 5.323z" />
+                                                </svg>
+                                                NPM Package
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    ))
+                }
+            </div>
+        </section>
+
+        <!-- Open Source Contributions Section -->
+        <section class="mb-20 sm:mb-24">
+            <div class="text-center mb-16">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-brand-600 to-brand-700 rounded-2xl mb-6 shadow-lg"
+                >
+                    <svg
+                        class="w-8 h-8 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                        ></path>
+                    </svg>
+                </div>
+
+                <h2
+                    class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl font-light text-gray-900 mb-4"
+                >
+                    Open Source
+                    <span class="font-medium text-brand-600">Contributions</span
+                    >
+                </h2>
+
+                <div
+                    class="mx-auto w-16 h-0.5 bg-gradient-to-r from-brand-600 to-brand-700 rounded-full mb-6"
+                >
+                </div>
+
+                <p
+                    class="font-['Montserrat_Variable'] text-lg text-gray-600 font-light max-w-2xl mx-auto leading-relaxed mb-8"
+                >
+                    My contributions to the open source community over the
+                    years.
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div
+                        class="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-2xl"
+                    >
+                        <span
+                            class="text-2xl font-bold text-brand-700 font-['Red_Hat_Display_Variable']"
+                            >{
+                                openSourceContributionsStats.total_pull_requests
+                            }+</span
+                        >
+                        <span
+                            class="ml-2 text-sm text-gray-600 font-['Montserrat_Variable'] font-medium"
+                            >Pull Requests</span
+                        >
+                    </div>
+                    <div
+                        class="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-2xl"
+                    >
+                        <span
+                            class="text-2xl font-bold text-brand-700 font-['Red_Hat_Display_Variable']"
+                            >{
+                                openSourceContributionsStats.total_repositories
+                            }+</span
+                        >
+                        <span
+                            class="ml-2 text-sm text-gray-600 font-['Montserrat_Variable'] font-medium"
+                            >Repositories</span
+                        >
+                    </div>
+                    <div
+                        class="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200/60 rounded-2xl"
+                    >
+                        <span
+                            class="text-2xl font-bold text-brand-700 font-['Red_Hat_Display_Variable']"
+                            >{
+                                Math.floor(
+                                    openSourceContributionsStats.account_age_years,
+                                )
+                            }+</span
+                        >
+                        <span
+                            class="ml-2 text-sm text-gray-600 font-['Montserrat_Variable'] font-medium"
+                            >Years Active</span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {
+                    openSourceContributions.map((project, _) => (
+                        <article class="group relative">
+                            <div class="absolute inset-0 bg-gradient-to-br from-white via-white to-gray-50/50 rounded-2xl transform rotate-0.5 group-hover:rotate-1 transition-transform duration-300" />
+
+                            <div class="flex flex-col relative bg-white/95 backdrop-blur-sm rounded-2xl border border-gray-200/60 hover:border-brand-200/60 hover:shadow-xl hover:shadow-brand-500/5 hover:-translate-y-1 transition-all duration-300 p-6 overflow-hidden h-full">
+                                <div class="absolute top-0 right-0 w-20 h-20 opacity-5">
+                                    <div class="w-full h-full bg-gradient-to-br from-brand-600 to-brand-700 rounded-full transform translate-x-10 -translate-y-10" />
+                                </div>
+
+                                <div class="relative mb-4">
+                                    {project.organization && (
+                                        <div class="mb-2">
+                                            <span class="inline-flex px-2 py-1 text-xs font-medium bg-brand-50 text-brand-700 rounded-lg font-['Montserrat_Variable']">
+                                                {project.organization}
+                                            </span>
+                                        </div>
+                                    )}
+                                    <h4 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-2">
+                                        {project.name}
+                                    </h4>
+                                    <p class="text-gray-600 text-sm font-['Montserrat_Variable'] mb-4">
+                                        {project.description}
+                                    </p>
+
+                                    <div class="flex flex-wrap gap-1 mb-4">
+                                        {project.technologies.map(
+                                            (tech: string) => (
+                                                <span class="px-2 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 font-['Montserrat_Variable']">
+                                                    {tech}
+                                                </span>
+                                            ),
+                                        )}
+                                        {project.topics &&
+                                            project.topics.length > 0 &&
+                                            project.topics.map(
+                                                (topic: string) => (
+                                                    <span class="px-2 py-1 rounded-lg text-xs font-medium bg-brand-50 text-brand-700 border border-brand-100 font-['Montserrat_Variable']">
+                                                        {topic}
+                                                    </span>
+                                                ),
+                                            )}
+                                    </div>
+                                </div>
+
+                                <div class="mt-auto">
+                                    <a
+                                        href={project.repository}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="inline-flex items-center text-brand-600 hover:text-brand-700 text-sm font-medium font-['Montserrat_Variable'] transition-colors duration-200"
+                                    >
+                                        View Repository
+                                        <svg
+                                            class="w-3 h-3 ml-1"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                            />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    ))
+                }
+            </div>
+        </section>
+
+        {
+            otherProjects.length > 0 && (
+                <section class="mb-20 sm:mb-24">
+                    <div class="text-center mb-16">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gray-600 to-gray-700 rounded-2xl mb-6 shadow-lg">
+                            <svg
+                                class="w-8 h-8 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                                />
+                            </svg>
+                        </div>
+                        <h2 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl font-light text-gray-900 mb-4">
+                            More&nbsp;
+                            <span class="font-medium text-gray-600">
+                                Projects
+                            </span>
+                        </h2>
+                        <div class="mx-auto w-16 h-0.5 bg-gradient-to-r from-gray-600 to-gray-700 rounded-full mb-6" />
+                        <p class="font-['Montserrat_Variable'] text-lg text-gray-600 font-light max-w-2xl mx-auto leading-relaxed">
+                            A variety of other projects, experiments, and
+                            contributions from my development journey.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+                        {otherProjects.map((project) => (
+                            <article class="group relative">
+                                <div class="absolute inset-0 bg-gradient-to-br from-white to-gray-50/80 rounded-2xl transform rotate-0.5 group-hover:rotate-1 transition-transform duration-300" />
+
+                                <div class="flex flex-col relative bg-white/95 backdrop-blur-sm rounded-2xl border border-gray-200/60 hover:border-gray-300/60 hover:shadow-xl hover:shadow-gray-500/10 hover:-translate-y-1 transition-all duration-300 p-6 lg:p-7 overflow-hidden h-full">
+                                    <div class="absolute top-0 right-0 w-20 h-20 opacity-5">
+                                        <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-700 rounded-full transform translate-x-10 -translate-y-10" />
+                                    </div>
+
+                                    <div class="relative mb-6">
+                                        <div class="flex items-start justify-between mb-4">
+                                            <h3 class="text-xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] leading-tight flex-1 pr-2">
+                                                {project.name}
+                                            </h3>
+
+                                            <span class="flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-medium bg-gray-100 text-gray-700 font-['Montserrat_Variable'] border border-gray-200 text-nowrap">
+                                                {project.language}
+                                            </span>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-medium bg-blue-50 text-blue-700 font-['Montserrat_Variable'] border border-blue-200 text-nowrap">
+                                                {project.category}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-8">
+                                        <p class="text-gray-600 leading-relaxed font-['Montserrat_Variable'] text-sm">
+                                            {project.description}
+                                        </p>
+                                    </div>
+
+                                    <div class="flex gap-3 mt-auto">
+                                        <a
+                                            href={project.github}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="group/btn flex-1 sm:flex-initial flex items-center justify-center px-5 py-2.5 bg-gray-100 hover:bg-gray-200 border border-gray-200 hover:border-gray-300 rounded-xl text-gray-700 hover:text-gray-900 transition-all duration-300 font-['Montserrat_Variable'] font-medium text-xs min-w-[100px] hover:shadow-md hover:-translate-y-0.5 text-nowrap"
+                                        >
+                                            <svg
+                                                class="w-3.5 h-3.5 mr-2 group-hover/btn:scale-110 transition-transform duration-200"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                                                    clip-rule="evenodd"
+                                                />
+                                            </svg>
+                                            Source Code
+                                        </a>
+
+                                        {project.demo && (
+                                            <a
+                                                href={project.demo}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="group/btn flex-1 sm:flex-initial flex items-center justify-center px-5 py-2.5 bg-brand-600 hover:bg-brand-700 border border-transparent rounded-xl text-white transition-all duration-300 font-['Montserrat_Variable'] font-medium text-xs min-w-[100px] hover:shadow-lg hover:shadow-brand-500/30 hover:-translate-y-0.5 text-nowrap"
+                                            >
+                                                <svg
+                                                    class="w-3.5 h-3.5 mr-2 group-hover/btn:scale-110 transition-transform duration-200"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                                    />
+                                                </svg>
+                                                Live Demo
+                                            </a>
+                                        )}
+
+                                        {project.npm && (
+                                            <a
+                                                href={project.npm}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="group/btn flex-1 sm:flex-initial flex items-center justify-center px-6 py-3 bg-red-50 hover:bg-red-100 text-red-700 hover:text-red-800 border border-red-200 hover:border-red-300 rounded-2xl transition-all duration-300 font-['Montserrat_Variable'] font-medium text-sm min-w-[120px] hover:shadow-md hover:-translate-y-0.5 text-nowrap"
+                                            >
+                                                <svg
+                                                    class="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform duration-200"
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                >
+                                                    <path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0H1.763zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113L5.13 5.323z" />
+                                                </svg>
+                                                NPM Package
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+            )
+        }
+
+        <section class="relative">
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-brand-50/60 via-white to-brand-100/40 rounded-3xl transform rotate-1"
+            >
+            </div>
+            <div
+                class="absolute inset-0 bg-gradient-to-tl from-brand-100/30 via-transparent to-brand-50/30 rounded-3xl transform -rotate-1"
+            >
+            </div>
+
+            <div
+                class="relative bg-white/90 backdrop-blur-sm rounded-3xl p-12 sm:p-16 lg:p-20 border border-brand-200/30 text-center overflow-hidden"
+            >
+                <div class="absolute top-0 right-0 w-40 h-40 opacity-5">
+                    <div
+                        class="w-full h-full bg-gradient-to-br from-brand-600 to-brand-700 rounded-full transform translate-x-20 -translate-y-20"
+                    >
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 opacity-5">
+                    <div
+                        class="w-full h-full bg-gradient-to-tr from-brand-500 to-brand-600 rounded-full transform -translate-x-16 translate-y-16"
+                    >
+                    </div>
+                </div>
+
+                <div class="relative space-y-8">
+                    <div class="space-y-4">
+                        <h2
+                            class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 leading-tight"
+                        >
+                            Let's Create Something
+                            <span
+                                class="block font-medium bg-gradient-to-r from-brand-600 via-brand-700 to-brand-800 bg-clip-text text-transparent"
+                            >
+                                Amazing Together
+                            </span>
+                        </h2>
+
+                        <div
+                            class="mx-auto w-20 h-1 bg-gradient-to-r from-brand-600 to-brand-700 rounded-full"
+                        >
+                        </div>
+                    </div>
+
+                    <p
+                        class="font-['Montserrat_Variable'] text-xl sm:text-2xl text-gray-600 font-light mb-12 max-w-4xl mx-auto leading-relaxed"
+                    >
+                        Ready to bring your ideas to life? I'm passionate about
+                        collaborating on innovative projects and building
+                        solutions that make a real difference. Let's discuss how
+                        we can work together.
+                    </p>
+
+                    <div
+                        class="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-8"
+                    >
+                        <a
+                            href="/contact/"
+                            class="group relative inline-flex items-center justify-center w-full sm:w-auto overflow-hidden bg-gradient-to-r from-brand-600 to-brand-700 text-white px-10 py-4 rounded-2xl font-['Montserrat_Variable'] font-medium text-base hover:from-brand-700 hover:to-brand-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-brand-500/25 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
+                        >
+                            <div
+                                class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+                            >
+                            </div>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-200"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                ></path>
+                            </svg>
+                            <span class="relative z-10">Get in Touch</span>
+                        </a>
+
+                        <a
+                            href="https://github.com/rishichawda"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group inline-flex items-center justify-center w-full sm:w-auto bg-white/80 backdrop-blur-sm text-gray-700 border-2 border-gray-200/80 px-10 py-4 rounded-2xl font-['Montserrat_Variable'] font-medium text-base hover:bg-white hover:border-brand-300 hover:text-brand-700 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-300"
+                        >
+                            <svg
+                                class="w-5 h-5 mr-3 group-hover:scale-101 transition-transform duration-300"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Explore more on GitHub</span>
+                        </a>
+                    </div>
+
+                    <div class="pt-12">
+                        <div
+                            class="mx-auto w-32 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"
+                        >
+                        </div>
+                        <p
+                            class="text-sm text-gray-500 font-['Montserrat_Variable'] font-light mt-6"
+                        >
+                            Open to collaboration • Let's build the future
+                            together
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</BaseLayout>
+
+<style>
+    /* Enhanced Animations */
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-10px) rotate(2deg);
+        }
+    }
+
+    @keyframes pulse-glow {
+        0%,
+        100% {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+        50% {
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+        }
+    }
+
+    @keyframes gradient-shift {
+        0%,
+        100% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse-glow {
+        animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .gradient-animate {
+        background-size: 200% 200%;
+        animation: gradient-shift 4s ease infinite;
+    }
+
+    /* Smooth entrance animations */
+    .fade-in-up {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Stagger animation delays */
+    .delay-100 {
+        animation-delay: 0.1s;
+    }
+    .delay-200 {
+        animation-delay: 0.2s;
+    }
+    .delay-300 {
+        animation-delay: 0.3s;
+    }
+    .delay-400 {
+        animation-delay: 0.4s;
+    }
+
+    /* Enhanced hover effects */
+    .hover-lift {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-8px) scale(1.02);
+    }
+
+    /* Glass morphism enhancement */
+    .glass-enhanced {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Custom scrollbar for better aesthetics */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(243, 244, 246, 0.5);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(
+            to bottom,
+            rgb(99, 102, 241),
+            rgb(79, 70, 229)
+        );
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(
+            to bottom,
+            rgb(79, 70, 229),
+            rgb(67, 56, 202)
+        );
+    }
+</style>
+
+<script>
+    // Enhanced scroll animations with Intersection Observer
+    document.addEventListener("DOMContentLoaded", () => {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add("fade-in-up");
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all project cards and sections
+        const animatedElements = document.querySelectorAll(
+            "article, section > div",
+        );
+        animatedElements.forEach((el) => {
+            observer.observe(el);
+        });
+
+        // Parallax effect for background elements
+        window.addEventListener("scroll", () => {
+            const scrolled = window.pageYOffset;
+            const backgrounds = document.querySelectorAll(".parallax-bg");
+
+            backgrounds.forEach((bg) => {
+                const element = bg as HTMLElement;
+                const speed = element.dataset.speed || "0.5";
+                element.style.transform = `translateY(${scrolled * parseFloat(speed)}px)`;
+            });
+        });
+
+        // Enhanced button interactions
+        const buttons = document.querySelectorAll('a[class*="group"]');
+        buttons.forEach((button) => {
+            const element = button as HTMLElement;
+
+            button.addEventListener("mouseenter", () => {
+                element.style.transform = "translateY(-2px) scale(1.05)";
+            });
+
+            button.addEventListener("mouseleave", () => {
+                element.style.transform = "translateY(0) scale(1)";
+            });
+        });
+    });
+
+    // Re-initialize animations on Astro page transitions
+    document.addEventListener("astro:page-load", () => {
+        // Repeat the same initialization logic for Astro's client-side routing
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add("fade-in-up");
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const animatedElements = document.querySelectorAll(
+            "article, section > div",
+        );
+        animatedElements.forEach((el) => {
+            observer.observe(el);
+        });
+    });
+</script>
