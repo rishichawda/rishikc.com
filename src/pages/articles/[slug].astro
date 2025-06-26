@@ -5,6 +5,7 @@ import Prose from "../../components/article/prose.astro";
 import RelatedArticles from "../../components/article/related_articles.astro";
 import BaseLayout from "../../layouts/base_layout.astro";
 import TableOfContents from "../../components/article/table_of_contents.astro";
+import ExternalLink from "../../components/article/ExternalLink.astro";
 
 export async function getStaticPaths() {
 	let posts = await getCollection("articles");
@@ -52,7 +53,7 @@ const { Content, remarkPluginFrontmatter, headings } = await render(post);
 		<BlogPost content={post.data} frontmatter={remarkPluginFrontmatter}>
 			<TableOfContents headings={headings} />
 			<Prose>
-				<Content />
+				<Content components={{ a: ExternalLink }} />
 			</Prose>
 		</BlogPost>
 		<RelatedArticles currentArticle={post} allArticles={allPosts} />
