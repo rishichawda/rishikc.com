@@ -5,7 +5,6 @@ import { Schema } from "astro-seo-schema";
 import favicon from "../../content/assets/logo/Group 489.png";
 import { fetchMetadata, type WebsiteMeta } from "../utils/metadataFetcher";
 import LinkCard from "../components/LinkCard.astro";
-import { calculateDuration, calculateCompanyDuration } from "../utils/dateUtils";
 interface Language {
   name: string;
   level: string;
@@ -422,10 +421,8 @@ const siteUrl = new URL(
                   </h3>
 
                   <p class="text-base text-gray-600 font-['Montserrat_Variable'] font-light">
-                    {(() => {
-                      const dynamicDuration = calculateCompanyDuration(exp.positions);
-                      return dynamicDuration || exp.duration;
-                    })()}
+                    <span class="company-duration" data-positions={JSON.stringify(exp.positions)}>
+                    </span>
                   </p>
 
                   {exp.websitesMeta && exp.websitesMeta.length > 0 && (
@@ -460,10 +457,8 @@ const siteUrl = new URL(
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                               </svg>
                               {position.period}
-                              {(() => {
-                                const dynamicDuration = calculateDuration(position.start_date, position.end_date);
-                                return dynamicDuration ? ` (${dynamicDuration})` : (position.duration ? ` (${position.duration})` : "");
-                              })()}
+                              <span class="position-duration" data-start-date={position.start_date} data-end-date={position.end_date}>
+                              </span>
                             </span>
                             
                             {position.location && (
@@ -606,10 +601,8 @@ const siteUrl = new URL(
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                       </svg>
                                       {position.period}
-                                      {(() => {
-                                        const dynamicDuration = calculateDuration(position.start_date, position.end_date);
-                                        return dynamicDuration ? ` (${dynamicDuration})` : (position.duration ? ` (${position.duration})` : "");
-                                      })()}
+                                      <span class="position-duration" data-start-date={position.start_date} data-end-date={position.end_date}>
+                                      </span>
                                     </span>
                                     
                                     {position.location && (
@@ -715,6 +708,8 @@ const siteUrl = new URL(
   </main>
 
   <script>
+    import { updateCareerDurations } from '../scripts/careerDurations';
+
     // Intersection Observer for scroll animations
     const observerOptions = {
       threshold: 0.1,
@@ -731,6 +726,7 @@ const siteUrl = new URL(
 
     // Add scroll reveal to sections
     document.addEventListener('DOMContentLoaded', () => {
+      updateCareerDurations();
       const sections = document.querySelectorAll('.scroll-reveal');
       sections.forEach(section => {
         observer.observe(section);
@@ -739,6 +735,7 @@ const siteUrl = new URL(
 
     // Re-initialize on page load for Astro
     document.addEventListener('astro:page-load', () => {
+      updateCareerDurations();
       const sections = document.querySelectorAll('.scroll-reveal');
       sections.forEach(section => {
         observer.observe(section);

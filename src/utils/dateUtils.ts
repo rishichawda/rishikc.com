@@ -3,38 +3,17 @@
  */
 
 /**
- * Calculate the duration between start and end dates using MM-YYYY format
- * @param startDate - The start date in format "MM-YYYY" (e.g., "06-2024")
- * @param endDate - Optional end date in format "MM-YYYY" or null for ongoing positions
- * @returns A human-readable duration string (e.g., "1 year 7 months")
+ * Calculate the difference between two dates in years and months
+ * @param startDate - The start date
+ * @param endDate - The end date
+ * @returns Object with years and months
  */
-export function calculateDuration(startDate: string, endDate: string | null = null): string {
-  const currentDate = new Date();
-  
-  // Parse start date
-  const start = parseDateFromFormat(startDate);
-  if (!start) {
-    return "";
-  }
-  
-  // Parse end date (use current date if null/ongoing)
-  let end: Date;
-  if (!endDate) {
-    end = currentDate;
-  } else {
-    const parsedEnd = parseDateFromFormat(endDate);
-    if (!parsedEnd) {
-      return "";
-    }
-    end = parsedEnd;
-  }
-  
-  // Calculate difference
-  let years = end.getFullYear() - start.getFullYear();
-  let months = end.getMonth() - start.getMonth();
+function calculateDateDifference(startDate: Date, endDate: Date): { years: number; months: number } {
+  let years = endDate.getFullYear() - startDate.getFullYear();
+  let months = endDate.getMonth() - startDate.getMonth();
   
   // Include the current month by adding 1
-  months += 1;
+  // months += 1;
   
   // Adjust for negative months
   if (months < 0) {
@@ -48,7 +27,16 @@ export function calculateDuration(startDate: string, endDate: string | null = nu
     months = months % 12;
   }
   
-  // Format the result
+  return { years, months };
+}
+
+/**
+ * Format years and months into a human-readable string
+ * @param years - Number of years
+ * @param months - Number of months
+ * @returns A human-readable duration string
+ */
+function formatDuration(years: number, months: number): string {
   const parts: string[] = [];
   
   if (years > 0) {
@@ -68,11 +56,41 @@ export function calculateDuration(startDate: string, endDate: string | null = nu
 }
 
 /**
+ * Calculate the duration between start and end dates using MM-YYYY format
+ * @param startDate - The start date in format "MM-YYYY" (e.g., "06-2024")
+ * @param endDate - Optional end date in format "MM-YYYY" or null for ongoing positions
+ * @returns A human-readable duration string (e.g., "1 year 7 months")
+ */
+export function calculateDuration(startDate: string, endDate: string | null = null): string {
+  // Parse start date
+  const start = parseDateFromFormat(startDate);
+  if (!start) {
+    return "";
+  }
+  
+  // Parse end date (use current date if null/ongoing)
+  let end: Date;
+  if (!endDate) {
+    end = new Date();
+  } else {
+    const parsedEnd = parseDateFromFormat(endDate);
+    if (!parsedEnd) {
+      return "";
+    }
+    end = parsedEnd;
+  }
+  
+  // Calculate and format duration
+  const { years, months } = calculateDateDifference(start, end);
+  return formatDuration(years, months);
+}
+
+/**
  * Parse a date string in format "MM-YYYY" to a Date object
  * @param dateString - Date string like "06-2024" or "12-2022"
  * @returns Date object or null if parsing fails
  */
-function parseDateFromFormat(dateString: string): Date | null {
+export function parseDateFromFormat(dateString: string): Date | null {
   try {
     // Split the date string by hyphen
     const parts = dateString.trim().split('-');
@@ -133,40 +151,7 @@ export function calculateCompanyDuration(positions: Array<{start_date: string, e
     return "";
   }
 
-  // Calculate difference
-  let years = latestEnd.getFullYear() - earliestStart.getFullYear();
-  let months = latestEnd.getMonth() - earliestStart.getMonth();
-  
-  // Include the current month by adding 1
-  months += 1;
-  
-  // Adjust for negative months
-  if (months < 0) {
-    years--;
-    months += 12;
-  }
-  
-  // Handle month overflow
-  if (months >= 12) {
-    years += Math.floor(months / 12);
-    months = months % 12;
-  }
-  
-  // Format the result
-  const parts: string[] = [];
-  
-  if (years > 0) {
-    parts.push(`${years} year${years > 1 ? 's' : ''}`);
-  }
-  
-  if (months > 0) {
-    parts.push(`${months} month${months > 1 ? 's' : ''}`);
-  }
-  
-  // If both are 0 after calculation, return 1 month as minimum
-  if (years === 0 && months === 0) {
-    return "1 month";
-  }
-  
-  return parts.join(' ');
+  // Calculate and format duration
+  const { years, months } = calculateDateDifference(earliestStart, latestEnd);
+  return formatDuration(years, months);
 }
