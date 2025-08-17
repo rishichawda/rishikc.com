@@ -6,8 +6,10 @@ import "../styles/tailwind.css";
 import "../styles/animations.css";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/red-hat-display";
+import redhatdisplaywoff from "@fontsource-variable/red-hat-display/files/red-hat-display-latin-wght-normal.woff2?url"
 import "@fontsource-variable/red-hat-text";
 import "@fontsource-variable/montserrat";
+import montserratwoff from "@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url"
 import Footer from "../components/footer.astro";
 import { ClientRouter } from "astro:transitions";
 
@@ -29,6 +31,9 @@ const seo = {
 	<head>
 		<SEO page_info={seo} />
 		<ClientRouter />
+		<!-- preloading this two because they are in the critical chain -->
+		<link rel="preload" as="font" type="font/woff2" href={montserratwoff} crossorigin="anonymous" />
+		<link rel="preload" as="font" type="font/woff2" href={redhatdisplaywoff} crossorigin="anonymous" />
 		<slot name="head" />
 	</head>
 	<body class="max-w-screen">
