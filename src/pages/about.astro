@@ -453,7 +453,8 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
   </main>
 </BaseLayout>
 
-<style>
+<!-- inlining this one to see if it improves the load time in astro -->
+<style type="text/css">
   .fade-in-up {
     opacity: 0;
     transform: translateY(20px);
