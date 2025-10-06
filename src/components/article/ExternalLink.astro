@@ -7,6 +7,4 @@ const isExternal = href && !href.startsWith("/") && !href.startsWith("#") && !hr
   target={isExternal ? "_blank" : undefined}
   rel={isExternal ? "noopener noreferrer" : undefined}
   {...Astro.props}
->
-  <slot />
-</a>
+><slot /></a>
