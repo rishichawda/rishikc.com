@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 
 import mdx from '@astrojs/mdx';
-import { h } from 'hastscript'
+import { h, s } from 'hastscript'
 
 import siteMetadata from './metadata';
 import { getEnv } from 'astro/env/runtime';
@@ -22,11 +22,11 @@ import playformCompress from '@playform/compress';
 const AnchorLinkIcon = h(
   'span',
   { ariaHidden: 'true', class: 'inline-flex items-center justify-center ml-2' },
-  h(
+  s(
     'svg',
     { width: '0.7em', height: '0.7em', viewBox: '0 0 24 24', fill: "none" },
     h('g', {
-      "stroke-linecap": "round", "stroke-linejoin": "round"
+      strokeLineCap: "round", strokeLineJoin: "round"
     },
     ),
     h(
@@ -34,8 +34,8 @@ const AnchorLinkIcon = h(
       h(
         'path',
         {
-          "fill-rule": "evenodd",
-          "clip-rule": "evenodd",
+          fillRule: "evenodd",
+          clipRule: "evenodd",
           d: "M8 2.25C4.27208 2.25 1.25 5.27208 1.25 9C1.25 10.7283 1.90054 12.3065 2.96894 13.5002C3.24518 13.8088 3.71933 13.8351 4.02797 13.5589C4.33662 13.2826 4.36288 12.8085 4.08664 12.4998C3.25487 11.5705 2.75 10.3451 2.75 9C2.75 6.10051 5.10051 3.75 8 3.75H12C14.8995 3.75 17.25 6.10051 17.25 9C17.25 11.8995 14.8995 14.25 12 14.25H10C9.58579 14.25 9.25 14.5858 9.25 15C9.25 15.4142 9.58579 15.75 10 15.75H12C15.7279 15.75 18.75 12.7279 18.75 9C18.75 5.27208 15.7279 2.25 12 2.25H8Z",
           fill: "#1C274C"
         }
