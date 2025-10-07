@@ -2868,6 +2868,11 @@ hast-util-whitespace@^3.0.0:
   dependencies:
     "@types/hast" "^3.0.0"
 
+hast@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/hast/-/hast-1.0.0.tgz#50615e6b2b0583e5608bc76c47029722f1e00607"
+  integrity sha512-vFUqlRV5C+xqP76Wwq2SrM0kipnmpxJm7OfvVXpB35Fp+Fn4MV+ozr+JZr5qFvyR1q/U+Foim2x+3P+x9S1PLA==
+
 hastscript@^9.0.0, hastscript@^9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/hastscript/-/hastscript-9.0.1.tgz#dbc84bef6051d40084342c229c451cd9dc567dff"
@@ -3421,7 +3426,7 @@ mdast-util-phrasing@^4.0.0:
     "@types/mdast" "^4.0.0"
     unist-util-is "^6.0.0"
 
-mdast-util-to-hast@^13.0.0, mdast-util-to-hast@^13.2.0:
+mdast-util-to-hast@^13.0.0:
   version "13.2.0"
   resolved "https://registry.yarnpkg.com/mdast-util-to-hast/-/mdast-util-to-hast-13.2.0.tgz#5ca58e5b921cc0a3ded1bc02eed79a4fe4fe41f4"
   integrity sha512-QGYKEuUsYT9ykKBCMOEDLsU5JRObWQusAolFMeko/tYPufNkRffBAQjIE+99jbA87xv6FgmjLtwjh9wBWajwAA==
@@ -4836,16 +4841,15 @@ remark-mdx@^3.0.0:
     mdast-util-mdx "^3.0.0"
     micromark-extension-mdxjs "^3.0.0"
 
-remark-notes-plugin@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/remark-notes-plugin/-/remark-notes-plugin-1.0.2.tgz#3d33d5eded1223be2badf69d363c04c5187a7f07"
-  integrity sha512-svtGFefVfLT221KK7nD9nOJlunOM/ghHmE/mEANZEs8759UbKLz/nu1kFPLMUHxEMmJhWhmhADuq4tMISxWt6A==
+remark-notes-plugin@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/remark-notes-plugin/-/remark-notes-plugin-2.0.0.tgz#284e2d08933a381453baf3a749ffbc193190771e"
+  integrity sha512-LXjbJxYPeaiSB+3RmU9bw8po++bvlpOK8Wy+Wej6lxKg5djRGtaDpWBvhsBAjPad3cDc6FZjpV3BlxNn6IatPA==
   dependencies:
-    hast-util-to-html "^9.0.5"
+    hast "^1.0.0"
     mdast "^3.0.0"
-    mdast-util-to-hast "^13.2.0"
-    remark "^15.0.1"
     unified "^11.0.4"
+    unist "^0.0.1"
     unist-util-visit "^5.0.0"
 
 remark-parse@^11.0.0:
@@ -4895,16 +4899,6 @@ remark-toc@^9.0.0:
   dependencies:
     "@types/mdast" "^4.0.0"
     mdast-util-toc "^7.0.0"
-
-remark@^15.0.1:
-  version "15.0.1"
-  resolved "https://registry.yarnpkg.com/remark/-/remark-15.0.1.tgz#ac7e7563260513b66426bc47f850e7aa5862c37c"
-  integrity sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==
-  dependencies:
-    "@types/mdast" "^4.0.0"
-    remark-parse "^11.0.0"
-    remark-stringify "^11.0.0"
-    unified "^11.0.0"
 
 restructure@^3.0.0:
   version "3.0.2"
@@ -5553,6 +5547,11 @@ unist-util-visit@^5.0.0:
     "@types/unist" "^3.0.0"
     unist-util-is "^6.0.0"
     unist-util-visit-parents "^6.0.0"
+
+unist@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/unist/-/unist-0.0.1.tgz#360b99428d032d37724c467e186247c44a1429b1"
+  integrity sha512-bnzuF8b6d47WubA4a5yLqFbuZz/v/NS6eRwUIdOaDmsqzwTlyv8yS1g3M7ISdtBQrigPD3qKK87Cu7zhEfCF3A==
 
 unpic@^4.1.3:
   version "4.1.3"
