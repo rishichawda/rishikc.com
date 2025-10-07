@@ -6,6 +6,7 @@ import RelatedArticles from "../../components/article/related_articles.astro";
 import BaseLayout from "../../layouts/base_layout.astro";
 import TableOfContents from "../../components/article/table_of_contents.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
+import "remark-notes-plugin/styles.css";
 
 export async function getStaticPaths() {
 	let posts = await getCollection("articles");

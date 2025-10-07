@@ -5,7 +5,6 @@ import mdx from '@astrojs/mdx';
 import { h, s } from 'hastscript'
 
 import siteMetadata from './metadata';
-import { getEnv } from 'astro/env/runtime';
 import remarkToc from 'remark-toc';
 import rehypePresetMinify from 'rehype-preset-minify';
 
@@ -13,7 +12,6 @@ import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs';
 import remarkNotes from 'remark-notes-plugin';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
-import { imageService } from "@unpic/astro/service";
 
 import sitemap from '@astrojs/sitemap';
 
@@ -53,33 +51,44 @@ const AnchorLinkIcon = h(
 )
 
 export default defineConfig({
-  integrations: [mdx({
-    syntaxHighlight: 'shiki',
-    shikiConfig: { theme: 'dracula' },
-    remarkPlugins: [remarkToc, remarkReadingTime, remarkNotes],
-    rehypePlugins: [rehypePresetMinify, rehypeSlug, [rehypeAutolinkHeadings, {
-      behavior: 'append',
-      content: AnchorLinkIcon,
-    }]],
-    remarkRehype: { footnoteLabel: 'Footnotes' },
-    gfm: true,
-  }), sitemap(), playformCompress({
-    CSS: true,
-    HTML: {
-      "html-minifier-terser": {
-        removeAttributeQuotes: false,
-        collapseWhitespace: true,
-        removeComments: true,
-        minifyCSS: true,
-        minifyJS: true,
+  integrations: [
+    mdx({
+      syntaxHighlight: 'shiki',
+      shikiConfig: { theme: 'dracula' },
+      remarkPlugins: [
+        remarkToc,
+        remarkReadingTime,
+        remarkNotes
+      ],
+      rehypePlugins: [
+        rehypePresetMinify,
+        rehypeSlug,
+        [rehypeAutolinkHeadings, {
+          behavior: 'append',
+          content: AnchorLinkIcon,
+        }]
+      ],
+      remarkRehype: { footnoteLabel: 'Footnotes' },
+      gfm: true,
+    }),
+    sitemap(),
+    playformCompress({
+      CSS: true,
+      HTML: {
+        "html-minifier-terser": {
+          removeAttributeQuotes: false,
+          collapseWhitespace: true,
+          removeComments: true,
+          minifyCSS: true,
+          minifyJS: true,
+        },
       },
-    },
-    Image: true,
-    JavaScript: true,
-    SVG: true,
-    Logger: 0,
-  })],
-
+      Image: true,
+      JavaScript: true,
+      SVG: true,
+      Logger: 0,
+    })
+  ],
   site: siteMetadata.siteUrl,
   trailingSlash: 'always',
   compressHTML: true,
