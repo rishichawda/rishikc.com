@@ -13,6 +13,7 @@ const articles = defineCollection({
             hero_image_credit_text: z.string().optional(),
             path: z.string(),
             date: z.coerce.date(),
+            dateModified: z.coerce.date().optional(),
             keywords: z.string(),
             tags: z.array(z.string()),
             category: z.enum(['General', 'Technology', 'Photography', 'Engineering and Development', 'Philosophy', 'Muse']).optional(),

@@ -17,7 +17,16 @@ const date = new Date(content.date).toLocaleDateString("en-us", {
 	day: "numeric",
 });
 
+const dateModified = content.dateModified ? new Date(content.dateModified).toLocaleDateString("en-us", {
+	year: "numeric",
+	month: "long",
+	day: "numeric",
+}) : null;
+
+const hasBeenUpdated = content.dateModified && content.dateModified !== content.date;
+
 const isoDate = content.date ? new Date(content.date).toISOString() : "";
+const isoDateModified = content.dateModified ? new Date(content.dateModified).toISOString() : isoDate;
 const articleUrl = new URL(
 	content.path || Astro.url.pathname,
 	Astro.site || "https://rishikc.com",
@@ -39,7 +48,7 @@ const imageUrl = content.hero_image?.src
 			description: content.description,
 			image: imageUrl,
 			datePublished: isoDate,
-			dateModified: isoDate,
+			dateModified: isoDateModified,
 			author: {
 				"@type": "Person",
 				name: profile.name,
@@ -102,12 +111,53 @@ const imageUrl = content.hero_image?.src
 			)
 		}
 	</div>
-	<small
+	<div
 		transition:name={`${content.path}-date`}
-		class="justify-start text-gray-600 text-center text-sm font-normal font-['Montserrat_Variable'] leading-tight mb-8"
+		class="inline-flex items-center gap-3 mb-8 flex-wrap justify-center"
 	>
-		{date}
-	</small>
+		<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 rounded-full">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="h-3.5 w-3.5 text-gray-600"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+				stroke-width="2"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+				></path>
+			</svg>
+			<small class="text-gray-700 text-xs font-medium font-['Montserrat_Variable'] leading-tight">
+				{date}
+			</small>
+		</div>
+		{
+			hasBeenUpdated && (
+				<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-50 rounded-full">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-3.5 w-3.5 text-brand-600"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+						></path>
+					</svg>
+					<small class="text-brand-700 text-xs font-medium font-['Montserrat_Variable'] leading-tight">
+						Updated {dateModified}
+					</small>
+				</div>
+			)
+		}
+	</div>
 	<div class="w-full md:max-w-[790px] mb-10">
 		<Image
 			class="w-full rounded-xl shadow-md"
