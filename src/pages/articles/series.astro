@@ -28,6 +28,14 @@ function formatDate(date: Date): string {
     });
 }
 
+// Get the last updated date for a series (most recent dateModified or date)
+function getSeriesLastUpdated(series: typeof allSeries[0]): Date {
+    return series.articles.reduce((latest, article) => {
+        const articleDate = article.data.dateModified || article.data.date;
+        return articleDate > latest ? articleDate : latest;
+    }, series.articles[0]?.data.dateModified || series.articles[0]?.data.date || new Date(0));
+}
+
 // Get current page URL for schema
 const pageUrl = new URL(
     Astro.url.pathname,
@@ -202,20 +210,29 @@ const pageUrl = new URL(
                                             </h2>
                                         </div>
                                         
-                                        <div class="flex items-center gap-4 text-sm text-gray-600 font-['Montserrat_Variable']">
-                                            <span class="flex items-center gap-1.5">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                                {series.totalParts} parts
-                                            </span>
-                                            
-                                            <span class="flex items-center gap-1.5">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                                Started {formatDate(series.articles[0].data.date)}
-                                            </span>
+                                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600 font-['Montserrat_Variable']">
+                                            <div class="flex flex-wrap items-center gap-4">
+                                                <span class="flex items-center gap-1.5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                    {series.totalParts} parts
+                                                </span>
+
+                                                <span class="flex items-center gap-1.5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    Started {formatDate(series.articles[0].data.date)}
+                                                </span>
+
+                                                <span class="flex items-center gap-1.5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    Last Updated {formatDate(getSeriesLastUpdated(series))}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     
@@ -260,10 +277,12 @@ const pageUrl = new URL(
                                                     <div class="flex-1 p-4 sm:p-5 flex flex-col justify-between min-h-[12rem] sm:min-h-[8rem]">
                                                         <div>
                                                             <div class="flex items-start justify-between gap-3 mb-2">
-                                                                <h3 class="text-lg font-semibold text-gray-900 group-hover:text-brand-700 transition-colors duration-300 font-['Red_Hat_Display_Variable'] line-clamp-2 leading-tight">
+                                                                <h3 class="text-lg font-semibold text-gray-900 group-hover:text-brand-700 transition-colors duration-300 font-['Red_Hat_Display_Variable'] line-clamp-2 leading-tight flex-1 min-w-0">
                                                                     {article.data.title}
                                                                 </h3>
-                                                                <SeriesIndicator article={article} compact={true} />
+                                                                <div class="flex-shrink-0">
+                                                                    <SeriesIndicator article={article} compact={true} />
+                                                                </div>
                                                             </div>
                                                             
                                                             <p class="text-gray-600 text-sm font-['Montserrat_Variable'] leading-relaxed line-clamp-2 mb-3">
