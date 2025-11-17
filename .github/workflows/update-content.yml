@@ -16,7 +16,7 @@ jobs:
         with:
           submodules: true
           token: ${{ secrets.CONTENT_UPDATE_PAT }}
-          persist-credentials: false
+          persist-credentials: true
 
       - name: Authorize Git
         run: |
