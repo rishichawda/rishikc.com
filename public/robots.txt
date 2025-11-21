@@ -1,0 +1,33 @@
+# Allow all crawlers to access the site for SEO
+User-agent: *
+Allow: /
+
+# Block all bots from scraping images
+User-agent: *
+Disallow: /gallery/
+Disallow: *.jpg
+Disallow: *.jpeg
+Disallow: *.png
+Disallow: *.gif
+Disallow: *.webp
+Disallow: *.avif
+Disallow: *.svg
+
+# Allow good bots (Google, Bing, etc.) to index pages with images
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Bingbot
+Allow: /
+
+# Block image-specific crawlers
+User-agent: Googlebot-Image
+Disallow: /gallery/
+Disallow: *.jpg
+Disallow: *.jpeg
+Disallow: *.png
+Disallow: *.gif
+Disallow: *.webp
+Disallow: *.avif
+
+# Sitemap location
+Sitemap: https://rishikc.com/sitemap-index.xml
