@@ -4,6 +4,12 @@ import Layout from "../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
 import SeriesIndicator from "../../components/article/series_indicator.astro";
+import TagsFilter from "../../components/article/tags_filter.astro";
+import NavigationCards from "../../components/article/navigation_cards.astro";
+import GlobalSearchCard from "../../components/article/global_search_card.astro";
+import BitsCard from "../../components/article/bits_card.astro";
+import SeriesCard from "../../components/article/series_card.astro";
+import QuotesCard from "../../components/article/quotes_card.astro";
 
 const page_info = {
     title: "Articles | Rishi Chawda",
@@ -188,7 +194,12 @@ const pageUrl = new URL(
         <div class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 lg:py-20">
             <div class="flex flex-col xl:grid xl:grid-cols-[1fr_350px] gap-12 lg:gap-16">
                 <!-- Main content area -->
-                <div class="order-2 xl:order-1">
+                <div class="order-1 xl:order-1">
+                    <!-- Tags Filter (mobile only) -->
+                    <div class="xl:hidden mb-8">
+                        <TagsFilter tags={allTags} />
+                    </div>
+
                     <!-- Search bar -->
                     <div class="mb-10">
                         <div class="relative">
@@ -204,6 +215,15 @@ const pageUrl = new URL(
                                 class="font-['Montserrat_Variable'] w-full pl-12 pr-6 py-4 rounded-2xl bg-white/70 backdrop-blur-sm border border-brand-200/50 text-gray-700 placeholder-gray-500 text-base focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500/50 focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
                             />
                         </div>
+                    </div>
+
+                    <!-- Navigation Cards (desktop only - shown below search) -->
+                    <div class="hidden xl:block mb-10">
+                        <NavigationCards orientation="horizontal">
+                            <GlobalSearchCard orientation="horizontal" />
+                            <BitsCard orientation="horizontal" />
+                            <SeriesCard orientation="horizontal" />
+                        </NavigationCards>
                     </div>
 
                     <!-- Articles grid -->
@@ -384,119 +404,30 @@ const pageUrl = new URL(
                 </div>
 
                 <!-- Sidebar -->
-                <div class="order-1 xl:order-2">
+                <div class="order-2 xl:order-2">
                     <div class="sticky top-8">
-                        <!-- Global Search Card -->
-                        <div class="mb-8">
-                            <a
-                                href="/search/"
-                                class="block p-6 bg-gradient-to-br from-brand-500/10 via-brand-400/10 to-brand-300/10 rounded-3xl border border-brand-200/50 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50 group"
-                            >
-                                <div class="flex items-start gap-4">
-                                    <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-brand-600 to-brand-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-brand-800 font-bold text-lg font-['Red_Hat_Display_Variable'] mb-2 group-hover:text-brand-700 transition-colors">
-                                            Global Search
-                                        </h3>
-                                        <p class="text-brand-600 text-sm font-['Montserrat_Variable'] leading-relaxed">
-                                            Search across articles, gallery, and quotes to find exactly what you're looking for
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
+                        <!-- Tags Filter (desktop - shown in sidebar) -->
+                        <div class="hidden xl:block mb-8">
+                            <TagsFilter tags={allTags} />
                         </div>
 
-                        <!-- Article Series Card -->
-                        <div class="mb-8">
-                            <a
-                                href="/articles/series/"
-                                class="block p-6 bg-gradient-to-br from-purple-50/80 via-white/80 to-purple-100/50 rounded-3xl border border-purple-200/40 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-purple-300/60 group"
-                            >
-                                <div class="flex items-start gap-4">
-                                    <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-purple-800 font-bold text-lg font-['Red_Hat_Display_Variable'] mb-2 group-hover:text-purple-700 transition-colors">
-                                            Article Series
-                                        </h3>
-                                        <p class="text-purple-600 text-sm font-['Montserrat_Variable'] leading-relaxed">
-                                            Explore in-depth, multi-part tutorials and comprehensive guides on complex topics
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
+                        <!-- Navigation Cards (mobile only) -->
+                        <div class="xl:hidden">
+                            <NavigationCards orientation="vertical">
+                                <GlobalSearchCard orientation="vertical" />
+                                <BitsCard orientation="vertical" />
+                                <SeriesCard orientation="vertical" />
+                            </NavigationCards>
                         </div>
 
                         <!-- Quotes Card -->
-                        <div class="mb-10">
-                            <a
-                                href="/reads/"
-                                class="block p-6 bg-white/70 backdrop-blur-sm rounded-3xl border border-brand-200/30 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50 group"
-                            >
-                                <div class="flex items-start gap-4">
-                                    <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-brand-300 via-brand-400 to-brand-700 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="text-gray-800 font-bold text-lg font-['Red_Hat_Display_Variable'] mb-2 group-hover:text-brand-700 transition-colors">
-                                            Favourite Quotes
-                                        </h3>
-                                        <p class="text-gray-600 text-sm font-['Montserrat_Variable'] leading-relaxed">
-                                            Discover inspiring lines from books and the internet that resonated with me
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
+                        <div class="mb-10 mt-6">
+                            <QuotesCard orientation="vertical" />
                         </div>
 
-                        <!-- Tags Filter -->
-                        <div class="bg-white/70 backdrop-blur-sm rounded-3xl border border-brand-200/30 p-6">
-                            <h3 class="text-gray-900 font-bold text-xl font-['Red_Hat_Display_Variable'] mb-6 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z" />
-                                </svg>
-                                Filter by Tags
-                            </h3>
-                            <div class="flex flex-wrap gap-2">
-                                {
-                                    allTags.map((tag) => (
-                                        <button
-                                            class="group inline-flex items-center font-['Montserrat_Variable'] px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-50 text-brand-700 border border-brand-200/50 hover:bg-brand-100 hover:text-brand-800 hover:shadow-md transition-all duration-300 data-[selected=true]:bg-gradient-to-r data-[selected=true]:from-brand-600 data-[selected=true]:to-brand-500 data-[selected=true]:text-white data-[selected=true]:shadow-lg data-[selected=true]:shadow-brand-500/30 cursor-pointer"
-                                            data-tag={tag}
-                                        >
-                                            <span>{tag}</span>
-                                            <svg
-                                                class="overflow-hidden w-0 group-data-[selected=true]:w-3 group-data-[selected=true]:ml-1.5 transition-all duration-300"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                            >
-                                                <line x1="18" y1="6" x2="6" y2="18" />
-                                                <line x1="6" y1="6" x2="18" y2="18" />
-                                            </svg>
-                                        </button>
-                                    ))
-                                }
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
-            </div>
-        </div>
-    </main>
-</Layout>
 
 <script>
     document.addEventListener('astro:page-load', () => {
