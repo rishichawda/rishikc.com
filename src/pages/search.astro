@@ -7,12 +7,13 @@ import { Schema } from "astro-seo-schema";
 const page_info = {
     title: "Search | Rishi Chawda",
     description:
-        "Search articles, gallery, and content on Rishi Chawda's website",
-    keywords: "search, articles, gallery, photography, development",
+        "Search articles, bits, gallery, and content on Rishi Chawda's website",
+    keywords: "search, articles, bits, gallery, photography, development",
 };
 
 // Get all content collections to create search index
 const allArticles = await getCollection("articles");
+const allBits = await getCollection("bits");
 const allGallery = await getCollection("gallery");
 const allQuotes = await getCollection("quotes");
 
@@ -48,6 +49,23 @@ const searchIndex = {
             article.data.tags.join(" "),
             article.data.category,
             article.body, // Added article body to searchable content
+        ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase(),
+    })),
+    bits: allBits.map((bit) => ({
+        id: bit.id,
+        title: bit.data.title,
+        description: bit.data.description,
+        tags: bit.data.tags || [],
+        path: bit.data.path,
+        date: bit.data.date.toISOString(),
+        searchableContent: [
+            bit.data.title,
+            bit.data.description,
+            bit.data.tags?.join(" "),
+            bit.body,
         ]
             .filter(Boolean)
             .join(" ")
@@ -288,6 +306,17 @@ const pageUrl = new URL(
                             </span>
                         </a>
                         <a
+                            href="/bits/"
+                            class="group bg-white/90 hover:bg-white text-brand-700 border border-brand-200/60 hover:border-brand-300 px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 backdrop-blur-sm text-sm sm:text-base"
+                        >
+                            <span class="flex items-center justify-center gap-2 text-nowrap">
+                                ⚡ Browse Bits
+                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </span>
+                        </a>
+                        <a
                             href="/gallery/"
                             class="group bg-white/90 hover:bg-white text-brand-700 border border-brand-200/60 hover:border-brand-300 px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 backdrop-blur-sm text-sm sm:text-base"
                         >
@@ -349,6 +378,32 @@ const pageUrl = new URL(
                             <span>Show more articles</span>
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Bits Results -->
+                <section id="bits-section" class="hidden">
+                    <div class="mb-6 sm:mb-8">
+                        <h2 class="text-xl sm:text-2xl font-bold text-brand-900 flex items-center">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                                <svg class="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <span class="mr-3">Bits</span>
+                            <span id="bits-count" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-brand-100 text-brand-800">0</span>
+                        </h2>
+                    </div>
+
+                    <div id="bits-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8"></div>
+
+                    <div id="bits-show-more" class="text-center hidden">
+                        <button class="group px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-700 text-white rounded-xl hover:from-brand-700 hover:to-brand-800 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 inline-flex items-center gap-2">
+                            Show More Bits
+                            <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
                     </div>
@@ -565,9 +620,9 @@ const pageUrl = new URL(
 </style>
 
 <script>
-    import { initializeSearch, type SearchRenderer, type SearchResults, type ArticleItem, type GalleryItem, type QuoteItem } from "../utils/search.ts";
+    import { initializeSearch, type SearchRenderer, type SearchResults, type ArticleItem, type BitsItem, type GalleryItem, type QuoteItem } from "../utils/search.ts";
 
-    const PAGINATION = { articles: { initial: 3, increment: 3 }, gallery: { initial: 3, increment: 3 }, quotes: { initial: 4, increment: 4 } };
+    const PAGINATION = { articles: { initial: 3, increment: 3 }, bits: { initial: 4, increment: 4 }, gallery: { initial: 3, increment: 3 }, quotes: { initial: 4, increment: 4 } };
     
     const STYLES = {
         article: {
@@ -617,8 +672,8 @@ const pageUrl = new URL(
 
     class DOMSearchRenderer implements SearchRenderer {
         private elements: Record<string, HTMLElement> = {};
-        private currentResults: SearchResults = { articles: [], gallery: [], quotes: [] };
-        private displayed = { articles: 0, gallery: 0, quotes: 0 };
+        private currentResults: SearchResults = { articles: [], bits: [], gallery: [], quotes: [] };
+        private displayed = { articles: 0, bits: 0, gallery: 0, quotes: 0 };
 
         constructor() {
             this.initElements();
@@ -628,6 +683,7 @@ const pageUrl = new URL(
             const init = () => {
                 const ids = ["page-title", "search-results-info", "search-description", "no-results", "search-results", 
                            "articles-section", "articles-container", "articles-count", "articles-show-more",
+                           "bits-section", "bits-container", "bits-count", "bits-show-more",
                            "gallery-section", "gallery-container", "gallery-count", "gallery-show-more",
                            "quotes-section", "quotes-container", "quotes-count", "quotes-show-more",
                            "results-count", "results-plural", "search-query-display"];
@@ -636,7 +692,7 @@ const pageUrl = new URL(
                 
                 ids.forEach(id => this.elements[id] = document.getElementById(id) as HTMLElement);
                 
-                ['articles', 'gallery', 'quotes'].forEach(type => {
+                ['articles', 'bits', 'gallery', 'quotes'].forEach(type => {
                     const btn = this.elements[`${type}-show-more`]?.querySelector('button');
                     if (btn) btn.addEventListener('click', () => this.showMore(type));
                 });
@@ -652,7 +708,13 @@ const pageUrl = new URL(
             const config = PAGINATION[type as keyof typeof PAGINATION];
             const newCount = Math.min(this.currentResults[type as keyof SearchResults].length, this.displayed[type as keyof typeof this.displayed] + config.increment);
             this.displayed[type as keyof typeof this.displayed] = newCount;
-            this[`render${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof this]();
+            
+            // Call the appropriate render method
+            if (type === 'articles') this.renderArticles();
+            else if (type === 'bits') this.renderBits();
+            else if (type === 'gallery') this.renderGallery();
+            else if (type === 'quotes') this.renderQuotes();
+            
             if (newCount >= this.currentResults[type as keyof SearchResults].length) {
                 this.elements[`${type}-show-more`].classList.add("hidden");
             }
@@ -664,16 +726,16 @@ const pageUrl = new URL(
             this.elements["search-description"].classList.remove("hidden");
             this.elements["no-results"].classList.add("hidden");
             this.elements["search-results"].classList.add("hidden");
-            ["articles", "gallery", "quotes"].forEach(type => {
+            ["articles", "bits", "gallery", "quotes"].forEach(type => {
                 this.elements[`${type}-section`].classList.add("hidden");
                 this.elements[`${type}-show-more`]?.classList.add("hidden");
             });
         }
 
         displayResults(query: string, results: SearchResults): void {
-            const total = results.articles.length + results.gallery.length + results.quotes.length;
+            const total = results.articles.length + results.bits.length + results.gallery.length + results.quotes.length;
             this.currentResults = results;
-            this.displayed = { articles: 0, gallery: 0, quotes: 0 };
+            this.displayed = { articles: 0, bits: 0, gallery: 0, quotes: 0 };
 
             this.elements["page-title"].textContent = "Search Results";
             this.elements["search-query-display"].textContent = query;
@@ -691,15 +753,16 @@ const pageUrl = new URL(
             this.elements["no-results"].classList.add("hidden");
             this.elements["search-results"].classList.remove("hidden");
             this.displayArticles(results.articles);
+            this.displayBits(results.bits);
             this.displayGallery(results.gallery);
             this.displayQuotes(results.quotes);
         }
 
         hideAllSections(): void {
-            ["articles", "gallery", "quotes"].forEach(type => this.elements[`${type}-section`].classList.add("hidden"));
+            ["articles", "bits", "gallery", "quotes"].forEach(type => this.elements[`${type}-section`].classList.add("hidden"));
         }
 
-        private displaySection(type: 'articles' | 'gallery' | 'quotes', items: any[]): void {
+        private displaySection(type: 'articles' | 'bits' | 'gallery' | 'quotes', items: any[]): void {
             if (items.length === 0) {
                 this.elements[`${type}-section`].classList.add("hidden");
                 return;
@@ -707,11 +770,18 @@ const pageUrl = new URL(
             this.elements[`${type}-count`].textContent = items.length.toString();
             this.elements[`${type}-section`].classList.remove("hidden");
             this.displayed[type] = Math.min(items.length, PAGINATION[type].initial);
-            this[`render${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof this]();
+            
+            // Call the appropriate render method
+            if (type === 'articles') this.renderArticles();
+            else if (type === 'bits') this.renderBits();
+            else if (type === 'gallery') this.renderGallery();
+            else if (type === 'quotes') this.renderQuotes();
+            
             this.elements[`${type}-show-more`].classList.toggle("hidden", items.length <= PAGINATION[type].initial);
         }
 
         displayArticles(articles: ArticleItem[]): void { this.displaySection('articles', articles); }
+        displayBits(bits: BitsItem[]): void { this.displaySection('bits', bits); }
         displayGallery(gallery: GalleryItem[]): void { this.displaySection('gallery', gallery); }
         displayQuotes(quotes: QuoteItem[]): void { this.displaySection('quotes', quotes); }
 
@@ -719,6 +789,13 @@ const pageUrl = new URL(
             this.elements["articles-container"].innerHTML = "";
             this.currentResults.articles.slice(0, this.displayed.articles).forEach(article => {
                 this.elements["articles-container"].appendChild(this.createArticleElement(article));
+            });
+        }
+
+        private renderBits(): void {
+            this.elements["bits-container"].innerHTML = "";
+            this.currentResults.bits.slice(0, this.displayed.bits).forEach(bit => {
+                this.elements["bits-container"].appendChild(this.createBitsElement(bit));
             });
         }
 
@@ -782,6 +859,44 @@ const pageUrl = new URL(
             linkEl.appendChild(flexEl);
             articleEl.appendChild(linkEl);
             return articleEl;
+        }
+
+        private createBitsElement(bit: BitsItem): HTMLElement {
+            const s = window.clientSideSearchInstance;
+            if (!s) return el("div", "p-4 bg-white rounded border", { innerHTML: bit.title });
+
+            const bitEl = el("article", "group bg-gradient-to-br from-brand-50/20 to-white rounded-xl shadow-sm border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/30 transition-all duration-300 overflow-hidden");
+            const linkEl = el("a", "block p-6 h-full", { href: s.escapeForAttribute(bit.path) });
+            
+            const contentEl = el("div", "flex flex-col h-full");
+            
+            const dateEl = el("p", "font-['Montserrat_Variable'] text-brand-500 mb-3 text-xs font-medium uppercase tracking-wider");
+            dateEl.textContent = s.formatDate(bit.date);
+            
+            const titleEl = el("h2", "text-xl sm:text-2xl font-medium text-gray-900 mb-3 line-clamp-2 font-['Red_Hat_Display_Variable'] group-hover:text-brand-700 transition-colors");
+            titleEl.textContent = bit.title;
+            
+            const descEl = el("p", "font-['Montserrat_Variable'] text-gray-600 mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3 flex-grow");
+            descEl.textContent = bit.description;
+            
+            const tagsEl = el("div", "flex flex-wrap gap-2 mb-4");
+            if (bit.tags && bit.tags.length > 0) {
+                bit.tags.forEach(tag => {
+                    const tagEl = el("span", "text-xs font-['Montserrat_Variable'] text-brand-600 bg-brand-100/50 px-2 py-1 rounded-full");
+                    tagEl.textContent = tag;
+                    tagsEl.appendChild(tagEl);
+                });
+            }
+            
+            const readMoreEl = el("div", "mt-auto");
+            const readMoreSpan = el("span", "text-brand-700 font-['Montserrat_Variable'] hover:text-brand-600 font-medium text-sm inline-flex items-center gap-x-2 group-hover:translate-x-1 transition-transform duration-200");
+            readMoreSpan.innerHTML = `Read more <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>`;
+            readMoreEl.appendChild(readMoreSpan);
+            
+            contentEl.append(dateEl, titleEl, descEl, tagsEl, readMoreEl);
+            linkEl.appendChild(contentEl);
+            bitEl.appendChild(linkEl);
+            return bitEl;
         }
 
         private createGalleryElement(item: GalleryItem): HTMLElement {

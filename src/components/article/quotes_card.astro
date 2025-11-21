@@ -1,0 +1,42 @@
+---
+// Quotes Card - Reusable navigation card
+interface Props {
+    orientation?: "horizontal" | "vertical";
+}
+
+const { orientation = "vertical" } = Astro.props;
+const isHorizontal = orientation === "horizontal";
+---
+
+<a
+    href="/reads/"
+    class="block p-6 bg-white/70 backdrop-blur-sm rounded-3xl border border-brand-200/30 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50 group"
+>
+    <div class:list={["flex", isHorizontal ? "flex-col gap-3" : "items-start gap-4"]}>
+        <div class:list={["flex items-center", isHorizontal ? "gap-3" : "flex-col"]}>
+            <div class:list={[
+                "flex-shrink-0 bg-gradient-to-br from-brand-300 via-brand-400 to-brand-700 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300",
+                isHorizontal ? "w-8 h-8" : "w-12 h-12"
+            ]}>
+                <svg xmlns="http://www.w3.org/2000/svg" class:list={[isHorizontal ? "h-4 w-4" : "h-6 w-6", "text-white"]} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+            {isHorizontal && (
+                <h3 class="text-gray-800 font-bold text-lg font-['Red_Hat_Display_Variable'] group-hover:text-brand-700 transition-colors">
+                    Favourite Quotes
+                </h3>
+            )}
+        </div>
+        <div class="flex-1">
+            {!isHorizontal && (
+                <h3 class="text-gray-800 font-bold text-lg font-['Red_Hat_Display_Variable'] mb-2 group-hover:text-brand-700 transition-colors">
+                    Favourite Quotes
+                </h3>
+            )}
+            <p class="text-gray-600 text-sm font-['Montserrat_Variable'] leading-relaxed">
+                Discover inspiring lines from books and the internet that resonated with me
+            </p>
+        </div>
+    </div>
+</a>

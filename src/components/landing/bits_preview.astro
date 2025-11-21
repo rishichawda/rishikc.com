@@ -1,0 +1,291 @@
+---
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+const allBits = await getCollection("bits");
+const bits = allBits
+  .sort(
+    (a: CollectionEntry<"bits">, b: CollectionEntry<"bits">) =>
+      new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  )
+  .slice(0, 4) // Show only 4 bits in rotation
+  .map((bit: CollectionEntry<"bits">) => ({
+    title: bit.data.title,
+    description: bit.data.description,
+    link: bit.data.path,
+    date: new Date(bit.data.date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+    tags: bit.data.tags || [],
+  }));
+---
+
+<div class="mb-16">
+  <h3 class="text-xl sm:text-2xl font-medium text-gray-700 mb-6 font-['Red_Hat_Display_Variable']">
+    Thoughts and bits..
+  </h3>
+  
+  <div class="relative">
+    {/* Single Bit Display */}
+    <div class="relative overflow-hidden" id="bits-display">
+      {
+        bits.map((bit, index) => (
+          <div 
+            class={`transition-opacity duration-500 ${index === 0 ? 'opacity-100' : 'opacity-0 absolute inset-0'}`}
+            data-bit-index={index}
+          >
+            <div class="bg-gradient-to-br from-brand-50/30 via-white to-white rounded-2xl shadow-md border border-brand-100/50 p-8 sm:p-10 lg:p-12 max-w-4xl mx-auto">
+              {/* Date */}
+              <p class="font-['Montserrat_Variable'] text-brand-500 mb-3 text-sm font-medium uppercase tracking-wider">
+                {bit.date}
+              </p>
+              
+              {/* Title */}
+              <h4 class="text-2xl sm:text-3xl lg:text-4xl font-medium text-gray-900 mb-4 font-['Red_Hat_Display_Variable']">
+                {bit.title}
+              </h4>
+              
+              {/* Description */}
+              <p class="font-['Montserrat_Variable'] text-gray-700 mb-6 font-light leading-relaxed text-base sm:text-lg">
+                {bit.description}
+              </p>
+              
+              {/* Tags */}
+              {bit.tags.length > 0 && (
+                <div class="flex flex-wrap gap-2 mb-6">
+                  {bit.tags.map((tag) => (
+                    <span class="text-sm font-['Montserrat_Variable'] text-brand-600 bg-brand-100/50 px-3 py-1.5 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+              
+              {/* Action Buttons */}
+              <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                <a 
+                  href={bit.link}
+                  class="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-['Montserrat_Variable'] font-medium px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-brand-200/50"
+                >
+                  Read Full Bit
+                  <svg
+                    class="w-4 h-4 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </a>
+                
+                <a 
+                  href="/bits/"
+                  class="inline-flex items-center justify-center gap-2 bg-white hover:bg-brand-50 text-brand-700 font-['Montserrat_Variable'] font-medium px-6 py-3 rounded-lg border border-brand-200 transition-all duration-200 hover:border-brand-300"
+                >
+                  View All Bits
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    
+    {/* Navigation Controls */}
+    <div class="flex items-center justify-center gap-4 mt-6">
+      <button
+        class="bg-white/80 backdrop-blur-sm rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+        id="bits-prev-btn"
+        aria-label="Previous bit"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+      
+      {/* Dots Indicator */}
+      <div class="flex gap-2" id="bits-dots">
+        {bits.map((_, index) => (
+          <button
+            class={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${index === 0 ? 'bg-brand-600 w-8' : 'bg-brand-200 hover:bg-brand-400'}`}
+            data-dot-index={index}
+            aria-label={`Go to bit ${index + 1}`}
+          />
+        ))}
+      </div>
+      
+      <button
+        class="bg-white/80 backdrop-blur-sm rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
+        id="bits-next-btn"
+        aria-label="Next bit"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const display = document.getElementById("bits-display");
+    const prevBtn = document.getElementById("bits-prev-btn");
+    const nextBtn = document.getElementById("bits-next-btn");
+    const dotsContainer = document.getElementById("bits-dots");
+
+    if (display && prevBtn && nextBtn && dotsContainer) {
+      const bitElements = Array.from(display.querySelectorAll('[data-bit-index]'));
+      const dots = Array.from(dotsContainer.querySelectorAll('[data-dot-index]'));
+      let currentIndex = 0;
+      let autoScrollInterval: number | undefined;
+      const AUTO_SCROLL_DELAY = 2500; // 2.5 seconds
+
+      const eventHandlers: {
+        prevBtn: (() => void) | null;
+        nextBtn: (() => void) | null;
+        dots: ((e: Event) => void) | null;
+      } = {
+        prevBtn: null,
+        nextBtn: null,
+        dots: null,
+      };
+
+      function updateDisplay() {
+        // Update bit visibility
+        bitElements.forEach((el, index) => {
+          if (index === currentIndex) {
+            el.classList.remove('opacity-0', 'absolute', 'inset-0');
+            el.classList.add('opacity-100');
+          } else {
+            el.classList.remove('opacity-100');
+            el.classList.add('opacity-0', 'absolute', 'inset-0');
+          }
+        });
+
+        // Update dots
+        dots.forEach((dot, index) => {
+          if (index === currentIndex) {
+            dot.classList.add('bg-brand-600', 'w-8');
+            dot.classList.remove('bg-brand-200', 'hover:bg-brand-400');
+          } else {
+            dot.classList.remove('bg-brand-600', 'w-8');
+            dot.classList.add('bg-brand-200', 'hover:bg-brand-400');
+          }
+        });
+
+        // Update button states (always enabled for infinite loop)
+        (prevBtn as HTMLButtonElement).disabled = false;
+        (nextBtn as HTMLButtonElement).disabled = false;
+      }
+
+      function goToNext() {
+        // Infinite loop: go back to start when reaching the end
+        currentIndex = (currentIndex + 1) % bitElements.length;
+        updateDisplay();
+      }
+
+      function goToPrev() {
+        // Infinite loop: go to end when at start
+        currentIndex = currentIndex === 0 ? bitElements.length - 1 : currentIndex - 1;
+        updateDisplay();
+      }
+
+      function startAutoScroll() {
+        stopAutoScroll();
+        autoScrollInterval = window.setInterval(goToNext, AUTO_SCROLL_DELAY);
+      }
+
+      function stopAutoScroll() {
+        if (autoScrollInterval) {
+          clearInterval(autoScrollInterval);
+          autoScrollInterval = undefined;
+        }
+      }
+
+      function restartAutoScroll() {
+        stopAutoScroll();
+        startAutoScroll();
+      }
+
+      function cleanup() {
+        stopAutoScroll();
+        if (eventHandlers.prevBtn) (prevBtn as HTMLElement).removeEventListener("click", eventHandlers.prevBtn);
+        if (eventHandlers.nextBtn) (nextBtn as HTMLElement).removeEventListener("click", eventHandlers.nextBtn);
+        if (eventHandlers.dots) (dotsContainer as HTMLElement).removeEventListener("click", eventHandlers.dots);
+      }
+
+      document.addEventListener('astro:before-preparation', cleanup, { once: true });
+      
+      // Set up event handlers
+      eventHandlers.prevBtn = () => {
+        goToPrev();
+        restartAutoScroll();
+      };
+      
+      eventHandlers.nextBtn = () => {
+        goToNext();
+        restartAutoScroll();
+      };
+      
+      eventHandlers.dots = (e: Event) => {
+        const target = e.target as HTMLElement;
+        const dotIndex = target.getAttribute('data-dot-index');
+        if (dotIndex !== null) {
+          currentIndex = parseInt(dotIndex);
+          updateDisplay();
+          restartAutoScroll();
+        }
+      };
+      
+      // Add event listeners
+      (prevBtn as HTMLElement).addEventListener("click", eventHandlers.prevBtn!);
+      (nextBtn as HTMLElement).addEventListener("click", eventHandlers.nextBtn!);
+      (dotsContainer as HTMLElement).addEventListener("click", eventHandlers.dots!);
+
+      // Initial setup
+      updateDisplay();
+      startAutoScroll();
+    }
+  });
+</script>

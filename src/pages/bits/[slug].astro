@@ -1,0 +1,177 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/base_layout.astro";
+import Prose from "../../components/article/prose.astro";
+import ExternalLink from "../../components/article/ExternalLink.astro";
+
+export async function getStaticPaths() {
+	let bits = await getCollection("bits");
+
+	return bits.map((bit) => {
+		return {
+			params: { slug: bit.id.replace('.md', '').replace('.mdx', '') },
+			props: { bit, allBits: bits },
+		};
+	});
+}
+
+interface Props {
+	bit: CollectionEntry<"bits">;
+	allBits: CollectionEntry<"bits">[];
+}
+
+const { bit, allBits } = Astro.props as Props;
+const { Content } = await render(bit);
+
+// Get other bits for navigation
+const sortedBits = allBits
+	.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const currentIndex = sortedBits.findIndex((b) => b.id === bit.id);
+const prevBit = currentIndex > 0 ? sortedBits[currentIndex - 1] : null;
+const nextBit = currentIndex < sortedBits.length - 1 ? sortedBits[currentIndex + 1] : null;
+
+// Format date
+function formatDate(date: Date): string {
+    return new Date(date).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
+}
+---
+
+<BaseLayout
+	page_info={{
+		title: bit.data.title,
+		description: bit.data.description,
+		keywords: bit.data.tags?.join(', ') || bit.data.title,
+	}}
+>
+	<main class="min-h-screen bg-gradient-to-br from-brand-50/30 via-white to-brand-100/40">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+			{/* Back Button */}
+			<a
+				href="/bits/"
+				class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium mb-8"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					stroke-width="2"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M10 19l-7-7m0 0l7-7m-7 7h18"
+					></path>
+				</svg>
+				Back to bits
+			</a>
+
+			{/* Bit Content */}
+			<article class="bg-white rounded-2xl shadow-lg border border-brand-100/50 p-8 sm:p-10 lg:p-12 mb-12">
+				{/* Date */}
+				<p class="font-['Montserrat_Variable'] text-brand-500 mb-4 text-sm font-medium uppercase tracking-wider">
+					{formatDate(bit.data.date)}
+				</p>
+				
+				{/* Title */}
+				<h1 class="text-3xl sm:text-4xl lg:text-5xl font-medium text-gray-900 mb-6 font-['Red_Hat_Display_Variable'] leading-tight">
+					{bit.data.title}
+				</h1>
+				
+				{/* Tags */}
+				{bit.data.tags && bit.data.tags.length > 0 && (
+					<div class="flex flex-wrap gap-2 mb-8 pb-8 border-b border-gray-200">
+						{bit.data.tags.map((tag) => (
+							<span class="text-sm font-['Montserrat_Variable'] text-brand-600 bg-brand-100/50 px-3 py-1.5 rounded-full">
+								{tag}
+							</span>
+						))}
+					</div>
+				)}
+				
+				{/* Content */}
+				<Prose>
+					<Content components={{ a: ExternalLink }} />
+				</Prose>
+			</article>
+
+			{/* Navigation */}
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+				{prevBit ? (
+					<a
+						href={prevBit.data.path}
+						class="group bg-white rounded-xl shadow-sm border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/30 transition-all duration-300 p-6"
+					>
+						<div class="flex items-start gap-3">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5 text-brand-600 flex-shrink-0 mt-1 group-hover:-translate-x-1 transition-transform duration-300"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M15 19l-7-7 7-7"
+								></path>
+							</svg>
+							<div>
+								<p class="text-xs font-['Montserrat_Variable'] text-gray-500 uppercase tracking-wider mb-1">
+									Previous
+								</p>
+								<h3 class="text-base font-medium text-gray-900 group-hover:text-brand-700 transition-colors font-['Red_Hat_Display_Variable']">
+									{prevBit.data.title}
+								</h3>
+							</div>
+						</div>
+					</a>
+				) : (
+					<div></div>
+				)}
+
+				{nextBit ? (
+					<a
+						href={nextBit.data.path}
+						class="group bg-white rounded-xl shadow-sm border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/30 transition-all duration-300 p-6"
+					>
+						<div class="flex items-start gap-3 justify-end text-right">
+							<div>
+								<p class="text-xs font-['Montserrat_Variable'] text-gray-500 uppercase tracking-wider mb-1">
+									Next
+								</p>
+								<h3 class="text-base font-medium text-gray-900 group-hover:text-brand-700 transition-colors font-['Red_Hat_Display_Variable']">
+									{nextBit.data.title}
+								</h3>
+							</div>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5 text-brand-600 flex-shrink-0 mt-1 group-hover:translate-x-1 transition-transform duration-300"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M9 5l7 7-7 7"
+								></path>
+							</svg>
+						</div>
+					</a>
+				) : (
+					<div></div>
+				)}
+			</div>
+		</div>
+	</main>
+</BaseLayout>

@@ -1,0 +1,40 @@
+---
+interface Props {
+    tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+<div class="bg-white/70 backdrop-blur-sm rounded-3xl border border-brand-200/30 p-6">
+    <h3 class="text-gray-900 font-bold text-xl font-['Red_Hat_Display_Variable'] mb-6 flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+        Filter by Tags
+    </h3>
+    <div class="flex flex-wrap gap-2">
+        {
+            tags.map((tag) => (
+                <button
+                    class="group inline-flex items-center font-['Montserrat_Variable'] px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-50 text-brand-700 border border-brand-200/50 hover:bg-brand-100 hover:text-brand-800 hover:shadow-md transition-all duration-300 data-[selected=true]:bg-gradient-to-r data-[selected=true]:from-brand-600 data-[selected=true]:to-brand-500 data-[selected=true]:text-white data-[selected=true]:shadow-lg data-[selected=true]:shadow-brand-500/30 cursor-pointer"
+                    data-tag={tag}
+                >
+                    <span>{tag}</span>
+                    <svg
+                        class="overflow-hidden w-0 group-data-[selected=true]:w-3 group-data-[selected=true]:ml-1.5 transition-all duration-300"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            ))
+        }
+    </div>
+</div>

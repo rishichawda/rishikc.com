@@ -26,6 +26,19 @@ const articles = defineCollection({
         }),
 });
 
+const bits = defineCollection({
+    loader: glob({ pattern: "**/*.{md,mdx}", base: "./content/bits" }),
+    schema: ({ image }) =>
+        z.object({
+            title: z.string(),
+            description: z.string(),
+            hero_image: image().optional(),
+            path: z.string(),
+            date: z.coerce.date(),
+            tags: z.array(z.string()).optional(),
+        }),
+});
+
 const logo = defineCollection({
     loader: glob({ pattern: "**/*.{png,svg,jpg}", base: "./content/assets/logo" }),
     schema: ({ image }) => z.object({ image: image() })
@@ -80,4 +93,4 @@ const projects = defineCollection({
     loader: file("content/projects/projects.json", { parser: (text) => JSON.parse(text) }),
 })
 
-export const collections = { articles, quotes, logo, gallery, profile, services, projects };
+export const collections = { articles, bits, quotes, logo, gallery, profile, services, projects };

@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
+import BitsPreview from "./bits_preview.astro";
 
 const allArticles = await getCollection("articles");
 const articles = allArticles
@@ -34,7 +35,14 @@ const articles = allArticles
       </p>
     </div>
 
-    <div class="relative flex flex-row items center" id="blog-carousel">
+    <BitsPreview />
+
+    <div class="mb-16">
+      <h3 class="text-xl sm:text-2xl font-medium text-gray-700 mb-6 font-['Red_Hat_Display_Variable']">
+        In-Depth Articles
+      </h3>
+      
+      <div class="relative flex flex-row items center" id="blog-carousel">
       <button
         class="bg-white/80 backdrop-blur-sm max-w-fit m-auto rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 sm:block"
         id="prev-btn"
@@ -136,6 +144,7 @@ const articles = allArticles
     </div>
     <div class="flex justify-center gap-2 mt-6 sm:mt-8" id="carousel-dots">
     </div>
+    </div>
   </div>
 </section>
 
@@ -210,13 +219,30 @@ const articles = allArticles
 
       function updateDots(totalSlides: number) {
         if (dotsContainer) {
-          dotsContainer.innerHTML = "";
-          for (let i = 0; i < totalSlides; i++) {
-            const dot = document.createElement("span");
-            dot.className = `w-2 h-2 rounded-full ${i === currentIndex ? "bg-[#B7BEE7]" : "bg-[#B7BEE7]/40"}`;
-            dot.setAttribute("data-index", i.toString());
-            dotsContainer.appendChild(dot);
+          // Only create dots if they don't exist or count has changed
+          const existingDots = dotsContainer.querySelectorAll('button[data-index]');
+          if (existingDots.length !== totalSlides) {
+            dotsContainer.innerHTML = "";
+            for (let i = 0; i < totalSlides; i++) {
+              const dot = document.createElement("button");
+              dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-200 cursor-pointer bg-brand-200 hover:bg-brand-400`;
+              dot.setAttribute("data-index", i.toString());
+              dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
+              dotsContainer.appendChild(dot);
+            }
           }
+          
+          // Update dot states
+          const dots = dotsContainer.querySelectorAll('button[data-index]');
+          dots.forEach((dot, index) => {
+            if (index === currentIndex) {
+              dot.classList.add('bg-brand-600', 'w-8');
+              dot.classList.remove('bg-brand-200', 'hover:bg-brand-400');
+            } else {
+              dot.classList.remove('bg-brand-600', 'w-8');
+              dot.classList.add('bg-brand-200', 'hover:bg-brand-400');
+            }
+          });
         }
       }
 

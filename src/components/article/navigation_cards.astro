@@ -1,0 +1,14 @@
+---
+// Navigation cards wrapper component
+interface Props {
+    orientation?: "horizontal" | "vertical";
+}
+
+const { orientation = "vertical" } = Astro.props;
+---
+
+<div class:list={[
+    orientation === "horizontal" ? "grid grid-cols-1 md:grid-cols-3 gap-6" : "space-y-6"
+]}>
+    <slot />
+</div>

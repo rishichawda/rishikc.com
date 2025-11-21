@@ -34,14 +34,25 @@ export interface QuoteItem extends SearchableItem {
     info: string;
 }
 
+export interface BitsItem extends SearchableItem {
+    id: string;
+    title: string;
+    description: string;
+    tags: string[];
+    path: string;
+    date: string;
+}
+
 export interface SearchResults {
     articles: ArticleItem[];
+    bits: BitsItem[];
     gallery: GalleryItem[];
     quotes: QuoteItem[];
 }
 
 export interface SearchIndex {
     articles: ArticleItem[];
+    bits: BitsItem[];
     gallery: GalleryItem[];
     quotes: QuoteItem[];
 }
@@ -51,6 +62,7 @@ export interface SearchRenderer {
     displayResults(query: string, results: SearchResults): void;
     hideAllSections(): void;
     displayArticles(articles: ArticleItem[]): void;
+    displayBits(bits: BitsItem[]): void;
     displayGallery(gallery: GalleryItem[]): void;
     displayQuotes(quotes: QuoteItem[]): void;
 }
@@ -68,7 +80,7 @@ export class ClientSideSearch {
     private searchForm!: HTMLFormElement;
     private renderer: SearchRenderer;
     
-    private currentResults: SearchResults = { articles: [], gallery: [], quotes: [] };
+    private currentResults: SearchResults = { articles: [], bits: [], gallery: [], quotes: [] };
     private searchTimeout: number | null = null;
     
     // Store bound event listeners for cleanup
@@ -207,6 +219,11 @@ export class ClientSideSearch {
             article.searchableContent.includes(searchTerm)
         );
         
+        // Search bits
+        const bits = window.searchIndex.bits.filter((bit: BitsItem) => 
+            bit.searchableContent.includes(searchTerm)
+        );
+        
         // Search gallery
         const gallery = window.searchIndex.gallery.filter((item: GalleryItem) => 
             item.searchableContent.includes(searchTerm)
@@ -217,7 +234,7 @@ export class ClientSideSearch {
             quote.searchableContent.includes(searchTerm)
         );
         
-        return { articles, gallery, quotes };
+        return { articles, bits, gallery, quotes };
     }
     
     public sanitizeInput(input: string): string {

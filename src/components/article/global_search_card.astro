@@ -1,0 +1,42 @@
+---
+// Global Search Card - Reusable navigation card
+interface Props {
+    orientation?: "horizontal" | "vertical";
+}
+
+const { orientation = "vertical" } = Astro.props;
+const isHorizontal = orientation === "horizontal";
+---
+
+<a
+    href="/search/"
+    class="block p-6 bg-gradient-to-br from-brand-500/10 via-brand-400/10 to-brand-300/10 rounded-3xl border border-brand-200/50 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50 group"
+>
+    <div class:list={["flex", isHorizontal ? "flex-col gap-3" : "items-start gap-4"]}>
+        <div class:list={["flex items-center", isHorizontal ? "gap-3" : "flex-col"]}>
+            <div class:list={[
+                "flex-shrink-0 bg-gradient-to-br from-brand-600 to-brand-500 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300",
+                isHorizontal ? "w-8 h-8" : "w-12 h-12"
+            ]}>
+                <svg xmlns="http://www.w3.org/2000/svg" class:list={[isHorizontal ? "h-4 w-4" : "h-6 w-6", "text-white"]} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                </svg>
+            </div>
+            {isHorizontal && (
+                <h3 class="text-brand-800 font-bold text-lg font-['Red_Hat_Display_Variable'] group-hover:text-brand-700 transition-colors">
+                    Global Search
+                </h3>
+            )}
+        </div>
+        <div class="flex-1">
+            {!isHorizontal && (
+                <h3 class="text-brand-800 font-bold text-lg font-['Red_Hat_Display_Variable'] mb-2 group-hover:text-brand-700 transition-colors">
+                    Global Search
+                </h3>
+            )}
+            <p class="text-brand-600 text-sm font-['Montserrat_Variable'] leading-relaxed">
+                Search across articles, gallery, and quotes to find exactly what you're looking for
+            </p>
+        </div>
+    </div>
+</a>
