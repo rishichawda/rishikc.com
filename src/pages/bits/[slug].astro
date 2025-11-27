@@ -4,13 +4,14 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/base_layout.astro";
 import Prose from "../../components/article/prose.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
+import "remark-notes-plugin/styles.css";
 
 export async function getStaticPaths() {
 	let bits = await getCollection("bits");
 
 	return bits.map((bit) => {
 		return {
-			params: { slug: bit.id.replace('.md', '').replace('.mdx', '') },
+			params: { slug: bit.id },
 			props: { bit, allBits: bits },
 		};
 	});
