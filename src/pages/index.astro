@@ -7,11 +7,20 @@ import "../styles/global.css";
 import BaseLayout from "../layouts/base_layout.astro";
 import { Schema } from "astro-seo-schema";
 import favicon from "../../content/assets/logo/logo.png";
+import { getCollection } from "astro:content";
+
+interface Social { platform: string; url: string; }
+interface Position { title: string; }
+interface Experience { company: string; positions: Position[]; }
+interface ProfileData { name: string; title: string; summary: string; experience: Experience[]; socials: Social[]; }
+
+const profileEntry = await getCollection("profile");
+const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
-	title: "Rishi Chawda - Software Engineer",
-	description: "Rishi Chawda - Software Engineer",
-	keywords: "Rishi Chawda - Software Engineer",
+	title: `${profile.name} - ${profile.title}`,
+	description: `${profile.name} - ${profile.title}`,
+	keywords: `${profile.name} - ${profile.title}`,
 };
 
 const siteUrl = new URL(
@@ -26,23 +35,16 @@ const siteUrl = new URL(
 		item={{
 			"@context": "https://schema.org",
 			"@type": "Person",
-			name: "Rishi Chawda",
-			jobTitle: "Senior Software Engineer",
+			name: profile.name,
+			jobTitle: profile.title,
 			worksFor: {
 				"@type": "Organization",
-				name: "Progress Chef",
+				name: profile.experience[0]?.company || "Unknown Company",
 			},
 			url: siteUrl,
 			image: `${siteUrl.replace(/\/$/, "")}/${favicon.src}`,
-			description:
-				"Senior Software Engineer building systems with Software Engineering and DevSecOps skills",
-			sameAs: [
-				"https://github.com/rishichawda",
-				"https://www.linkedin.com/in/rkrishi",
-				"https://www.instagram.com/rishiikc",
-				"https://twitter.com/rishiikc",
-				"https://dribbble.com/rishikc",
-			],
+			description: profile.summary,
+			sameAs: profile.socials.map((social: Social) => social.url),
 		}}
 	/>
 	<main>

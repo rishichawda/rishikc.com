@@ -5,10 +5,15 @@ import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
 import { isPartOfSeries, getAllSeries } from "../../utils/seriesUtils";
 import SeriesIndicator from "../../components/article/series_indicator.astro";
-import siteMetadata from "../../../metadata";
+
+interface Social { platform: string; url: string; }
+interface ProfileData { name: string; socials: Social[]; }
+
+const profileEntry = await getCollection("profile");
+const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
-    title: "Article Series | Rishi Chawda",
+    title: `Article Series | ${profile.name}`,
     description: "Explore multi-part article series covering in-depth topics in web development, React architecture, SEO, and more.",
     keywords: "article series, multi-part articles, web development tutorials, React architecture, SEO guides",
 };
@@ -49,14 +54,14 @@ const pageUrl = new URL(
         item={{
             "@context": "https://schema.org",
             "@type": "CollectionPage",
-            name: "Article Series by Rishi Chawda",
+            name: `Article Series by ${profile.name}`,
             description: page_info.description,
             url: pageUrl,
             author: {
                 "@type": "Person",
-                name: siteMetadata.schema.author.name,
-                url: siteMetadata.schema.author.url,
-                sameAs: siteMetadata.schema.author.sameAs
+                name: profile.name,
+                url: "https://rishikc.com",
+                sameAs: profile.socials.map((social: Social) => social.url)
             },
             inLanguage: "en-US",
             dateCreated: allSeries.length > 0 ? allSeries[allSeries.length - 1].articles[0].data.date.toISOString() : undefined,
@@ -73,13 +78,13 @@ const pageUrl = new URL(
                         description: `A ${series.totalParts}-part series on ${series.seriesTitle.toLowerCase()} covering in-depth topics in web development and engineering.`,
                         author: {
                             "@type": "Person",
-                            name: siteMetadata.schema.author.name,
-                            url: siteMetadata.schema.author.url
+                            name: profile.name,
+                            url: "https://rishikc.com"
                         },
                         publisher: {
                             "@type": "Person", 
-                            name: siteMetadata.schema.author.name,
-                            url: siteMetadata.schema.author.url
+                            name: profile.name,
+                            url: "https://rishikc.com"
                         },
                         inLanguage: "en-US",
                         startDate: series.articles[0].data.date.toISOString(),
@@ -96,13 +101,13 @@ const pageUrl = new URL(
                             dateModified: article.data.date.toISOString(),
                             author: {
                                 "@type": "Person",
-                                name: siteMetadata.schema.author.name,
-                                url: siteMetadata.schema.author.url
+                                name: profile.name,
+                                url: "https://rishikc.com"
                             },
                             publisher: {
                                 "@type": "Person",
-                                name: siteMetadata.schema.author.name,
-                                url: siteMetadata.schema.author.url
+                                name: profile.name,
+                                url: "https://rishikc.com"
                             },
                             inLanguage: "en-US",
                             keywords: (article.data.tags || []).join(", "),
