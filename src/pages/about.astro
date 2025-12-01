@@ -185,20 +185,20 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
                 {Array.isArray(profile.bio) ? (
                   <div class="space-y-6">
                     {profile.bio.map((paragraph, index) => (
-                      <div class={`text-xl sm:text-2xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed ${index === 0 ? 'first-letter:text-6xl first-letter:font-bold first-letter:text-brand-700 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none' : ''}`}>
+                      <div class={`text-lg sm:text-xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed ${index === 0 ? 'first-letter:text-6xl first-letter:font-bold first-letter:text-brand-700 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none' : ''}`}>
                         {paragraph}
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div class="text-xl sm:text-2xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed mb-8 first-letter:text-6xl first-letter:font-bold first-letter:text-brand-700 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none">
+                  <div class="text-lg sm:text-xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed mb-8 first-letter:text-6xl first-letter:font-bold first-letter:text-brand-700 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none">
                     {profile.bio}
                   </div>
                 )}
                 
-                <div class="space-y-6 text-lg font-light font-['Montserrat_Variable'] text-gray-700 leading-relaxed">
+                <div class="space-y-6 text-lg sm:text-xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed">
                   <p>
-                    With over <strong class="font-medium text-brand-800">{pluralize(yearsExperience, 'year', 'years')}</strong> of experience in the tech industry, I've had the privilege of working on diverse projects, from developing scalable web applications to contributing to DevSecOps tooling at <a href={profile.experience[0]?.website?.[0] || '#'} target="_blank" rel="noopener noreferrer" class="text-brand-700 hover:text-brand-900 underline decoration-brand-300 hover:decoration-brand-500 decoration-1 underline-offset-2 transition-all duration-300 font-medium">{profile.experience[0]?.company || 'my current role'}</a>.
+                    With over <strong class="font-medium text-brand-800">{pluralize(yearsExperience, 'year', 'years')}</strong> of experience in the tech industry, <em>and a couple more as a freelancer</em>, I've had the privilege of working on diverse projects, from developing scalable web applications to contributing to DevSecOps tooling at <a href={profile.experience[0]?.website?.[0] || '#'} target="_blank" rel="noopener noreferrer" class="text-brand-700 hover:text-brand-900 underline decoration-brand-300 hover:decoration-brand-500 decoration-1 underline-offset-2 transition-all duration-300 font-medium">{profile.experience[0]?.company || 'my current role'}</a>.
                   </p>
                   
                   <p>
