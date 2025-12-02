@@ -1,0 +1,136 @@
+---
+import BaseLayout from "../layouts/base_layout.astro";
+import { Schema } from "astro-seo-schema";
+
+const page_info = {
+  title: "Privacy Policy",
+  description: "Privacy Policy for rishikc.com",
+  keywords: "privacy policy, data protection, gdpr, cookies, adsense",
+};
+
+const siteUrl = new URL(
+  Astro.url.pathname,
+  Astro.site || "https://rishikc.com",
+).toString();
+---
+
+<BaseLayout page_info={page_info}>
+  <Schema
+    slot="head"
+    item={{
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Privacy Policy",
+      description: "Privacy Policy for rishikc.com",
+      url: siteUrl,
+    }}
+  />
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-['Montserrat_Variable']">
+    <h1 class="text-3xl font-bold mb-8 font-['Red_Hat_Display_Variable']">Privacy Policy</h1>
+    
+    <div class="prose prose-lg max-w-none text-gray-700">
+      <p class="mb-4">Last updated: {new Date().toLocaleDateString()}</p>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4 font-['Red_Hat_Display_Variable']">1. Introduction</h2>
+      <p>
+        Welcome to <a href={Astro.url.origin}>rishikc.com</a>. We respect your privacy and are committed to protecting your personal data. 
+        This privacy policy explains how we collect, use, and safeguard your information when you visit our website.
+      </p>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4 font-['Red_Hat_Display_Variable']">2. Information We Collect</h2>
+      
+      <h3 class="text-xl font-medium mt-6 mb-2">Information You Provide Voluntarily</h3>
+      <p>
+        We collect information that you voluntarily provide to us when you use our "Contact" form. This includes:
+      </p>
+      <ul class="list-disc pl-6 mb-4 space-y-2">
+        <li><strong>Name:</strong> To address you properly in our response.</li>
+        <li><strong>Email Address:</strong> To reply to your inquiries.</li>
+        <li><strong>Message Content:</strong> The details of your inquiry or feedback.</li>
+      </ul>
+      <p>
+        We do not create user accounts, and we do not ask for passwords or financial information.
+      </p>
+
+      <h3 class="text-xl font-medium mt-6 mb-2">Information Collected Automatically</h3>
+      <p>
+        When you visit our website, certain information may be collected automatically by our hosting provider or third-party services, including:
+      </p>
+      <ul class="list-disc pl-6 mb-4 space-y-2">
+        <li><strong>Log Data:</strong> Internet Protocol (IP) address, browser type, operating system, and access times.</li>
+        <li><strong>Device Information:</strong> Information about the device you use to access the site (e.g., mobile or desktop).</li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4 font-['Red_Hat_Display_Variable']">3. How We Use Your Information</h2>
+      <p>
+        We use the information we collect for the following purposes:
+      </p>
+      <ul class="list-disc pl-6 mb-4 space-y-2">
+        <li>To respond to your comments, questions, and requests via our contact form.</li>
+        <li>To maintain the security and operation of our website.</li>
+        <li>To display advertisements through Google AdSense (see Section 4).</li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4 font-['Red_Hat_Display_Variable']">4. Cookies and Advertising</h2>
+      <p>
+        This website uses cookies to enhance your experience and to serve advertisements.
+      </p>
+
+      <h3 class="text-xl font-medium mt-6 mb-2">Google AdSense</h3>
+      <p>
+        We use Google AdSense to display ads on our website. Google, as a third-party vendor, uses cookies to serve ads on our site.
+      </p>
+      <ul class="list-disc pl-6 mb-4 space-y-2">
+        <li>
+          Google uses the <strong>DoubleClick cookie</strong> to enable it and its partners to serve ads to our users based on their visit to our site and/or other sites on the Internet.
+        </li>
+        <li>
+          You may opt out of the use of the DoubleClick cookie for interest-based advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" class="text-brand-600 hover:underline">Google Ads Settings</a>.
+        </li>
+        <li>
+          Alternatively, you can opt out of a third-party vendor's use of cookies for interest-based advertising by visiting <a href="https://aboutads.info/" target="_blank" rel="noopener noreferrer" class="text-brand-600 hover:underline">aboutads.info</a>.
+        </li>
+        <li>
+          For more information on how Google uses data when you use our partners' sites or apps, please visit <a href="https://www.google.com/policies/privacy/partners/" target="_blank" rel="noopener noreferrer" class="text-brand-600 hover:underline">Google's Privacy & Terms</a>.
+        </li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4 font-['Red_Hat_Display_Variable']">5. GDPR and CPRA Compliance</h2>
+      <p>
+        If you are accessing this website from the European Economic Area (EEA), the UK, or California, you have specific rights regarding your personal data.
+      </p>
+      <ul class="list-disc pl-6 mb-4 space-y-2">
+        <li>
+          <strong>GDPR (EEA/UK):</strong> We comply with the General Data Protection Regulation. We use Google's Consent Mode and certified Consent Management Platform (CMP) to manage your cookie preferences and obtain consent for personalized advertising where required.
+        </li>
+        <li>
+          <strong>CPRA (California):</strong> California residents have the right to opt out of the "sale" or "sharing" of their personal information. You can exercise your rights via the privacy settings provided by our advertising partners or by contacting us.
+        </li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4 font-['Red_Hat_Display_Variable']">6. Third-Party Services</h2>
+      <p>
+        We may share your data with the following third-party service providers for specific functions:
+      </p>
+      <ul class="list-disc pl-6 mb-4 space-y-2">
+        <li><strong>EmailJS:</strong> We use EmailJS to process and deliver messages sent through our contact form. Your name, email, and message are transmitted securely to us via their service.</li>
+        <li><strong>Google:</strong> For advertising (AdSense) and potentially for site analytics.</li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4 font-['Red_Hat_Display_Variable']">7. Data Retention</h2>
+      <p>
+        We retain the personal information you provide via email only for as long as necessary to respond to your inquiry and for our business records. We do not store your contact form submissions in a public database.
+      </p>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4 font-['Red_Hat_Display_Variable']">8. External Links</h2>
+      <p>
+        Our website contains links to external sites (e.g., GitHub, LinkedIn, Instagram). We are not responsible for the privacy practices or content of these third-party sites. We encourage you to review their privacy policies.
+      </p>
+
+      <h2 class="text-2xl font-semibold mt-8 mb-4 font-['Red_Hat_Display_Variable']">9. Contact Us</h2>
+      <p>
+        If you have any questions about this Privacy Policy, please contact us via our <a href="/contact/" class="text-brand-600 hover:underline">Contact Page</a>.
+      </p>
+    </div>
+  </main>
+</BaseLayout>
