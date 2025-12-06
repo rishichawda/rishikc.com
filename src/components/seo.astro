@@ -30,10 +30,16 @@ const canonicalURL = new URL(
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content={image} />
 
+<!-- Preconnect to AdSense domains to speed up connection -->
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+<link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin />
+
+<!-- Use defer instead of async to unblock initial HTML parsing -->
 <script
-  async
+  defer
   src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3355551817579937"
   crossorigin="anonymous"
+  data-astro-rerun
 ></script>
 
 <Schema
