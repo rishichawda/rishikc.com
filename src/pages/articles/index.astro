@@ -337,7 +337,7 @@ const pageUrl = new URL(
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-16 flex justify-center">
+                    <div id="pagination-container" class="mt-16 flex justify-center">
                         <div class="flex items-center space-x-1">
                             <button
                                 class="flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10 disabled:opacity-40 disabled:hover:bg-white/70 disabled:cursor-not-allowed cursor-pointer"
@@ -451,6 +451,7 @@ const pageUrl = new URL(
 
         const prevButton = document.querySelector("[data-prev]") as HTMLButtonElement;
         const nextButton = document.querySelector("[data-next]") as HTMLButtonElement;
+        const paginationContainer = document.getElementById("pagination-container") as HTMLElement;
 
         // Filter and pagination logic
         function updateArticlesVisibility() {
@@ -489,16 +490,23 @@ const pageUrl = new URL(
                 noResultsElement.classList.add("hidden");
             }
 
+            // Hide entire pagination when 1 or fewer pages
+            if (paginationContainer) {
+                paginationContainer.classList.toggle("hidden", totalPages <= 1);
+            }
+
             pageButtons.forEach((button) => {
                 const page = parseInt(button.dataset.page || "1", 10);
-                button.classList.toggle("hidden", page > totalPages);
                 
-                // Update styles for current page
+                // Update styles for current page (must happen before classList.toggle
+                // since setting className replaces the entire class list)
                 if (page === currentPage) {
                     button.className = "flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-500/30 cursor-pointer";
                 } else {
                     button.className = "flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10 cursor-pointer";
                 }
+
+                button.classList.toggle("hidden", page > totalPages);
             });
 
             if (prevButton) {
@@ -552,7 +560,21 @@ const pageUrl = new URL(
         });
 
         nextButton?.addEventListener("click", () => {
-            const totalPages = Math.ceil(articles.length / itemsPerPage);
+            // Count only visible (filtered) articles for totalPages
+            const searchTerm = searchInput?.value.toLowerCase() || "";
+            let filteredCount = 0;
+            articles.forEach((article) => {
+                const matchesSearch = (article.dataset.search || "").includes(searchTerm);
+                const matchesTags =
+                    selectedTags.size === 0 ||
+                    Array.from(selectedTags).every((tag) =>
+                        (article.dataset.tags || "")
+                            .toLowerCase()
+                            .includes((tag as string).toLowerCase()),
+                    );
+                if (matchesSearch && matchesTags) filteredCount++;
+            });
+            const totalPages = Math.ceil(filteredCount / itemsPerPage);
             if (currentPage < totalPages) {
                 currentPage++;
                 updateArticlesVisibility();
