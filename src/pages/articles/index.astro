@@ -526,9 +526,11 @@ const pageUrl = new URL(
                 if (selectedTags.has(tag)) {
                     selectedTags.delete(tag);
                     button.dataset.selected = "false";
+                    button.setAttribute("aria-pressed", "false");
                 } else {
                     selectedTags.add(tag);
                     button.dataset.selected = "true";
+                    button.setAttribute("aria-pressed", "true");
                 }
                 currentPage = 1;
                 updateArticlesVisibility();
@@ -568,6 +570,7 @@ const pageUrl = new URL(
             selectedTags.clear();
             tagButtons.forEach((button) => {
                 button.dataset.selected = "false";
+                button.setAttribute("aria-pressed", "false");
             });
             currentPage = 1;
             updateArticlesVisibility();
