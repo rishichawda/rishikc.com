@@ -213,7 +213,12 @@ const pageUrl = new URL(
       <div id="masonry-grid" class="relative py-4">
         {
           images.map((image, index) => (
-            <div class="grid-item group relative aspect-auto overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 mb-4 sm:mb-6">
+            <div
+              class="grid-item group relative aspect-auto overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 mb-4 sm:mb-6 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+              role="img"
+              tabindex="0"
+              aria-label={image.alt || image.caption || `${title} photo ${index + 1}`}
+            >
               <Image
                 src={image.src}
                 alt={image.alt || `${title} photo ${index + 1}`}
