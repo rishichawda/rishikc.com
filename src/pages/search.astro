@@ -242,10 +242,13 @@ const pageUrl = new URL(
                                 class="w-full pl-14 pr-32 sm:pr-40 py-5 sm:py-6 text-base sm:text-lg rounded-2xl sm:rounded-3xl border border-brand-200/40 bg-white/85 backdrop-blur-xl focus:ring-4 focus:ring-brand-500/15 focus:border-brand-400/60 focus:outline-none focus:bg-white/95 transition-all duration-300 font-['Montserrat_Variable'] text-brand-900 placeholder-brand-400 shadow-lg shadow-brand-100/20 hover:shadow-xl hover:shadow-brand-100/30"
                                 autocomplete="off"
                                 id="search-input"
+                                aria-label="Search articles, gallery, quotes. Press Command+K to focus."
+                                aria-describedby="search-shortcut-hint"
                             />
+                            <span id="search-shortcut-hint" class="sr-only">Press Command+K or Control+K to focus the search field.</span>
                             
                             <div class="absolute inset-y-0 right-3 flex items-center gap-3">
-                                <kbd class="hidden sm:inline-flex items-center px-2.5 py-1.5 text-xs font-mono text-brand-500 bg-brand-50/80 backdrop-blur-sm rounded-lg border border-brand-200/50 shadow-sm">
+                                <kbd class="hidden sm:inline-flex items-center px-2.5 py-1.5 text-xs font-mono text-brand-500 bg-brand-50/80 backdrop-blur-sm rounded-lg border border-brand-200/50 shadow-sm" aria-hidden="true">
                                     ⌘K
                                 </kbd>
                                 <button
