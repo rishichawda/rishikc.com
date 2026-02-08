@@ -60,9 +60,7 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
                                 
                                 <!-- Text content -->
                                 <span 
-                                    class={`flex-1 leading-relaxed font-['Montserrat_Variable'] transition-all duration-300 ${
-                                        item.depth > 3 ? "text-sm" : "text-sm"
-                                    } ${
+                                    class={`flex-1 leading-relaxed font-['Montserrat_Variable'] transition-all duration-300 "text-sm" ${
                                         item.depth === 2 ? "font-medium" : "font-normal"
                                     }`}
                                     title={item.text}
