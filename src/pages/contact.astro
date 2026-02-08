@@ -17,10 +17,6 @@ const page_info = {
   keywords: `contact, email, collaboration, ${profile.name}, software engineer`,
 };
 
-const emailJSPublicKey = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
-const emailJSServiceID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
-const emailJSTemplateID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
-
 const pageUrl = new URL(
   Astro.url.pathname,
   Astro.site || "https://rishikc.com",
@@ -357,18 +353,16 @@ const pageUrl = new URL(
   </main>
 </BaseLayout>
 
-<script
-  type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
-></script>
+<script>
+  import emailjs from '@emailjs/browser';
 
-<script define:vars={{ emailJSPublicKey, emailJSServiceID, emailJSTemplateID }}>
+  const emailJSPublicKey = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
+  const emailJSServiceID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
+  const emailJSTemplateID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
+
   function setUpForm() {
-    // Initialize EmailJS properly
-    if (typeof emailjs !== "undefined") {
-      // Only initialize if public key exists
-      emailjs.init(emailJSPublicKey);
-    }
+    // Initialize EmailJS
+    emailjs.init(emailJSPublicKey);
 
     // Check if the form is already set up
     if (document.getElementById("contact-form").dataset.initialized) {
