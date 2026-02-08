@@ -1,6 +1,5 @@
 ---
 // Now SSG compatible - no server-side query parameter handling
-import { getCollection } from "astro:content";
 import Layout from "../layouts/base_layout.astro";
 import { Schema } from "astro-seo-schema";
 
@@ -9,101 +8,6 @@ const page_info = {
     description:
         "Search articles, bits, gallery, and content on Rishi Chawda's website",
     keywords: "search, articles, bits, gallery, photography, development",
-};
-
-// Get all content collections to create search index
-const allArticles = await getCollection("articles");
-const allBits = await getCollection("bits");
-const allGallery = await getCollection("gallery");
-const allQuotes = await getCollection("quotes");
-
-// Format date
-function formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString("en-US", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-    });
-}
-
-// Create search index for client-side search
-const searchIndex = {
-    articles: allArticles.map((article) => ({
-        id: article.id,
-        title: article.data.title,
-        description: article.data.description,
-        subtitle: article.data.subtitle || "",
-        keywords: article.data.keywords || "",
-        tags: article.data.tags || [],
-        category: article.data.category || "",
-        path: article.data.path,
-        date: article.data.date.toISOString(),
-        hero_image: article.data.hero_image,
-        hero_image_alt: article.data.hero_image_alt || article.data.title,
-        series: article.data.series || null,
-        searchableContent: [
-            article.data.title,
-            article.data.description,
-            article.data.subtitle,
-            article.data.keywords,
-            article.data.tags.join(" "),
-            article.data.category,
-            article.body, // Added article body to searchable content
-        ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase(),
-    })),
-    bits: allBits.map((bit) => ({
-        id: bit.id,
-        title: bit.data.title,
-        description: bit.data.description,
-        tags: bit.data.tags || [],
-        path: bit.data.path,
-        date: bit.data.date.toISOString(),
-        searchableContent: [
-            bit.data.title,
-            bit.data.description,
-            bit.data.tags?.join(" "),
-            bit.body,
-        ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase(),
-    })),
-    gallery: allGallery.map((gallery) => ({
-        id: gallery.id,
-        title: gallery.data.title,
-        description: gallery.data.description || "",
-        location: gallery.data.location || "",
-        tags: gallery.data.tags || [],
-        directory: gallery.data.directory,
-        featured_image: gallery.data.featured_image,
-        featured_image_alt:
-            gallery.data.featured_image_alt || gallery.data.title,
-        images_count: gallery.data.images?.length || 0,
-        searchableContent: [
-            gallery.data.title,
-            gallery.data.description,
-            gallery.data.location,
-            gallery.data.tags?.join(" "),
-            gallery.data.directory,
-        ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase(),
-    })),
-    quotes: allQuotes[1]?.data
-        ? allQuotes[1].data.map((quote: any, index: number) => ({
-              id: `quote-${index}`,
-              quote: quote.quote,
-              info: quote.info || "",
-              searchableContent: [quote.quote, quote.info]
-                  .filter(Boolean)
-                  .join(" ")
-                  .toLowerCase(),
-          }))
-        : [],
 };
 
 // Get current page URL for schema
@@ -493,10 +397,6 @@ const pageUrl = new URL(
         </div>
     </main>
 
-    <!-- Pass search index to JavaScript -->
-    <script define:vars={{ searchIndex }}>
-        window.searchIndex = searchIndex;
-    </script>
 </Layout>
 
 <style>
@@ -989,17 +889,22 @@ const pageUrl = new URL(
         });
     };
 
-    const initializeSearchWithRetry = () => {
+    const fetchSearchIndex = async () => {
+        if (window.searchIndex) return;
+        try {
+            const response = await fetch('/api/search-index.json');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            window.searchIndex = await response.json();
+        } catch (error) {
+            console.error('Failed to load search index:', error);
+        }
+    };
+
+    const initializeSearchWithRetry = async () => {
+        await fetchSearchIndex();
         if (window.searchIndex) {
             const renderer = new DOMSearchRenderer();
             initializeSearch(renderer);
-        } else {
-            setTimeout(() => {
-                if (window.searchIndex) {
-                    const renderer = new DOMSearchRenderer();
-                    initializeSearch(renderer);
-                }
-            }, 100);
         }
     };
 

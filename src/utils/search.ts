@@ -5,10 +5,8 @@ export interface SearchableItem {
 }
 
 export interface ArticleItem extends SearchableItem {
-    id: string;
     title: string;
     description: string;
-    subtitle: string;
     path: string;
     date: string;
     hero_image: { src: string };
@@ -17,7 +15,6 @@ export interface ArticleItem extends SearchableItem {
 }
 
 export interface GalleryItem extends SearchableItem {
-    id: string;
     title: string;
     description: string;
     location: string;
@@ -29,13 +26,11 @@ export interface GalleryItem extends SearchableItem {
 }
 
 export interface QuoteItem extends SearchableItem {
-    id: string;
     quote: string;
     info: string;
 }
 
 export interface BitsItem extends SearchableItem {
-    id: string;
     title: string;
     description: string;
     tags: string[];
