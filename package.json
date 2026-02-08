@@ -16,7 +16,7 @@
     "@fontsource-variable/red-hat-text": "^5.2.8",
     "@playform/compress": "^0.2.0",
     "@unpic/astro": "^1.0.1",
-    "astro": "^5.14.1",
+    "astro": "^5.15.9",
     "astro-seo-schema": "^5.1.0",
     "dompurify": "^3.2.7",
     "imagesloaded": "^5.0.0",
