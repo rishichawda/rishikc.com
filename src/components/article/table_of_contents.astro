@@ -97,6 +97,10 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
         const tocContainer = document.getElementById('table-of-contents');
         if (!tocContainer) return;
         
+        // AbortController to clean up window listeners on navigation
+        const controller = new AbortController();
+        const { signal } = controller;
+        
         const tocLinks = tocContainer.querySelectorAll('.toc-link') as NodeListOf<HTMLAnchorElement>;
         const progressBar = document.getElementById('reading-progress') as HTMLElement;
         const backToTopBtn = document.getElementById('back-to-top') as HTMLButtonElement;
@@ -312,7 +316,7 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
                 });
                 ticking = true;
             }
-        }, { passive: true });
+        }, { passive: true, signal });
         
         // Handle window resize
         window.addEventListener('resize', () => {
@@ -321,7 +325,15 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
                 const activeHeading = findActiveHeading();
                 updateActiveLink(activeHeading);
             }
-        });
+        }, { signal });
+        
+        // Clean up listeners on navigation (prevents accumulation with view transitions)
+        document.addEventListener('astro:before-swap', () => {
+            controller.abort();
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+        }, { once: true });
     });
 </script>
 
