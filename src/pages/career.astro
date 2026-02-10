@@ -828,18 +828,16 @@ const siteUrl = new URL(
 </BaseLayout>
 
 <style>
-  /* Animation Classes */
-  .fade-in-up {
+  /* Scroll-reveal: elements start hidden, transition in when .revealed is added */
+  .scroll-reveal {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    will-change: opacity, transform;
   }
-  
-  .visible.fade-in-up {
+
+  .scroll-reveal.revealed {
     opacity: 1;
-    transform: translate(0, 0);
-    will-change: auto;
+    transform: translateY(0);
   }
 
   .timeline-dot {
@@ -1005,17 +1003,12 @@ const siteUrl = new URL(
     text-overflow: ellipsis;
   }
 
-  /* Staggered animation delays */
-  .animate-on-scroll:nth-child(odd) { transition-delay: 0.1s; }
-  .animate-on-scroll:nth-child(even) { transition-delay: 0.2s; }
-
   /* Respect reduced motion preferences */
   @media (prefers-reduced-motion: reduce) {
-    .fade-in-up {
+    .scroll-reveal {
       opacity: 1 !important;
       transform: none !important;
       transition: none !important;
-      animation: none !important;
     }
     .social-link,
     .timeline-item-container,
@@ -1032,58 +1025,3 @@ const siteUrl = new URL(
     }
   }
 </style>
-
-<script>
-  function scrollObserver() {
-    try {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            // Remove will-change after animation completes
-            setTimeout(() => {
-              (entry.target as HTMLElement).style.willChange = 'auto';
-            }, 400);
-          }
-        });
-      }, {
-        threshold: 0.15,
-        rootMargin: '0px 0px -30px 0px'
-      });
-
-      // Use requestAnimationFrame to batch DOM operations
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.animate-on-scroll').forEach(element => {
-          element.classList.remove('visible');
-          observer.observe(element);
-        });
-      });
-    } catch (error) {
-      console.error('Animation observer error:', error);
-      // Fallback: show all content immediately
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.animate-on-scroll').forEach(element => {
-          element.classList.add('visible');
-          (element as HTMLElement).style.willChange = 'auto';
-        });
-      });
-    }
-  }
-
-  function ensureContentVisibility() {
-    setTimeout(() => {
-      document.querySelectorAll('.animate-on-scroll').forEach(element => {
-        if (!element.classList.contains('visible')) {
-          element.classList.add('visible');
-        }
-      });
-    }, 1500);
-  }
-
-  // Use passive event listeners for better performance
-  document.addEventListener('DOMContentLoaded', scrollObserver, { passive: true });
-  document.addEventListener('astro:page-load', scrollObserver, { passive: true });
-  
-  // Delay ensureContentVisibility to reduce initial load impact
-  setTimeout(ensureContentVisibility, 100);
-</script>

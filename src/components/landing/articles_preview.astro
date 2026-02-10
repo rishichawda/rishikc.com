@@ -44,13 +44,15 @@ const articles = allArticles
       
       <div class="relative flex flex-row items center" id="blog-carousel">
       <button
-        class="bg-white/80 backdrop-blur-sm max-w-fit m-auto rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 sm:block"
+        class="bg-white/80 backdrop-blur-sm max-w-fit m-auto rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 sm:block cursor-pointer"
+        style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;"
         id="prev-btn"
+        type="button"
         aria-label="Previous slide"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 sm:h-6 sm:w-6"
+          class="h-5 w-5 sm:h-6 sm:w-6 pointer-events-none"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -123,13 +125,15 @@ const articles = allArticles
       </div>
 
       <button
-        class="bg-white/80 backdrop-blur-sm max-w-fit m-auto rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 sm:block"
+        class="bg-white/80 backdrop-blur-sm max-w-fit m-auto rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 sm:block cursor-pointer"
+        style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;"
         id="next-btn"
+        type="button"
         aria-label="Next slide"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 sm:h-6 sm:w-6"
+          class="h-5 w-5 sm:h-6 sm:w-6 pointer-events-none"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -170,11 +174,15 @@ const articles = allArticles
         nextBtn: (() => void) | null;
         dots: ((e: Event) => void) | null;
         resize: (() => void) | null;
+        touchstart: ((e: TouchEvent) => void) | null;
+        touchend: ((e: TouchEvent) => void) | null;
       } = {
         prevBtn: null,
         nextBtn: null,
         dots: null,
-        resize: null
+        resize: null,
+        touchstart: null,
+        touchend: null
       };
       
       const items = container.children;
@@ -227,7 +235,10 @@ const articles = allArticles
               const dot = document.createElement("button");
               dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-200 cursor-pointer bg-brand-200 hover:bg-brand-400`;
               dot.setAttribute("data-index", i.toString());
+              dot.setAttribute("type", "button");
               dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
+              dot.style.touchAction = "manipulation";
+              (dot.style as any).webkitTapHighlightColor = "transparent";
               dotsContainer.appendChild(dot);
             }
           }
@@ -264,6 +275,8 @@ const articles = allArticles
         if (eventHandlers.nextBtn) (nextBtn as HTMLElement).removeEventListener("click", eventHandlers.nextBtn);
         if (eventHandlers.dots) (dotsContainer as HTMLElement).removeEventListener("click", eventHandlers.dots);
         if (eventHandlers.resize) window.removeEventListener("resize", eventHandlers.resize);
+        if (eventHandlers.touchstart) (viewport as HTMLElement).removeEventListener("touchstart", eventHandlers.touchstart as EventListener);
+        if (eventHandlers.touchend) (viewport as HTMLElement).removeEventListener("touchend", eventHandlers.touchend as EventListener);
       }
 
       document.addEventListener('astro:before-preparation', cleanup, { once: true });
@@ -306,6 +319,28 @@ const articles = allArticles
       (nextBtn as HTMLElement).addEventListener("click", eventHandlers.nextBtn!);
       (dotsContainer as HTMLElement).addEventListener("click", eventHandlers.dots!);
       window.addEventListener("resize", eventHandlers.resize!);
+
+      // Touch swipe support for mobile
+      let touchStartX = 0;
+      eventHandlers.touchstart = (e: TouchEvent) => {
+        touchStartX = e.changedTouches[0].screenX;
+      };
+      eventHandlers.touchend = (e: TouchEvent) => {
+        const touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        const { totalSlides } = calculateLayout();
+        if (Math.abs(diff) > 50) {
+          if (diff > 0 && currentIndex < totalSlides - 1) {
+            currentIndex++;
+            updateCarousel();
+          } else if (diff < 0 && currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+          }
+        }
+      };
+      (viewport as HTMLElement).addEventListener("touchstart", eventHandlers.touchstart as EventListener, { passive: true });
+      (viewport as HTMLElement).addEventListener("touchend", eventHandlers.touchend as EventListener, { passive: true });
 
       // Initial setup
       updateCarousel();
