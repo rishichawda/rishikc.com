@@ -459,30 +459,23 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    will-change: opacity, transform;
   }
   .fade-in-left {
     opacity: 0;
     transform: translateX(-20px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    will-change: opacity, transform;
   }
   .fade-in-right {
     opacity: 0;
     transform: translateX(20px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    will-change: opacity, transform;
   }
   .visible.fade-in-up,
   .visible.fade-in-left,
   .visible.fade-in-right {
     opacity: 1;
     transform: translate(0, 0);
-    will-change: auto;
   }
-
-  .animate-on-scroll:nth-child(odd) { transition-delay: 0.1s; }
-  .animate-on-scroll:nth-child(even) { transition-delay: 0.2s; }
 
   .prose .first-letter\:text-6xl:first-letter {
     font-family: 'Red Hat Display Variable', sans-serif;
@@ -519,10 +512,6 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
     cursor: default;
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
-
   @keyframes pulse-slow {
     0%, 100% { opacity: 0.6; transform: scale(1); }
     50% { opacity: 1; transform: scale(1.1); }
@@ -533,26 +522,6 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
   .delay-700 {
     animation-delay: 0.7s;
   }
-
-  .focus\:ring-2:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 2px var(--tw-ring-color);
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .animate-on-scroll {
-      animation: fallbackFadeIn 1s forwards 1s;
-    }
-    @keyframes fallbackFadeIn {
-      to {
-        opacity: 1;
-        transform: translate(0, 0);
-      }
-    }
-  }
-
-
 
   @media (prefers-reduced-motion: reduce) {
     .fade-in-up,
@@ -568,15 +537,6 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
       transition: none;
     }
   }
-
-  .border-l-2 {
-    border-left-width: 2px;
-    border-left-style: solid;
-  }
-
-  .transform {
-    transform: translateZ(0);
-  }
 </style>
 
 <script>
@@ -586,9 +546,7 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            setTimeout(() => {
-              (entry.target as HTMLElement).style.willChange = 'auto';
-            }, 400);
+            observer.unobserve(entry.target);
           }
         });
       }, {
@@ -596,36 +554,17 @@ const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear
         rootMargin: '0px 0px -30px 0px'
       });
 
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.animate-on-scroll').forEach(element => {
-          element.classList.remove('visible');
-          observer.observe(element);
-        });
+      document.querySelectorAll('.animate-on-scroll').forEach(element => {
+        observer.observe(element);
       });
     } catch (error) {
-      console.error('Animation observer error:', error);
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.animate-on-scroll').forEach(element => {
-          element.classList.add('visible');
-          (element as HTMLElement).style.willChange = 'auto';
-        });
+      // Fallback: show all content immediately
+      document.querySelectorAll('.animate-on-scroll').forEach(element => {
+        element.classList.add('visible');
       });
     }
   }
 
-  function ensureContentVisibility() {
-    setTimeout(() => {
-      document.querySelectorAll('.animate-on-scroll').forEach(element => {
-        if (!element.classList.contains('visible')) {
-          element.classList.add('visible');
-          (element as HTMLElement).style.willChange = 'auto';
-        }
-      });
-    }, 1500);
-  }
-
   document.addEventListener('DOMContentLoaded', scrollObserver, { passive: true });
   document.addEventListener('astro:page-load', scrollObserver, { passive: true });
-  
-  setTimeout(ensureContentVisibility, 100);
 </script>
