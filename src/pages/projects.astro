@@ -139,7 +139,7 @@ const siteUrl = new URL(
                 </a>
             </div>
 
-            <div class="text-center space-y-8">
+            <div class="text-center space-y-8 scroll-reveal">
                 <div class="space-y-4">
                     <h1
                         class="font-['Red_Hat_Display_Variable'] text-5xl sm:text-6xl lg:text-7xl font-light text-gray-900 leading-tight"
@@ -179,7 +179,7 @@ const siteUrl = new URL(
         </div>
 
         <section class="mb-20 sm:mb-24">
-            <div class="text-center mb-16">
+            <div class="text-center mb-16 scroll-reveal">
                 <div
                     class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-brand-600 to-brand-700 rounded-2xl mb-6 shadow-lg"
                 >
@@ -214,8 +214,8 @@ const siteUrl = new URL(
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
                 {
-                    featuredProjects.map((project) => (
-                        <article class="group relative">
+                    featuredProjects.map((project, idx) => (
+                        <article class="group relative scroll-reveal">
                             <div class="absolute inset-0 bg-gradient-to-br from-white via-white to-gray-50/50 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-500" />
 
                             <div class="relative bg-white/95 backdrop-blur-sm rounded-3xl border border-gray-200/60 hover:border-brand-200/60 hover:shadow-2xl hover:shadow-brand-500/10 hover:-translate-y-2 transition-all duration-500 p-8 lg:p-10 overflow-hidden h-full flex flex-col">
@@ -338,7 +338,7 @@ const siteUrl = new URL(
 
         <!-- Open Source Contributions Section -->
         <section class="mb-20 sm:mb-24">
-            <div class="text-center mb-16">
+            <div class="text-center mb-16 scroll-reveal">
                 <div
                     class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-brand-600 to-brand-700 rounded-2xl mb-6 shadow-lg"
                 >
@@ -445,8 +445,8 @@ const siteUrl = new URL(
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {
-                    openSourceContributions.map((project, _) => (
-                        <article class="group relative">
+                    openSourceContributions.map((project, idx) => (
+                        <article class="group relative scroll-reveal">
                             <div class="absolute inset-0 bg-gradient-to-br from-white via-white to-gray-50/50 rounded-2xl transform rotate-0.5 group-hover:rotate-1 transition-transform duration-300" />
 
                             <div class="flex flex-col relative bg-white/95 backdrop-blur-sm rounded-2xl border border-gray-200/60 hover:border-brand-200/60 hover:shadow-xl hover:shadow-brand-500/5 hover:-translate-y-1 transition-all duration-300 p-6 overflow-hidden h-full">
@@ -522,7 +522,7 @@ const siteUrl = new URL(
         {
             otherProjects.length > 0 && (
                 <section class="mb-20 sm:mb-24">
-                    <div class="text-center mb-16">
+                    <div class="text-center mb-16 scroll-reveal">
                         <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gray-600 to-gray-700 rounded-2xl mb-6 shadow-lg">
                             <svg
                                 class="w-8 h-8 text-white"
@@ -552,8 +552,8 @@ const siteUrl = new URL(
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
-                        {otherProjects.map((project) => (
-                            <article class="group relative">
+                        {otherProjects.map((project, idx) => (
+                            <article class="group relative scroll-reveal">
                                 <div class="absolute inset-0 bg-gradient-to-br from-white to-gray-50/80 rounded-2xl transform rotate-0.5 group-hover:rotate-1 transition-transform duration-300" />
 
                                 <div class="flex flex-col relative bg-white/95 backdrop-blur-sm rounded-2xl border border-gray-200/60 hover:border-gray-300/60 hover:shadow-xl hover:shadow-gray-500/10 hover:-translate-y-1 transition-all duration-300 p-6 lg:p-7 overflow-hidden h-full">
@@ -656,7 +656,7 @@ const siteUrl = new URL(
             )
         }
 
-        <section class="relative">
+        <section class="relative scroll-reveal">
             <div
                 class="absolute inset-0 bg-gradient-to-br from-brand-50/60 via-white to-brand-100/40 rounded-3xl transform rotate-1"
             >
@@ -778,92 +778,16 @@ const siteUrl = new URL(
 </BaseLayout>
 
 <style>
-    /* Enhanced Animations */
-    @keyframes float {
-        0%,
-        100% {
-            transform: translateY(0px) rotate(0deg);
-        }
-        50% {
-            transform: translateY(-10px) rotate(2deg);
-        }
-    }
-
-    @keyframes pulse-glow {
-        0%,
-        100% {
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
-        }
-        50% {
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
-        }
-    }
-
-    @keyframes gradient-shift {
-        0%,
-        100% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-    }
-
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
-    }
-
-    .animate-pulse-glow {
-        animation: pulse-glow 3s ease-in-out infinite;
-    }
-
-    .gradient-animate {
-        background-size: 200% 200%;
-        animation: gradient-shift 4s ease infinite;
-    }
-
-    /* Smooth entrance animations */
-    .fade-in-up {
+    /* Scroll-reveal: elements start hidden, transition in when revealed */
+    .scroll-reveal {
         opacity: 0;
-        transform: translateY(30px);
-        animation: fadeInUp 0.8s ease-out forwards;
+        transform: translateY(24px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
 
-    @keyframes fadeInUp {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Stagger animation delays */
-    .delay-100 {
-        animation-delay: 0.1s;
-    }
-    .delay-200 {
-        animation-delay: 0.2s;
-    }
-    .delay-300 {
-        animation-delay: 0.3s;
-    }
-    .delay-400 {
-        animation-delay: 0.4s;
-    }
-
-    /* Enhanced hover effects */
-    .hover-lift {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .hover-lift:hover {
-        transform: translateY(-8px) scale(1.02);
-    }
-
-    /* Glass morphism enhancement */
-    .glass-enhanced {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+    .scroll-reveal.revealed {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     /* Custom scrollbar for better aesthetics */
@@ -895,83 +819,29 @@ const siteUrl = new URL(
 </style>
 
 <script>
-    // Enhanced scroll animations with Intersection Observer
-    document.addEventListener("DOMContentLoaded", () => {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px",
-        };
+    function initScrollReveal() {
+        const elements = document.querySelectorAll(".scroll-reveal");
+        if (!elements.length) return;
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add("fade-in-up");
-                    }, index * 100);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        // Observe all project cards and sections
-        const animatedElements = document.querySelectorAll(
-            "article, section > div",
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("revealed");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            {
+                threshold: 0.15,
+                rootMargin: "0px 0px -40px 0px",
+            },
         );
-        animatedElements.forEach((el) => {
-            observer.observe(el);
-        });
 
-        // Parallax effect for background elements
-        window.addEventListener("scroll", () => {
-            const scrolled = window.pageYOffset;
-            const backgrounds = document.querySelectorAll(".parallax-bg");
+        elements.forEach((el) => observer.observe(el));
+    }
 
-            backgrounds.forEach((bg) => {
-                const element = bg as HTMLElement;
-                const speed = element.dataset.speed || "0.5";
-                element.style.transform = `translateY(${scrolled * parseFloat(speed)}px)`;
-            });
-        });
-
-        // Enhanced button interactions
-        const buttons = document.querySelectorAll('a[class*="group"]');
-        buttons.forEach((button) => {
-            const element = button as HTMLElement;
-
-            button.addEventListener("mouseenter", () => {
-                element.style.transform = "translateY(-2px) scale(1.05)";
-            });
-
-            button.addEventListener("mouseleave", () => {
-                element.style.transform = "translateY(0) scale(1)";
-            });
-        });
-    });
-
-    // Re-initialize animations on Astro page transitions
-    document.addEventListener("astro:page-load", () => {
-        // Repeat the same initialization logic for Astro's client-side routing
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px",
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add("fade-in-up");
-                    }, index * 100);
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-
-        const animatedElements = document.querySelectorAll(
-            "article, section > div",
-        );
-        animatedElements.forEach((el) => {
-            observer.observe(el);
-        });
-    });
+    // Run on initial load and on Astro client-side navigation
+    document.addEventListener("DOMContentLoaded", initScrollReveal);
+    document.addEventListener("astro:page-load", initScrollReveal);
 </script>
