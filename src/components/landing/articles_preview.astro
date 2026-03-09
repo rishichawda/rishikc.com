@@ -242,10 +242,17 @@ const articles = allArticles
               dotsContainer.appendChild(dot);
             }
           }
-          
+
+          // Windowed dots: show at most 7 centred on currentIndex
+          const windowSize = 7;
+          const halfWindow = Math.floor(windowSize / 2);
+          const windowStart = Math.max(0, Math.min(currentIndex - halfWindow, totalSlides - windowSize));
+          const windowEnd = Math.min(totalSlides - 1, windowStart + windowSize - 1);
+
           // Update dot states
           const dots = dotsContainer.querySelectorAll('button[data-index]');
           dots.forEach((dot, index) => {
+            (dot as HTMLElement).classList.toggle('hidden', index < windowStart || index > windowEnd);
             if (index === currentIndex) {
               dot.classList.add('bg-brand-600', 'w-8');
               dot.classList.remove('bg-brand-200', 'hover:bg-brand-400');
