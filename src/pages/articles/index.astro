@@ -495,6 +495,12 @@ const pageUrl = new URL(
                 paginationContainer.classList.toggle("hidden", totalPages <= 1);
             }
 
+            // Windowed pagination: show at most 5 page buttons centred on currentPage
+            const windowSize = 5;
+            const halfWindow = Math.floor(windowSize / 2);
+            const windowStart = Math.max(1, Math.min(currentPage - halfWindow, totalPages - windowSize + 1));
+            const windowEnd = Math.min(totalPages, windowStart + windowSize - 1);
+
             pageButtons.forEach((button) => {
                 const page = parseInt(button.dataset.page || "1", 10);
                 
@@ -506,7 +512,7 @@ const pageUrl = new URL(
                     button.className = "flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10 cursor-pointer";
                 }
 
-                button.classList.toggle("hidden", page > totalPages);
+                button.classList.toggle("hidden", page > totalPages || page < windowStart || page > windowEnd);
             });
 
             if (prevButton) {
