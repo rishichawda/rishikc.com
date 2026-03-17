@@ -96,6 +96,48 @@ const imageUrl = content.hero_image?.src
 			]
 		}}
 	/>
+	<Schema
+		item={{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			itemListElement: [
+				{
+					"@type": "ListItem",
+					position: 1,
+					name: "Home",
+					item: "https://rishikc.com/",
+				},
+				{
+					"@type": "ListItem",
+					position: 2,
+					name: "Articles",
+					item: "https://rishikc.com/articles/",
+				},
+				{
+					"@type": "ListItem",
+					position: 3,
+					name: content.title,
+					item: articleUrl,
+				},
+			],
+		}}
+	/>
+	{content.faq && content.faq.length > 0 && (
+		<Schema
+			item={{
+				"@context": "https://schema.org",
+				"@type": "FAQPage",
+				mainEntity: content.faq.map((item: { question: string; answer: string }) => ({
+					"@type": "Question",
+					name: item.question,
+					acceptedAnswer: {
+						"@type": "Answer",
+						text: item.answer,
+					},
+				})),
+			}}
+		/>
+	)}
 	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-4">
 		<h1
 			transition:name={`${content.path}-title`}

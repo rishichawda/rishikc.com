@@ -23,6 +23,10 @@ const articles = defineCollection({
                 currentPart: z.number(), // Which part this article is (1-based)
                 ongoing: z.boolean().optional(),
             }).optional(),
+            faq: z.array(z.object({
+                question: z.string(),
+                answer: z.string(),
+            })).optional(),
         }),
 });
 
