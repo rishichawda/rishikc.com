@@ -85,6 +85,54 @@ const gallery = defineCollection({
         }),
 });
 
+const photo_stories = defineCollection({
+    loader: glob({ pattern: "**/story.json", base: "./content/gallery/stories" }),
+    schema: ({ image }) => {
+        const sectionImage = z.object({
+            src: image(),
+            alt: z.string().optional(),
+            caption: z.string().optional(),
+            camera: z.string().optional(),
+            lens: z.string().optional(),
+            settings: z.string().optional(),
+            location: z.string().optional(),
+        });
+
+        return z.object({
+            title: z.string(),
+            description: z.string(),
+            cover_image: image(),
+            cover_image_alt: z.string().optional(),
+            date: z.coerce.date(),
+            tags: z.array(z.string()).optional(),
+            path: z.string(),
+            reading_time: z.string().optional(),
+
+            prologue: z.string(),
+
+            sections: z.array(z.object({
+                type: z.enum(["full-bleed", "text", "diptych", "triptych", "horizontal-scroll", "quote"]),
+                image: image().optional(),
+                images: z.array(sectionImage).optional(),
+                content: z.string().optional(),
+                alt: z.string().optional(),
+                caption: z.string().optional(),
+                attribution: z.string().optional(),
+                camera: z.string().optional(),
+                lens: z.string().optional(),
+                settings: z.string().optional(),
+                location: z.string().optional(),
+            })),
+
+            epilogue: z.object({
+                reflection: z.string(),
+                gear_summary: z.string().optional(),
+                hobbyist_note: z.string().optional(),
+            }),
+        });
+    },
+});
+
 const profile = defineCollection({
     loader: file("content/about/profile.json", { parser: (text) => JSON.parse(text) }),
 })
@@ -97,4 +145,4 @@ const projects = defineCollection({
     loader: file("content/projects/projects.json", { parser: (text) => JSON.parse(text) }),
 })
 
-export const collections = { articles, bits, quotes, logo, gallery, profile, services, projects };
+export const collections = { articles, bits, quotes, logo, gallery, photo_stories, profile, services, projects };

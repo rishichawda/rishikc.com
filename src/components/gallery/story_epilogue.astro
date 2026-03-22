@@ -1,0 +1,37 @@
+---
+interface Epilogue {
+  reflection: string;
+  gear_summary?: string;
+  hobbyist_note?: string;
+}
+
+interface Props {
+  epilogue: Epilogue;
+}
+
+const { epilogue } = Astro.props;
+---
+
+<section class="gallery-reveal border-t border-gallery-border pt-16 sm:pt-24 mt-16 sm:mt-24" aria-label="Story details">
+  <div class="max-w-3xl mx-auto px-6 sm:px-8 text-center">
+    <h2 class="meta-label text-gallery-accent mb-8">The Lasting Impression</h2>
+    <p class="text-gallery-text/85 text-lg sm:text-xl leading-[1.8] font-light">
+      {epilogue.reflection}
+    </p>
+
+    {epilogue.gear_summary && (
+      <p class="mt-10 meta-label text-gallery-text-muted/70 text-[0.7rem]">
+        {epilogue.gear_summary}
+      </p>
+    )}
+
+    {epilogue.hobbyist_note && (
+      <div class="mt-12 max-w-xl mx-auto p-6 rounded-lg bg-gallery-bg-secondary border border-gallery-border text-left">
+        <h3 class="meta-label text-gallery-accent mb-3">Hobbyist's Note</h3>
+        <p class="text-gallery-text/80 text-sm leading-relaxed font-light italic">
+          {epilogue.hobbyist_note}
+        </p>
+      </div>
+    )}
+  </div>
+</section>

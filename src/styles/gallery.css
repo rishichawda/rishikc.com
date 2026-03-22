@@ -1,0 +1,406 @@
+/* Gallery Dark Theme + Animation Styles */
+
+/* ─── Scroll Progress Bar ─── */
+.gallery-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--color-gallery-accent);
+  z-index: 100;
+  width: 0%;
+  transition: width 50ms linear;
+}
+
+/* ─── Scroll Reveal ─── */
+.gallery-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 500ms cubic-bezier(0.215, 0.61, 0.355, 1),
+              transform 500ms cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.gallery-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Bento Grid ─── */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .bento-grid .bento-featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+
+/* ─── Story Card Hover ─── */
+.story-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.story-card img {
+  transition: transform 300ms ease-out;
+}
+
+.story-card:hover img,
+.story-card:focus-within img {
+  transform: scale(1.05);
+}
+
+.story-card .story-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  transition: background 300ms ease-out;
+}
+
+.story-card:hover .story-card-overlay,
+.story-card:focus-within .story-card-overlay {
+  background: rgba(0, 0, 0, 0);
+}
+
+.story-card .story-card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  transform: translateY(0.5rem);
+  opacity: 0.9;
+  transition: transform 300ms ease-out, opacity 300ms ease-out;
+}
+
+.story-card:hover .story-card-content,
+.story-card:focus-within .story-card-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ─── Scroll-to-Explore Indicator ─── */
+.scroll-indicator {
+  animation: scroll-pulse 2s ease-in-out infinite;
+}
+
+.scroll-indicator-line {
+  width: 1px;
+  height: 40px;
+  background: var(--color-gallery-text);
+  opacity: 0.6;
+  animation: scroll-line 2s ease-in-out infinite;
+}
+
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(6px); }
+}
+
+@keyframes scroll-line {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ─── Horizontal Scroll Section (scroll-hijack) ─── */
+.horizontal-scroll-wrapper {
+  position: relative;
+  /* Height = viewport + (track scroll width - viewport) so the user has room to scroll */
+}
+
+.horizontal-scroll-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.horizontal-scroll-track {
+  display: flex;
+  gap: 1rem;
+  height: 100%;
+  will-change: transform;
+}
+
+.horizontal-scroll-item {
+  flex-shrink: 0;
+  width: 70vw;
+  max-width: 900px;
+  height: 80vh;
+  margin-top: 10vh;
+}
+
+.horizontal-scroll-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.horizontal-scroll-progress {
+  position: absolute;
+  bottom: 4vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(300px, 50vw);
+  height: 2px;
+  background: var(--color-gallery-border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.horizontal-scroll-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--color-gallery-accent);
+  transition: width 60ms linear;
+}
+
+/* ─── Lightbox ─── */
+.gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease-out;
+}
+
+.gallery-lightbox.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gallery-lightbox img {
+  max-width: 90vw;
+  max-height: 80vh;
+  object-fit: contain;
+  z-index: 201;
+}
+
+.gallery-lightbox-close {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gallery-text);
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+
+.gallery-lightbox-close:hover,
+.gallery-lightbox-close:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Prev / Next navigation */
+.gallery-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 202;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gallery-text);
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease;
+}
+
+.gallery-lightbox-nav--prev { left: 1rem; }
+.gallery-lightbox-nav--next { right: 1rem; }
+
+.gallery-lightbox-nav:hover,
+.gallery-lightbox-nav:focus-visible {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+@media (min-width: 640px) {
+  .gallery-lightbox-nav--prev { left: 1.5rem; }
+  .gallery-lightbox-nav--next { right: 1.5rem; }
+}
+
+/* ─── Section Fade-in Stagger ─── */
+.gallery-reveal:nth-child(2) { transition-delay: 100ms; }
+.gallery-reveal:nth-child(3) { transition-delay: 200ms; }
+.gallery-reveal:nth-child(4) { transition-delay: 300ms; }
+.gallery-reveal:nth-child(5) { transition-delay: 400ms; }
+.gallery-reveal:nth-child(6) { transition-delay: 500ms; }
+
+/* ─── Metadata Labels (Monospace, Uppercase) ─── */
+.meta-label {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gallery-text-muted);
+}
+
+/* ─── Mobile: Horizontal scroll → stacked vertical ─── */
+@media (max-width: 639px) {
+  .horizontal-scroll-wrapper {
+    height: auto !important;
+  }
+
+  .horizontal-scroll-sticky {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
+
+  .horizontal-scroll-track {
+    flex-direction: column;
+    gap: 1rem;
+    transform: none !important;
+  }
+
+  .horizontal-scroll-item {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3/2;
+    margin-top: 0;
+  }
+
+  .horizontal-scroll-progress {
+    display: none;
+  }
+}
+
+/* ─── Footer dark theme override for gallery pages ─── */
+body:has(.bg-gallery-bg) {
+  background-color: var(--color-gallery-bg);
+}
+
+body:has(.bg-gallery-bg) > footer {
+  background-color: var(--color-gallery-bg);
+}
+
+body:has(.bg-gallery-bg) > footer a,
+body:has(.bg-gallery-bg) > footer div,
+body:has(.bg-gallery-bg) > footer span {
+  color: var(--color-gallery-text-muted);
+}
+
+body:has(.bg-gallery-bg) > footer a:hover,
+body:has(.bg-gallery-bg) > footer a:focus-visible {
+  color: var(--color-gallery-text);
+}
+
+/* ─── Custom Cursor ─── */
+.gallery-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-gallery-accent);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: width 200ms cubic-bezier(0.23, 1, 0.32, 1),
+              height 200ms cubic-bezier(0.23, 1, 0.32, 1),
+              background 200ms ease,
+              opacity 200ms ease;
+  mix-blend-mode: difference;
+}
+
+.gallery-cursor.visible {
+  opacity: 1;
+}
+
+.gallery-cursor.expanded {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1.5px solid var(--color-gallery-text);
+  mix-blend-mode: normal;
+}
+
+.gallery-cursor-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gallery-text);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.gallery-cursor.expanded .gallery-cursor-text {
+  opacity: 1;
+}
+
+/* Hide system cursor on gallery interactive elements (desktop only) */
+@media (pointer: fine) {
+  .bg-gallery-bg .story-card,
+  .bg-gallery-bg .lightbox-trigger {
+    cursor: none;
+  }
+}
+
+/* ─── Button Ripple ─── */
+.gallery-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-ripple::after {
+  content: '';
+  position: absolute;
+  left: var(--ripple-x, 50%);
+  top: var(--ripple-y, 50%);
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--color-gallery-accent);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.gallery-ripple.rippling::after {
+  animation: ripple-expand 400ms ease-in-out;
+}
+
+@keyframes ripple-expand {
+  0% { width: 0; height: 0; opacity: 0.3; }
+  100% { width: 300px; height: 300px; opacity: 0; }
+}

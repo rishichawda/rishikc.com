@@ -1,0 +1,42 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  title: string;
+  prologue: string;
+  cover_image: ImageMetadata;
+  cover_image_alt?: string;
+  storyId: string;
+}
+
+const { title, prologue, cover_image, cover_image_alt, storyId } = Astro.props;
+---
+
+<section class="relative min-h-screen flex flex-col justify-end" aria-label="Story introduction">
+  <div class="absolute inset-0">
+    <Image
+      src={cover_image}
+      alt={cover_image_alt || title}
+      class="w-full h-full object-cover"
+      widths={[640, 1024, 1920, 2560]}
+      sizes="100vw"
+      loading="eager"
+      transition:name={`story-cover-${storyId}`}
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-gallery-bg via-gallery-bg/40 to-transparent"></div>
+  </div>
+
+  <div class="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 pb-32 sm:pb-40 text-center">
+    <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8">
+      {title}
+    </h1>
+    <p class="text-gallery-text/85 text-lg sm:text-xl leading-relaxed font-light max-w-2xl mx-auto">
+      {prologue}
+    </p>
+  </div>
+
+  <div class="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10">
+    <span class="meta-label text-gallery-text/60 text-[0.65rem]">Scroll to Explore</span>
+    <div class="scroll-indicator-line"></div>
+  </div>
+</section>

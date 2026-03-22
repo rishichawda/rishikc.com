@@ -12,4 +12,13 @@
      --color-brand-200: #cdd3eb;
      --color-brand-100: #dde2f2;
      --color-brand-50: #f2f3fa;
+
+     --color-gallery-bg: #0D0D0D;
+     --color-gallery-bg-secondary: #1A1A1A;
+     --color-gallery-bg-tertiary: #242424;
+     --color-gallery-text: #F6EDE3;
+     --color-gallery-text-muted: #8C8C8C;
+     --color-gallery-accent: #B15D44;
+     --color-gallery-accent-vivid: #DC3E26;
+     --color-gallery-border: #2A2A2A;
  }

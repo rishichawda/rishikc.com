@@ -1,0 +1,171 @@
+---
+/* Rich lightbox — caption, counter, prev/next navigation, keyboard support */
+---
+
+<div id="gallery-lightbox" class="gallery-lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <!-- Top bar: counter + close -->
+  <div class="absolute top-0 left-0 right-0 z-[202] flex items-center justify-between px-5 py-4">
+    <span id="lightbox-counter" class="meta-label text-gallery-text/60 text-xs select-none"></span>
+    <button
+      type="button"
+      class="gallery-lightbox-close"
+      aria-label="Close image viewer"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Prev / Next arrows -->
+  <button
+    type="button"
+    id="lightbox-prev"
+    class="gallery-lightbox-nav gallery-lightbox-nav--prev"
+    aria-label="Previous image"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+  <button
+    type="button"
+    id="lightbox-next"
+    class="gallery-lightbox-nav gallery-lightbox-nav--next"
+    aria-label="Next image"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 6 15 12 9 18"></polyline>
+    </svg>
+  </button>
+
+  <!-- Image -->
+  <img id="lightbox-image" src="" alt="" />
+
+  <!-- Bottom bar: caption + metadata -->
+  <div id="lightbox-caption-bar" class="absolute bottom-0 left-0 right-0 z-[202] px-6 py-5 bg-gradient-to-t from-black/80 via-black/50 to-transparent pointer-events-none">
+    <div class="max-w-3xl mx-auto">
+      <p id="lightbox-caption" class="text-gallery-text/80 text-sm sm:text-base font-light italic text-center mb-2"></p>
+      <div id="lightbox-meta" class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-gallery-text/50 text-[0.65rem] tracking-wider uppercase" style="font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;"></div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const lightbox = document.getElementById("gallery-lightbox");
+    const lightboxImg = document.getElementById("lightbox-image");
+    const captionEl = document.getElementById("lightbox-caption");
+    const captionBar = document.getElementById("lightbox-caption-bar");
+    const counterEl = document.getElementById("lightbox-counter");
+    const closeBtn = lightbox?.querySelector(".gallery-lightbox-close");
+    const prevBtn = document.getElementById("lightbox-prev");
+    const nextBtn = document.getElementById("lightbox-next");
+
+    if (!lightbox || !lightboxImg) return;
+
+    let triggers = [];
+    let currentIndex = 0;
+
+    function collectTriggers() {
+      triggers = Array.from(document.querySelectorAll(".lightbox-trigger"));
+    }
+
+    function updateCounter() {
+      if (counterEl && triggers.length > 1) {
+        counterEl.textContent = (currentIndex + 1) + " / " + triggers.length;
+      } else if (counterEl) {
+        counterEl.textContent = "";
+      }
+    }
+
+    function showImage(index) {
+      if (index < 0 || index >= triggers.length) return;
+      currentIndex = index;
+      const trigger = triggers[index];
+      const img = trigger.querySelector("img");
+      if (!img) return;
+
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt || "Full size image";
+
+      var caption = trigger.getAttribute("data-caption") || "";
+      var camera = trigger.getAttribute("data-camera") || "";
+      var lens = trigger.getAttribute("data-lens") || "";
+      var settings = trigger.getAttribute("data-settings") || "";
+      var location = trigger.getAttribute("data-location") || "";
+
+      var metaEl = document.getElementById("lightbox-meta");
+
+      if (captionEl) captionEl.textContent = caption;
+
+      // Build metadata pills
+      if (metaEl) {
+        metaEl.innerHTML = "";
+        var items = [camera, lens, settings, location].filter(Boolean);
+        items.forEach(function(label, i) {
+          if (i > 0) {
+            var sep = document.createElement("span");
+            sep.textContent = "·";
+            sep.style.opacity = "0.4";
+            metaEl.appendChild(sep);
+          }
+          var span = document.createElement("span");
+          span.textContent = label;
+          metaEl.appendChild(span);
+        });
+      }
+
+      var hasContent = caption || camera || lens || settings || location;
+      if (captionBar) captionBar.style.display = hasContent ? "" : "none";
+
+      updateCounter();
+
+      // Show/hide nav arrows
+      if (prevBtn) prevBtn.style.display = triggers.length > 1 ? "" : "none";
+      if (nextBtn) nextBtn.style.display = triggers.length > 1 ? "" : "none";
+    }
+
+    function openLightbox(index) {
+      collectTriggers();
+      showImage(index);
+      lightbox.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("active");
+      document.body.style.overflow = "";
+      lightboxImg.src = "";
+    }
+
+    function navigate(delta) {
+      let next = currentIndex + delta;
+      if (next >= triggers.length) next = 0;
+      if (next < 0) next = triggers.length - 1;
+      showImage(next);
+    }
+
+    // Attach click handlers
+    collectTriggers();
+    triggers.forEach((trigger, i) => {
+      trigger.addEventListener("click", () => openLightbox(i));
+    });
+
+    closeBtn?.addEventListener("click", closeLightbox);
+    prevBtn?.addEventListener("click", () => navigate(-1));
+    nextBtn?.addEventListener("click", () => navigate(1));
+
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("active")) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") navigate(-1);
+      if (e.key === "ArrowRight") navigate(1);
+    });
+  });
+</script>

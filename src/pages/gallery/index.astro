@@ -1,12 +1,13 @@
 ---
 import BaseLayout from "../../layouts/base_layout.astro";
 import "../../styles/global.css";
-import GalleryGrid from "../../components/gallery/gallery_grid.astro";
+import "../../styles/gallery.css";
+import StoryCard from "../../components/gallery/story_card.astro";
+import ProjectCard from "../../components/gallery/project_card.astro";
+import CustomCursor from "../../components/gallery/custom_cursor.astro";
 import { getCollection } from "astro:content";
-import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
-import type { ListItem, ImageGallery as SchemaImageGallery } from "schema-dts"; // Import types
-import logo from "../../../content/assets/logo/logo.svg";
+import type { ListItem, ImageGallery as SchemaImageGallery } from "schema-dts";
 
 // Define interfaces needed for profile data
 interface Social {
@@ -15,7 +16,7 @@ interface Social {
 }
 interface ProfileData {
   name: string;
-  socials: Social[] /* Add other fields if needed */;
+  socials: Social[];
 }
 
 // Fetch profile data
@@ -28,13 +29,26 @@ const instagramSocial = profile.socials.find(
 );
 
 const page_info = {
-  title: `Gallery - ${profile.name}`, // Use profile name
-  description: `Photography portfolio showcasing various projects and moments captured by ${profile.name}`, // Use profile name
-  keywords: `photography, portfolio, gallery, ${profile.name}`, // Use profile name
+  title: `Gallery — ${profile.name}`,
+  description: `Visual stories and photography by ${profile.name}. Immersive photo essays exploring landscapes, streets, and the world through a lens.`,
+  keywords: `photography, portfolio, gallery, visual essays, ${profile.name}`,
 };
 
-// Get gallery collection for structured data
+// Get stories and galleries
+const stories = await getCollection("photo_stories");
+const sortedStories = stories.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date) : new Date(0);
+  const dateB = b.data.date ? new Date(b.data.date) : new Date(0);
+  return dateB.getTime() - dateA.getTime();
+});
+
 const galleries = await getCollection("gallery");
+const sortedGalleries = galleries.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date) : new Date(0);
+  const dateB = b.data.date ? new Date(b.data.date) : new Date(0);
+  return dateB.getTime() - dateA.getTime();
+});
+
 const pageUrl = new URL(
   Astro.url.pathname,
   Astro.site || "https://rishikc.com",
@@ -42,7 +56,6 @@ const pageUrl = new URL(
 
 // Create gallery items for JSON-LD
 const galleryItems = galleries.map((gallery) => {
-  // Ensure the object conforms to ImageGallery type expected by ListItem
   const gallerySchema: SchemaImageGallery = {
     "@type": "ImageGallery",
     name: gallery.data.title,
@@ -51,16 +64,14 @@ const galleryItems = galleries.map((gallery) => {
       `/gallery/${gallery.data.directory}/`,
       Astro.site || "https://rishikc.com",
     ).toString(),
-    // Add other required ImageGallery properties if necessary, e.g., image
     image: new URL(
-      gallery.data.featured_image.src, // Assuming featured_image has a src property
+      gallery.data.featured_image.src,
       Astro.site || "https://rishikc.com",
     ).toString(),
   };
   return gallerySchema;
 });
 
-// Explicitly type the itemListElement array
 const itemListElements: ListItem[] = galleryItems.map(
   (gallerySchema, index) => ({
     "@type": "ListItem",
@@ -68,6 +79,8 @@ const itemListElements: ListItem[] = galleryItems.map(
     item: gallerySchema,
   }),
 );
+
+const hasStories = sortedStories.length > 0;
 ---
 
 <BaseLayout page_info={page_info}>
@@ -114,108 +127,134 @@ const itemListElements: ListItem[] = galleryItems.map(
       ]
     }}
   />
-  <main
-    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-brand-100/[0.12]"
-  >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-10">
-      <a
-        href="/"
-        class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium mb-20"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
+
+  <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gallery-bg">
+    <!-- Hero Section -->
+    <div class="relative py-20 sm:py-28 lg:py-36 px-6 sm:px-8">
+      <div class="max-w-5xl mx-auto text-center">
+        <a
+          href="/"
+          class="group inline-flex items-center px-4 py-2.5 bg-gallery-bg-secondary/80 backdrop-blur-sm border border-gallery-border rounded-full text-gallery-text/70 hover:text-gallery-text hover:bg-gallery-bg-secondary transition-all duration-300 text-sm font-light mb-16 sm:mb-20"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          ></path>
-        </svg>
-        Back to home
-      </a>
-      <div
-        class="flex flex-col md:flex-row items-center justify-around text-center mb-20"
-      >
-        <div class="basis-1/3 lg:basis-2/5">
-          <Image
-            alt="logo"
-            src={logo}
-            transition:name="hero-logo-image"
-            class="mx-auto max-w-[80%]"
-          />
-        </div>
-        <div class="basis-2/3 lg:3/5">
-          <h1
-            class="text-4xl lg:text-5xl font-light text-brand-950 mb-8 tracking-[-0.02em] leading-tight"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="1.5"
           >
-            Photography Gallery
-          </h1>
-          <p
-            class="text-brand-800/90 text-xl leading-relaxed font-light max-w-2xl mx-auto tracking-wide"
-          >
-            Explore my collection of photography projects, from street
-            photography to portrait sessions.
-          </p>
-          {
-            instagramSocial && (
-              <a
-                href={instagramSocial.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center mt-6 text-sm text-brand-700 hover:text-brand-900 transition-colors duration-300 group font-['Montserrat_Variable']"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 mr-2 opacity-80 group-hover:opacity-100 transition-opacity"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                </svg>
-                Follow me on Instagram
-                <span class="inline-block ml-1 transition-transform duration-300 group-hover:translate-x-1">
-                  &rarr;
-                </span>
-              </a>
-            )
-          }
-        </div>
-      </div>
-      <div
-        class="mt-6 flex items-start p-4 rounded-lg bg-brand-100/[0.5] border border-brand-200 mx-auto shadow-sm"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 text-brand-700 flex-shrink-0 mr-3 mt-0.5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-            clip-rule="evenodd"></path>
-        </svg>
-        <p class="text-sm text-brand-800">
-          <strong class="font-medium">Heads up!</strong> I'm currently sorting through
-          and uploading lots of new photos to the gallery. It's a slow process, but
-          please feel free to check back often to see the latest additions. Enjoy
-          the photos that have been uploaded so far!
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            ></path>
+          </svg>
+          Home
+        </a>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-6">
+          Visual Stories
+        </h1>
+        <p class="text-gallery-text-muted text-lg sm:text-xl leading-relaxed font-light max-w-2xl mx-auto mb-8">
+          Photo essays and visual narratives — exploring the world one frame at a time.
         </p>
+        {instagramSocial && (
+          <a
+            href={instagramSocial.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center text-sm text-gallery-text-muted hover:text-gallery-accent transition-colors duration-300 group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-2 opacity-70 group-hover:opacity-100 transition-opacity"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+            </svg>
+            Instagram
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+        )}
       </div>
-      <GalleryGrid />
-      <p
-        class="text-center text-xs sm:text-sm text-gray-500 mt-12 sm:mt-16 font-light"
-      >
+    </div>
+
+    <!-- Stories Bento Grid -->
+    {hasStories && (
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-28" aria-label="Visual stories">
+        <div class="bento-grid">
+          {sortedStories.map((story, index) => (
+            <StoryCard story={story} featured={index === 0} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Browse by Category -->
+    <section class="border-t border-gallery-border" aria-label="Browse by category">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div class="text-center mb-12 sm:mb-16">
+          <h2 class="meta-label text-gallery-text-muted mb-4">Browse by Category</h2>
+          <p class="text-gallery-text/70 text-base font-light max-w-lg mx-auto">
+            Explore the full collection organized by theme and subject.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {sortedGalleries.map((gallery) => (
+            <ProjectCard project={gallery} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Copyright -->
+    <footer class="py-8 sm:py-12 px-6 sm:px-8 border-t border-gallery-border">
+      <p class="text-center text-xs text-gallery-text-muted/60 font-light max-w-2xl mx-auto">
         All photographs displayed in this gallery are the intellectual property
         of {profile.name}. Any reproduction, distribution, or use of these
         images, in whole or in part, without explicit written permission from
         the copyright holder is strictly prohibited.
       </p>
-    </div>
+    </footer>
   </main>
+
+  <CustomCursor />
 </BaseLayout>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const reveals = document.querySelectorAll(".gallery-reveal");
+    if (reveals.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    reveals.forEach((el) => observer.observe(el));
+
+    // Ripple effect on clickable cards
+    document.querySelectorAll(".gallery-ripple").forEach(function(el) {
+      el.addEventListener("click", function(e) {
+        var rect = el.getBoundingClientRect();
+        el.style.setProperty("--ripple-x", (e.clientX - rect.left) + "px");
+        el.style.setProperty("--ripple-y", (e.clientY - rect.top) + "px");
+        el.classList.remove("rippling");
+        void el.offsetWidth;
+        el.classList.add("rippling");
+        setTimeout(function() { el.classList.remove("rippling"); }, 400);
+      });
+    });
+  });
+</script>

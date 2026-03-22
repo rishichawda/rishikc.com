@@ -1,0 +1,197 @@
+---
+import { Image } from "astro:assets";
+
+interface ImageRef {
+  src: ImageMetadata;
+  alt?: string;
+  caption?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Section {
+  type: "full-bleed" | "text" | "diptych" | "triptych" | "horizontal-scroll" | "quote";
+  image?: ImageMetadata;
+  images?: ImageRef[];
+  content?: string;
+  alt?: string;
+  caption?: string;
+  attribution?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Props {
+  section: Section;
+  index: number;
+}
+
+const { section, index } = Astro.props;
+---
+
+{section.type === "full-bleed" && section.image && (
+  <div class="gallery-reveal w-full my-8 sm:my-16">
+    <figure class="relative">
+      <button
+        type="button"
+        class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+        data-caption={section.caption || ""}
+        data-camera={section.camera || ""}
+        data-lens={section.lens || ""}
+        data-settings={section.settings || ""}
+        data-location={section.location || ""}
+        aria-label={`View full image: ${section.alt || 'Photo'}`}
+      >
+        <Image
+          src={section.image}
+          alt={section.alt || `Story photo ${index + 1}`}
+          class="w-full h-auto max-h-[85vh] object-cover rounded-sm"
+          widths={[640, 1024, 1920, 2560]}
+          sizes="100vw"
+          loading="lazy"
+        />
+      </button>
+      {section.caption && (
+        <figcaption class="mt-4 text-center text-sm text-gallery-text-muted font-light italic">
+          {section.caption}
+        </figcaption>
+      )}
+    </figure>
+  </div>
+)}
+
+{section.type === "text" && section.content && (
+  <div class="gallery-reveal max-w-3xl mx-auto px-6 sm:px-8 my-12 sm:my-20" data-parallax="text">
+    <p class="text-gallery-text/90 text-lg sm:text-xl leading-[1.8] font-light">
+      {section.content}
+    </p>
+  </div>
+)}
+
+{section.type === "diptych" && section.images && (
+  <div class="gallery-reveal grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 my-8 sm:my-16 px-4 sm:px-8">
+    {section.images.map((img, i) => (
+      <figure>
+        <button
+          type="button"
+          class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+          data-caption={img.caption || ""}
+          data-camera={img.camera || ""}
+          data-lens={img.lens || ""}
+          data-settings={img.settings || ""}
+          data-location={img.location || ""}
+          aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+        >
+          <Image
+            src={img.src}
+            alt={img.alt || `Photo ${i + 1}`}
+            class="w-full h-auto aspect-[3/2] object-cover rounded-sm"
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 640px) 100vw, 50vw"
+            loading="lazy"
+          />
+        </button>
+        {img.caption && (
+          <figcaption class="mt-3 text-center text-sm text-gallery-text-muted font-light italic">
+            {img.caption}
+          </figcaption>
+        )}
+      </figure>
+    ))}
+  </div>
+)}
+
+{section.type === "triptych" && section.images && (
+  <div class="gallery-reveal grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 my-8 sm:my-16 px-4 sm:px-8">
+    {section.images.map((img, i) => (
+      <figure>
+        <button
+          type="button"
+          class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+          data-caption={img.caption || ""}
+          data-camera={img.camera || ""}
+          data-lens={img.lens || ""}
+          data-settings={img.settings || ""}
+          data-location={img.location || ""}
+          aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+        >
+          <Image
+            src={img.src}
+            alt={img.alt || `Photo ${i + 1}`}
+            class="w-full h-auto aspect-[3/4] object-cover rounded-sm"
+            widths={[400, 800]}
+            sizes="(max-width: 640px) 100vw, 33vw"
+            loading="lazy"
+          />
+        </button>
+        {img.caption && (
+          <figcaption class="mt-3 text-center text-sm text-gallery-text-muted font-light italic">
+            {img.caption}
+          </figcaption>
+        )}
+      </figure>
+    ))}
+  </div>
+)}
+
+{section.type === "horizontal-scroll" && section.images && (
+  <div class="gallery-reveal my-8 sm:my-16">
+    <div class="horizontal-scroll-wrapper" data-horizontal-scroll>
+      <div class="horizontal-scroll-sticky">
+        <div class="horizontal-scroll-track">
+          {section.images.map((img, i) => (
+            <figure class="horizontal-scroll-item">
+              <button
+                type="button"
+                class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0"
+                data-caption={img.caption || ""}
+                data-camera={img.camera || ""}
+                data-lens={img.lens || ""}
+                data-settings={img.settings || ""}
+                data-location={img.location || ""}
+                aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt || `Photo ${i + 1}`}
+                  class="w-full h-full object-cover rounded-sm"
+                  widths={[400, 800, 1200]}
+                  sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 35vw"
+                  loading="lazy"
+                />
+              </button>
+              {img.caption && (
+                <figcaption class="mt-3 text-center text-sm text-gallery-text-muted font-light italic">
+                  {img.caption}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+        <div class="horizontal-scroll-progress">
+          <div class="horizontal-scroll-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{section.type === "quote" && section.content && (
+  <div class="gallery-reveal max-w-3xl mx-auto px-6 sm:px-8 my-16 sm:my-24 text-center" data-parallax="text">
+    <blockquote class="relative">
+      <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-6xl text-gallery-accent/30 font-serif leading-none select-none" aria-hidden="true">&ldquo;</span>
+      <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed">
+        {section.content}
+      </p>
+      {section.attribution && (
+        <footer class="mt-4 meta-label text-gallery-text-muted">
+          — {section.attribution}
+        </footer>
+      )}
+    </blockquote>
+  </div>
+)}

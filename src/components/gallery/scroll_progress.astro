@@ -1,0 +1,22 @@
+---
+/* Scroll progress bar — thin 2px line at top of viewport */
+---
+
+<div id="scroll-progress" class="gallery-progress-bar" aria-hidden="true"></div>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const bar = document.getElementById("scroll-progress");
+    if (!bar) return;
+
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      bar.style.width = progress + "%";
+    }
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    updateProgress();
+  });
+</script>

@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from "astro:assets";
+
+interface Props {
+  story: CollectionEntry<'photo_stories'>;
+  featured?: boolean;
+}
+
+const { story, featured = false } = Astro.props;
+const { title, description, cover_image, cover_image_alt, tags, reading_time } = story.data;
+---
+
+<a
+  href={story.data.path}
+  class:list={[
+    "story-card gallery-reveal gallery-ripple group block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gallery-accent",
+    featured ? "bento-featured aspect-[4/3] sm:aspect-auto" : "aspect-[4/3]"
+  ]}
+  aria-label={`Read story: ${title}`}
+>
+  <Image
+    src={cover_image}
+    alt={cover_image_alt || title}
+    class="w-full h-full object-cover"
+    widths={featured ? [600, 1200, 1920] : [400, 800, 1200]}
+    sizes={featured 
+      ? "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 66vw" 
+      : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
+    transition:name={`story-cover-${story.id}`}
+  />
+  <div class="story-card-overlay"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+  <div class="story-card-content">
+    <div class="flex items-center gap-3 mb-3">
+      {reading_time && (
+        <span class="meta-label text-gallery-text/70">{reading_time}</span>
+      )}
+    </div>
+    <h3 class:list={[
+      "font-['Red_Hat_Display_Variable'] font-bold text-gallery-text leading-tight mb-2",
+      featured ? "text-2xl sm:text-3xl lg:text-4xl" : "text-lg sm:text-xl"
+    ]}>
+      {title}
+    </h3>
+    <p class:list={[
+      "text-gallery-text/80 font-light leading-relaxed",
+      featured ? "text-base sm:text-lg line-clamp-3" : "text-sm line-clamp-2"
+    ]}>
+      {description}
+    </p>
+    {tags && tags.length > 0 && (
+      <div class="flex flex-wrap gap-2 mt-3">
+        {tags.map((tag) => (
+          <span class="text-[0.65rem] bg-white/15 text-gallery-text/80 px-2.5 py-1 rounded-full tracking-wider uppercase font-light">
+            {tag}
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+</a>
