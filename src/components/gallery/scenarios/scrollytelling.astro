@@ -1,0 +1,243 @@
+---
+/**
+ * Scenario 4: Scrollytelling
+ * 
+ * The most immersive scenario — narrative driven by scrolling.
+ * Elements enter, animate, and exit as user scrolls.
+ * Fixed background with foreground text washing over it.
+ * Triggered by IntersectionObserver at 50% viewport.
+ * Transitions: 0.6s cubic-bezier(0.65, 0, 0.35, 1).
+ */
+import { Image } from "astro:assets";
+import StorySection from "../story_section.astro";
+
+
+interface ImageRef {
+  src: ImageMetadata;
+  alt?: string;
+  caption?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Section {
+  type: string;
+  image?: ImageMetadata;
+  images?: ImageRef[];
+  content?: string;
+  alt?: string;
+  caption?: string;
+  attribution?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Props {
+  title: string;
+  prologue: string;
+  cover_image: ImageMetadata;
+  cover_image_alt?: string;
+  sections: Section[];
+  storyId: string;
+}
+
+const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Astro.props;
+
+// Group sections into "chapters" — each full-bleed image starts a new chapter
+const chapters: { backgroundImage?: ImageMetadata; backgroundAlt?: string; sections: Section[] }[] = [];
+let currentChapter: { backgroundImage?: ImageMetadata; backgroundAlt?: string; sections: Section[] } = { sections: [] };
+
+sections.forEach(section => {
+  if (section.type === "full-bleed" && section.image) {
+    // Start a new chapter with this image as background
+    if (currentChapter.sections.length > 0 || currentChapter.backgroundImage) {
+      chapters.push(currentChapter);
+    }
+    currentChapter = {
+      backgroundImage: section.image,
+      backgroundAlt: section.alt,
+      sections: []
+    };
+  } else {
+    currentChapter.sections.push(section);
+  }
+});
+if (currentChapter.sections.length > 0 || currentChapter.backgroundImage) {
+  chapters.push(currentChapter);
+}
+---
+
+<article class="scrollytelling bg-gallery-bg" aria-label={title}>
+  <!-- Hero: full-screen cover -->
+  <header class="relative min-h-screen flex flex-col justify-end">
+    <div class="absolute inset-0">
+      <Image
+        src={cover_image}
+        alt={cover_image_alt || title}
+        class="w-full h-full object-cover"
+        widths={[640, 1024, 1920, 2560]}
+        sizes="100vw"
+        loading="eager"
+        transition:name={`story-cover-${storyId}`}
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-gallery-bg via-gallery-bg/40 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 pb-32 sm:pb-40 text-center">
+      <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8">
+        {title}
+      </h1>
+      <p class="text-gallery-text/85 text-lg sm:text-xl leading-relaxed font-light max-w-2xl mx-auto">
+        {prologue}
+      </p>
+    </div>
+
+    <div class="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10">
+      <span class="meta-label text-gallery-text/60 text-[0.65rem]">Scroll to Explore</span>
+      <div class="scroll-indicator-line"></div>
+    </div>
+  </header>
+
+  <!-- Chapters: each has a fixed background + overlaid content -->
+  {chapters.map((chapter, chapterIdx) => (
+    <section
+      class="scrollytelling-chapter relative"
+      data-chapter={chapterIdx}
+      style={chapter.backgroundImage ? `min-height: ${Math.max(100, chapter.sections.length * 80)}vh;` : ''}
+    >
+      {/* Fixed background image for this chapter */}
+      {chapter.backgroundImage && (
+        <div class="sticky top-0 h-screen overflow-hidden -z-10" aria-hidden="true">
+          <Image
+            src={chapter.backgroundImage}
+            alt={chapter.backgroundAlt || `Chapter ${chapterIdx + 1}`}
+            class="w-full h-full object-cover"
+            widths={[640, 1024, 1920, 2560]}
+            sizes="100vw"
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-gallery-bg/30"></div>
+        </div>
+      )}
+
+      {/* Foreground content "washes over" the fixed background */}
+      <div class:list={[
+        "relative z-10",
+        chapter.backgroundImage ? "-mt-[100vh]" : ""
+      ]}>
+        {chapter.backgroundImage && <div class="h-[50vh]"></div>}
+
+        {chapter.sections.map((section, sectionIdx) => (
+          <div
+            class="scrollytelling-panel min-h-[60vh] flex items-center"
+            data-panel={`${chapterIdx}-${sectionIdx}`}
+          >
+            {section.type === "text" && section.content && (
+              <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12">
+                <div class="bg-gallery-bg/80 backdrop-blur-sm rounded-lg p-8 sm:p-12">
+                  <p class="text-gallery-text/90 text-lg sm:text-xl leading-[1.8] font-light">
+                    {section.content}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {section.type === "quote" && section.content && (
+              <div class="max-w-xl mx-auto px-6 sm:px-8 lg:px-12">
+                <div class="bg-gallery-bg/80 backdrop-blur-sm rounded-lg p-8 sm:p-12 text-center">
+                  <blockquote>
+                    <span class="text-4xl text-gallery-accent/40 font-serif leading-none" aria-hidden="true">&ldquo;</span>
+                    <p class="font-['Red_Hat_Display_Variable'] text-xl sm:text-2xl text-gallery-text/90 font-light italic leading-relaxed mt-2">
+                      {section.content}
+                    </p>
+                    {section.attribution && (
+                      <footer class="mt-4 meta-label text-gallery-text-muted">
+                        — {section.attribution}
+                      </footer>
+                    )}
+                  </blockquote>
+                </div>
+              </div>
+            )}
+
+            {/* Non-text sections displayed normally */}
+            {(section.type === "diptych" || section.type === "triptych" || section.type === "horizontal-scroll") && (
+              <div class="w-full">
+                <StorySection section={section} index={sectionIdx} />
+              </div>
+            )}
+          </div>
+        ))}
+
+        {chapter.backgroundImage && <div class="h-[30vh]"></div>}
+      </div>
+    </section>
+  ))}
+
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" id="scrollytelling-progress" aria-hidden="true"></div>
+</article>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const article = document.querySelector(".scrollytelling");
+    if (!article) return;
+
+    // Scroll progress
+    const progressBar = document.getElementById("scrollytelling-progress");
+
+    function updateProgress() {
+      if (!progressBar) return;
+      var scrollTop = window.scrollY;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + "%";
+    }
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+
+    // Scrollytelling panels: fade in at 50% viewport
+    var panels = article.querySelectorAll(".scrollytelling-panel");
+    var panelObserver = new IntersectionObserver(
+      function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          } else {
+            // Allow exit animation
+            entry.target.style.opacity = "0.3";
+            entry.target.style.transform = "translateY(20px)";
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    panels.forEach(function(panel) {
+      panel.style.opacity = "0.3";
+      panel.style.transform = "translateY(20px)";
+      panel.style.transition = "opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1), transform 0.6s cubic-bezier(0.65, 0, 0.35, 1)";
+      panelObserver.observe(panel);
+    });
+
+    // Gallery reveals
+    var reveals = article.querySelectorAll(".gallery-reveal");
+    var revealObserver = new IntersectionObserver(
+      function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+    reveals.forEach(function(el) { revealObserver.observe(el); });
+  });
+</script>

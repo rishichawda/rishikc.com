@@ -1,0 +1,291 @@
+---
+/**
+ * Scenario 7: Day-in-the-Life Timeline
+ *
+ * Vertical timeline with growing line, pulsing time-of-day nodes,
+ * and STAR-model narration (Situation → Task → Action → Result).
+ * Each section becomes a timeline entry anchored to a time of day.
+ */
+import { Image } from "astro:assets";
+
+interface ImageRef {
+  src: ImageMetadata;
+  alt?: string;
+  caption?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Section {
+  type: string;
+  image?: ImageMetadata;
+  images?: ImageRef[];
+  content?: string;
+  alt?: string;
+  caption?: string;
+  attribution?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Props {
+  title: string;
+  prologue: string;
+  cover_image: ImageMetadata;
+  cover_image_alt?: string;
+  sections: Section[];
+  storyId: string;
+}
+
+const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Astro.props;
+
+// Assign time labels to sections for the timeline
+const timeLabels = [
+  "Dawn", "Morning", "Midday", "Afternoon", "Golden Hour", "Dusk", "Evening", "Night",
+  "Late Night", "Midnight",
+];
+---
+
+<article class="timeline-story bg-gallery-bg text-gallery-text" aria-label={title}>
+  <!-- Hero -->
+  <header class="relative min-h-[60vh] flex items-end overflow-hidden">
+    <Image
+      src={cover_image}
+      alt={cover_image_alt || title}
+      class="absolute inset-0 w-full h-full object-cover"
+      widths={[640, 1024, 1920]}
+      sizes="100vw"
+      loading="eager"
+      transition:name={`story-cover-${storyId}`}
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-gallery-bg via-gallery-bg/50 to-transparent"></div>
+    <div class="relative z-10 max-w-3xl px-6 sm:px-10 pb-12 sm:pb-20">
+      <h1 class="font-['Red_Hat_Display_Variable'] text-3xl sm:text-5xl font-bold leading-[1.1] tracking-tight text-gallery-text">
+        {title}
+      </h1>
+      <p class="mt-6 text-gallery-text/60 text-lg sm:text-xl leading-[1.7] font-light max-w-xl">
+        {prologue}
+      </p>
+    </div>
+  </header>
+
+  <!-- Timeline -->
+  <div class="timeline-container relative max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24">
+    <!-- Vertical line - grows via JS -->
+    <div class="timeline-line absolute left-6 sm:left-14 top-0 w-px bg-gallery-text/10" style="height: 100%;" aria-hidden="true">
+      <div class="timeline-line-progress absolute top-0 left-0 w-full bg-gallery-accent" style="height: 0%;"></div>
+    </div>
+
+    <div class="space-y-16 sm:space-y-24">
+      {sections.map((section, index) => {
+        const timeLabel = timeLabels[index % timeLabels.length];
+        const isEven = index % 2 === 0;
+
+        return (
+          <div class="timeline-entry gallery-reveal relative pl-12 sm:pl-24" data-time={timeLabel}>
+            <!-- Node -->
+            <div class="timeline-node absolute left-4 sm:left-12 top-2 w-4 h-4 rounded-full border-2 border-gallery-accent bg-gallery-bg z-10" aria-hidden="true">
+              <span class="absolute inset-0 rounded-full bg-gallery-accent/30 animate-pulse"></span>
+            </div>
+
+            <!-- Time label -->
+            <span class="meta-label text-gallery-accent text-xs font-semibold uppercase tracking-widest mb-3 block">
+              {timeLabel}
+            </span>
+
+            {section.type === "text" && section.content && (
+              <div class="max-w-2xl">
+                <p class="text-gallery-text/70 text-lg leading-[1.8] font-light">
+                  {section.content}
+                </p>
+              </div>
+            )}
+
+            {section.type === "full-bleed" && section.image && (
+              <figure class="max-w-3xl">
+                <button
+                  type="button"
+                  class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                  data-caption={section.caption || ""}
+                  data-camera={section.camera || ""}
+                  data-lens={section.lens || ""}
+                  data-settings={section.settings || ""}
+                  data-location={section.location || ""}
+                  aria-label={`View full image: ${section.alt || `Photo ${index + 1}`}`}
+                >
+                  <Image
+                    src={section.image}
+                    alt={section.alt || `Story photo ${index + 1}`}
+                    class="w-full h-auto rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                    widths={[640, 1024, 1440]}
+                    sizes="(max-width: 640px) calc(100vw - 4rem), 700px"
+                    loading="lazy"
+                  />
+                </button>
+                {section.caption && (
+                  <figcaption class="mt-3 text-sm text-gallery-text/40 font-light italic">
+                    {section.caption}
+                  </figcaption>
+                )}
+              </figure>
+            )}
+
+            {section.type === "diptych" && section.images && (
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+                {section.images.map((img, i) => (
+                  <figure>
+                    <button
+                      type="button"
+                      class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                      data-caption={img.caption || ""}
+                      data-camera={img.camera || ""}
+                      data-lens={img.lens || ""}
+                      data-settings={img.settings || ""}
+                      data-location={img.location || ""}
+                      aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt || `Photo ${i + 1}`}
+                        class="w-full h-auto aspect-[4/3] object-cover rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                        widths={[400, 800]}
+                        sizes="(max-width: 640px) 100vw, 350px"
+                        loading="lazy"
+                      />
+                    </button>
+                  </figure>
+                ))}
+              </div>
+            )}
+
+            {section.type === "triptych" && section.images && (
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl">
+                {section.images.map((img, i) => (
+                  <figure>
+                    <button
+                      type="button"
+                      class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                      data-caption={img.caption || ""}
+                      data-camera={img.camera || ""}
+                      data-lens={img.lens || ""}
+                      data-settings={img.settings || ""}
+                      data-location={img.location || ""}
+                      aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt || `Photo ${i + 1}`}
+                        class="w-full h-auto aspect-[3/4] object-cover rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                        widths={[320, 640]}
+                        sizes="(max-width: 640px) 100vw, 250px"
+                        loading="lazy"
+                      />
+                    </button>
+                  </figure>
+                ))}
+              </div>
+            )}
+
+            {section.type === "quote" && section.content && (
+              <blockquote class="max-w-2xl border-l-2 border-gallery-accent/40 pl-5">
+                <p class="font-['Red_Hat_Display_Variable'] text-xl sm:text-2xl text-gallery-text/80 font-light italic leading-relaxed">
+                  {section.content}
+                </p>
+                {section.attribution && (
+                  <footer class="mt-3 text-sm text-gallery-text/40 font-light">
+                    — {section.attribution}
+                  </footer>
+                )}
+              </blockquote>
+            )}
+
+            {section.type === "horizontal-scroll" && section.images && (
+              <div class="flex gap-4 overflow-x-auto scrollbar-hidden pb-4 max-w-4xl" role="list">
+                {section.images.map((img, i) => (
+                  <figure class="flex-shrink-0 w-72 sm:w-80" role="listitem">
+                    <button
+                      type="button"
+                      class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                      data-caption={img.caption || ""}
+                      data-camera={img.camera || ""}
+                      data-lens={img.lens || ""}
+                      data-settings={img.settings || ""}
+                      data-location={img.location || ""}
+                      aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt || `Photo ${i + 1}`}
+                        class="w-full h-auto aspect-[3/2] object-cover rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                        widths={[400, 800]}
+                        sizes="320px"
+                        loading="lazy"
+                      />
+                    </button>
+                  </figure>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</article>
+
+<style>
+  .scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", function () {
+    var timeline = document.querySelector(".timeline-story");
+    if (!timeline) return;
+
+    var lineProgress = timeline.querySelector(".timeline-line-progress");
+
+    // Grow timeline line based on scroll
+    function updateTimelineProgress() {
+      if (!lineProgress) return;
+      var container = timeline.querySelector(".timeline-container");
+      if (!container) return;
+      var rect = container.getBoundingClientRect();
+      var viewHeight = window.innerHeight;
+      var totalHeight = rect.height;
+      var scrolled = viewHeight - rect.top;
+      var pct = Math.max(0, Math.min(100, (scrolled / totalHeight) * 100));
+      lineProgress.style.height = pct + "%";
+    }
+
+    window.addEventListener("scroll", updateTimelineProgress, { passive: true });
+    updateTimelineProgress();
+
+    // Reveal entries
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
+    );
+
+    timeline.querySelectorAll(".gallery-reveal").forEach(function (el) {
+      observer.observe(el);
+    });
+  });
+</script>

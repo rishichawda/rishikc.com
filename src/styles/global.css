@@ -1,14 +1,102 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* ─── Design Tokens: Motion System ─── */
+:root {
+  /* Motion Easing Curves */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --ease-soft-landing: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+  --ease-narrative: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-tactile-pop: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-gallery: cubic-bezier(0.215, 0.61, 0.355, 1);
+
+  /* Motion Durations */
+  --duration-small: 200ms;
+  --duration-medium: 300ms;
+  --duration-large: 500ms;
+  --duration-transition: 400ms;
+  --duration-narrative: 600ms;
+  --duration-heavy-entry: 800ms;
+  --duration-tactile-bounce: 400ms;
+  --duration-cursor-morph: 300ms;
+
+  /* Named Motion Tokens (from Holy Grail spec) */
+  --ease-heavy-entry: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-cursor-morph: ease-out;
+  --heavy-entry-distance: 40px;
+  --cursor-morph-from: 12px;
+  --cursor-morph-to: 40px;
+
+  /* Typography Scale (Major Third 1.25) */
+  --text-base: 1rem;       /* 16px */
+  --text-body: 1.125rem;   /* 18px */
+  --text-lg: 1.25rem;      /* 20px */
+  --text-xl: 1.563rem;     /* 25px */
+  --text-2xl: 1.953rem;    /* 31.25px */
+  --text-3xl: 2.441rem;    /* 39px */
+  --text-4xl: 3.052rem;    /* 48.83px */
+  --text-display: 6rem;    /* 96px */
+  --text-caption: 0.875rem; /* 14px */
+  --text-metadata: 0.75rem; /* 12px */
+
+  /* Spacing Tokens */
+  --grid-gap: 2rem;
+  --scroll-padding: 15vh;
+
+  /* Focus Ring (WCAG) */
+  --focus-halo: 0 0 0 4px var(--color-brand-blue, #2D31FA);
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: var(--scroll-padding);
   }
   
   body {
     color: #111827;
     background-color: white;
+  }
+
+  /* WCAG Focus Ring */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-halo);
+  }
+
+  /* Reduced Motion: Disable transitions and animations */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    .scroll-reveal,
+    .gallery-reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    .horizontal-scroll-wrapper {
+      height: auto !important;
+    }
+
+    .horizontal-scroll-sticky {
+      position: relative;
+      height: auto;
+    }
+
+    .horizontal-scroll-track {
+      flex-direction: column;
+      transform: none !important;
+    }
   }
 }
 
@@ -101,6 +189,189 @@
     50% {
       transform: translateY(-10px);
     }
+  }
+
+  /* ─── Narrative Motion Utilities (from Roadmap tokens) ─── */
+  
+  /* Narrative Slide: subtle upward reveal for storytelling */
+  .narrative-slide {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity var(--duration-narrative) var(--ease-narrative),
+                transform var(--duration-narrative) var(--ease-narrative);
+  }
+  .narrative-slide.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Subtle Fade: gentle opacity transition */
+  .subtle-fade {
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+  }
+  .subtle-fade.visible {
+    opacity: 1;
+  }
+
+  /* Tactile Pop: playful bounce-in scale */
+  .tactile-pop {
+    transform: scale(1);
+    transition: transform 0.3s var(--ease-tactile-pop);
+  }
+  .tactile-pop:hover,
+  .tactile-pop.active {
+    transform: scale(1.05);
+  }
+
+  /* Ken Burns: slow cinematic zoom */
+  .ken-burns {
+    animation: ken-burns 10s ease-in-out forwards;
+  }
+  @keyframes ken-burns {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); }
+  }
+
+  /* Fade in from different directions */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .fade-in-left {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .fade-in-right {
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .fade-in-up.visible,
+  .fade-in-left.visible,
+  .fade-in-right.visible {
+    opacity: 1;
+    transform: translate(0);
+  }
+
+  /* Stagger delays for child elements */
+  .stagger-children > *:nth-child(1) { transition-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { transition-delay: 100ms; }
+  .stagger-children > *:nth-child(3) { transition-delay: 200ms; }
+  .stagger-children > *:nth-child(4) { transition-delay: 300ms; }
+  .stagger-children > *:nth-child(5) { transition-delay: 400ms; }
+  .stagger-children > *:nth-child(6) { transition-delay: 500ms; }
+  .stagger-children > *:nth-child(7) { transition-delay: 600ms; }
+  .stagger-children > *:nth-child(8) { transition-delay: 700ms; }
+
+  /* Parallax speed utilities */
+  .parallax-slow { --parallax-speed: 0.5; }
+  .parallax-medium { --parallax-speed: 0.8; }
+  .parallax-text { --parallax-speed: 0.04; }
+
+  /* SVG line drawing animation */
+  .svg-draw {
+    stroke-dasharray: var(--path-length, 1000);
+    stroke-dashoffset: var(--path-length, 1000);
+    animation: svg-draw 2s ease-in-out forwards;
+  }
+  @keyframes svg-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Timeline grow animation */
+  .timeline-grow {
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 0.6s var(--ease-narrative);
+  }
+  .timeline-grow.visible {
+    transform: scaleY(1);
+  }
+
+  /* Timeline node pulse */
+  .timeline-pulse {
+    animation: timeline-pulse 2s ease-in-out infinite;
+  }
+  @keyframes timeline-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.5); opacity: 1; }
+  }
+
+  /* Image blur-up placeholder */
+  .blur-up {
+    filter: blur(20px);
+    transform: scale(1.1);
+    transition: filter 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .blur-up.loaded {
+    filter: blur(0);
+    transform: scale(1);
+  }
+
+  /* Scroll progress bar (global) */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-brand-500, #9aa7d7), var(--color-brand-700, #7989c9));
+    z-index: 100;
+    width: 0%;
+    transition: width 50ms linear;
+  }
+
+  /* Map marker elastic bounce */
+  .marker-bounce {
+    animation: marker-bounce 0.6s var(--ease-elastic);
+  }
+  @keyframes marker-bounce {
+    0% { transform: translateY(-20px) scale(0); opacity: 0; }
+    60% { transform: translateY(0) scale(1.2); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  /* Heavy Entry: dramatic viewport entrance */
+  .heavy-entry {
+    opacity: 0;
+    transform: translateY(var(--heavy-entry-distance, 40px));
+    transition: opacity var(--duration-heavy-entry) var(--ease-heavy-entry),
+                transform var(--duration-heavy-entry) var(--ease-heavy-entry);
+  }
+  .heavy-entry.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Tactile Bounce: playful overshoot scale (updated token) */
+  .tactile-bounce {
+    transform: scale(1);
+    transition: transform var(--duration-tactile-bounce) var(--ease-tactile-pop);
+  }
+  .tactile-bounce:hover,
+  .tactile-bounce.active {
+    transform: scale(1.05);
+  }
+
+  /* Text Scramble: glitch-decoding effect placeholder */
+  .text-scramble {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Reading progress bar */
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: var(--color-brand-blue, #2D31FA);
+    z-index: 9999;
+    width: 0%;
+    transition: width 50ms linear;
+    pointer-events: none;
   }
 }
 

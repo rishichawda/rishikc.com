@@ -12,7 +12,7 @@ interface ImageRef {
 }
 
 interface Section {
-  type: "full-bleed" | "text" | "diptych" | "triptych" | "horizontal-scroll" | "quote";
+  type: string;
   image?: ImageMetadata;
   images?: ImageRef[];
   content?: string;

@@ -7,6 +7,7 @@ import { Schema } from "astro-seo-schema";
 import StoryHero from "../../../components/gallery/story_hero.astro";
 import StorySection from "../../../components/gallery/story_section.astro";
 import StoryEpilogue from "../../../components/gallery/story_epilogue.astro";
+import ScenarioRenderer from "../../../components/gallery/scenario_renderer.astro";
 import Lightbox from "../../../components/gallery/lightbox.astro";
 import ScrollProgress from "../../../components/gallery/scroll_progress.astro";
 import CustomCursor from "../../../components/gallery/custom_cursor.astro";
@@ -45,7 +46,11 @@ const {
   epilogue,
   tags,
   date,
+  scenario,
 } = story.data;
+
+// Use scenario renderer for non-default scenarios
+const useScenarioRenderer = scenario && scenario !== "scrollytelling";
 
 const page_info = {
   title: `${title} — ${profile.name}`,
@@ -117,23 +122,37 @@ const hasNextStory = allStories.length > 1;
       </a>
     </nav>
 
-    <!-- Prologue / Hero -->
-    <StoryHero
-      title={title}
-      prologue={prologue}
-      cover_image={cover_image}
-      cover_image_alt={cover_image_alt}
-      storyId={story.id}
-    />
+    <!-- Scenario-aware rendering -->
+    {useScenarioRenderer ? (
+      <ScenarioRenderer
+        scenario={scenario}
+        title={title}
+        prologue={prologue}
+        cover_image={cover_image}
+        cover_image_alt={cover_image_alt}
+        sections={sections}
+        storyId={story.id}
+      />
+    ) : (
+      <>
+        {/* Default: Scrollytelling with existing components */}
+        <StoryHero
+          title={title}
+          prologue={prologue}
+          cover_image={cover_image}
+          cover_image_alt={cover_image_alt}
+          storyId={story.id}
+        />
 
-    <!-- Narrative Sections -->
-    <div class="relative">
-      {sections.map((section, index) => (
-        <StorySection section={section} index={index} />
-      ))}
-    </div>
+        <div class="relative">
+          {sections.map((section, index) => (
+            <StorySection section={section} index={index} />
+          ))}
+        </div>
+      </>
+    )}
 
-    <!-- Epilogue -->
+    <!-- Epilogue (shown for all scenarios) -->
     <StoryEpilogue epilogue={epilogue} />
 
     <!-- Next Story CTA -->

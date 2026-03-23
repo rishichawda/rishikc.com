@@ -1,0 +1,325 @@
+---
+/**
+ * Scenario 8: Interactive Map
+ *
+ * Location-based stories with a visual map overview and location markers.
+ * Each section anchors to a location with marker bounce animation.
+ * Supports zooming into location details. Uses CSS-based map representation
+ * since no external mapping libraries are allowed.
+ */
+import { Image } from "astro:assets";
+
+interface ImageRef {
+  src: ImageMetadata;
+  alt?: string;
+  caption?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Section {
+  type: string;
+  image?: ImageMetadata;
+  images?: ImageRef[];
+  content?: string;
+  alt?: string;
+  caption?: string;
+  attribution?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Props {
+  title: string;
+  prologue: string;
+  cover_image: ImageMetadata;
+  cover_image_alt?: string;
+  sections: Section[];
+  storyId: string;
+}
+
+const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Astro.props;
+
+// Extract unique locations from sections
+const locations: { name: string; index: number }[] = [];
+sections.forEach((section, i) => {
+  const loc = section.location || (section.type === "full-bleed" ? `Location ${i + 1}` : null);
+  if (loc) {
+    locations.push({ name: loc, index: i });
+  }
+});
+---
+
+<article class="interactive-map bg-gallery-bg text-gallery-text" aria-label={title}>
+  <!-- Hero with cover as map overview -->
+  <header class="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+    <Image
+      src={cover_image}
+      alt={cover_image_alt || `Map overview: ${title}`}
+      class="absolute inset-0 w-full h-full object-cover"
+      widths={[640, 1024, 1920]}
+      sizes="100vw"
+      loading="eager"
+      transition:name={`story-cover-${storyId}`}
+    />
+    <div class="absolute inset-0 bg-gradient-to-b from-gallery-bg/60 via-transparent to-gallery-bg"></div>
+
+    <div class="relative z-10 text-center max-w-3xl px-6 sm:px-10">
+      <h1 class="font-['Red_Hat_Display_Variable'] text-3xl sm:text-5xl font-bold leading-[1.1] tracking-tight text-gallery-text mb-6">
+        {title}
+      </h1>
+      <p class="text-gallery-text/60 text-lg sm:text-xl leading-[1.7] font-light">
+        {prologue}
+      </p>
+    </div>
+
+    <!-- Location markers overlay on hero -->
+    {locations.length > 0 && (
+      <nav class="absolute bottom-8 left-0 right-0 z-20 flex justify-center gap-3 flex-wrap px-6" aria-label="Story locations">
+        {locations.map((loc, i) => (
+          <a
+            href={`#map-section-${loc.index}`}
+            class="map-marker group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gallery-bg/70 backdrop-blur-sm border border-gallery-text/20 text-sm text-gallery-text/80 transition-all hover:bg-gallery-accent hover:text-white hover:border-gallery-accent"
+            data-marker-index={loc.index}
+          >
+            <svg class="w-4 h-4 text-gallery-accent group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            <span>{loc.name}</span>
+          </a>
+        ))}
+      </nav>
+    )}
+  </header>
+
+  <!-- Content sections as location stops -->
+  <div class="max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24">
+    {sections.map((section, index) => {
+      const loc = section.location || null;
+
+      return (
+        <div
+          id={`map-section-${index}`}
+          class:list={["map-section gallery-reveal mb-16 sm:mb-24 scroll-mt-24", loc ? "has-location" : ""]}
+          data-location={loc || ""}
+        >
+          {/* Location badge */}
+          {loc && (
+            <div class="flex items-center gap-3 mb-6">
+              <div class="map-pin w-8 h-8 rounded-full bg-gallery-accent/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-gallery-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+              </div>
+              <span class="meta-label text-gallery-accent text-xs font-semibold uppercase tracking-widest">
+                {loc}
+              </span>
+            </div>
+          )}
+
+          {section.type === "text" && section.content && (
+            <div class="max-w-2xl">
+              <p class="text-gallery-text/70 text-lg leading-[1.8] font-light">
+                {section.content}
+              </p>
+            </div>
+          )}
+
+          {section.type === "full-bleed" && section.image && (
+            <figure>
+              <button
+                type="button"
+                class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                data-caption={section.caption || ""}
+                data-camera={section.camera || ""}
+                data-lens={section.lens || ""}
+                data-settings={section.settings || ""}
+                data-location={section.location || ""}
+                aria-label={`View full image: ${section.alt || `Photo at ${loc || `location ${index + 1}`}`}`}
+              >
+                <Image
+                  src={section.image}
+                  alt={section.alt || `Photo ${index + 1}`}
+                  class="w-full h-auto max-h-[70vh] object-cover rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-[1.01]"
+                  widths={[640, 1024, 1920]}
+                  sizes="(max-width: 640px) 100vw, 900px"
+                  loading="lazy"
+                />
+              </button>
+              {section.caption && (
+                <figcaption class="mt-3 text-sm text-gallery-text/40 font-light italic">
+                  {section.caption}
+                </figcaption>
+              )}
+            </figure>
+          )}
+
+          {section.type === "diptych" && section.images && (
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {section.images.map((img, i) => (
+                <figure>
+                  <button
+                    type="button"
+                    class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                    data-caption={img.caption || ""}
+                    data-camera={img.camera || ""}
+                    data-lens={img.lens || ""}
+                    data-settings={img.settings || ""}
+                    data-location={img.location || ""}
+                    aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                  >
+                    <Image
+                      src={img.src}
+                      alt={img.alt || `Photo ${i + 1}`}
+                      class="w-full h-auto aspect-[4/3] object-cover rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                      widths={[400, 800, 1200]}
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                      loading="lazy"
+                    />
+                  </button>
+                </figure>
+              ))}
+            </div>
+          )}
+
+          {section.type === "triptych" && section.images && (
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {section.images.map((img, i) => (
+                <figure>
+                  <button
+                    type="button"
+                    class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                    data-caption={img.caption || ""}
+                    data-camera={img.camera || ""}
+                    data-lens={img.lens || ""}
+                    data-settings={img.settings || ""}
+                    data-location={img.location || ""}
+                    aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                  >
+                    <Image
+                      src={img.src}
+                      alt={img.alt || `Photo ${i + 1}`}
+                      class="w-full h-auto aspect-[3/4] object-cover rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                      widths={[320, 640]}
+                      sizes="(max-width: 640px) 100vw, 33vw"
+                      loading="lazy"
+                    />
+                  </button>
+                </figure>
+              ))}
+            </div>
+          )}
+
+          {section.type === "quote" && section.content && (
+            <blockquote class="max-w-2xl border-l-2 border-gallery-accent/40 pl-5">
+              <p class="font-['Red_Hat_Display_Variable'] text-xl sm:text-2xl text-gallery-text/80 font-light italic leading-relaxed">
+                {section.content}
+              </p>
+              {section.attribution && (
+                <footer class="mt-3 text-sm text-gallery-text/40 font-light">
+                  — {section.attribution}
+                </footer>
+              )}
+            </blockquote>
+          )}
+
+          {section.type === "horizontal-scroll" && section.images && (
+            <div class="flex gap-4 overflow-x-auto scrollbar-hidden pb-4" role="list">
+              {section.images.map((img, i) => (
+                <figure class="flex-shrink-0 w-72 sm:w-80" role="listitem">
+                  <button
+                    type="button"
+                    class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                    data-caption={img.caption || ""}
+                    data-camera={img.camera || ""}
+                    data-lens={img.lens || ""}
+                    data-settings={img.settings || ""}
+                    data-location={img.location || ""}
+                    aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                  >
+                    <Image
+                      src={img.src}
+                      alt={img.alt || `Photo ${i + 1}`}
+                      class="w-full h-auto aspect-[3/2] object-cover rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
+                      widths={[400, 800]}
+                      sizes="320px"
+                      loading="lazy"
+                    />
+                  </button>
+                </figure>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+</article>
+
+<style>
+  .scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  .map-pin {
+    animation: marker-bounce 2s var(--ease-elastic, cubic-bezier(0.68, -0.55, 0.265, 1.55)) infinite;
+  }
+
+  @keyframes marker-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .map-pin {
+      animation: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", function () {
+    var map = document.querySelector(".interactive-map");
+    if (!map) return;
+
+    // Smooth scroll for location markers
+    map.querySelectorAll(".map-marker").forEach(function (marker) {
+      marker.addEventListener("click", function (e) {
+        e.preventDefault();
+        var href = marker.getAttribute("href");
+        if (!href) return;
+        var target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          target.querySelector(".map-pin")?.classList.add("bounced");
+        }
+      });
+    });
+
+    // Reveal animation
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    map.querySelectorAll(".gallery-reveal").forEach(function (el) {
+      observer.observe(el);
+    });
+  });
+</script>

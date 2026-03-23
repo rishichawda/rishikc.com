@@ -1,0 +1,263 @@
+---
+/**
+ * Scenario 5: Brand Story
+ * 
+ * Focus on values and history. Uses "Nature Distilled" aesthetic.
+ * Features SVG line drawing animations, hand-rendered feel,
+ * and "choose your own adventure" style exploration links.
+ */
+import { Image } from "astro:assets";
+
+interface ImageRef {
+  src: ImageMetadata;
+  alt?: string;
+  caption?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Section {
+  type: string;
+  image?: ImageMetadata;
+  images?: ImageRef[];
+  content?: string;
+  alt?: string;
+  caption?: string;
+  attribution?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Props {
+  title: string;
+  prologue: string;
+  cover_image: ImageMetadata;
+  cover_image_alt?: string;
+  sections: Section[];
+  storyId: string;
+}
+
+const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Astro.props;
+---
+
+<article class="brand-story" aria-label={title}>
+  <!-- Nature Distilled hero with earthy tones -->
+  <header class="relative min-h-[80vh] flex items-center justify-center bg-cloud-dancer overflow-hidden">
+    <div class="absolute inset-0 opacity-20">
+      <Image
+        src={cover_image}
+        alt={cover_image_alt || title}
+        class="w-full h-full object-cover"
+        widths={[640, 1024, 1920]}
+        sizes="100vw"
+        loading="eager"
+        transition:name={`story-cover-${storyId}`}
+      />
+    </div>
+
+    <!-- SVG decorative line drawing -->
+    <svg class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+      <path
+        class="svg-draw"
+        d="M0,200 C200,100 400,300 600,200 S1000,100 1200,200 S1600,300 1920,200"
+        fill="none"
+        stroke="var(--color-earth-clay, #D7BAA9)"
+        stroke-width="1"
+        style="--path-length: 2400"
+      />
+    </svg>
+
+    <div class="relative z-10 max-w-3xl mx-auto px-6 sm:px-8 text-center">
+      <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-indigo leading-[1.1] tracking-tight mb-8 narrative-slide" data-observe>
+        {title}
+      </h1>
+      <p class="text-brand-indigo/70 text-lg sm:text-xl leading-[1.8] font-light narrative-slide" data-observe style="transition-delay: 200ms;">
+        {prologue}
+      </p>
+    </div>
+  </header>
+
+  <!-- Content sections with Nature Distilled aesthetic -->
+  <div class="bg-cloud-dancer">
+    {sections.map((section, index) => (
+      <div class:list={[
+        section.type === "full-bleed" ? "w-full" : "max-w-3xl mx-auto px-6 sm:px-8"
+      ]}>
+        {section.type === "text" && section.content && (
+          <div class="gallery-reveal py-10 sm:py-16" data-parallax="text">
+            <p class="text-brand-indigo/80 text-lg sm:text-xl leading-[1.8] font-light">
+              {section.content}
+            </p>
+          </div>
+        )}
+
+        {section.type === "full-bleed" && section.image && (
+          <figure class="gallery-reveal my-12 sm:my-20">
+            <button
+              type="button"
+              class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+              data-caption={section.caption || ""}
+              data-camera={section.camera || ""}
+              data-lens={section.lens || ""}
+              data-settings={section.settings || ""}
+              data-location={section.location || ""}
+              aria-label={`View full image: ${section.alt || 'Photo'}`}
+            >
+              <Image
+                src={section.image}
+                alt={section.alt || `Story photo ${index + 1}`}
+                class="w-full h-auto max-h-[80vh] object-cover rounded-sm"
+                widths={[640, 1024, 1920, 2560]}
+                sizes="100vw"
+                loading="lazy"
+              />
+            </button>
+            {section.caption && (
+              <figcaption class="max-w-3xl mx-auto px-6 sm:px-8 mt-4 text-sm text-brand-indigo/50 font-light italic">
+                {section.caption}
+              </figcaption>
+            )}
+          </figure>
+        )}
+
+        {section.type === "diptych" && section.images && (
+          <div class="gallery-reveal grid grid-cols-1 sm:grid-cols-2 gap-6 my-12 sm:my-20">
+            {section.images.map((img, i) => (
+              <figure>
+                <button
+                  type="button"
+                  class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                  data-caption={img.caption || ""}
+                  data-camera={img.camera || ""}
+                  data-lens={img.lens || ""}
+                  data-settings={img.settings || ""}
+                  data-location={img.location || ""}
+                  aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt || `Photo ${i + 1}`}
+                    class="w-full h-auto aspect-[4/3] object-cover rounded-lg shadow-md"
+                    widths={[400, 800, 1200]}
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                    loading="lazy"
+                  />
+                </button>
+                {img.caption && (
+                  <figcaption class="mt-3 text-sm text-brand-indigo/50 font-light italic">
+                    {img.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+        )}
+
+        {section.type === "triptych" && section.images && (
+          <div class="gallery-reveal grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 my-12 sm:my-20">
+            {section.images.map((img, i) => (
+              <figure>
+                <button
+                  type="button"
+                  class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                  data-caption={img.caption || ""}
+                  data-camera={img.camera || ""}
+                  data-lens={img.lens || ""}
+                  data-settings={img.settings || ""}
+                  data-location={img.location || ""}
+                  aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt || `Photo ${i + 1}`}
+                    class="w-full h-auto aspect-[3/4] object-cover rounded-lg shadow-md"
+                    widths={[400, 800]}
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                    loading="lazy"
+                  />
+                </button>
+              </figure>
+            ))}
+          </div>
+        )}
+
+        {section.type === "quote" && section.content && (
+          <div class="gallery-reveal py-12 sm:py-20 text-center">
+            <blockquote class="relative max-w-2xl mx-auto border-l-4 border-earth-clay/50 pl-6 text-left">
+              <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-brand-indigo/80 font-light italic leading-relaxed">
+                {section.content}
+              </p>
+              {section.attribution && (
+                <footer class="mt-4 text-sm text-brand-indigo/50 font-light">
+                  — {section.attribution}
+                </footer>
+              )}
+            </blockquote>
+          </div>
+        )}
+
+        {section.type === "horizontal-scroll" && section.images && (
+          <div class="gallery-reveal my-12 sm:my-20">
+            <div class="horizontal-scroll-wrapper" data-horizontal-scroll>
+              <div class="horizontal-scroll-sticky">
+                <div class="horizontal-scroll-track">
+                  {section.images.map((img, i) => (
+                    <figure class="horizontal-scroll-item">
+                      <button
+                        type="button"
+                        class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0"
+                        data-caption={img.caption || ""}
+                        data-camera={img.camera || ""}
+                        data-lens={img.lens || ""}
+                        data-settings={img.settings || ""}
+                        data-location={img.location || ""}
+                        aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                      >
+                        <Image
+                          src={img.src}
+                          alt={img.alt || `Photo ${i + 1}`}
+                          class="w-full h-full object-cover rounded-lg"
+                          widths={[400, 800, 1200]}
+                          sizes="70vw"
+                          loading="lazy"
+                        />
+                      </button>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</article>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    var story = document.querySelector(".brand-story");
+    if (!story) return;
+
+    var observer = new IntersectionObserver(
+      function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    story.querySelectorAll("[data-observe], .gallery-reveal").forEach(function(el) {
+      observer.observe(el);
+    });
+  });
+</script>

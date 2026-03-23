@@ -1,0 +1,92 @@
+---
+/**
+ * ScenarioRenderer
+ *
+ * Maps the `scenario` field from a photo_stories entry to the
+ * corresponding scenario layout component. Falls back to the
+ * default Scrollytelling scenario.
+ *
+ * This component replaces the StoryHero → StorySection → StoryEpilogue
+ * pipeline with a single scenario component that handles its own
+ * hero, sections, and visual treatment.
+ */
+import SingularIconicFocus from "./scenarios/singular_iconic_focus.astro";
+import ThematicEssay from "./scenarios/thematic_essay.astro";
+import KineticArchive from "./scenarios/kinetic_archive.astro";
+import Scrollytelling from "./scenarios/scrollytelling.astro";
+import BrandStory from "./scenarios/brand_story.astro";
+import MasonryMosaic from "./scenarios/masonry_mosaic.astro";
+import DayInTheLifeTimeline from "./scenarios/day_in_the_life_timeline.astro";
+import InteractiveMap from "./scenarios/interactive_map.astro";
+
+interface ImageRef {
+  src: ImageMetadata;
+  alt?: string;
+  caption?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+  tags?: string[];
+}
+
+interface Section {
+  type: string;
+  image?: ImageMetadata;
+  images?: ImageRef[];
+  content?: string;
+  alt?: string;
+  caption?: string;
+  attribution?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Props {
+  scenario: string;
+  title: string;
+  prologue: string;
+  cover_image: ImageMetadata;
+  cover_image_alt?: string;
+  sections: Section[];
+  storyId: string;
+}
+
+const { scenario, title, prologue, cover_image, cover_image_alt, sections, storyId } = Astro.props;
+
+const commonProps = { title, prologue, cover_image, cover_image_alt, sections, storyId };
+---
+
+{scenario === "singular-iconic-focus" && (
+  <SingularIconicFocus {...commonProps} />
+)}
+
+{scenario === "thematic-essay" && (
+  <ThematicEssay {...commonProps} />
+)}
+
+{scenario === "kinetic-archive" && (
+  <KineticArchive {...commonProps} />
+)}
+
+{scenario === "scrollytelling" && (
+  <Scrollytelling {...commonProps} />
+)}
+
+{scenario === "brand-story" && (
+  <BrandStory {...commonProps} />
+)}
+
+{scenario === "masonry-mosaic" && (
+  <MasonryMosaic {...commonProps} />
+)}
+
+{scenario === "day-in-the-life-timeline" && (
+  <DayInTheLifeTimeline {...commonProps} />
+)}
+
+{scenario === "interactive-map" && (
+  <InteractiveMap {...commonProps} />
+)}

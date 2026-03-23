@@ -1,0 +1,236 @@
+---
+/**
+ * Scenario 3: Kinetic Archive
+ * 
+ * Horizontal scroll film strip for browsing large photo collections.
+ * Vertical scrolling translated into horizontal motion via CSS sticky + translateX.
+ * Parallax at different speeds, thumbnail scrubber, snap-centering.
+ * On hover, images expand slightly and reveal a "view details" pill.
+ */
+import { Image } from "astro:assets";
+
+interface ImageRef {
+  src: ImageMetadata;
+  alt?: string;
+  caption?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Section {
+  type: string;
+  image?: ImageMetadata;
+  images?: ImageRef[];
+  content?: string;
+  alt?: string;
+  caption?: string;
+  attribution?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Props {
+  title: string;
+  prologue: string;
+  cover_image: ImageMetadata;
+  cover_image_alt?: string;
+  sections: Section[];
+  storyId: string;
+}
+
+const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Astro.props;
+
+// Collect all images for the kinetic strip
+const allImages: ImageRef[] = [];
+sections.forEach(section => {
+  if (section.type === "full-bleed" && section.image) {
+    allImages.push({
+      src: section.image as unknown as ImageMetadata,
+      alt: section.alt,
+      caption: section.caption,
+      camera: section.camera,
+      lens: section.lens,
+      settings: section.settings,
+      location: section.location,
+    });
+  }
+  if (section.images) {
+    allImages.push(...section.images);
+  }
+});
+---
+
+<article class="kinetic-archive bg-gallery-bg" aria-label={title}>
+  <!-- Title Card -->
+  <header class="min-h-screen flex flex-col justify-center items-center px-6 sm:px-8 text-center relative">
+    <div class="absolute inset-0 overflow-hidden">
+      <Image
+        src={cover_image}
+        alt={cover_image_alt || title}
+        class="w-full h-full object-cover opacity-30"
+        widths={[640, 1024, 1920]}
+        sizes="100vw"
+        loading="eager"
+        transition:name={`story-cover-${storyId}`}
+      />
+      <div class="absolute inset-0 bg-gallery-bg/70"></div>
+    </div>
+    <div class="relative z-10 max-w-3xl">
+      <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8 narrative-slide" data-observe>
+        {title}
+      </h1>
+      <p class="text-gallery-text/85 text-lg sm:text-xl leading-[1.8] font-light narrative-slide" data-observe style="transition-delay: 200ms;">
+        {prologue}
+      </p>
+    </div>
+
+    <div class="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-10">
+      <span class="meta-label text-gallery-text/60 text-[0.65rem]">Scroll to Browse</span>
+      <div class="scroll-indicator-line"></div>
+    </div>
+  </header>
+
+  <!-- Horizontal Scroll Film Strip -->
+  {allImages.length > 0 && (
+    <section class="kinetic-strip" aria-label="Photo archive">
+      <div class="horizontal-scroll-wrapper" data-horizontal-scroll style={`height: ${(allImages.length + 1) * 100}vh;`}>
+        <div class="horizontal-scroll-sticky">
+          <div class="horizontal-scroll-track">
+            {allImages.map((img, i) => (
+              <figure class="horizontal-scroll-item kinetic-item group relative">
+                <button
+                  type="button"
+                  class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0 relative overflow-hidden"
+                  data-caption={img.caption || ""}
+                  data-camera={img.camera || ""}
+                  data-lens={img.lens || ""}
+                  data-settings={img.settings || ""}
+                  data-location={img.location || ""}
+                  aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt || `Photo ${i + 1}`}
+                    class="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+                    widths={[400, 800, 1200]}
+                    sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 35vw"
+                    loading="lazy"
+                  />
+                  <!-- View details pill on hover -->
+                  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span class="inline-flex items-center gap-2 px-4 py-2 bg-gallery-bg/80 backdrop-blur-sm text-gallery-text text-xs rounded-full meta-label">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      View Details
+                    </span>
+                  </div>
+                </button>
+                {img.caption && (
+                  <figcaption class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent text-sm text-gallery-text/80 font-light">
+                    {img.caption}
+                  </figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
+
+          <!-- Thumbnail scrubber -->
+          <div class="hidden sm:flex absolute bottom-4 left-1/2 -translate-x-1/2 gap-1 px-4 py-2 bg-gallery-bg/60 backdrop-blur-sm rounded-full" role="navigation" aria-label="Image thumbnails">
+            {allImages.map((img, i) => (
+              <button
+                type="button"
+                class="kinetic-scrubber-dot w-2 h-2 rounded-full bg-gallery-text/30 hover:bg-gallery-accent transition-colors duration-200"
+                data-index={i}
+                aria-label={`Jump to image ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <!-- Progress bar -->
+          <div class="horizontal-scroll-progress">
+            <div class="horizontal-scroll-progress-bar"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Any remaining text/quote sections below the strip -->
+  <div class="max-w-3xl mx-auto px-6 sm:px-8 py-16 sm:py-24">
+    {sections.filter(s => s.type === "text" || s.type === "quote").map((section) => (
+      <div class="gallery-reveal mb-12">
+        {section.type === "text" && section.content && (
+          <p class="text-gallery-text/90 text-lg sm:text-xl leading-[1.8] font-light">
+            {section.content}
+          </p>
+        )}
+        {section.type === "quote" && section.content && (
+          <blockquote class="text-center">
+            <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-6xl text-gallery-accent/30 font-serif leading-none select-none" aria-hidden="true">&ldquo;</span>
+            <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed">
+              {section.content}
+            </p>
+            {section.attribution && (
+              <footer class="mt-4 meta-label text-gallery-text-muted">
+                — {section.attribution}
+              </footer>
+            )}
+          </blockquote>
+        )}
+      </div>
+    ))}
+  </div>
+</article>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const archive = document.querySelector(".kinetic-archive");
+    if (!archive) return;
+
+    // Narrative slide observer
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    archive.querySelectorAll("[data-observe], .gallery-reveal").forEach((el) => observer.observe(el));
+
+    // Horizontal scroll hijack
+    const wrappers = archive.querySelectorAll("[data-horizontal-scroll]");
+    wrappers.forEach(function(wrapper) {
+      var sticky = wrapper.querySelector(".horizontal-scroll-sticky");
+      var track = wrapper.querySelector(".horizontal-scroll-track");
+      var progressBar = wrapper.querySelector(".horizontal-scroll-progress-bar");
+      if (!sticky || !track) return;
+
+      function updateHorizontalScroll() {
+        var wrapperRect = wrapper.getBoundingClientRect();
+        var wrapperTop = window.scrollY + wrapperRect.top;
+        var scrollableDistance = wrapper.scrollHeight - window.innerHeight;
+        var scrolled = window.scrollY - wrapperTop;
+        var progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+
+        var maxTranslate = track.scrollWidth - window.innerWidth;
+        track.style.transform = "translateX(" + (-progress * maxTranslate) + "px)";
+
+        if (progressBar) {
+          progressBar.style.width = (progress * 100) + "%";
+        }
+      }
+
+      window.addEventListener("scroll", updateHorizontalScroll, { passive: true });
+      updateHorizontalScroll();
+    });
+  });
+</script>

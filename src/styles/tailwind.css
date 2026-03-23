@@ -1,6 +1,7 @@
  @import "tailwindcss";
 
  @theme {
+     /* ─── Brand Palette (Blue/Indigo) ─── */
      --color-brand-950: #4C5781;
      --color-brand-900: #576cbc;
      --color-brand-800: #687bc3;
@@ -13,6 +14,13 @@
      --color-brand-100: #dde2f2;
      --color-brand-50: #f2f3fa;
 
+     /* ─── Nature Distilled / Modern Editorial Palette ─── */
+     --color-cloud-dancer: #F0F0F0;
+     --color-brand-indigo: #1A1B41;
+     --color-earth-clay: #D7BAA9;
+     --color-brand-blue: #2D31FA;
+
+     /* ─── Gallery Dark Theme ─── */
      --color-gallery-bg: #0D0D0D;
      --color-gallery-bg-secondary: #1A1A1A;
      --color-gallery-bg-tertiary: #242424;
@@ -21,4 +29,9 @@
      --color-gallery-accent: #B15D44;
      --color-gallery-accent-vivid: #DC3E26;
      --color-gallery-border: #2A2A2A;
+
+     /* ─── Dark Mode Surface (Storytelling Scenarios) ─── */
+     --color-surface-dark: #121212;
+     --color-surface-text: #F5F5F5;
+     --color-surface-text-secondary: #A0A0A0;
  }

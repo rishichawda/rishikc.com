@@ -13,3 +13,62 @@
         transform: translateY(0);
     }
 }
+
+/* ─── View Transition Animations ─── */
+
+/* Slide from right (forward navigation) */
+@keyframes slide-from-right {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-to-left {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(-30px); }
+}
+
+/* Slide from left (backward navigation) */
+@keyframes slide-from-left {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-to-right {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(30px); }
+}
+
+/* Fade scale (for modal/lightbox transitions) */
+@keyframes fade-scale-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fade-scale-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+}
+
+/* Loading progress bar animation */
+@keyframes loading-progress {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 90%; }
+}
+
+.loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--color-brand-500, #9aa7d7), var(--color-brand-blue, #2D31FA));
+    z-index: 9999;
+    animation: loading-progress 2s var(--ease-decelerate, cubic-bezier(0, 0, 0.2, 1)) forwards;
+}
+
+.loading-bar.complete {
+    width: 100% !important;
+    animation: none;
+    transition: width 200ms ease-out, opacity 300ms ease-out 200ms;
+    opacity: 0;
+}

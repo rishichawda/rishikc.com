@@ -1,0 +1,280 @@
+---
+/**
+ * Scenario 2: Thematic Essay
+ * 
+ * Multi-image and text editorial flow with modular rhythm grid.
+ * 80/20 rule, interstitial full-bleeds every 3-4 paragraphs,
+ * asymmetrical text-image offsets (40/60), drop caps for section openers.
+ * Images lazy-load with blur-up effect.
+ */
+import { Image } from "astro:assets";
+
+interface ImageRef {
+  src: ImageMetadata;
+  alt?: string;
+  caption?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Section {
+  type: string;
+  image?: ImageMetadata;
+  images?: ImageRef[];
+  content?: string;
+  alt?: string;
+  caption?: string;
+  attribution?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Props {
+  title: string;
+  prologue: string;
+  cover_image: ImageMetadata;
+  cover_image_alt?: string;
+  sections: Section[];
+  storyId: string;
+}
+
+const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Astro.props;
+---
+
+<article class="thematic-essay bg-gallery-bg" aria-label={title}>
+  <!-- Hero: full-width with centered text -->
+  <header class="relative min-h-[70vh] flex items-end">
+    <div class="absolute inset-0">
+      <Image
+        src={cover_image}
+        alt={cover_image_alt || title}
+        class="w-full h-full object-cover"
+        widths={[640, 1024, 1920, 2560]}
+        sizes="100vw"
+        loading="eager"
+        transition:name={`story-cover-${storyId}`}
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-gallery-bg via-gallery-bg/50 to-transparent"></div>
+    </div>
+    <div class="relative z-10 max-w-3xl mx-auto px-6 sm:px-8 pb-16 sm:pb-24 text-center">
+      <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-6">
+        {title}
+      </h1>
+    </div>
+  </header>
+
+  <!-- Prologue with drop cap -->
+  <div class="max-w-[800px] mx-auto px-6 sm:px-8 py-16 sm:py-24">
+    <p class="gallery-reveal text-gallery-text/90 text-lg sm:text-xl leading-[1.8] font-light first-letter:text-6xl first-letter:font-['Red_Hat_Display_Variable'] first-letter:font-bold first-letter:text-gallery-accent first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none">
+      {prologue}
+    </p>
+  </div>
+
+  <!-- Content sections: alternating layouts -->
+  {sections.map((section, index) => (
+    <div class={index % 4 === 2 ? "w-full" : "max-w-[800px] mx-auto px-6 sm:px-8"}>
+      {/* Text sections slide up from bottom */}
+      {section.type === "text" && section.content && (
+        <div class="gallery-reveal py-6 sm:py-10" data-parallax="text">
+          {/* Every 3rd text block gets drop cap treatment */}
+          <p class:list={[
+            "text-gallery-text/90 text-lg sm:text-xl leading-[1.8] font-light",
+            index % 3 === 0 && "first-letter:text-5xl first-letter:font-['Red_Hat_Display_Variable'] first-letter:font-bold first-letter:text-gallery-accent/70 first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-none"
+          ]}>
+            {section.content}
+          </p>
+        </div>
+      )}
+
+      {/* Full-bleed: interstitial break spanning full width */}
+      {section.type === "full-bleed" && section.image && (
+        <figure class="gallery-reveal my-12 sm:my-20">
+          <button
+            type="button"
+            class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+            data-caption={section.caption || ""}
+            data-camera={section.camera || ""}
+            data-lens={section.lens || ""}
+            data-settings={section.settings || ""}
+            data-location={section.location || ""}
+            aria-label={`View full image: ${section.alt || 'Photo'}`}
+          >
+            <Image
+              src={section.image}
+              alt={section.alt || `Story photo ${index + 1}`}
+              class="w-full h-auto max-h-[85vh] object-cover"
+              widths={[640, 1024, 1920, 2560]}
+              sizes="100vw"
+              loading="lazy"
+            />
+          </button>
+          {section.caption && (
+            <figcaption class="max-w-[800px] mx-auto px-6 sm:px-8 mt-4 text-sm text-gallery-text-muted font-light italic">
+              {section.caption}
+            </figcaption>
+          )}
+        </figure>
+      )}
+
+      {/* Diptych: asymmetrical 40/60 layout, zigzag */}
+      {section.type === "diptych" && section.images && (
+        <div class:list={[
+          "gallery-reveal grid gap-4 sm:gap-6 my-8 sm:my-16",
+          index % 2 === 0
+            ? "grid-cols-1 sm:grid-cols-[2fr_3fr]"
+            : "grid-cols-1 sm:grid-cols-[3fr_2fr]"
+        ]}>
+          {section.images.map((img, i) => (
+            <figure>
+              <button
+                type="button"
+                class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                data-caption={img.caption || ""}
+                data-camera={img.camera || ""}
+                data-lens={img.lens || ""}
+                data-settings={img.settings || ""}
+                data-location={img.location || ""}
+                aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt || `Photo ${i + 1}`}
+                  class="w-full h-auto aspect-[3/2] object-cover rounded-sm"
+                  widths={[400, 800, 1200]}
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                  loading="lazy"
+                />
+              </button>
+              {img.caption && (
+                <figcaption class="mt-3 text-sm text-gallery-text-muted font-light italic">
+                  {img.caption}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      )}
+
+      {/* Triptych */}
+      {section.type === "triptych" && section.images && (
+        <div class="gallery-reveal grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 my-8 sm:my-16">
+          {section.images.map((img, i) => (
+            <figure>
+              <button
+                type="button"
+                class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                data-caption={img.caption || ""}
+                data-camera={img.camera || ""}
+                data-lens={img.lens || ""}
+                data-settings={img.settings || ""}
+                data-location={img.location || ""}
+                aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt || `Photo ${i + 1}`}
+                  class="w-full h-auto aspect-[3/4] object-cover rounded-sm"
+                  widths={[400, 800]}
+                  sizes="(max-width: 640px) 100vw, 33vw"
+                  loading="lazy"
+                />
+              </button>
+            </figure>
+          ))}
+        </div>
+      )}
+
+      {/* Quote */}
+      {section.type === "quote" && section.content && (
+        <div class="gallery-reveal py-12 sm:py-20 text-center">
+          <blockquote class="relative max-w-2xl mx-auto">
+            <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-6xl text-gallery-accent/30 font-serif leading-none select-none" aria-hidden="true">&ldquo;</span>
+            <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed">
+              {section.content}
+            </p>
+            {section.attribution && (
+              <footer class="mt-4 meta-label text-gallery-text-muted">
+                — {section.attribution}
+              </footer>
+            )}
+          </blockquote>
+        </div>
+      )}
+
+      {/* Horizontal scroll */}
+      {section.type === "horizontal-scroll" && section.images && (
+        <div class="gallery-reveal my-8 sm:my-16">
+          <div class="horizontal-scroll-wrapper" data-horizontal-scroll>
+            <div class="horizontal-scroll-sticky">
+              <div class="horizontal-scroll-track">
+                {section.images.map((img, i) => (
+                  <figure class="horizontal-scroll-item">
+                    <button
+                      type="button"
+                      class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0"
+                      data-caption={img.caption || ""}
+                      data-camera={img.camera || ""}
+                      data-lens={img.lens || ""}
+                      data-settings={img.settings || ""}
+                      data-location={img.location || ""}
+                      aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                    >
+                      <Image
+                        src={img.src}
+                        alt={img.alt || `Photo ${i + 1}`}
+                        class="w-full h-full object-cover rounded-sm"
+                        widths={[400, 800, 1200]}
+                        sizes="70vw"
+                        loading="lazy"
+                      />
+                    </button>
+                  </figure>
+                ))}
+              </div>
+              <div class="horizontal-scroll-progress">
+                <div class="horizontal-scroll-progress-bar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  ))}
+</article>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const essay = document.querySelector(".thematic-essay");
+    if (!essay) return;
+
+    // Scroll-reveal observer
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    essay.querySelectorAll(".gallery-reveal").forEach((el) => observer.observe(el));
+
+    // Track scroll depth for engagement metrics
+    let maxScrollDepth = 0;
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0) {
+        const depth = Math.round((scrollTop / docHeight) * 100);
+        if (depth > maxScrollDepth) maxScrollDepth = depth;
+      }
+    }, { passive: true });
+  });
+</script>

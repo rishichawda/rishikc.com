@@ -108,6 +108,18 @@ const photo_stories = defineCollection({
             path: z.string(),
             reading_time: z.string().optional(),
 
+            // Scenario template (1-8) for visual storytelling
+            scenario: z.enum([
+                'singular-iconic-focus',
+                'thematic-essay',
+                'kinetic-archive',
+                'scrollytelling',
+                'brand-story',
+                'masonry-mosaic',
+                'day-in-the-life-timeline',
+                'interactive-map'
+            ]).optional().default('scrollytelling'),
+
             prologue: z.string(),
 
             sections: z.array(z.object({

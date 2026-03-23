@@ -1,0 +1,233 @@
+---
+/**
+ * Scenario 1: Singular Iconic Focus
+ * 
+ * Split-screen sticky layout: fixed image on the left (50%), scrolling text on the right (50%).
+ * Features Ken Burns zoom, macro-crop detail insets, and hover-magnify.
+ * Designed for a single high-impact image demanding undivided attention.
+ */
+import { Image } from "astro:assets";
+
+interface ImageRef {
+  src: ImageMetadata;
+  alt?: string;
+  caption?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Section {
+  type: string;
+  image?: ImageMetadata;
+  images?: ImageRef[];
+  content?: string;
+  alt?: string;
+  caption?: string;
+  attribution?: string;
+  camera?: string;
+  lens?: string;
+  settings?: string;
+  location?: string;
+}
+
+interface Props {
+  title: string;
+  prologue: string;
+  cover_image: ImageMetadata;
+  cover_image_alt?: string;
+  sections: Section[];
+  storyId: string;
+}
+
+const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Astro.props;
+
+// Get all full-bleed images for the sticky display
+const heroImages = sections.filter(s => s.type === "full-bleed" && s.image);
+const textSections = sections.filter(s => s.type === "text" || s.type === "quote");
+---
+
+<article class="singular-iconic-focus" aria-label={title}>
+  <!-- Split-screen: fixed image left, scrolling text right -->
+  <div class="lg:grid lg:grid-cols-2 min-h-screen">
+    <!-- Left: Sticky image panel -->
+    <div class="lg:sticky lg:top-0 lg:h-screen relative overflow-hidden">
+      <div class="ken-burns w-full h-screen">
+        <Image
+          src={cover_image}
+          alt={cover_image_alt || title}
+          class="w-full h-full object-cover"
+          widths={[640, 1024, 1920, 2560]}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          loading="eager"
+          transition:name={`story-cover-${storyId}`}
+        />
+      </div>
+      <!-- Gradient overlay for text readability on mobile -->
+      <div class="lg:hidden absolute inset-0 bg-gradient-to-t from-gallery-bg via-gallery-bg/60 to-transparent"></div>
+
+      <!-- Detail callout circles (macro-crop insets) -->
+      {heroImages.length > 0 && (
+        <div class="hidden lg:block absolute bottom-8 left-8 right-8">
+          <div class="flex gap-4">
+            {heroImages.slice(0, 3).map((section, i) => section.image && (
+              <div class="w-[120px] h-[120px] rounded-full overflow-hidden border-2 border-gallery-text/20 hover:border-gallery-accent/60 hover:scale-110 transition-all duration-300 cursor-pointer lightbox-trigger"
+                data-caption={section.caption || ""}
+                data-camera={section.camera || ""}
+                data-lens={section.lens || ""}
+                data-settings={section.settings || ""}
+                data-location={section.location || ""}>
+                <Image
+                  src={section.image}
+                  alt={section.alt || `Detail ${i + 1}`}
+                  class="w-full h-full object-cover"
+                  widths={[200, 400]}
+                  sizes="120px"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Right: Scrolling text panel -->
+    <div class="relative z-10 lg:z-auto">
+      <!-- Title block: overlaps on mobile, separate on desktop -->
+      <div class="lg:min-h-screen flex flex-col justify-center px-6 sm:px-8 lg:px-12 xl:px-16 py-20 lg:py-32">
+        <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8 narrative-slide" data-observe>
+          {title}
+        </h1>
+        <p class="text-gallery-text/85 text-lg sm:text-xl leading-[1.8] font-light max-w-lg narrative-slide" data-observe style="transition-delay: 200ms;">
+          {prologue}
+        </p>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator mt-16 flex items-center gap-3">
+          <div class="scroll-indicator-line"></div>
+          <span class="meta-label text-gallery-text/60 text-[0.65rem]">Continue</span>
+        </div>
+      </div>
+
+      <!-- Content sections flow below -->
+      {sections.map((section, index) => (
+        <div class="px-6 sm:px-8 lg:px-12 xl:px-16 py-8 lg:py-12">
+          {section.type === "text" && section.content && (
+            <p class="gallery-reveal text-gallery-text/90 text-lg sm:text-xl leading-[1.8] font-light max-w-lg" data-parallax="text">
+              {section.content}
+            </p>
+          )}
+
+          {section.type === "quote" && section.content && (
+            <blockquote class="gallery-reveal relative my-8">
+              <span class="absolute -top-6 -left-2 text-5xl text-gallery-accent/30 font-serif leading-none select-none" aria-hidden="true">&ldquo;</span>
+              <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed pl-4 border-l-2 border-gallery-accent/30">
+                {section.content}
+              </p>
+              {section.attribution && (
+                <footer class="mt-4 meta-label text-gallery-text-muted pl-4">
+                  — {section.attribution}
+                </footer>
+              )}
+            </blockquote>
+          )}
+
+          {section.type === "full-bleed" && section.image && (
+            <figure class="gallery-reveal lg:hidden my-8">
+              <button
+                type="button"
+                class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                data-caption={section.caption || ""}
+                data-camera={section.camera || ""}
+                data-lens={section.lens || ""}
+                data-settings={section.settings || ""}
+                data-location={section.location || ""}
+                aria-label={`View full image: ${section.alt || 'Photo'}`}
+              >
+                <Image
+                  src={section.image}
+                  alt={section.alt || `Photo ${index + 1}`}
+                  class="w-full h-auto rounded-sm"
+                  widths={[640, 1024]}
+                  sizes="100vw"
+                  loading="lazy"
+                />
+              </button>
+              {section.caption && (
+                <figcaption class="mt-3 text-sm text-gallery-text-muted font-light italic">
+                  {section.caption}
+                </figcaption>
+              )}
+            </figure>
+          )}
+
+          {(section.type === "diptych" || section.type === "triptych") && section.images && (
+            <div class:list={[
+              "gallery-reveal grid gap-4 my-8",
+              section.type === "diptych" ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-3"
+            ]}>
+              {section.images.map((img, i) => (
+                <figure>
+                  <button
+                    type="button"
+                    class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                    data-caption={img.caption || ""}
+                    data-camera={img.camera || ""}
+                    data-lens={img.lens || ""}
+                    data-settings={img.settings || ""}
+                    data-location={img.location || ""}
+                    aria-label={`View full image: ${img.alt || `Photo ${i + 1}`}`}
+                  >
+                    <Image
+                      src={img.src}
+                      alt={img.alt || `Photo ${i + 1}`}
+                      class="w-full h-auto aspect-square object-cover rounded-sm"
+                      widths={[400, 800]}
+                      sizes="50vw"
+                      loading="lazy"
+                    />
+                  </button>
+                </figure>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</article>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const hero = document.querySelector(".singular-iconic-focus");
+    if (!hero) return;
+
+    // GSAP Ken Burns: 1.0 → 1.08 over 10s
+    var kenBurnsEl = hero.querySelector(".ken-burns img");
+    if (kenBurnsEl && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      import("/node_modules/gsap/index.js").then(function(mod) {
+        var gsap = mod.gsap;
+        gsap.fromTo(kenBurnsEl, { scale: 1 }, { scale: 1.08, duration: 10, ease: "power1.inOut" });
+      }).catch(function() {});
+    }
+
+    // Intersection observer for narrative slides
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    hero.querySelectorAll("[data-observe], .gallery-reveal").forEach((el) => {
+      observer.observe(el);
+    });
+  });
+</script>

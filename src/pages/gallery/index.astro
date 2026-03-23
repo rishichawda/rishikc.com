@@ -9,6 +9,8 @@ import { getCollection } from "astro:content";
 import { Schema } from "astro-seo-schema";
 import type { ListItem, ImageGallery as SchemaImageGallery } from "schema-dts";
 
+import { Image } from "astro:assets";
+
 // Define interfaces needed for profile data
 interface Social {
   platform: string;
@@ -81,6 +83,8 @@ const itemListElements: ListItem[] = galleryItems.map(
 );
 
 const hasStories = sortedStories.length > 0;
+const featuredStory = sortedStories[0];
+const remainingStories = sortedStories.slice(1);
 ---
 
 <BaseLayout page_info={page_info}>
@@ -183,17 +187,55 @@ const hasStories = sortedStories.length > 0;
       </div>
     </div>
 
+    <!-- Featured Story Hero -->
+    {featuredStory && (
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20" aria-label="Featured story">
+        <a
+          href={featuredStory.data.path}
+          class="group block relative overflow-hidden rounded-2xl aspect-[21/9] gallery-reveal gallery-ripple"
+        >
+          <Image
+            src={featuredStory.data.cover_image}
+            alt={featuredStory.data.cover_image_alt || featuredStory.data.title}
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            widths={[640, 1024, 1920]}
+            sizes="(max-width: 768px) 100vw, 1280px"
+            loading="eager"
+            transition:name={`story-cover-${featuredStory.id}`}
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-gallery-bg via-gallery-bg/40 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-10">
+            <span class="meta-label text-gallery-accent mb-3 block">Featured Story</span>
+            <h2
+              class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl lg:text-4xl font-bold text-gallery-text leading-[1.1] mb-3 group-hover:text-gallery-accent transition-colors duration-300"
+              transition:name={`${featuredStory.id}-title`}
+            >
+              {featuredStory.data.title}
+            </h2>
+            <p class="text-gallery-text-muted text-base sm:text-lg font-light max-w-2xl line-clamp-2">
+              {featuredStory.data.description}
+            </p>
+            <span class="inline-flex items-center text-gallery-text-muted group-hover:text-gallery-accent transition-colors duration-300 text-sm mt-4">
+              Read Story
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </section>
+    )}
+
     <!-- Stories Bento Grid -->
-    {hasStories && (
+    {remainingStories.length > 0 && (
       <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-28" aria-label="Visual stories">
         <div class="bento-grid">
-          {sortedStories.map((story, index) => (
+          {remainingStories.map((story, index) => (
             <StoryCard story={story} featured={index === 0} />
           ))}
         </div>
       </section>
     )}
-
     <!-- Browse by Category -->
     <section class="border-t border-gallery-border" aria-label="Browse by category">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
