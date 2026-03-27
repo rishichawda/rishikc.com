@@ -17,6 +17,8 @@ const { title, description, cover_image, cover_image_alt, tags, reading_time } =
     "story-card gallery-reveal gallery-ripple group block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gallery-accent",
     featured ? "bento-featured aspect-[4/3] sm:aspect-auto" : "aspect-[4/3]"
   ]}
+  data-cursor="card"
+  data-cursor-label="View Story"
   aria-label={`Read story: ${title}`}
 >
   <Image
@@ -38,7 +40,7 @@ const { title, description, cover_image, cover_image_alt, tags, reading_time } =
       )}
     </div>
     <h3 class:list={[
-      "font-['Red_Hat_Display_Variable'] font-bold text-gallery-text leading-tight mb-2",
+      "font-display font-bold text-gallery-text leading-tight mb-2",
       featured ? "text-2xl sm:text-3xl lg:text-4xl" : "text-lg sm:text-xl"
     ]}>
       {title}

@@ -1,28 +1,169 @@
 ---
 ---
-<div
-  class="
-  prose
-  prose-neutral
-
-  prose-headings:font-bold
-  prose-headings:scroll-mt-8
-  prose-headings:font-['Red_Hat_Display_Variable']
-
-  prose-code:before:content-none prose-code:after:content-none
-  prose-code:rounded-md
-  prose-code:px-1 prose-code:py-0.5 prose-code:font-mono
-
-  prose-pre:rounded-md prose-pre:p-4
-
-  prose-img:rounded-xl
-  prose-img:mx-auto
-  prose-img:max-w-[90%]
-  prose-img:w-full
-
-  prose-th:table-cell
-  prose-table:overflow-x-auto
-  prose-table:block
-  ">
+<div class="prose-content">
   <slot />
 </div>
+
+<style is:global>
+  .prose-content {
+    max-width: 720px;
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    line-height: 1.75;
+    color: var(--color-text);
+  }
+
+  /* Headings */
+  .prose-content h1,
+  .prose-content h2,
+  .prose-content h3,
+  .prose-content h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-text);
+    scroll-margin-top: 5rem;
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-4);
+    line-height: 1.3;
+  }
+  .prose-content h2 { font-size: var(--text-h2); line-height: 1.2; letter-spacing: -0.015em; }
+  .prose-content h3 { font-size: var(--text-h3); line-height: 1.3; letter-spacing: -0.01em; }
+  .prose-content h4 { font-size: var(--text-h4, 1.125rem); line-height: 1.35; letter-spacing: -0.005em; }
+
+  /* Paragraphs */
+  .prose-content p {
+    margin-bottom: var(--space-6);
+  }
+
+  /* Links */
+  .prose-content a {
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 200ms, text-decoration-thickness 200ms;
+  }
+  .prose-content a:hover {
+    color: var(--color-brand-dark);
+    text-decoration-thickness: 2px;
+  }
+
+  /* Blockquotes */
+  .prose-content blockquote {
+    padding-left: var(--space-6);
+    font-style: italic;
+    color: var(--color-text-secondary);
+    background: color-mix(in srgb, var(--color-brand-lighter) 30%, transparent);
+    padding: var(--space-4) var(--space-6);
+    margin: var(--space-6) 0;
+    border-radius: 8px;
+  }
+  .prose-content blockquote p:last-child { margin-bottom: 0; }
+
+  /* Override remark-notes-plugin hard-coded light-only text color */
+  .prose-content [class*="remark-note-content"] {
+    color: var(--color-text-secondary);
+  }
+
+  /* Code (inline) */
+  .prose-content code {
+    font-family: var(--font-mono);
+    color: var(--color-brand-dark, var(--color-brand));
+    background: var(--color-brand-lighter);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.875em;
+  }
+  .prose-content code::before,
+  .prose-content code::after { content: none; }
+
+  /* Code (blocks) */
+  .prose-content pre {
+    font-family: var(--font-mono);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    padding: var(--space-5);
+    overflow-x: auto;
+    margin: var(--space-6) 0;
+    -webkit-overflow-scrolling: touch;
+    tab-size: 2;
+  }
+  .prose-content pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: 0.875rem;
+    border-radius: 0;
+  }
+  .prose-content pre[tabindex] { tabindex: 0; }
+
+  /* Images */
+  .prose-content img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: var(--space-6) auto;
+    display: block;
+  }
+
+  /* Lists */
+  .prose-content ul,
+  .prose-content ol {
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+  .prose-content ul { list-style-type: disc; }
+  .prose-content ol { list-style-type: decimal; }
+  .prose-content li { margin-bottom: var(--space-2); }
+  .prose-content li::marker { color: var(--color-text-tertiary); }
+
+  /* Tables */
+  .prose-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-6) 0;
+    overflow-x: auto;
+    display: block;
+  }
+  .prose-content th,
+  .prose-content td {
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border);
+    text-align: left;
+  }
+  .prose-content th {
+    background: var(--color-surface);
+    font-weight: 600;
+    display: table-cell;
+  }
+  .prose-content tr:nth-child(even) td {
+    background: var(--color-bg-alt);
+  }
+
+  /* Horizontal rule */
+  .prose-content hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-10) 0;
+  }
+
+  /* Note callouts (from remark-notes-plugin) */
+  .prose-content .note-callout {
+    border-radius: 12px;
+    padding: 20px;
+    margin: var(--space-6) 0;
+  }
+
+  /* Heading anchor links */
+  .prose-content .heading-anchor {
+    opacity: 0;
+    transition: opacity 200ms, transform 200ms;
+    transform: translateX(-5px);
+    color: var(--color-text-tertiary);
+  }
+  .prose-content h2:hover .heading-anchor,
+  .prose-content h3:hover .heading-anchor {
+    opacity: 1;
+    transform: translateX(0);
+  }
+</style>

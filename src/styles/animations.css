@@ -14,7 +14,28 @@
     }
 }
 
-/* ─── View Transition Animations ─── */
+/* ═══════════════════════════════════════════════════════
+   View Transition Animations (v2 design system)
+   ═══════════════════════════════════════════════════════ */
+
+/* Default page transition: fade + slide */
+@keyframes page-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes page-fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+::view-transition-old(root) {
+    animation: page-fade-out 0.4s cubic-bezier(0.4, 0, 1, 1);
+}
+
+::view-transition-new(root) {
+    animation: page-fade-in 0.5s cubic-bezier(0.0, 0.0, 0.2, 1);
+}
 
 /* Slide from right (forward navigation) */
 @keyframes slide-from-right {
@@ -38,7 +59,7 @@
     to { opacity: 0; transform: translateX(30px); }
 }
 
-/* Fade scale (for modal/lightbox transitions) */
+/* Fade scale (for modal/lightbox/search overlay transitions) */
 @keyframes fade-scale-in {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
@@ -61,7 +82,7 @@
     top: 0;
     left: 0;
     height: 2px;
-    background: linear-gradient(to right, var(--color-brand-500, #9aa7d7), var(--color-brand-blue, #2D31FA));
+    background: var(--color-brand, #9aa7d7);
     z-index: 9999;
     animation: loading-progress 2s var(--ease-decelerate, cubic-bezier(0, 0, 0.2, 1)) forwards;
 }
@@ -72,3 +93,58 @@
     transition: width 200ms ease-out, opacity 300ms ease-out 200ms;
     opacity: 0;
 }
+
+/* ─── Skeleton shimmer for loading states ─── */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--color-bg-alt) 25%,
+        var(--color-surface) 50%,
+        var(--color-bg-alt) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: var(--radius-sm);
+}
+
+/* ─── Heading reveal animation ─── */
+@keyframes heading-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+        clip-path: inset(0 0 100% 0);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        clip-path: inset(0 0 0% 0);
+    }
+}
+
+/* ─── Scroll indicator bounce ─── */
+@keyframes scroll-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+}
+
+.scroll-indicator {
+    animation: scroll-bounce 2s ease-in-out infinite;
+}
+
+/* ─── Dark mode radial clip reveal transition ─── */
+/* Used by theme_toggle.astro via View Transitions API */
+@keyframes clip-reveal {
+    from {
+        clip-path: circle(0% at var(--toggle-x, 50%) var(--toggle-y, 50%));
+    }
+    to {
+        clip-path: circle(150% at var(--toggle-x, 50%) var(--toggle-y, 50%));
+    }
+}
+
+/* Theme toggle clip-reveal is handled in global.css via :root[data-theme-transitioning] */

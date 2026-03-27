@@ -61,7 +61,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
       <div class="absolute inset-0 bg-gradient-to-t from-gallery-bg via-gallery-bg/50 to-transparent"></div>
     </div>
     <div class="relative z-10 max-w-3xl mx-auto px-6 sm:px-8 pb-16 sm:pb-24 text-center">
-      <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-6">
+      <h1 class="font-display text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-6">
         {title}
       </h1>
     </div>
@@ -69,7 +69,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
 
   <!-- Prologue with drop cap -->
   <div class="max-w-[800px] mx-auto px-6 sm:px-8 py-16 sm:py-24">
-    <p class="gallery-reveal text-gallery-text/90 text-lg sm:text-xl leading-[1.8] font-light first-letter:text-6xl first-letter:font-['Red_Hat_Display_Variable'] first-letter:font-bold first-letter:text-gallery-accent first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none">
+    <p class="gallery-reveal text-gallery-text/90 text-lg sm:text-xl leading-[1.8] font-light first-letter:text-6xl first-letter:font-display first-letter:font-bold first-letter:text-gallery-accent first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none">
       {prologue}
     </p>
   </div>
@@ -83,7 +83,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
           {/* Every 3rd text block gets drop cap treatment */}
           <p class:list={[
             "text-gallery-text/90 text-lg sm:text-xl leading-[1.8] font-light",
-            index % 3 === 0 && "first-letter:text-5xl first-letter:font-['Red_Hat_Display_Variable'] first-letter:font-bold first-letter:text-gallery-accent/70 first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-none"
+            index % 3 === 0 && "first-letter:text-5xl first-letter:font-display first-letter:font-bold first-letter:text-gallery-accent/70 first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-none"
           ]}>
             {section.content}
           </p>
@@ -95,7 +95,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
         <figure class="gallery-reveal my-12 sm:my-20">
           <button
             type="button"
-            class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+            data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
             data-caption={section.caption || ""}
             data-camera={section.camera || ""}
             data-lens={section.lens || ""}
@@ -132,7 +132,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
             <figure>
               <button
                 type="button"
-                class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
                 data-caption={img.caption || ""}
                 data-camera={img.camera || ""}
                 data-lens={img.lens || ""}
@@ -166,7 +166,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
             <figure>
               <button
                 type="button"
-                class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
                 data-caption={img.caption || ""}
                 data-camera={img.camera || ""}
                 data-lens={img.lens || ""}
@@ -193,7 +193,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
         <div class="gallery-reveal py-12 sm:py-20 text-center">
           <blockquote class="relative max-w-2xl mx-auto">
             <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-6xl text-gallery-accent/30 font-serif leading-none select-none" aria-hidden="true">&ldquo;</span>
-            <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed">
+            <p class="font-display text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed">
               {section.content}
             </p>
             {section.attribution && (
@@ -215,7 +215,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
                   <figure class="horizontal-scroll-item">
                     <button
                       type="button"
-                      class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0"
+                      data-cursor="image" class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0"
                       data-caption={img.caption || ""}
                       data-camera={img.camera || ""}
                       data-lens={img.lens || ""}
@@ -265,6 +265,18 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
     );
 
     essay.querySelectorAll(".gallery-reveal").forEach((el) => observer.observe(el));
+
+    // Immediately reveal elements to prevent invisible content on page load
+    requestAnimationFrame(() => {
+      const vh = window.innerHeight || 800;
+      essay.querySelectorAll(".gallery-reveal").forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const delay = rect.top > vh ? Math.min(800, ((rect.top - vh) / vh) * 100) : 0;
+        el.style.transitionDelay = Math.round(delay) + "ms";
+        el.classList.add("revealed");
+        observer.unobserve(el);
+      });
+    });
 
     // Track scroll depth for engagement metrics
     let maxScrollDepth = 0;

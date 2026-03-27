@@ -1,13 +1,16 @@
 ---
 import Hero from "../components/landing/hero.astro";
 import ArticlesPreview from "../components/landing/articles_preview.astro";
+import BitsPreview from "../components/landing/bits_preview.astro";
+import GalleryPreview from "../components/landing/gallery_preview.astro";
+import QuoteSpotlight from "../components/landing/quote_spotlight.astro";
 import CallToAction from "../components/landing/call_to_action.astro";
 import Services from "../components/landing/services.astro";
 import "../styles/global.css";
 import BaseLayout from "../layouts/base_layout.astro";
-import { Schema } from "astro-seo-schema";
 import favicon from "../../content/assets/logo/logo.png";
 import { getCollection } from "astro:content";
+import { buildWebPageEntity, personRef } from "../utils/jsonLd";
 
 interface Social { platform: string; url: string; }
 interface Position { title: string; }
@@ -27,64 +30,24 @@ const siteUrl = new URL(
 	Astro.url.pathname,
 	Astro.site || "https://rishikc.com",
 ).toString();
+
+const pageSchemaEntities = [
+	buildWebPageEntity({
+		url: siteUrl,
+		name: page_info.title,
+		description: page_info.description,
+		mainEntity: personRef,
+	}),
+];
 ---
 
-<BaseLayout page_info={page_info}>
-	<Schema
-		slot="head"
-		item={{
-			"@context": "https://schema.org",
-			"@type": "Person",
-			name: profile.name,
-			jobTitle: profile.title,
-			worksFor: {
-				"@type": "Organization",
-				name: profile.experience[0]?.company || "Unknown Company",
-			},
-			url: siteUrl,
-			image: `${siteUrl.replace(/\/$/, "")}/${favicon.src}`,
-			description: profile.summary,
-			sameAs: profile.socials.map((social: Social) => social.url),
-		}}
-	/>
+<BaseLayout page_info={page_info} activeRoute="/" pageSchemaEntities={pageSchemaEntities}>
 	<main>
 		<Hero />
 		<Services />
 		<ArticlesPreview />
+		<GalleryPreview />
+		<QuoteSpotlight />
 		<CallToAction />
 	</main>
-	
-	<script>
-		// Intersection Observer for scroll animations
-		const observerOptions = {
-			threshold: 0.1,
-			rootMargin: '0px 0px -50px 0px'
-		};
-
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add('revealed');
-				}
-			});
-		}, observerOptions);
-
-		// Add scroll reveal to sections
-		document.addEventListener('DOMContentLoaded', () => {
-			const sections = document.querySelectorAll('section:not(:first-child)');
-			sections.forEach(section => {
-				section.classList.add('scroll-reveal');
-				observer.observe(section);
-			});
-		});
-
-		// Re-initialize on page load for Astro
-		document.addEventListener('astro:page-load', () => {
-			const sections = document.querySelectorAll('section:not(:first-child)');
-			sections.forEach(section => {
-				section.classList.add('scroll-reveal');
-				observer.observe(section);
-			});
-		});
-	</script>
 </BaseLayout>

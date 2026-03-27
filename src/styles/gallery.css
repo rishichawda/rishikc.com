@@ -1,12 +1,12 @@
-/* Gallery Dark Theme + Animation Styles */
+/* Gallery Shared Styles + Animation */
 
 /* ─── Scroll Progress Bar ─── */
 .gallery-progress-bar {
   position: fixed;
   top: 0;
   left: 0;
-  height: 2px;
-  background: var(--color-gallery-accent);
+  height: 3px;
+  background: var(--color-brand);
   z-index: 100;
   width: 0%;
   transition: width 50ms linear;
@@ -104,7 +104,7 @@
 .scroll-indicator-line {
   width: 1px;
   height: 40px;
-  background: var(--color-gallery-text);
+  background: var(--color-text);
   opacity: 0.6;
   animation: scroll-line 2s ease-in-out infinite;
 }
@@ -163,7 +163,7 @@
   transform: translateX(-50%);
   width: min(300px, 50vw);
   height: 2px;
-  background: var(--color-gallery-border);
+  background: var(--color-border);
   border-radius: 1px;
   overflow: hidden;
 }
@@ -171,7 +171,7 @@
 .horizontal-scroll-progress-bar {
   height: 100%;
   width: 0%;
-  background: var(--color-gallery-accent);
+  background: var(--color-brand);
   transition: width 60ms linear;
 }
 
@@ -207,7 +207,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-gallery-text);
+  color: var(--color-text);
   background: rgba(255, 255, 255, 0.08);
   border: none;
   border-radius: 50%;
@@ -231,7 +231,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-gallery-text);
+  color: var(--color-text);
   background: rgba(255, 255, 255, 0.06);
   border: none;
   border-radius: 50%;
@@ -261,11 +261,11 @@
 
 /* ─── Metadata Labels (Monospace, Uppercase) ─── */
 .meta-label {
-  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+  font-size: var(--text-overline);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-gallery-text-muted);
+  color: var(--color-text-muted);
 }
 
 /* ─── Mobile: Horizontal scroll → stacked vertical ─── */
@@ -298,83 +298,9 @@
   }
 }
 
-/* ─── Footer dark theme override for gallery pages ─── */
-body:has(.bg-gallery-bg) {
-  background-color: var(--color-gallery-bg);
-}
+/* Footer inherits site-wide tokens — no gallery-specific override needed */
 
-body:has(.bg-gallery-bg) > footer {
-  background-color: var(--color-gallery-bg);
-}
-
-body:has(.bg-gallery-bg) > footer a,
-body:has(.bg-gallery-bg) > footer div,
-body:has(.bg-gallery-bg) > footer span {
-  color: var(--color-gallery-text-muted);
-}
-
-body:has(.bg-gallery-bg) > footer a:hover,
-body:has(.bg-gallery-bg) > footer a:focus-visible {
-  color: var(--color-gallery-text);
-}
-
-/* ─── Custom Cursor ─── */
-.gallery-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-gallery-accent);
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: width 200ms cubic-bezier(0.23, 1, 0.32, 1),
-              height 200ms cubic-bezier(0.23, 1, 0.32, 1),
-              background 200ms ease,
-              opacity 200ms ease;
-  mix-blend-mode: difference;
-}
-
-.gallery-cursor.visible {
-  opacity: 1;
-}
-
-.gallery-cursor.expanded {
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border: 1.5px solid var(--color-gallery-text);
-  mix-blend-mode: normal;
-}
-
-.gallery-cursor-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 0.5rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-gallery-text);
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 200ms ease;
-}
-
-.gallery-cursor.expanded .gallery-cursor-text {
-  opacity: 1;
-}
-
-/* Hide system cursor on gallery interactive elements (desktop only) */
-@media (pointer: fine) {
-  .bg-gallery-bg .story-card,
-  .bg-gallery-bg .lightbox-trigger {
-    cursor: none;
-  }
-}
+/* Custom cursor is now site-wide — see src/components/common/custom_cursor.astro */
 
 /* ─── Button Ripple ─── */
 .gallery-ripple {
@@ -390,7 +316,7 @@ body:has(.bg-gallery-bg) > footer a:focus-visible {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: var(--color-gallery-accent);
+  background: var(--color-brand);
   opacity: 0;
   transform: translate(-50%, -50%);
   pointer-events: none;

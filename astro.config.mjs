@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 
 import mdx from '@astrojs/mdx';
 import { h, s } from 'hastscript'
@@ -51,6 +51,66 @@ const AnchorLinkIcon = h(
 )
 
 export default defineConfig({
+  // Output
+  output: 'static',
+
+  // Fonts API (replaces @fontsource-variable packages)
+  fonts: [
+    {
+      provider: fontProviders.fontsource(),
+      name: "Inter",
+      cssVariable: "--font-inter",
+      weights: ["100 900"],
+      styles: ["normal"],
+      fallbacks: ["sans-serif"],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Red Hat Display",
+      cssVariable: "--font-red-hat-display",
+      weights: [400, 500, 600, 700, 800, 900],
+      styles: ["normal", "italic"],
+      fallbacks: ["sans-serif"],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Red Hat Text",
+      cssVariable: "--font-red-hat-text",
+      weights: [400, 500, 600, 700],
+      styles: ["normal"],
+      fallbacks: ["sans-serif"],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Montserrat",
+      cssVariable: "--font-montserrat",
+      weights: ["100 900"],
+      styles: ["normal"],
+      fallbacks: ["sans-serif"],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "JetBrains Mono",
+      cssVariable: "--font-jetbrains-mono",
+      weights: [400, 700],
+      styles: ["normal"],
+      fallbacks: ["monospace"],
+    },
+  ],
+
+  // Images
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+      config: { limitInputPixels: false },
+    },
+  },
+
+  // Prefetching
+  prefetch: {
+    defaultStrategy: 'hover',
+  },
+
   integrations: [
     mdx({
       syntaxHighlight: 'shiki',
@@ -92,28 +152,17 @@ export default defineConfig({
   site: siteMetadata.siteUrl,
   trailingSlash: 'always',
   compressHTML: true,
+
+  // Vite
   vite: {
     build: {
-      // Enable CSS code splitting for better loading performance
       cssCodeSplit: true,
-      // Increase chunk size warning limit
       chunkSizeWarningLimit: 1000,
-      rollupOptions: {
-        output: {
-          // Better chunk splitting
-          manualChunks: {
-            'vendor': ['astro'],
-            'fonts': ['@fontsource-variable/inter', '@fontsource-variable/red-hat-display', '@fontsource-variable/red-hat-text', '@fontsource-variable/montserrat']
-          }
-        }
-      }
     },
-    ssr: {
-      // Optimize SSR performance
-      noExternal: ['@fontsource-variable/*']
-    }
   },
+
+  // Security
   security: {
-    checkOrigin: true
+    checkOrigin: true,
   },
 });

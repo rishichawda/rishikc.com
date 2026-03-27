@@ -3,14 +3,14 @@ import BaseLayout from "../../../layouts/base_layout.astro";
 import "../../../styles/global.css";
 import "../../../styles/gallery.css";
 import { getCollection } from "astro:content";
-import { Schema } from "astro-seo-schema";
+import { buildWebPageEntity, personRef } from "../../../utils/jsonLd";
 import StoryHero from "../../../components/gallery/story_hero.astro";
 import StorySection from "../../../components/gallery/story_section.astro";
 import StoryEpilogue from "../../../components/gallery/story_epilogue.astro";
 import ScenarioRenderer from "../../../components/gallery/scenario_renderer.astro";
 import Lightbox from "../../../components/gallery/lightbox.astro";
 import ScrollProgress from "../../../components/gallery/scroll_progress.astro";
-import CustomCursor from "../../../components/gallery/custom_cursor.astro";
+// Gallery CustomCursor is now handled by site-wide cursor in base_layout
 
 interface Social {
   platform: string;
@@ -27,7 +27,9 @@ const profile = profileEntry[0].data as ProfileData;
 export async function getStaticPaths() {
   const stories = await getCollection("photo_stories");
   return stories.map((story) => {
-    const slug = story.data.path.replace("/gallery/stories/", "").replace(/\/$/, "");
+    const slug = story.data.path
+      .replace("/gallery/stories/", "")
+      .replace(/\/$/, "");
     return {
       params: { slug },
       props: { story },
@@ -69,132 +71,282 @@ const allStories = await getCollection("photo_stories");
 const currentIndex = allStories.findIndex((s) => s.id === story.id);
 const nextStory = allStories[(currentIndex + 1) % allStories.length];
 const hasNextStory = allStories.length > 1;
----
 
-<BaseLayout page_info={page_info}>
-  <Schema
-    slot="head"
-    item={{
-      "@context": "https://schema.org",
+const pageSchemaEntities = [
+  buildWebPageEntity({
+    url: pageUrl,
+    name: page_info.title,
+    description: description,
+    mainEntity: {
       "@type": "Article",
       headline: title,
       description: description,
       image: cover_image.src,
       datePublished: date.toISOString(),
-      author: {
-        "@type": "Person",
-        name: profile.name,
-        url: "https://rishikc.com",
-        sameAs: profile.socials.map((social: Social) => social.url),
-      },
-      mainEntityOfPage: {
-        "@type": "WebPage",
-        "@id": pageUrl,
-      },
+      author: personRef,
       keywords: tags?.join(", "),
-    }}
-  />
+    },
+  }),
+];
+---
 
+<BaseLayout page_info={page_info} pageSchemaEntities={pageSchemaEntities}>
   <ScrollProgress />
 
-  <main class="bg-gallery-bg min-h-screen">
-    <!-- Back navigation -->
-    <nav class="fixed top-4 left-4 sm:top-6 sm:left-6 z-50">
-      <a
-        href="/gallery/"
-        class="group inline-flex items-center px-4 py-2.5 bg-gallery-bg/70 backdrop-blur-md border border-gallery-border rounded-full text-gallery-text/80 hover:text-gallery-text hover:bg-gallery-bg/90 transition-all duration-300 text-sm font-light"
-      >
+  <main class="gallery-page story-page relative min-h-screen">
+    <!-- Back to gallery breadcrumb -->
+    <nav class="story-breadcrumb" aria-label="Breadcrumb">
+      <a href="/gallery/" class="breadcrumb-link">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
+          width="14"
+          height="14"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
           stroke-width="1.5"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          ></path>
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         Gallery
       </a>
     </nav>
 
     <!-- Scenario-aware rendering -->
-    {useScenarioRenderer ? (
-      <ScenarioRenderer
-        scenario={scenario}
-        title={title}
-        prologue={prologue}
-        cover_image={cover_image}
-        cover_image_alt={cover_image_alt}
-        sections={sections}
-        storyId={story.id}
-      />
-    ) : (
-      <>
-        {/* Default: Scrollytelling with existing components */}
-        <StoryHero
+    {
+      useScenarioRenderer ? (
+        <ScenarioRenderer
+          scenario={scenario}
           title={title}
           prologue={prologue}
           cover_image={cover_image}
           cover_image_alt={cover_image_alt}
+          sections={sections}
           storyId={story.id}
         />
+      ) : (
+        <>
+          <StoryHero
+            title={title}
+            prologue={prologue}
+            cover_image={cover_image}
+            cover_image_alt={cover_image_alt}
+            storyId={story.id}
+          />
 
-        <div class="relative">
-          {sections.map((section, index) => (
-            <StorySection section={section} index={index} />
-          ))}
-        </div>
-      </>
-    )}
+          <div class="relative">
+            {sections.map((section, index) => (
+              <StorySection section={section} index={index} />
+            ))}
+          </div>
+        </>
+      )
+    }
 
-    <!-- Epilogue (shown for all scenarios) -->
+    <!-- Epilogue -->
     <StoryEpilogue epilogue={epilogue} />
 
     <!-- Next Story CTA -->
-    {hasNextStory && nextStory && nextStory.id !== story.id && (
-      <section class="border-t border-gallery-border mt-16 sm:mt-24 py-16 sm:py-24" aria-label="Next story">
-        <div class="max-w-3xl mx-auto px-6 sm:px-8 text-center">
-          <span class="meta-label text-gallery-text-muted mb-4 block">Next Story</span>
-          <a
-            href={nextStory.data.path}
-            class="group inline-block"
-          >
-            <h2 class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl lg:text-4xl font-bold text-gallery-text group-hover:text-gallery-accent transition-colors duration-300 mb-3">
-              {nextStory.data.title}
-            </h2>
-            <span class="inline-flex items-center text-gallery-text-muted group-hover:text-gallery-accent transition-colors duration-300 text-sm">
-              Read Story
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-              </svg>
-            </span>
-          </a>
-        </div>
-      </section>
-    )}
+    {
+      hasNextStory && nextStory && nextStory.id !== story.id && (
+        <section class="next-story-section" aria-label="Next story">
+          <div class="next-story-inner">
+            <span class="next-label">Next Story</span>
+            <a href={nextStory.data.path} class="next-link group">
+              <h2 class="next-title">{nextStory.data.title}</h2>
+              <span class="next-cta">
+                Read Story
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="next-arrow"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </span>
+            </a>
+          </div>
+        </section>
+      )
+    }
 
     <!-- Copyright -->
-    <footer class="py-8 sm:py-12 px-6 sm:px-8">
-      <p class="text-center text-xs text-gallery-text-muted/60 font-light max-w-2xl mx-auto">
-        All photographs displayed are the intellectual property of {profile.name}.
-        Any reproduction, distribution, or use of these images without explicit written
-        permission is strictly prohibited.
+    <footer class="story-copyright">
+      <p>
+        All photographs displayed are the intellectual property of {
+          profile.name
+        }. Any reproduction, distribution, or use of these images without
+        explicit written permission is strictly prohibited.
       </p>
     </footer>
   </main>
 
   <Lightbox />
-  <CustomCursor />
 </BaseLayout>
+
+<style>
+  /* ─── Breadcrumb Navigation ─── */
+  .story-breadcrumb {
+    position: absolute;
+    top: calc(var(--nav-height, 64px) + var(--space-4));
+    left: var(--space-6);
+    z-index: 30;
+  }
+
+  @media (min-width: 640px) {
+    .story-breadcrumb {
+      left: var(--space-8);
+    }
+  }
+
+  .breadcrumb-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--text-caption);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition:
+      color var(--duration-normal) ease,
+      background var(--duration-normal) ease;
+    letter-spacing: 0.02em;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .breadcrumb-link:hover {
+    color: rgba(255, 255, 255, 1);
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .breadcrumb-link svg {
+    transition: transform var(--duration-normal) ease;
+  }
+
+  .breadcrumb-link:hover svg {
+    transform: translateX(-2px);
+  }
+
+  /* ─── Next Story CTA ─── */
+  .next-story-section {
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-16);
+    padding: var(--space-16) 0;
+  }
+
+  @media (min-width: 640px) {
+    .next-story-section {
+      margin-top: var(--space-24);
+      padding: var(--space-24) 0;
+    }
+  }
+
+  .next-story-inner {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+    text-align: center;
+  }
+
+  @media (min-width: 640px) {
+    .next-story-inner {
+      padding: 0 var(--space-8);
+    }
+  }
+
+  .next-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-overline);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .next-link {
+    display: inline-block;
+  }
+
+  .next-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    line-height: 1.2;
+    margin-bottom: var(--space-3);
+    transition: color var(--duration-normal) ease;
+  }
+
+  .next-link:hover .next-title {
+    color: var(--color-brand);
+  }
+
+  .next-cta {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text-muted);
+    font-size: var(--text-body-sm);
+    transition: color var(--duration-normal) ease;
+  }
+
+  .next-link:hover .next-cta {
+    color: var(--color-brand);
+  }
+
+  .next-arrow {
+    width: 16px;
+    height: 16px;
+    margin-left: var(--space-2);
+    transition: transform var(--duration-normal) ease;
+  }
+
+  .next-link:hover .next-arrow {
+    transform: translateX(4px);
+  }
+
+  /* ─── Copyright ─── */
+  .story-copyright {
+    padding: var(--space-8) var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .story-copyright {
+      padding: var(--space-12) var(--space-8);
+    }
+  }
+
+  .story-copyright p {
+    text-align: center;
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+    font-weight: 300;
+    max-width: 640px;
+    margin: 0 auto;
+    opacity: 0.6;
+  }
+</style>
 
 <script is:inline>
   document.addEventListener("astro:page-load", () => {
-    // Scroll reveal observer
     const reveals = document.querySelectorAll(".gallery-reveal");
     if (reveals.length === 0) return;
 
@@ -207,87 +359,21 @@ const hasNextStory = allStories.length > 1;
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
     );
 
     reveals.forEach((el) => observer.observe(el));
 
-    // Horizontal scroll hijack — translate vertical scroll into horizontal movement
-    const isMobile = window.matchMedia("(max-width: 639px)").matches;
-    if (isMobile) return;
-
-    document.querySelectorAll("[data-horizontal-scroll]").forEach((wrapper) => {
-      const track = wrapper.querySelector(".horizontal-scroll-track");
-      const progressBar = wrapper.querySelector(".horizontal-scroll-progress-bar");
-      if (!track) return;
-
-      function setup() {
-        // Calculate how far the track can scroll horizontally
-        const trackScrollWidth = track.scrollWidth;
-        const viewportWidth = wrapper.clientWidth;
-        const maxScroll = trackScrollWidth - viewportWidth;
-
-        if (maxScroll <= 0) {
-          wrapper.style.height = "100vh";
-          return;
-        }
-
-        // Set wrapper height to viewport + the extra scroll distance
-        // This gives the user vertical scroll room to drive the horizontal movement
-        wrapper.style.height = (window.innerHeight + maxScroll) + "px";
-      }
-
-      setup();
-      window.addEventListener("resize", setup);
-
-      function onScroll() {
-        const rect = wrapper.getBoundingClientRect();
-        const maxScroll = track.scrollWidth - wrapper.clientWidth;
-        if (maxScroll <= 0) return;
-
-        // The scroll progress: when wrapper top reaches viewport top (sticky kicks in)
-        // to when the wrapper bottom reaches viewport bottom
-        const scrolled = -rect.top;
-        const progress = Math.max(0, Math.min(1, scrolled / maxScroll));
-
-        track.style.transform = "translateX(" + (-progress * maxScroll) + "px)";
-
-        if (progressBar) {
-          progressBar.style.width = (progress * 100) + "%";
-        }
-      }
-
-      window.addEventListener("scroll", onScroll, { passive: true });
-      onScroll();
-    });
-
-    // Parallax: text/quote sections scroll slightly faster (1.2x ratio)
-    var parallaxEls = document.querySelectorAll("[data-parallax]");
-    if (parallaxEls.length > 0) {
-      function updateParallax() {
-        var vh = window.innerHeight;
-        parallaxEls.forEach(function(el) {
-          if (!el.classList.contains("revealed")) return;
-          var rect = el.getBoundingClientRect();
-          var center = rect.top + rect.height / 2;
-          var offset = (center - vh / 2) * 0.04;
-          el.style.translate = "0 " + (-offset) + "px";
-        });
-      }
-      window.addEventListener("scroll", updateParallax, { passive: true });
-      updateParallax();
-    }
-
-    // Ripple effect on clickable elements
-    document.querySelectorAll(".gallery-ripple").forEach(function(el) {
-      el.addEventListener("click", function(e) {
-        var rect = el.getBoundingClientRect();
-        el.style.setProperty("--ripple-x", (e.clientX - rect.left) + "px");
-        el.style.setProperty("--ripple-y", (e.clientY - rect.top) + "px");
-        el.classList.remove("rippling");
-        void el.offsetWidth;
-        el.classList.add("rippling");
-        setTimeout(function() { el.classList.remove("rippling"); }, 400);
+    // Immediately reveal elements to prevent invisible content on page load
+    requestAnimationFrame(() => {
+      const vh = window.innerHeight || 800;
+      reveals.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const delay =
+          rect.top > vh ? Math.min(800, ((rect.top - vh) / vh) * 100) : 0;
+        el.style.transitionDelay = Math.round(delay) + "ms";
+        el.classList.add("revealed");
+        observer.unobserve(el);
       });
     });
   });

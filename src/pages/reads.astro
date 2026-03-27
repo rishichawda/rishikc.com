@@ -1,370 +1,230 @@
 ---
 import BaseLayout from "../layouts/base_layout.astro";
 import { getCollection } from "astro:content";
-import "../styles/global.css";
-import { Schema } from "astro-seo-schema";
+import { buildWebPageEntity } from "../utils/jsonLd";
 
 const quotesData = await getCollection("quotes");
 const allQuotes = quotesData[1].data;
 
-const currentDate = new Date(quotesData[0].data);
-const formattedDate = currentDate.toLocaleDateString("en-US", {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-});
-
 const page_info = {
-  title: "Reads - Rishi Chawda",
-  description:
-    "A collection of quotes and passages that inspire, provoke thought, or simply resonate with me",
-  keywords: "quotes, books, reading, inspiration, Rishi Chawda",
+    title: "Reads - Rishi Chawda",
+    description: "A collection of quotes and passages that inspire, provoke thought, or simply resonate with me",
+    keywords: "quotes, books, reading, inspiration, Rishi Chawda",
 };
 
 const pageUrl = new URL(
-  Astro.url.pathname,
-  Astro.site || "https://rishikc.com",
+    Astro.url.pathname,
+    Astro.site || "https://rishikc.com",
 ).toString();
 
-const featuredQuote = allQuotes.length > 0 ? allQuotes[0] : null;
-const remainingQuotes = allQuotes.length > 0 ? allQuotes.slice(1) : [];
+const pageSchemaEntities = [
+    buildWebPageEntity({
+        type: "CollectionPage",
+        url: pageUrl,
+        name: "Reads - Rishi Chawda",
+        description: page_info.description,
+        mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: allQuotes.length,
+            itemListElement: allQuotes.map((quote: any, index: number) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                item: {
+                    "@type": "Quotation",
+                    text: quote.quote,
+                    author: quote.info ? quote.info.split(",")[0] : undefined,
+                },
+            })),
+        },
+    }),
+];
 ---
 
-<BaseLayout page_info={page_info}>
-  <Schema
-    slot="head"
-    item={{
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      name: "Reads - Rishi Chawda",
-      description:
-        "A collection of quotes and passages that inspire, provoke thought, or simply resonate with me",
-      url: pageUrl,
-      mainEntity: {
-        "@type": "ItemList",
-        numberOfItems: allQuotes.length,
-        itemListElement: allQuotes.map((quote: any, index: number) => ({
-          "@type": "ListItem",
-          position: index + 1,
-          item: {
-            "@type": "Quotation",
-            text: quote.quote,
-            author: quote.info ? quote.info.split(",")[0] : undefined,
-          },
-        })),
-      },
-    }}
-  />
+<BaseLayout page_info={page_info} activeRoute="/reads/" pageSchemaEntities={pageSchemaEntities}>
 
-  <main
-    class="font-['Red_Hat_Display_Variable'] min-h-screen reads-page-background"
-  >
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 pt-10">
-      <a
-        href="/"
-        class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium mb-16 sm:mb-20"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          ></path>
-        </svg>
-        Back to home
-      </a>
+    <main>
+        <section class="page-header" data-reveal>
+            <span class="overline">WORDS THAT RESONATE</span>
+            <h1 class="page-title">Reads</h1>
+            <p class="page-subtitle">A collection of quotes, passages, and ideas that have shaped my thinking.</p>
+        </section>
 
-      <div class="mb-16 sm:mb-20 text-center">
-        <h1
-          class="text-4xl sm:text-5xl font-light text-brand-950 mb-3 tracking-tight leading-tight"
-        >
-          Reads
-        </h1>
-        <p
-          class="text-xs text-brand-700/60 mb-6 font-['Montserrat_Variable'] uppercase tracking-widest"
-        >
-          Last updated: {formattedDate}
-        </p>
-        <p
-          class="text-brand-800/70 text-lg sm:text-xl leading-relaxed font-light max-w-3xl mx-auto font-['Montserrat_Variable']"
-        >
-          A collection of quotes and passages that have inspired me, challenged
-          my thinking, or simply resonated with me.
-        </p>
-      </div>
+        {allQuotes.length > 0 ? (
+            <section class="quotes-list">
+                <div class="shuffle-row">
+                    <button id="shuffle-button" class="shuffle-btn" type="button" aria-label="Shuffle quotes">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 13.5V21m0 0l2.5-2.5M16 21l-2.5-2.5M8 10.5V3m0 0l2.5 2.5M8 3L5.5 5.5M18.5 5.5l-13 13" />
+                        </svg>
+                        Shuffle
+                    </button>
+                </div>
 
-      <div class="mb-10 text-center">
-        <button
-          id="shuffle-button"
-          class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-['Montserrat_Variable'] text-sm rounded-lg shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-opacity-50 inline-flex items-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16 13.5V21m0 0l2.5-2.5M16 21l-2.5-2.5M8 10.5V3m0 0l2.5 2.5M8 3L5.5 5.5M18.5 5.5l-13 13" />
-          </svg>
-          Shuffle Quotes
-        </button>
-      </div>
-
-      {featuredQuote && (
-        <div id="featured-quote-section" class="mb-12 md:mb-16">
-          <div id="featured-quote-card-container">
-            <div
-              class="quote-card relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden mx-auto max-w-2xl"
-              transition:animate="fade"
-            >
-              <span
-                class="absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none"
-                aria-hidden="true"
-              >
-                “
-              </span>
-              <blockquote class="mb-5 z-10">
-                <p class="quote-text text-center sm:text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable']">
-                  {featuredQuote.quote}
-                </p>
-              </blockquote>
-              <cite style={`display: ${featuredQuote.info ? '' : 'none'};`} class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
-                {featuredQuote.info ? `— ${featuredQuote.info}` : ''}
-              </cite>
+                <div id="quotes-container">
+                    {allQuotes.map((quote: any) => (
+                        <blockquote class="quote-card" data-quote={quote.quote} data-info={quote.info || ""}>
+                            <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+                            <p class="quote-text">{quote.quote}</p>
+                            {quote.info && (
+                                <cite class="quote-author">&mdash; {quote.info}</cite>
+                            )}
+                        </blockquote>
+                    ))}
+                </div>
+            </section>
+        ) : (
+            <div class="empty-state" data-reveal>
+                <p>Coming soon &mdash; collecting words worth sharing.</p>
             </div>
-          </div>
-        </div>
-      )}
-
-      <div id="quotes-grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-        {remainingQuotes.map((quote: any, index: number) => (
-          <div
-            class="quote-card relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden"
-            style={`--index: ${index};`}
-            transition:animate="fade"
-          >
-            <span class="absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none" aria-hidden="true">“</span>
-            <blockquote class="mb-5 z-10">
-              <p class="quote-text text-center sm:text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable']">
-                {quote.quote}
-              </p>
-            </blockquote>
-            {quote.info && (
-              <cite class="quote-author text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10">
-                — {quote.info}
-              </cite>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  </main>
+        )}
+    </main>
 </BaseLayout>
 
-<script define:vars={{ allQuotes }}>
-  const shuffleButton = document.getElementById('shuffle-button');
-  const featuredQuoteSection = document.getElementById('featured-quote-section');
-  const featuredQuoteCardContainer = document.getElementById('featured-quote-card-container');
-  const quotesGridContainer = document.getElementById('quotes-grid-container');
+<script>
+    document.addEventListener('astro:page-load', () => {
+        const shuffleButton = document.getElementById('shuffle-button');
+        const container = document.getElementById('quotes-container');
+        if (!shuffleButton || !container) return;
 
-  let currentQuotes = [...allQuotes];
-
-  let featuredQuoteCardElement = null;
-  let featuredQuoteTextElement = null;
-  let featuredQuoteAuthorElement = null;
-
-  if (featuredQuoteCardContainer) {
-    featuredQuoteCardElement = featuredQuoteCardContainer.querySelector('.quote-card');
-    if (featuredQuoteCardElement) {
-      featuredQuoteTextElement = featuredQuoteCardElement.querySelector('.quote-text');
-      featuredQuoteAuthorElement = featuredQuoteCardElement.querySelector('.quote-author');
-    }
-  }
-
-  const gridCardDOMElements = quotesGridContainer ? Array.from(quotesGridContainer.querySelectorAll('.quote-card')) : [];
-  const gridQuoteTextDOMElements = gridCardDOMElements.map(card => card.querySelector('.quote-text'));
-  const gridQuoteAuthorDOMElements = gridCardDOMElements.map(card => card.querySelector('.quote-author'));
-  
-  const allAnimatedCardElements = [featuredQuoteCardElement, ...gridCardDOMElements].filter(el => el);
-
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
-  function _updateCardContent(textEl, authorEl, quoteData) {
-    if (textEl) {
-      textEl.textContent = quoteData.quote;
-    }
-    if (authorEl) {
-      authorEl.textContent = quoteData.info ? `— ${quoteData.info}` : '';
-      authorEl.style.display = quoteData.info ? '' : 'none';
-    }
-  }
-
-  function displayQuotes() {
-    allAnimatedCardElements.forEach(card => card.style.animation = 'none');
-    allAnimatedCardElements.forEach(card => void card.offsetWidth);
-
-    if (!currentQuotes || currentQuotes.length === 0) {
-      if (featuredQuoteSection) featuredQuoteSection.style.display = 'none';
-      if (featuredQuoteCardElement) featuredQuoteCardElement.style.display = 'none';
-      gridCardDOMElements.forEach(card => card.style.display = 'none');
-      
-      if (quotesGridContainer && allQuotes.length === 0) {
-         quotesGridContainer.innerHTML = '<p class="col-span-full text-center text-brand-700/80">No quotes available to display.</p>';
-      }
-      return;
-    }
-
-    if (featuredQuoteSection) featuredQuoteSection.style.display = 'block';
-    if (featuredQuoteCardElement) {
-        featuredQuoteCardElement.style.display = '';
-        _updateCardContent(featuredQuoteTextElement, featuredQuoteAuthorElement, currentQuotes[0]);
-    }
-
-    const newGridQuotesData = currentQuotes.slice(1);
-    gridCardDOMElements.forEach((cardElement, index) => {
-      const quoteData = newGridQuotesData[index];
-      if (quoteData) {
-        cardElement.style.display = '';
-        _updateCardContent(gridQuoteTextDOMElements[index], gridQuoteAuthorDOMElements[index], quoteData);
-      } else {
-        cardElement.style.display = 'none';
-      }
+        shuffleButton.addEventListener('click', () => {
+            const cards = Array.from(container.querySelectorAll('.quote-card'));
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                container.appendChild(cards[j]);
+            }
+        });
     });
-    
-    allAnimatedCardElements.forEach(card => card.style.animation = '');
-  }
-
-  shuffleArray(currentQuotes);
-  displayQuotes();
-
-  if (shuffleButton) {
-    shuffleButton.addEventListener('click', () => {
-      shuffleArray(currentQuotes);
-      displayQuotes();
-    });
-  } else {
-    console.error("Shuffle button not found.");
-  }
 </script>
 
 <style>
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(25px) scale(0.98);
+    .page-header {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: var(--space-20) var(--space-6) var(--space-12);
+        text-align: center;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
+    .overline {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: var(--text-overline);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--color-text-tertiary);
+        margin-bottom: var(--space-4);
     }
-  }
-  .quote-card {
-    transition:
-      transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-      box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-      background-color 0.3s ease;
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-  .quote-card:hover {
-    transform: translateY(-5px) scale(1.015);
-    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.12);
-    background-color: rgba(var(--color-brand-50), 0.5);
-  }
-  @media (prefers-reduced-motion: no-preference) {
+    .page-title {
+        font-family: var(--font-display);
+        font-size: var(--text-display-lg);
+        font-weight: 700;
+        color: var(--color-text);
+        margin: 0 0 var(--space-4);
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+    }
+    .page-subtitle {
+        font-family: var(--font-body);
+        font-size: var(--text-body-lg);
+        color: var(--color-text-secondary);
+        max-width: 560px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Quotes List */
+    .quotes-list {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 var(--space-6) var(--space-20);
+    }
+    .shuffle-row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: var(--space-10);
+    }
+    .shuffle-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-family: var(--font-ui);
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 20px;
+        border-radius: 9999px;
+        background: var(--btn-bg);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background 200ms;
+    }
+    .shuffle-btn:hover { background: var(--btn-bg-hover); }
+    .shuffle-btn:focus-visible {
+        outline: 2px solid var(--color-brand);
+        outline-offset: 2px;
+    }
+
+    #quotes-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-8);
+    }
+
+    /* Quote Card */
     .quote-card {
-      opacity: 0;
-      transform: translateY(30px) scale(0.9);
-      will-change: opacity, transform;
-      view-timeline-name: --card-reveal;
-      view-timeline-axis: block;
-      animation: revealCard linear both;
-      animation-timeline: --card-reveal;
-      animation-range: entry 5% cover 35%;
+        position: relative;
+        background: var(--color-surface);
+        border-left: 3px solid var(--color-brand-light);
+        border-radius: 12px;
+        padding: 32px;
+        margin: 0;
+        box-shadow: var(--shadow-subtle);
+        transition: box-shadow 300ms, border-color 200ms;
     }
-    @keyframes revealCard {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+    .quote-card:hover {
+        box-shadow: var(--shadow-raised);
+        border-color: var(--color-brand);
     }
-    @supports not (animation-timeline: --card-reveal) {
-      .quote-card {
-        animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        animation-delay: calc(var(--index) * 0.08s);
-      }
+    .quote-mark {
+        font-family: var(--font-display);
+        font-size: 64px;
+        font-weight: 700;
+        color: var(--color-brand-lighter);
+        opacity: 0.3;
+        position: absolute;
+        top: -8px;
+        left: 16px;
+        line-height: 1;
     }
-  }
-  .reads-page-background {
-    background: linear-gradient(
-      135deg,
-      rgba(var(--color-brand-50), 0.3),
-      rgba(var(--color-brand-100), 0.15) 30%,
-      rgba(var(--color-brand-50), 0.25) 60%,
-      rgba(var(--color-brand-100), 0.1)
-    );
-    background-size: 300% 300%;
-    animation: gradientFloat 30s ease-in-out infinite;
-    position: relative;
-    z-index: 0;
-  }
-  .reads-page-background::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.025;
-    pointer-events: none;
-    z-index: -1;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  }
-  @keyframes gradientFloat {
-    0% { background-position: 0% 50%; }
-    25% { background-position: 50% 25%; }
-    50% { background-position: 100% 50%; }
-    75% { background-position: 50% 75%; }
-    100% { background-position: 0% 50%; }
-  }
-  .quote-author {
-    opacity: 0.6;
-    transform: translateY(5px);
-    transition: all 0.4s ease;
-  }
-  .quote-text {
-    line-height: 1.7;
-  }
-  .quote-author {
-    letter-spacing: 0.01em;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .quote-card,
-    .quote-author,
-    .quote-text,
-    .reads-page-background {
-      animation: none !important;
-      transition: none !important;
-    }
-    .quote-card {
-      opacity: 1 !important;
-      transform: none !important;
-      animation-delay: 0s !important;
+    .quote-text {
+        font-family: var(--font-body);
+        font-size: var(--text-body-lg);
+        color: var(--color-text);
+        line-height: 1.75;
+        font-style: italic;
+        margin: 0;
     }
     .quote-author {
-       opacity: 1;
-       transform: none;
+        display: block;
+        font-family: var(--font-ui);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--color-text-secondary);
+        text-align: right;
+        margin-top: var(--space-4);
+        font-style: normal;
     }
-  }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: var(--space-20) var(--space-6);
+        font-family: var(--font-body);
+        font-size: var(--text-body);
+        color: var(--color-text-muted);
+    }
+
+    @media (max-width: 767px) {
+        .quote-card { padding: 20px; }
+        .quote-text { font-size: 16px; }
+    }
 </style>

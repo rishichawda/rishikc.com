@@ -9,62 +9,29 @@ const { headings } = Astro.props;
 let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.length > 10 ? 3 : 4));
 ---
 
-<div class="lg:sticky top-6 py-6 max-w-xs max-h-[calc(100vh-3rem)] overflow-y-auto" id="table-of-contents">
-    <nav class="relative bg-white/90 backdrop-blur-xl rounded-2xl border border-brand-200/30 shadow-lg shadow-brand-500/5 overflow-hidden">
-        <!-- Progress indicator -->
-        <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-brand-100 to-brand-50">
-            <div 
-                id="reading-progress" 
-                class="w-full bg-gradient-to-b from-brand-600 to-brand-500 transition-all duration-300 ease-out"
-                style="height: 0%"
-            ></div>
-        </div>
-        
-        <div class="p-6">
-            <!-- Header with icon -->
-            <div class="flex items-center gap-3 mb-6">
-                <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-brand-500/10 to-brand-600/10 rounded-lg flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                    </svg>
-                </div>
-                <h2 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable']">
-                    Table of Contents
-                </h2>
+<div class="lg:sticky top-6 py-6 max-w-xs hidden lg:block" id="table-of-contents">
+    <nav class="toc-nav">
+        <div class="toc-inner">
+            <!-- Header -->
+            <div class="toc-header">
+                <h2 class="toc-title">Contents</h2>
             </div>
             
             <!-- Navigation list -->
-            <ul class="space-y-1">
+            <ul class="toc-list">
                 {
-                    filteredHeadings.map((item, index) => (
+                    filteredHeadings.map((item) => (
                         <li
-                            class="list-none relative"
-                            style={`margin-left: ${(item.depth - 2) * 1}rem;`}
+                            class="toc-item"
+                            style={item.depth > 2 ? `padding-left: ${(item.depth - 2) * 0.875}rem;` : ''}
                             data-heading-level={item.depth}
                         >
-                            <!-- Connector line for nested items -->
-                            {item.depth > 2 && (
-                                <div class="absolute -left-4 top-3 w-3 h-px bg-brand-200/60"></div>
-                            )}
-                            
                             <a
-                                class="toc-link group flex items-start gap-2 rounded-xl px-3 py-2.5 transition-all duration-300 text-gray-600 hover:bg-brand-50/70 hover:text-brand-700 relative"
+                                class="toc-link"
                                 href={`#${item.slug}`}
                                 data-target={item.slug}
                             >
-                                <!-- Active indicator -->
-                                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-0 bg-gradient-to-b from-brand-600 to-brand-500 rounded-full transition-all duration-300 group-hover:h-4 toc-active-indicator"></div>
-                                
-                                <!-- Bullet point -->
-                                <div class="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brand-300/60 mt-2 group-hover:bg-brand-500 transition-all duration-300 group-hover:scale-125"></div>
-                                
-                                <!-- Text content -->
-                                <span 
-                                    class={`flex-1 leading-relaxed font-['Montserrat_Variable'] transition-all duration-300 "text-sm" ${
-                                        item.depth === 2 ? "font-medium" : "font-normal"
-                                    }`}
-                                    title={item.text}
-                                >
+                                <span class={item.depth === 2 ? "toc-text toc-text-h2" : "toc-text"}>
                                     {item.text}
                                 </span>
                             </a>
@@ -73,13 +40,10 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
                 }
             </ul>
             
-            <!-- Back to top button -->
-            <div class="mt-6 pt-4 border-t border-brand-100/50">
-                <button
-                    id="back-to-top"
-                    class="group w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-brand-50 to-brand-100/50 hover:from-brand-100 hover:to-brand-200/50 text-brand-700 hover:text-brand-800 rounded-xl transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium hover:shadow-md"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 group-hover:-translate-y-0.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <!-- Back to top -->
+            <div class="toc-footer">
+                <button id="back-to-top" class="toc-back-top">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="toc-back-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
                     </svg>
                     Back to top
@@ -100,7 +64,6 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
         const { signal } = controller;
         
         const tocLinks = tocContainer.querySelectorAll('.toc-link') as NodeListOf<HTMLAnchorElement>;
-        const progressBar = document.getElementById('reading-progress') as HTMLElement;
         const backToTopBtn = document.getElementById('back-to-top') as HTMLButtonElement;
         
         // Get all headings in the content
@@ -133,44 +96,23 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
         
         // Update active link
         function updateActiveLink(activeHeading: HTMLElement | null) {
-            // Always clear previous active states first
             tocLinks.forEach(link => {
-                const indicator = link.querySelector('.toc-active-indicator') as HTMLElement;
-                link.classList.remove('active', 'bg-brand-50', 'text-brand-700', 'font-medium');
-                link.classList.add('text-gray-600');
-                if (indicator) {
-                    indicator.style.height = '0px';
-                }
+                link.classList.remove('active');
             });
             
-            // Add active state to current link (only if we have an active heading)
             if (activeHeading && tocContainer) {
                 const activeLink = tocContainer.querySelector(`[data-target="${activeHeading.id}"]`) as HTMLElement;
                 if (activeLink) {
-                    const indicator = activeLink.querySelector('.toc-active-indicator') as HTMLElement;
-                    activeLink.classList.add('active', 'bg-brand-50', 'text-brand-700', 'font-medium');
-                    activeLink.classList.remove('text-gray-600');
-                    if (indicator) {
-                        indicator.style.height = '16px';
-                    }
+                    activeLink.classList.add('active');
                     lastActiveLink = activeLink;
                 }
             } else {
-                // No active heading, so clear lastActiveLink
                 lastActiveLink = null;
             }
         }
         
-        // Update reading progress
-        function updateReadingProgress() {
-            if (!progressBar) return;
-            
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrolled = window.pageYOffset;
-            const progress = Math.min((scrolled / docHeight) * 100, 100);
-            
-            progressBar.style.height = `${progress}%`;
-        }
+        // Update reading progress (no-op, progress tracked by article layout bar)
+        function updateReadingProgress() {}
         
         // Find current active heading
         function findActiveHeading(): HTMLElement | null {
@@ -336,68 +278,120 @@ let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.l
 </script>
 
 <style>
-    /* Custom scrollbar for TOC */
+    /* ─── TOC Container ─── */
     #table-of-contents {
-        scrollbar-width: thin;
-        scrollbar-color: #cbd5e1 transparent;
+        max-height: calc(100vh - 6rem);
+        overflow-y: auto;
+        scrollbar-width: none;
     }
-    
     #table-of-contents::-webkit-scrollbar {
-        width: 4px;
+        display: none;
     }
-    
-    #table-of-contents::-webkit-scrollbar-track {
-        background: transparent;
+
+    .toc-nav {
+        border-left: 1px solid var(--color-border);
     }
-    
-    #table-of-contents::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 2px;
+
+    .toc-inner {
+        padding: 0 0 0 var(--space-5);
     }
-    
-    #table-of-contents::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
+
+    .toc-header {
+        margin-bottom: var(--space-4);
     }
-    
-    /* Enhanced hover effects */
-    .toc-link:hover .toc-active-indicator {
-        height: 16px !important;
+
+    .toc-title {
+        font-family: var(--font-ui);
+        font-size: var(--text-ui-small);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--color-text-tertiary);
     }
-    
-    /* Enhanced active state */
+
+    /* ─── TOC List ─── */
+    .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .toc-item {
+        margin: 0;
+    }
+
+    .toc-link {
+        display: block;
+        padding: 5px 0;
+        text-decoration: none;
+        color: var(--color-text-tertiary);
+        border-left: 2px solid transparent;
+        margin-left: -1px;
+        padding-left: var(--space-4);
+        transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+    }
+
+    .toc-link:hover {
+        color: var(--color-text-secondary);
+        border-left-color: var(--color-border-strong);
+    }
+
     .toc-link.active {
-        background-color: rgba(154, 167, 215, 0.1) !important;
-        color: rgb(121, 137, 201) !important;
-        font-weight: 500 !important;
+        color: var(--color-brand);
+        border-left-color: var(--color-brand);
     }
-    
-    .toc-link.active .toc-active-indicator {
-        height: 16px !important;
-        opacity: 1 !important;
+
+    .toc-text {
+        font-family: var(--font-body);
+        font-size: 13px;
+        line-height: 1.5;
+        display: block;
     }
-    
-    .toc-link.active span {
-        color: rgb(121, 137, 201) !important;
+
+    .toc-text-h2 {
+        font-weight: 500;
+        color: var(--color-text-secondary);
     }
-    
-    /* Fade in animation */
-    #table-of-contents {
-        animation: fadeInUp 0.6s ease-out;
+
+    .toc-link.active .toc-text,
+    .toc-link.active .toc-text-h2 {
+        color: var(--color-brand);
     }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+
+    /* ─── Back to Top ─── */
+    .toc-footer {
+        margin-top: var(--space-5);
+        padding-top: var(--space-4);
+        border-top: 1px solid var(--color-border);
+        padding-left: var(--space-4);
     }
-    
-    /* Smooth transitions for all elements */
-    .toc-link * {
-        transition: all 0.3s ease;
+
+    .toc-back-top {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        background: none;
+        border: none;
+        padding: 0;
+        font-family: var(--font-ui);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--color-text-tertiary);
+        cursor: pointer;
+        transition: color var(--duration-fast) ease;
+    }
+
+    .toc-back-top:hover {
+        color: var(--color-brand);
+    }
+
+    .toc-back-icon {
+        width: 14px;
+        height: 14px;
+        transition: transform var(--duration-fast) ease;
+    }
+
+    .toc-back-top:hover .toc-back-icon {
+        transform: translateY(-2px);
     }
 </style>

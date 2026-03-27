@@ -1,0 +1,93 @@
+---
+import { getCollection } from "astro:content";
+
+const quotesEntry = await getCollection("quotes");
+// The file loader creates entries from the JSON object's keys.
+// Find the entry whose data is the quotes array.
+const allQuotes: { quote: string; info?: string }[] = (() => {
+  for (const entry of quotesEntry) {
+    const d = entry.data as any;
+    if (Array.isArray(d)) return d;
+    if (d?.quotes && Array.isArray(d.quotes)) return d.quotes;
+  }
+  // Fallback: try to find entries that look like individual quotes
+  const candidates = quotesEntry
+    .map((e: any) => e.data)
+    .filter((d: any) => d && typeof d === 'object' && typeof d.quote === 'string');
+  if (candidates.length) return candidates;
+  return [];
+})();
+
+// Pick a random quote at build time
+const quote = allQuotes.length > 0
+  ? allQuotes[Math.floor(Math.random() * allQuotes.length)]
+  : { quote: "The simple things are also the most extraordinary things.", info: "Paulo Coelho" };
+---
+
+<section class="section-quote" data-reveal>
+  <div class="quote-container">
+    <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+    <blockquote class="quote-text">
+      {quote.quote}
+    </blockquote>
+    {quote.info && (
+      <cite class="quote-attr">&mdash; {quote.info}</cite>
+    )}
+    <a href="/reads/" class="quote-link">More quotes &rarr;</a>
+  </div>
+</section>
+
+<style>
+  .section-quote {
+    padding: var(--space-10) 0;
+    text-align: center;
+  }
+
+  .quote-container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+    position: relative;
+  }
+
+  .quote-mark {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 80px;
+    line-height: 1;
+    color: var(--color-brand-lighter);
+    opacity: 0.2;
+    margin-bottom: calc(-1 * var(--space-4));
+    user-select: none;
+  }
+
+  .quote-text {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    font-style: italic;
+    color: var(--color-text);
+    line-height: 1.7;
+    margin: 0 0 var(--space-4);
+  }
+
+  .quote-attr {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui-small);
+    font-style: normal;
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-6);
+  }
+
+  .quote-link {
+    font-family: var(--font-ui);
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .quote-link:hover {
+    color: var(--color-brand);
+  }
+</style>

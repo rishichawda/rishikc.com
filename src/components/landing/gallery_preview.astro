@@ -1,0 +1,141 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+const allGalleries = await getCollection("gallery");
+// Pick 2 featured galleries
+const featured = allGalleries.slice(0, 2);
+---
+
+<section class="section-gallery" data-reveal>
+  <div class="gallery-container">
+    <div class="gallery-grid">
+      {featured.map((gallery) => (
+        <a href={gallery.data.path} class="gallery-item" data-reveal-item>
+          <div class="gallery-image-wrap">
+            <Image
+              src={gallery.data.featured_image}
+              alt={gallery.data.featured_image_alt || gallery.data.title}
+              width={900}
+              class="gallery-img"
+              loading="lazy"
+            />
+            <div class="gallery-overlay">
+              <span class="gallery-label">{gallery.data.title}</span>
+              {gallery.data.description && (
+                <span class="gallery-desc">{gallery.data.description}</span>
+              )}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="section-link-wrap">
+      <a href="/gallery/" class="section-link">
+        Explore Gallery
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-gallery {
+    padding: var(--space-12) 0;
+  }
+
+  .gallery-container {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .gallery-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .gallery-item {
+    display: block;
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .gallery-image-wrap {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-normal) ease;
+  }
+
+  .gallery-item:hover .gallery-img {
+    transform: scale(1.04);
+  }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-6) var(--space-8);
+    color: #fff;
+  }
+
+  .gallery-label {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  .gallery-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    opacity: 0.85;
+    margin-top: var(--space-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ─── Section Link ─── */
+  .section-link-wrap {
+    text-align: center;
+  }
+
+  .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-brand-dark);
+    text-decoration: none;
+    transition: gap var(--duration-fast) ease;
+  }
+
+  .section-link:hover { gap: var(--space-3); }
+</style>

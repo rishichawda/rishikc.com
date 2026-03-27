@@ -1,15 +1,58 @@
 ---
-import { Schema } from "astro-seo-schema";
 import favicon from "../../content/assets/logo/logo.png";
+import { getCollection } from "astro:content";
+import {
+  buildGraphForPage,
+  buildWebPageEntity,
+  personRef,
+  type ProfileData,
+} from "../utils/jsonLd";
+
+interface Social { platform: string; url: string; }
+interface Position { title: string; }
+interface Experience { company: string; positions: Position[]; website?: string[]; }
+interface Certification { institution: string; title: string; }
+interface Education { university: string; institution: string; degree: string; }
+interface LangEntry { name: string; level: string; }
 
 let {
-  page_info: { title, description, image, keywords },
+  page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex },
+  pageSchemaEntities,
 } = Astro.props;
 
 const canonicalURL = new URL(
   Astro.url.pathname,
   Astro.site || "https://rishikc.com",
 );
+
+const profileEntry = await getCollection("profile");
+const raw = profileEntry[0].data as any;
+const profile: ProfileData = {
+  name: raw.name,
+  title: raw.title,
+  summary: raw.summary,
+  socials: raw.socials as Social[],
+  certifications: raw.certifications as Certification[],
+  education: raw.education as Education[],
+  experience: raw.experience as Experience[],
+  languages: raw.languages as LangEntry[],
+};
+
+const siteDescription = "Personal portfolio, technical articles, photography, and open source projects by Rishi Kumar Chawda.";
+
+// Build the @graph for this page
+const pageEntities = pageSchemaEntities || [];
+const fullGraph = buildGraphForPage({
+  profile,
+  siteDescription,
+  pathname: Astro.url.pathname,
+  pageTitle: title,
+  pageEntities: pageEntities,
+});
+const graphJson = JSON.stringify(fullGraph);
+
+// OG type: use 'article' for article pages, 'website' for everything else
+const ogType = type === "article" ? "article" : "website";
 ---
 
 <meta charset="UTF-8" />
@@ -19,61 +62,30 @@ const canonicalURL = new URL(
 <link rel="canonical" href={canonicalURL.toString()} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <meta name="description" content={description} />
+{noindex ? <meta name="robots" content="noindex, nofollow" /> : null}
 <meta name="image" content={image} />
 {keywords ? <meta name="keywords" content={keywords} /> : null}
+
+<!-- Open Graph -->
 <meta property="og:title" content={title} />
-<meta property="og:site_name" content={title} />
+<meta property="og:site_name" content="Rishi Kumar Chawda" />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={image} />
-<meta property="og:url" content={Astro.url.pathname} />
+<meta property="og:url" content={canonicalURL.toString()} />
+<meta property="og:type" content={ogType} />
+<meta property="og:locale" content="en_US" />
+{datePublished ? <meta property="article:published_time" content={datePublished} /> : null}
+{dateModified ? <meta property="article:modified_time" content={dateModified} /> : null}
+{ogType === "article" ? <meta property="article:author" content="https://rishikc.com/about/" /> : null}
+{tags?.map((tag: string) => <meta property="article:tag" content={tag} />)}
+
+<!-- Twitter -->
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content={image} />
+<meta name="twitter:site" content="@rishiikc" />
+<meta name="twitter:creator" content="@rishiikc" />
 
-<Schema
-  item={{
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "Rishi Chawda",
-    url: canonicalURL.toString(),
-    description: description,
-    potentialAction: [
-      {
-        "@type": "ViewAction",
-        target: `${canonicalURL.origin}/articles/`,
-        name: "Browse Articles"
-      },
-      {
-        "@type": "ViewAction",
-        target: `${canonicalURL.origin}/gallery/`,
-        name: "View Photography Gallery"
-      },
-      {
-        "@type": "ViewAction",
-        target: `${canonicalURL.origin}/about/`,
-        name: "About Rishi"
-      },
-      {
-        "@type": "ViewAction",
-        target: `${canonicalURL.origin}/career/`,
-        name: "Career Information"
-      },
-      {
-        "@type": "ViewAction",
-        target: `${canonicalURL.origin}/contact/`,
-        name: "Contact"
-      },
-      {
-        "@type": "ViewAction",
-        target: `${canonicalURL.origin}/reads/`,
-        name: "Reading Collection"
-      },
-      {
-        "@type": "SearchAction",
-        target: `${canonicalURL.origin}/search/?q={search_term_string}`,
-        query: "required name=search_term_string",
-      }
-    ]
-  }}
-/>
+<!-- JSON-LD @graph -->
+<script type="application/ld+json" set:html={graphJson} />

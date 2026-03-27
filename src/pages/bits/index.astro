@@ -1,13 +1,7 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../../layouts/base_layout.astro";
-import { Schema } from "astro-seo-schema";
-import NavigationCards from "../../components/article/navigation_cards.astro";
-import GlobalSearchCard from "../../components/article/global_search_card.astro";
-import SeriesCard from "../../components/article/series_card.astro";
-import QuotesCard from "../../components/article/quotes_card.astro";
-import ArticlesCard from "../../components/article/articles_card.astro";
-import GalleryCard from "../../components/article/gallery_card.astro";
+import BaseLayout from "../../layouts/base_layout.astro";
+import { buildWebPageEntity } from "../../utils/jsonLd";
 
 const page_info = {
     title: "Bits | Rishi Chawda",
@@ -15,15 +9,22 @@ const page_info = {
     keywords: "bits, thoughts, insights, short posts, Rishi Chawda",
 };
 
-// Get all bits
 const allBits = await getCollection("bits");
-
-// Sort bits by date
 const sortedBits = allBits.sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 
-// Format date
+// Group bits by year for year dividers
+const currentYear = new Date().getFullYear();
+const bitsByYear = new Map<number, typeof sortedBits>();
+sortedBits.forEach((bit) => {
+    const year = bit.data.date.getFullYear();
+    if (!bitsByYear.has(year)) bitsByYear.set(year, []);
+    bitsByYear.get(year)!.push(bit);
+});
+const yearGroups = Array.from(bitsByYear.entries()).sort(([a], [b]) => b - a);
+const shouldGroupByYear = sortedBits.length > 20;
+
 function formatDate(date: Date): string {
     return new Date(date).toLocaleDateString("en-US", {
         day: "numeric",
@@ -32,287 +33,298 @@ function formatDate(date: Date): string {
     });
 }
 
-// Get current page URL for schema
 const pageUrl = new URL(
-  Astro.url.pathname,
-  Astro.site || "https://rishikc.com",
+    Astro.url.pathname,
+    Astro.site || "https://rishikc.com",
 ).toString();
+
+const pageSchemaEntities = [
+    buildWebPageEntity({
+        type: "CollectionPage",
+        url: pageUrl,
+        name: "Bits by Rishi Chawda",
+        description: page_info.description,
+        mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: sortedBits.length,
+            itemListElement: sortedBits.slice(0, 10).map((bit, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                item: {
+                    "@type": "BlogPosting",
+                    headline: bit.data.title,
+                    description: bit.data.description,
+                    url: new URL(bit.data.path, Astro.site || "https://rishikc.com").toString(),
+                    datePublished: bit.data.date.toISOString(),
+                    keywords: bit.data.tags?.join(", ") || ""
+                }
+            }))
+        }
+    }),
+];
 ---
 
-<Layout page_info={page_info}>
-    <!-- CollectionPage JSON-LD Schema for Bits Index -->
-    <Schema
-        slot="head"
-        item={{
-            "@context": "https://schema.org",
-            "@type": "CollectionPage",
-            name: "Bits by Rishi Chawda",
-            description: "Short thoughts, insights, and ideas on technology, creativity, and engineering",
-            url: pageUrl,
-            mainEntity: {
-                "@type": "ItemList",
-                numberOfItems: sortedBits.length,
-                itemListElement: sortedBits.slice(0, 10).map((bit, index) => ({
-                    "@type": "ListItem",
-                    position: index + 1,
-                    item: {
-                        "@type": "BlogPosting",
-                        headline: bit.data.title,
-                        description: bit.data.description,
-                        url: new URL(bit.data.path, Astro.site || "https://rishikc.com").toString(),
-                        datePublished: bit.data.date.toISOString(),
-                        keywords: bit.data.tags?.join(", ") || ""
-                    }
-                }))
-            }
-        }}
-    />
+<BaseLayout page_info={page_info} activeRoute="/bits/" pageSchemaEntities={pageSchemaEntities}>
 
-    <style slot="head">
-        .bg-grid-slate-100 {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(15 23 42 / 0.04)'%3e%3cpath d='m0 .5 32 0'/%3e%3cpath d='m0 16.5 32 0'/%3e%3cpath d='m0 32.5 32 0'/%3e%3cpath d='m.5 0 0 32'/%3e%3cpath d='m16.5 0 0 32'/%3e%3cpath d='m32.5 0 0 32'/%3e%3c/svg%3e");
-        }
-        
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .line-clamp-3 {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-    </style>
+    <main>
+        <section class="page-header" data-reveal>
+            <span class="overline">QUICK READS</span>
+            <h1 class="page-title">Bits</h1>
+            <p class="page-subtitle">Short-form thoughts, tips, and observations.</p>
+            <span class="bits-count">{sortedBits.length} bits published</span>
+        </section>
 
-    <main class="min-h-screen bg-gradient-to-br from-brand-50/30 via-white to-brand-100/40">
-        <!-- Hero Section -->
-        <div class="relative overflow-hidden bg-gradient-to-r from-brand-600/5 via-brand-500/5 to-brand-400/5 border-b border-brand-200/30">
-            <!-- Background Pattern -->
-            <div class="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]"></div>
-            
-            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-                <div class="text-center">
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 mb-6 font-['Red_Hat_Display_Variable']">
-                        Bits
-                    </h1>
-                    <p class="text-lg sm:text-xl text-gray-600 font-['Montserrat_Variable'] font-light max-w-3xl mx-auto mb-4">
-                        Short thoughts, insights, and ideas
-                    </p>
-                    <p class="text-base text-gray-500 font-['Montserrat_Variable'] font-light max-w-2xl mx-auto mb-8">
-                        Bite-sized posts on technology, creativity, hobbies and everything else; and the connections between them
-                    </p>
-                    
-                    <!-- Back to Home Button -->
-                    <a 
-                        href="/"
-                        class="group inline-flex items-center px-8 py-4 bg-white/80 backdrop-blur-sm border border-brand-200/50 rounded-2xl text-brand-700 hover:text-brand-800 hover:border-brand-300/70 hover:shadow-lg hover:shadow-brand-500/10 transition-all duration-300 font-['Montserrat_Variable'] font-medium hover:-translate-y-0.5"
-                    >
-                        <svg 
-                            class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                        >
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                        Back to Home
-                    </a>
-                </div>
+        {sortedBits.length > 0 ? (
+            <section class="bits-list">
+                {shouldGroupByYear ? (
+                    yearGroups.map(([year, bits]) => (
+                        <details class="year-group" open={year === currentYear}>
+                            <summary class="year-divider">
+                                <h3 class="year-heading">
+                                    <span class="year-toggle" aria-hidden="true">▸</span>
+                                    {year}
+                                    <span class="year-count">({bits.length} {bits.length === 1 ? 'bit' : 'bits'})</span>
+                                </h3>
+                                <span class="year-line" aria-hidden="true"></span>
+                            </summary>
+                            <ul role="list">
+                                {bits.map((bit) => (
+                                    <li class="bit-item" data-reveal>
+                                        <a href={bit.data.path} class="bit-link">
+                                            <h3 class="bit-title">{bit.data.title}</h3>
+                                            <p class="bit-desc">{bit.data.description}</p>
+                                            <div class="bit-meta">
+                                                <time datetime={bit.data.date.toISOString()}>{formatDate(bit.data.date)}</time>
+                                                {bit.data.tags && bit.data.tags.length > 0 && (
+                                                    <span class="bit-tags">
+                                                        {bit.data.tags.map((tag: string) => (
+                                                            <span class="bit-tag">{tag}</span>
+                                                        ))}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </details>
+                    ))
+                ) : (
+                    <ul role="list">
+                        {sortedBits.map((bit) => (
+                            <li class="bit-item" data-reveal>
+                                <a href={bit.data.path} class="bit-link">
+                                    <h3 class="bit-title">{bit.data.title}</h3>
+                                    <p class="bit-desc">{bit.data.description}</p>
+                                    <div class="bit-meta">
+                                        <time datetime={bit.data.date.toISOString()}>{formatDate(bit.data.date)}</time>
+                                        {bit.data.tags && bit.data.tags.length > 0 && (
+                                            <span class="bit-tags">
+                                                {bit.data.tags.map((tag: string) => (
+                                                    <span class="bit-tag">{tag}</span>
+                                                ))}
+                                            </span>
+                                        )}
+                                    </div>
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </section>
+        ) : (
+            <div class="empty-state" data-reveal>
+                <p class="empty-title">Short-form thoughts coming soon.</p>
+                <p class="empty-desc">In the meantime, check out the full articles.</p>
+                <a href="/articles/" class="back-link">Browse Articles &rarr;</a>
             </div>
-        </div>
-
-        <!-- Content Section with Sidebar -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-            <div class="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-8 lg:gap-12">
-                <!-- Main Content -->
-                <div class="order-1 xl:order-1">
-                    <!-- Search bar -->
-                    <div class="mb-10">
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-brand-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                                </svg>
-                            </div>
-                            <input
-                                type="text"
-                                id="search"
-                                placeholder="Search bits by title, description, or tags..."
-                                class="font-['Montserrat_Variable'] w-full pl-12 pr-6 py-4 rounded-2xl bg-white/70 backdrop-blur-sm border border-brand-200/50 text-gray-700 placeholder-gray-500 text-base focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500/50 focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
-                            />
-                        </div>
-                    </div>
-
-                    <!-- Navigation Cards (desktop only - shown below search) -->
-                    <div class="hidden xl:block mb-10">
-                        <NavigationCards orientation="horizontal">
-                            <GlobalSearchCard orientation="horizontal" />
-                            <SeriesCard orientation="horizontal" />
-                            <QuotesCard orientation="horizontal" />
-                        </NavigationCards>
-                    </div>
-
-                    <!-- No Results Message -->
-                    <div id="no-bits-found" class="hidden text-center py-16">
-                        <p class="text-gray-500 font-['Montserrat_Variable'] text-lg mb-4">
-                            No bits found matching your search.
-                        </p>
-                        <button 
-                            id="clear-search"
-                            class="text-brand-600 hover:text-brand-700 font-medium transition-colors"
-                        >
-                            Clear search
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:gap-8">
-                {sortedBits.map((bit) => (
-                    <a 
-                        href={bit.data.path}
-                        class="group block bg-gradient-to-br from-brand-50/20 to-white rounded-xl shadow-sm border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/30 transition-all duration-300 overflow-hidden p-6 data-[hidden=true]:hidden"
-                        data-tags={bit.data.tags?.join(",") || ""}
-                        data-title={bit.data.title.toLowerCase()}
-                        data-description={bit.data.description.toLowerCase()}
-                        data-search={[bit.data.title, bit.data.description, bit.data.tags?.join(" ")].filter(Boolean).join(" ").toLowerCase()}
-                    >
-                        <div class="flex flex-col h-full">
-                            {/* Date */}
-                            <p class="font-['Montserrat_Variable'] text-brand-500 mb-3 text-xs font-medium uppercase tracking-wider">
-                                {formatDate(bit.data.date)}
-                            </p>
-                            
-                            {/* Title */}
-                            <h2 class="text-xl sm:text-2xl font-medium text-gray-900 mb-3 line-clamp-2 font-['Red_Hat_Display_Variable'] group-hover:text-brand-700 transition-colors">
-                                {bit.data.title}
-                            </h2>
-                            
-                            {/* Description */}
-                            <p class="font-['Montserrat_Variable'] text-gray-600 mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3 flex-grow">
-                                {bit.data.description}
-                            </p>
-                            
-                            {/* Tags */}
-                            {bit.data.tags && bit.data.tags.length > 0 && (
-                                <div class="flex flex-wrap gap-2 mb-4">
-                                    {bit.data.tags.map((tag) => (
-                                        <span class="text-xs font-['Montserrat_Variable'] text-brand-600 bg-brand-100/50 px-2 py-1 rounded-full">
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
-                            
-                            {/* Read More Link */}
-                            <div class="mt-auto">
-                                <span class="text-brand-700 font-['Montserrat_Variable'] hover:text-brand-600 font-medium text-sm inline-flex items-center gap-x-2 group-hover:translate-x-1 transition-transform duration-200">
-                                    Read more
-                                    <svg
-                                        class="w-4 h-4 transition-transform group-hover:translate-x-1"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M9 5l7 7-7 7"
-                                        />
-                                    </svg>
-                                </span>
-                            </div>
-                        </div>
-                    </a>
-                ))}
-                    </div>
-
-                    {/* Empty State */}
-                    {sortedBits.length === 0 && (
-                        <div class="text-center py-16">
-                            <p class="text-gray-500 font-['Montserrat_Variable'] text-lg">
-                                No bits available yet. Check back soon!
-                            </p>
-                        </div>
-                    )}
-                </div>
-
-                <!-- Sidebar -->
-                <div class="order-2 xl:order-2">
-                    <div class="sticky top-8">
-                        <!-- Articles & Gallery Cards (desktop only) -->
-                        <div class="hidden xl:block space-y-8">
-                            <ArticlesCard orientation="vertical" />
-                            <GalleryCard orientation="vertical" />
-                        </div>
-
-                        <!-- All Navigation Cards (mobile only - shown after list) -->
-                        <div class="xl:hidden">
-                            <NavigationCards orientation="vertical">
-                                <GlobalSearchCard orientation="vertical" />
-                                <SeriesCard orientation="vertical" />
-                                <QuotesCard orientation="vertical" />
-                                <ArticlesCard orientation="vertical" />
-                                <GalleryCard orientation="vertical" />
-                            </NavigationCards>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        )}
     </main>
-</Layout>
+</BaseLayout>
 
-<script>
-    document.addEventListener('astro:page-load', () => {
-        // DOM Elements
-        const searchInput = document.getElementById("search") as HTMLInputElement;
-        const bitElements = document.querySelectorAll("[data-tags]") as NodeListOf<HTMLElement>;
-        const bits = [...bitElements];
-        const noResultsElement = document.getElementById("no-bits-found") as HTMLElement;
-        const clearSearchButton = document.getElementById("clear-search") as HTMLButtonElement;
+<style>
+    .page-header {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: var(--space-20) var(--space-6) var(--space-12);
+        text-align: center;
+    }
+    .overline {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: var(--text-overline);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--color-text-tertiary);
+        margin-bottom: var(--space-4);
+    }
+    .page-title {
+        font-family: var(--font-display);
+        font-size: var(--text-display-lg);
+        font-weight: 700;
+        color: var(--color-text);
+        margin: 0 0 var(--space-4);
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+    }
+    .page-subtitle {
+        font-family: var(--font-body);
+        font-size: var(--text-body-lg);
+        color: var(--color-text-secondary);
+        max-width: 560px;
+        margin: 0 auto var(--space-4);
+        line-height: 1.6;
+    }
+    .bits-count {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-muted);
+    }
 
-        // Filter logic
-        function updateBitsVisibility() {
-            const searchTerm = searchInput?.value.toLowerCase() || "";
-            
-            let visibleCount = 0;
-            bits.forEach((bit) => {
-                const matchesSearch = (bit.dataset.search || "").includes(searchTerm);
-                
-                if (matchesSearch) {
-                    visibleCount++;
-                    bit.dataset.hidden = "false";
-                } else {
-                    bit.dataset.hidden = "true";
-                }
-            });
+    /* Bits List */
+    .bits-list {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 var(--space-6) var(--space-20);
+    }
+    .bits-list ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
 
-            // Show/hide no results message
-            if (visibleCount === 0 && searchTerm) {
-                noResultsElement.classList.remove("hidden");
-            } else {
-                noResultsElement.classList.add("hidden");
-            }
-        }
+    /* Year grouping */
+    .year-group {
+        margin-bottom: var(--space-2);
+    }
+    .year-divider {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        cursor: pointer;
+        padding: var(--space-4) 0 var(--space-2);
+        list-style: none;
+    }
+    .year-divider::-webkit-details-marker { display: none; }
+    .year-heading {
+        font-family: var(--font-display);
+        font-size: var(--text-h3);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+        color: var(--color-text-muted);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        white-space: nowrap;
+    }
+    .year-toggle {
+        display: inline-block;
+        transition: transform 200ms;
+        font-size: 0.7em;
+    }
+    .year-group[open] .year-toggle {
+        transform: rotate(90deg);
+    }
+    .year-count {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        font-weight: 400;
+        color: var(--color-text-muted);
+    }
+    .year-line {
+        flex: 1;
+        height: 1px;
+        background: var(--color-border);
+    }
+    .bit-item {
+        border-bottom: 1px solid var(--color-border);
+    }
+    .bit-item:last-child { border-bottom: none; }
 
-        // Event listeners
-        searchInput?.addEventListener("input", () => {
-            updateBitsVisibility();
-        });
+    .bit-link {
+        display: block;
+        padding: var(--space-6) var(--space-4);
+        text-decoration: none;
+        color: inherit;
+        border-radius: 8px;
+        transition: background 150ms;
+    }
+    .bit-link:hover {
+        background: var(--color-bg-alt);
+    }
+    .bit-title {
+        font-family: var(--font-display);
+        font-size: var(--text-h3);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--color-text);
+        margin: 0 0 var(--space-2);
+        line-height: 1.3;
+        transition: color 200ms, transform 200ms;
+    }
+    .bit-link:hover .bit-title {
+        color: var(--color-brand);
+        transform: translateX(4px);
+    }
+    .bit-desc {
+        font-family: var(--font-body);
+        font-size: var(--text-body);
+        color: var(--color-text-secondary);
+        margin: 0 0 var(--space-3);
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .bit-meta {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-tertiary);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        flex-wrap: wrap;
+    }
+    .bit-tags {
+        display: flex;
+        gap: var(--space-2);
+    }
+    .bit-tag {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-muted);
+    }
+    .bit-tag::before { content: "·"; margin-right: var(--space-2); }
 
-        clearSearchButton?.addEventListener("click", () => {
-            if (searchInput) {
-                searchInput.value = "";
-                updateBitsVisibility();
-                searchInput.focus();
-            }
-        });
-
-        // Initial update
-        updateBitsVisibility();
-    });
-</script>
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: var(--space-20) var(--space-6);
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    .empty-title {
+        font-family: var(--font-display);
+        font-size: var(--text-h2);
+        color: var(--color-text);
+        margin: 0 0 var(--space-3);
+    }
+    .empty-desc {
+        font-family: var(--font-body);
+        font-size: var(--text-body);
+        color: var(--color-text-secondary);
+        margin: 0 0 var(--space-6);
+    }
+    .back-link {
+        font-family: var(--font-ui);
+        font-size: var(--text-body);
+        color: var(--color-brand);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .back-link:hover { text-decoration: underline; }
+</style>

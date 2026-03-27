@@ -1,607 +1,911 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../../layouts/base_layout.astro";
+import BaseLayout from "../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
-import { Schema } from "astro-seo-schema";
-import SeriesIndicator from "../../components/article/series_indicator.astro";
-import TagsFilter from "../../components/article/tags_filter.astro";
-import NavigationCards from "../../components/article/navigation_cards.astro";
-import GlobalSearchCard from "../../components/article/global_search_card.astro";
-import BitsCard from "../../components/article/bits_card.astro";
-import SeriesCard from "../../components/article/series_card.astro";
-import QuotesCard from "../../components/article/quotes_card.astro";
+import { buildWebPageEntity } from "../../utils/jsonLd";
+import { getAllSeries } from "../../utils/seriesUtils";
 
 const page_info = {
     title: "Articles | Rishi Chawda",
-    description: "Articles | Rishi Chawda",
-    keywords: "Articles | Rishi Chawda",
+    description: "Long-form writing about engineering, web performance, and the things I've learned along the way.",
+    keywords: "articles, web development, engineering, tutorials, performance",
 };
 
-// Get all articles
 const allArticles = await getCollection("articles");
-
-// Sort articles by date
 const sortedArticles = allArticles.sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 
-// Get unique tags
-const allTags = [
-    ...new Set(sortedArticles.flatMap((article) => article.data.tags)),
-];
+const allTags = [...new Set(sortedArticles.flatMap((a) => a.data.tags))].sort();
+const featuredArticle = sortedArticles[0];
+const gridArticles = sortedArticles.slice(1);
+const allSeries = getAllSeries(allArticles);
 
-const itemsPerPage = 5;
-const totalPages = Math.ceil(sortedArticles.length / itemsPerPage);
-const currentPage = 1;
-
-// Format date
 function formatDate(date: Date): string {
     return new Date(date).toLocaleDateString("en-US", {
+        month: "short",
         day: "numeric",
-        month: "long",
         year: "numeric",
     });
 }
 
-// Prepare searchable content
-function getSearchableContent(article: any): string {
-    return [
-        article.data.title,
-        article.data.description,
-        article.data.subtitle,
-        article.data.keywords,
-        article.data.tags.join(" "),
-    ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-}
-
-// Get current page URL for schema
 const pageUrl = new URL(
-  Astro.url.pathname,
-  Astro.site || "https://rishikc.com",
+    Astro.url.pathname,
+    Astro.site || "https://rishikc.com",
 ).toString();
+
+const pageSchemaEntities = [
+    buildWebPageEntity({
+        type: "CollectionPage",
+        url: pageUrl,
+        name: "Articles by Rishi Chawda",
+        description: page_info.description,
+        mainEntity: {
+            "@type": "ItemList",
+            numberOfItems: sortedArticles.length,
+            itemListElement: sortedArticles.slice(0, 10).map((article, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                item: {
+                    "@type": article.data.jsonld_schema || "Article",
+                    headline: article.data.title,
+                    description: article.data.description,
+                    url: new URL(article.data.path, Astro.site || "https://rishikc.com").toString(),
+                    datePublished: article.data.date.toISOString(),
+                    keywords: article.data.tags.join(", ")
+                }
+            }))
+        }
+    }),
+];
 ---
 
-<Layout page_info={page_info}>
-    <!-- CollectionPage JSON-LD Schema for Articles Index -->
-    <Schema
-        slot="head"
-        item={{
-            "@context": "https://schema.org",
-            "@type": "CollectionPage",
-            name: "Articles by Rishi Chawda",
-            description: "Technical articles, tutorials, and insights on web development, engineering, and technology",
-            url: pageUrl,
-            mainEntity: {
-                "@type": "ItemList",
-                numberOfItems: sortedArticles.length,
-                itemListElement: sortedArticles.slice(0, 10).map((article, index) => ({
-                    "@type": "ListItem",
-                    position: index + 1,
-                    item: {
-                        "@type": article.data.jsonld_schema || "Article",
-                        headline: article.data.title,
-                        description: article.data.description,
-                        url: new URL(article.data.path, Astro.site || "https://rishikc.com").toString(),
-                        datePublished: article.data.date.toISOString(),
-                        keywords: article.data.tags.join(", ")
-                    }
-                }))
-            },
-            potentialAction: [
-                {
-                    "@type": "ReadAction",
-                    target: pageUrl,
-                    name: "Browse Articles"
-                },
-                {
-                    "@type": "BookmarkAction", 
-                    target: pageUrl,
-                    name: "Bookmark Articles Page"
-                }
-            ]
-        }}
-    />
+<BaseLayout page_info={page_info} activeRoute="/articles/" pageSchemaEntities={pageSchemaEntities}>
 
-    <style slot="head">
-        .bg-grid-slate-100 {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(15 23 42 / 0.04)'%3e%3cpath d='m0 .5 32 0'/%3e%3cpath d='m0 16.5 32 0'/%3e%3cpath d='m0 32.5 32 0'/%3e%3cpath d='m.5 0 0 32'/%3e%3cpath d='m16.5 0 0 32'/%3e%3cpath d='m32.5 0 0 32'/%3e%3c/svg%3e");
-        }
-        
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .line-clamp-3 {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        /* Enhanced smooth animations */
-        * {
-            scroll-behavior: smooth;
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
+    <main>
+        <!-- Page Header -->
+        <section class="page-header" data-reveal>
+            <span class="overline">THOUGHTS &amp; TUTORIALS</span>
+            <h1 class="page-title">Articles</h1>
+            <p class="page-subtitle">Long-form writing about engineering, web performance, and the things I've learned along the way.</p>
+            <span class="article-count">{sortedArticles.length} articles published</span>
+        </section>
 
-    <main class="min-h-screen bg-gradient-to-br from-brand-50/30 via-white to-brand-100/40">
-        <!-- Hero Section -->
-        <div class="relative overflow-hidden bg-gradient-to-r from-brand-600/5 via-brand-500/5 to-brand-400/5 border-b border-brand-200/30">
-            <!-- Background Pattern -->
-            <div class="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]"></div>
-            
-            <div class="relative max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 lg:py-20">
-                <div class="text-center max-w-3xl mx-auto">
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 font-['Red_Hat_Display_Variable'] leading-tight">
-                        <span class="bg-gradient-to-r from-brand-700 via-brand-600 to-brand-500 bg-clip-text text-transparent">
-                            Articles
-                        </span>
-                    </h1>
-                    <p class="text-lg sm:text-xl text-gray-600 mb-8 font-['Montserrat_Variable'] leading-relaxed">
-                        Insights on web development, engineering, and technology
-                    </p>
-                    
-                    <!-- Back to home button -->
-                    <a
-                        href="/"
-                        class="group inline-flex items-center px-8 py-4 bg-white/80 backdrop-blur-sm border border-brand-200/50 rounded-2xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                            ></path>
-                        </svg>
-                        Back to home
-                    </a>
+        <!-- Article Series -->
+        {allSeries.length > 0 && (
+            <section class="series-section" data-reveal>
+                <div class="series-header">
+                    <h3 class="series-heading">Series</h3>
+                    <div class="series-divider"></div>
+                </div>
+                <div class="series-scroll" role="region" aria-label="Article series">
+                    {allSeries.map((series) => (
+                        <a href={series.articles[0]?.data.path || "/articles/series/"} class="series-card">
+                            <h4 class="series-card-title">{series.seriesTitle}</h4>
+                            <span class="series-card-meta">{series.totalParts} parts</span>
+                            <span class="series-card-link">Start Reading <span class="arrow">&rarr;</span></span>
+                        </a>
+                    ))}
+                </div>
+            </section>
+        )}
+
+        <!-- Filter Bar -->
+        <div class="filter-bar" id="filter-bar">
+            <div class="filter-inner">
+                <div class="tag-filters" role="radiogroup" aria-label="Filter by tag">
+                    <div class="tag-indicator" id="tag-indicator" aria-hidden="true"></div>
+                    <button class="tag-pill active" data-tag="all" aria-pressed="true">All</button>
+                    {allTags.map((tag) => (
+                        <button class="tag-pill" data-tag={tag} aria-pressed="false">{tag}</button>
+                    ))}
+                </div>
+                <div class="filter-controls">
+                    <div class="view-toggle" role="group" aria-label="View mode">
+                        <button class="view-btn active" data-view="grid" aria-label="Grid view" aria-pressed="true">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+                        </button>
+                        <button class="view-btn" data-view="list" aria-label="List view" aria-pressed="false">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><line x1="1" y1="3" x2="15" y2="3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="13" x2="15" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        </button>
+                    </div>
+                    <select class="sort-select" id="sort-select" aria-label="Sort articles">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-16 lg:py-20">
-            <div class="flex flex-col xl:grid xl:grid-cols-[1fr_350px] gap-12 lg:gap-16">
-                <!-- Main content area -->
-                <div class="order-1 xl:order-1">
-                    <!-- Tags Filter (mobile only) -->
-                    <div class="xl:hidden mb-8">
-                        <TagsFilter tags={allTags} />
+        <!-- Featured Article -->
+        {featuredArticle && (
+            <section class="featured-section" data-reveal>
+                <a href={featuredArticle.data.path} class="featured-card" data-article data-tags={featuredArticle.data.tags.join(",")}>
+                    <div class="featured-image">
+                        <Image
+                            src={featuredArticle.data.hero_image}
+                            alt={featuredArticle.data.hero_image_alt || featuredArticle.data.title}
+                            width={720}
+                            height={405}
+                            class="featured-img"
+                            transition:name={`${featuredArticle.data.path}-image`}
+                        />
                     </div>
+                    <div class="featured-content">
+                        {featuredArticle.data.category && (
+                            <span class="category-pill">{featuredArticle.data.category}</span>
+                        )}
+                        <h2 class="featured-title" transition:name={`${featuredArticle.data.path}-title`}>
+                            {featuredArticle.data.title}
+                        </h2>
+                        {featuredArticle.data.subtitle && (
+                            <p class="featured-subtitle">{featuredArticle.data.subtitle}</p>
+                        )}
+                        <p class="featured-desc">{featuredArticle.data.description}</p>
+                        <div class="featured-meta">
+                            <time datetime={featuredArticle.data.date.toISOString()}>{formatDate(featuredArticle.data.date)}</time>
+                            <span class="meta-sep">&middot;</span>
+                            <span>{featuredArticle.data.tags.slice(0, 3).join(", ")}</span>
+                        </div>
+                        <span class="read-link">Continue Reading <span class="arrow">&rarr;</span></span>
+                    </div>
+                </a>
+            </section>
+        )}
 
-                    <!-- Search bar -->
-                    <div class="mb-10">
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-brand-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                                </svg>
+        <!-- All Articles Grid -->
+        <section class="articles-section">
+            <div class="articles-grid" id="articles-grid" role="list">
+                {gridArticles.map((article) => (
+                    <article
+                        class="article-card"
+                        role="listitem"
+                        data-article
+                        data-tags={article.data.tags.join(",")}
+                        data-date={article.data.date.getTime()}
+                        data-title={article.data.title}
+                    >
+                        <a href={article.data.path} class="card-link">
+                            <div class="card-image">
+                                <Image
+                                    src={article.data.hero_image}
+                                    alt={article.data.hero_image_alt || article.data.title}
+                                    width={400}
+                                    height={225}
+                                    class="card-img"
+                                    transition:name={`${article.data.path}-image`}
+                                />
                             </div>
-                            <input
-                                type="text"
-                                id="search"
-                                placeholder="Search articles by title, description, or tags..."
-                                class="font-['Montserrat_Variable'] w-full pl-12 pr-6 py-4 rounded-2xl bg-white/70 backdrop-blur-sm border border-brand-200/50 text-gray-700 placeholder-gray-500 text-base focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500/50 focus:outline-none transition-all duration-300 shadow-sm hover:shadow-md"
-                            />
-                        </div>
-                    </div>
-
-                    <!-- Navigation Cards (desktop only - shown below search) -->
-                    <div class="hidden xl:block mb-10">
-                        <NavigationCards orientation="horizontal">
-                            <GlobalSearchCard orientation="horizontal" />
-                            <BitsCard orientation="horizontal" />
-                            <SeriesCard orientation="horizontal" />
-                        </NavigationCards>
-                    </div>
-
-                    <!-- Articles grid -->
-                    <div class="grid gap-6">
-                        {
-                            sortedArticles.map((article) => (
-                                <article
-                                    class="group data-[hidden=true]:hidden"
-                                    data-tags={article.data.tags.join(",")}
-                                    data-title={article.data.title.toLowerCase()}
-                                    data-search={getSearchableContent(article)}
-                                >
-                                    <a
-                                        href={article.data.path}
-                                        class="block bg-white/70 backdrop-blur-sm rounded-2xl border border-brand-200/30 overflow-hidden hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50"
-                                    >
-                                        <div class="flex flex-col sm:flex-row">
-                                            <div class="flex-shrink-0">
-                                                <div class="relative h-56 sm:h-full overflow-hidden">
-                                                    <Image
-                                                        src={article.data.hero_image}
-                                                        alt={
-                                                            article.data.hero_image_alt ||
-                                                            article.data.title
-                                                        }
-                                                        width={256}
-                                                        height={160}
-                                                        class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                                                        transition:name={`${article.data.path}-image`}
-                                                    />
-                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
-                                                </div>
-                                            </div>
-                                            <div class="flex-1 p-5 flex flex-col justify-between">
-                                                <div>
-                                                    <div class="mb-4">
-                                                        <div class="flex items-start justify-between gap-3 mb-3">
-                                                            <h2 
-                                                                transition:name={`${article.data.path}-title`} 
-                                                                class="font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-700 transition-colors duration-300 line-clamp-2 leading-tight flex-1"
-                                                            >
-                                                                {article.data.title}
-                                                            </h2>
-                                                            <SeriesIndicator article={article} compact={true} />
-                                                        </div>
-                                                        
-                                                        <p class="font-['Montserrat_Variable'] text-gray-600 line-clamp-2 leading-relaxed text-sm mb-3">
-                                                            {article.data.description}
-                                                        </p>
-
-                                                        <div class="flex flex-wrap gap-1.5">
-                                                            {article.data.tags.map((tag) => (
-                                                                <span class="font-['Montserrat_Variable'] text-xs text-brand-600 border border-brand-200 px-2 py-0.5 rounded-md">
-                                                                    {tag}
-                                                                </span>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="flex items-center justify-between mt-4 pt-3 border-t border-brand-100/50">
-                                                    <time class="font-['Montserrat_Variable'] text-xs font-medium text-gray-400/90 tracking-wide leading-tight whitespace-nowrap">
-                                                        {formatDate(article.data.date)}
-                                                    </time>
-                                                    <span class="font-['Montserrat_Variable'] text-sm font-medium text-brand-600 group-hover:text-brand-700 transition-colors flex items-center">
-                                                        Read article
-                                                        <svg class="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                                        </svg>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </article>
-                            ))
-                        }
-                    </div>
-
-                    <!-- No Results Message -->
-                    <div id="no-articles-found" class="text-center py-16 hidden">
-                        <div class="max-w-md mx-auto">
-                            <div class="text-6xl mb-6 opacity-60">📝</div>
-                            <h3 class="text-2xl font-bold text-brand-900 mb-4 font-['Red_Hat_Display_Variable']">
-                                No articles found
-                            </h3>
-                            <p class="text-brand-600 font-['Montserrat_Variable'] mb-8 text-lg leading-relaxed">
-                                We couldn't find any articles matching your search. Try different keywords or browse all articles.
-                            </p>
-                            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                                <button
-                                    id="clear-search"
-                                    class="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white rounded-2xl transition-all duration-300 font-['Montserrat_Variable'] font-medium shadow-lg hover:shadow-xl hover:shadow-brand-500/30 transform hover:-translate-y-0.5 text-nowrap"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                    </svg>
-                                    Clear Search
-                                </button>
-                                <a
-                                    href="/search/"
-                                    class="group inline-flex items-center justify-center px-8 py-4 bg-white/80 backdrop-blur-sm border border-brand-200/50 hover:bg-white hover:border-brand-300/50 text-brand-700 hover:text-brand-600 rounded-2xl transition-all duration-300 font-['Montserrat_Variable'] font-medium shadow-lg hover:shadow-xl hover:shadow-brand-500/10 transform hover:-translate-y-0.5 text-nowrap"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                                    </svg>
-                                    Search entire rishikc.com
-                                </a>
+                            <div class="card-body">
+                                {article.data.category && (
+                                    <span class="category-pill small">{article.data.category}</span>
+                                )}
+                                <h3 class="card-title" transition:name={`${article.data.path}-title`}>{article.data.title}</h3>
+                                <p class="card-desc">{article.data.description}</p>
+                                <div class="card-footer">
+                                    <time class="card-date" datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time>
+                                    <div class="card-tags">
+                                        {article.data.tags.slice(0, 3).map((tag: string) => (
+                                            <span class="card-tag">{tag}</span>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </a>
+                        <!-- List view variant -->
+                        <a href={article.data.path} class="list-link">
+                            <div class="list-body">
+                                <h3 class="list-title">{article.data.title}</h3>
+                                <p class="list-desc">{article.data.description}</p>
+                            </div>
+                            <div class="list-meta">
+                                <time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time>
+                            </div>
+                        </a>
+                    </article>
+                ))}
+            </div>
 
-                    <!-- Pagination -->
-                    <div id="pagination-container" class="mt-16 flex justify-center">
-                        <div class="flex items-center space-x-1">
-                            <button
-                                class="flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10 disabled:opacity-40 disabled:hover:bg-white/70 disabled:cursor-not-allowed cursor-pointer"
-                                data-prev
-                                disabled={currentPage === 1}
-                            >
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="rotate-180"
-                                >
-                                    <path
-                                        d="M9 5l7 7-7 7"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </svg>
-                            </button>
-                            
-                            {
-                                Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                                    (page) => (
-                                        <button
-                                            class:list={[
-                                                "flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 cursor-pointer",
-                                                page === currentPage
-                                                    ? "bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-500/30"
-                                                    : "bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10",
-                                            ]}
-                                            data-page={page}
-                                        >
-                                            {page}
-                                        </button>
-                                    ),
-                                )
-                            }
-                            
-                            <button
-                                class="flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10 disabled:opacity-40 disabled:hover:bg-white/70 disabled:cursor-not-allowed cursor-pointer"
-                                data-next
-                                disabled={currentPage >= totalPages}
-                            >
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M9 5l7 7-7 7"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <!-- Empty State -->
+            <div class="empty-state" id="empty-state" hidden>
+                <p class="empty-title">No articles found with this tag.</p>
+                <p class="empty-desc">Try another tag or browse all articles.</p>
+                <button class="clear-filter-btn" id="clear-filter">Clear Filter</button>
+            </div>
+        </section>
+    </main>
+</BaseLayout>
 
-                <!-- Sidebar -->
-                <div class="order-2 xl:order-2">
-                    <div class="sticky top-8">
-                        <!-- Tags Filter (desktop - shown in sidebar) -->
-                        <div class="hidden xl:block mb-8">
-                            <TagsFilter tags={allTags} />
-                        </div>
+<style>
+    /* Page Header */
+    .page-header {
+        max-width: var(--max-content);
+        margin: 0 auto;
+        padding: var(--space-20) var(--space-6) var(--space-12);
+        text-align: center;
+    }
+    .overline {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: var(--text-overline);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--color-text-tertiary);
+        margin-bottom: var(--space-4);
+    }
+    .page-title {
+        font-family: var(--font-display);
+        font-size: var(--text-display-lg);
+        font-weight: 700;
+        color: var(--color-text);
+        margin: 0 0 var(--space-4);
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+    }
+    .page-subtitle {
+        font-family: var(--font-body);
+        font-size: var(--text-body-lg);
+        color: var(--color-text-secondary);
+        max-width: 640px;
+        margin: 0 auto var(--space-4);
+        line-height: 1.6;
+    }
+    .article-count {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-muted);
+    }
 
-                        <!-- Navigation Cards (mobile only) -->
-                        <div class="xl:hidden">
-                            <NavigationCards orientation="vertical">
-                                <GlobalSearchCard orientation="vertical" />
-                                <BitsCard orientation="vertical" />
-                                <SeriesCard orientation="vertical" />
-                            </NavigationCards>
-                        </div>
+    /* Filter Bar */
+    .filter-bar {
+        position: sticky;
+        top: var(--nav-height);
+        z-index: 40;
+        background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--color-border);
+        padding: 12px 0;
+    }
+    .filter-inner {
+        max-width: var(--max-content);
+        margin: 0 auto;
+        padding: 0 var(--space-6);
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+    }
+    .tag-filters {
+        display: flex;
+        gap: var(--space-2);
+        overflow-x: auto;
+        flex: 1;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 2px 0;
+        position: relative;
+    }
+    .tag-filters::-webkit-scrollbar { display: none; }
+    .tag-indicator {
+        position: absolute;
+        height: calc(100% - 4px);
+        top: 2px;
+        border-radius: 9999px;
+        background: var(--btn-bg);
+        transition: left 250ms cubic-bezier(0.7, 0, 0.3, 1), width 250ms cubic-bezier(0.7, 0, 0.3, 1);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .tag-pill {
+        font-family: var(--font-ui);
+        font-size: 14px;
+        padding: 6px 16px;
+        border-radius: 9999px;
+        border: 1px solid var(--color-border);
+        background: var(--color-surface);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: color 200ms, border-color 200ms;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+    }
+    .tag-pill:hover:not(.active) {
+        background: var(--color-brand-lighter);
+    }
+    .tag-pill.active {
+        background: transparent;
+        color: #fff;
+        border-color: transparent;
+    }
+    .filter-controls {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        flex-shrink: 0;
+    }
+    .view-toggle {
+        display: flex;
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .view-btn {
+        padding: 6px 10px;
+        background: var(--color-surface);
+        color: var(--color-text-tertiary);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 200ms, color 200ms;
+    }
+    .view-btn + .view-btn {
+        border-left: 1px solid var(--color-border);
+    }
+    .view-btn.active {
+        background: var(--color-brand-lighter);
+        color: var(--color-brand);
+    }
+    .view-btn:hover:not(.active) {
+        background: var(--color-bg-alt);
+    }
+    .sort-select {
+        font-family: var(--font-ui);
+        font-size: 14px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--color-border);
+        background: var(--color-surface);
+        color: var(--color-text);
+        cursor: pointer;
+        appearance: auto;
+    }
 
-                        <!-- Quotes Card -->
-                        <div class="mb-10 mt-6">
-                            <QuotesCard orientation="vertical" />
-                        </div>
+    /* Featured Article */
+    .featured-section {
+        max-width: var(--max-content);
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-6);
+    }
+    .featured-card {
+        display: grid;
+        grid-template-columns: 40% 1fr;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 16px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition: box-shadow 300ms;
+    }
+    .featured-card:hover {
+        box-shadow: var(--shadow-elevated);
+    }
+    .featured-image {
+        overflow: hidden;
+    }
+    .featured-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 500ms;
+    }
+    .featured-card:hover .featured-img {
+        transform: scale(1.03);
+    }
+    .featured-content {
+        padding: var(--space-10);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: var(--space-3);
+    }
+    .category-pill {
+        display: inline-block;
+        align-self: flex-start;
+        font-family: var(--font-ui);
+        font-size: 12px;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        background: var(--color-brand-lighter);
+        color: var(--color-brand);
+        font-weight: 500;
+    }
+    .category-pill.small {
+        font-size: 11px;
+        padding: 3px 10px;
+    }
+    .featured-title {
+        font-family: var(--font-display);
+        font-size: var(--text-h2);
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        color: var(--color-text);
+        line-height: 1.2;
+        margin: 0;
+        transition: color 200ms;
+    }
+    .featured-card:hover .featured-title {
+        color: var(--color-brand);
+    }
+    .featured-subtitle {
+        font-family: var(--font-body);
+        font-size: var(--text-h4);
+        color: var(--color-text-secondary);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        margin: 0;
+        line-height: 1.4;
+    }
+    .featured-desc {
+        font-family: var(--font-body);
+        font-size: var(--text-body);
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+        margin: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .featured-meta {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-tertiary);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        flex-wrap: wrap;
+    }
+    .meta-sep { opacity: 0.5; }
+    .read-link {
+        font-family: var(--font-ui);
+        font-size: var(--text-body);
+        color: var(--color-brand);
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+    .read-link .arrow {
+        transition: transform 200ms;
+    }
+    .featured-card:hover .read-link .arrow {
+        transform: translateX(4px);
+    }
 
-                        
-                    </div>
-                </div>
+    /* Series Section */
+    .series-section {
+        max-width: var(--max-content);
+        margin: 0 auto;
+        padding: var(--space-12) var(--space-6);
+    }
+    .series-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        margin-bottom: var(--space-6);
+    }
+    .series-heading {
+        font-family: var(--font-display);
+        font-size: var(--text-h3);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+        color: var(--color-text);
+        margin: 0;
+        white-space: nowrap;
+    }
+    .series-divider {
+        flex: 1;
+        height: 1px;
+        background: var(--color-border);
+    }
+    .series-scroll {
+        display: flex;
+        gap: var(--space-5);
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: var(--space-2);
+    }
+    .series-scroll::-webkit-scrollbar { display: none; }
+    .series-card {
+        min-width: 280px;
+        max-width: 280px;
+        padding: var(--space-6);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        transition: transform 300ms, box-shadow 300ms;
+    }
+    .series-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-elevated);
+    }
+    .series-card-title {
+        font-family: var(--font-display);
+        font-size: var(--text-body-lg);
+        font-weight: 600;
+        color: var(--color-text);
+        margin: 0;
+    }
+    .series-card-meta {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-tertiary);
+    }
+    .series-card-link {
+        font-family: var(--font-ui);
+        font-size: 14px;
+        color: var(--color-brand);
+        font-weight: 500;
+        margin-top: auto;
+    }
+    .series-card-link .arrow { transition: transform 200ms; }
+    .series-card:hover .series-card-link .arrow { transform: translateX(4px); }
+
+    /* Articles Grid */
+    .articles-section {
+        max-width: var(--max-content);
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-6) var(--space-20);
+    }
+    .articles-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+    .articles-grid[data-view="list"] {
+        grid-template-columns: 1fr;
+        gap: 0;
+        overflow: hidden;
+    }
+
+    /* Grid Card */
+    .article-card {
+        transition: opacity 200ms;
+    }
+    .article-card[hidden] { display: none; }
+    .card-link {
+        display: flex;
+        flex-direction: column;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 16px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 300ms, box-shadow 300ms;
+    }
+    .card-link:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-elevated);
+    }
+    .card-image {
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+    }
+    .card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 500ms;
+    }
+    .card-link:hover .card-img {
+        transform: scale(1.05);
+    }
+    .card-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        flex: 1;
+    }
+    .card-title {
+        font-family: var(--font-display);
+        font-size: var(--text-body-lg);
+        font-weight: 600;
+        color: var(--color-text);
+        margin: 0;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: color 200ms;
+    }
+    .card-link:hover .card-title {
+        color: var(--color-brand);
+    }
+    .card-desc {
+        font-family: var(--font-body);
+        font-size: var(--text-body-sm);
+        color: var(--color-text-secondary);
+        line-height: 1.5;
+        margin: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        padding-top: var(--space-3);
+    }
+    .card-date {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-tertiary);
+    }
+    .card-tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+    .card-tag {
+        font-family: var(--font-ui);
+        font-size: 12px;
+        padding: 2px 8px;
+        border-radius: 6px;
+        background: var(--color-brand-lighter);
+        color: var(--color-brand);
+    }
+
+    /* List View */
+    .list-link {
+        display: none;
+        text-decoration: none;
+        color: inherit;
+        padding: var(--space-4) 0;
+        border-bottom: 1px solid var(--color-border);
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        transition: background 200ms;
+    }
+    .list-link:hover {
+        background: var(--color-bg-alt);
+        padding-left: var(--space-3);
+        padding-right: var(--space-3);
+        margin-left: calc(-1 * var(--space-3));
+        margin-right: calc(-1 * var(--space-3));
+        border-radius: 8px;
+    }
+    .articles-grid[data-view="list"] .card-link { display: none; }
+    .articles-grid[data-view="list"] .list-link { display: flex; }
+    .list-body { flex: 1; min-width: 0; }
+    .list-title {
+        font-family: var(--font-display);
+        font-size: var(--text-body);
+        font-weight: 600;
+        color: var(--color-text);
+        margin: 0 0 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: color 200ms;
+    }
+    .list-link:hover .list-title { color: var(--color-brand); }
+    .list-desc {
+        font-family: var(--font-body);
+        font-size: var(--text-body-sm);
+        color: var(--color-text-secondary);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .list-meta {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-tertiary);
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: var(--space-16) 0;
+    }
+    .empty-state[hidden] { display: none; }
+    .empty-title {
+        font-family: var(--font-display);
+        font-size: var(--text-body-lg);
+        color: var(--color-text-secondary);
+        margin: 0 0 var(--space-2);
+    }
+    .empty-desc {
+        font-family: var(--font-body);
+        font-size: var(--text-body-sm);
+        color: var(--color-text-tertiary);
+        margin: 0 0 var(--space-6);
+    }
+    .clear-filter-btn {
+        font-family: var(--font-ui);
+        font-size: 14px;
+        padding: 8px 20px;
+        border-radius: 8px;
+        border: 1px solid var(--color-brand);
+        background: transparent;
+        color: var(--color-brand);
+        cursor: pointer;
+        transition: background 200ms, color 200ms;
+    }
+    .clear-filter-btn:hover {
+        background: var(--btn-bg);
+        color: #fff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1023px) {
+        .articles-grid { grid-template-columns: repeat(2, 1fr); }
+        .featured-card { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 767px) {
+        .articles-grid { grid-template-columns: 1fr; }
+        .featured-card { grid-template-columns: 1fr; }
+        .featured-content { padding: var(--space-6); }
+        .featured-title { font-size: var(--text-h2); }
+        .filter-controls { display: none; }
+        .page-header { padding: var(--space-12) var(--space-4) var(--space-8); }
+    }
+</style>
 
 <script>
     document.addEventListener('astro:page-load', () => {
-        // State
-        let currentPage = 1;
-        const itemsPerPage = 5;
-        const selectedTags = new Set();
+        const tagPills = document.querySelectorAll<HTMLButtonElement>('.tag-pill');
+        const viewBtns = document.querySelectorAll<HTMLButtonElement>('.view-btn');
+        const sortSelect = document.getElementById('sort-select') as HTMLSelectElement | null;
+        const grid = document.getElementById('articles-grid') as HTMLElement | null;
+        const articles = document.querySelectorAll<HTMLElement>('[data-article]');
+        const emptyState = document.getElementById('empty-state') as HTMLElement | null;
+        const clearFilterBtn = document.getElementById('clear-filter') as HTMLButtonElement | null;
 
-        // DOM Elements
-        const searchInput = document.getElementById("search") as HTMLInputElement;
-        const articleElements = document.querySelectorAll("[data-tags]") as NodeListOf<HTMLElement>;
-        const articles = [...articleElements];
-        const noResultsElement = document.getElementById("no-articles-found") as HTMLElement;
-        const clearSearchButton = document.getElementById("clear-search") as HTMLButtonElement;
+        if (!grid) return;
 
-        const tagButtonElements = document.querySelectorAll("[data-tag]") as NodeListOf<HTMLButtonElement>;
-        const tagButtons = [...tagButtonElements];
+        let activeTag = 'all';
 
-        const pageButtonElements = document.querySelectorAll("[data-page]") as NodeListOf<HTMLButtonElement>;
-        const pageButtons = [...pageButtonElements];
+        // Sliding indicator
+        const indicator = document.getElementById('tag-indicator') as HTMLElement | null;
+        function moveIndicator(pill: HTMLElement) {
+            if (!indicator) return;
+            const container = pill.parentElement!;
+            const containerRect = container.getBoundingClientRect();
+            const pillRect = pill.getBoundingClientRect();
+            indicator.style.left = `${pillRect.left - containerRect.left + container.scrollLeft}px`;
+            indicator.style.width = `${pillRect.width}px`;
+        }
 
-        const prevButton = document.querySelector("[data-prev]") as HTMLButtonElement;
-        const nextButton = document.querySelector("[data-next]") as HTMLButtonElement;
-        const paginationContainer = document.getElementById("pagination-container") as HTMLElement;
+        // Restore view preference
+        const savedView = localStorage.getItem('articles-view') || 'grid';
+        grid.dataset.view = savedView;
+        viewBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === savedView);
+            btn.setAttribute('aria-pressed', String(btn.dataset.view === savedView));
+        });
 
-        // Filter and pagination logic
-        function updateArticlesVisibility() {
-            const searchTerm = searchInput?.value.toLowerCase() || "";
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
+        // Restore tag from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlTag = urlParams.get('tag');
+        if (urlTag) {
+            activeTag = urlTag;
+            tagPills.forEach(pill => {
+                const isActive = pill.dataset.tag === urlTag;
+                pill.classList.toggle('active', isActive);
+                pill.setAttribute('aria-pressed', String(isActive));
+            });
+        }
 
+        // Position indicator on initial active pill
+        requestAnimationFrame(() => {
+            const activePill = document.querySelector<HTMLElement>('.tag-pill.active');
+            if (activePill) moveIndicator(activePill);
+        });
+
+        function filterArticles() {
             let visibleCount = 0;
-            articles.forEach((article) => {
-                const matchesSearch = (article.dataset.search || "").includes(searchTerm);
-                const matchesTags =
-                    selectedTags.size === 0 ||
-                    Array.from(selectedTags).every((tag) =>
-                        (article.dataset.tags || "")
-                            .toLowerCase()
-                            .includes((tag as string).toLowerCase()),
-                    );
-
-                const isVisible = matchesSearch && matchesTags;
-                if (isVisible) {
+            articles.forEach(article => {
+                const tags = (article.dataset.tags || '').toLowerCase().split(',');
+                const matches = activeTag === 'all' || tags.includes(activeTag.toLowerCase());
+                if (matches) {
+                    article.hidden = false;
                     visibleCount++;
-                    article.dataset.hidden = (
-                        visibleCount <= startIndex || visibleCount > endIndex
-                    ).toString();
                 } else {
-                    article.dataset.hidden = "true";
+                    article.hidden = true;
                 }
             });
-
-            const totalPages = Math.ceil(visibleCount / itemsPerPage);
-
-            // Show/hide no results message
-            if (visibleCount === 0 && (searchTerm || selectedTags.size > 0)) {
-                noResultsElement.classList.remove("hidden");
-            } else {
-                noResultsElement.classList.add("hidden");
-            }
-
-            // Hide entire pagination when 1 or fewer pages
-            if (paginationContainer) {
-                paginationContainer.classList.toggle("hidden", totalPages <= 1);
-            }
-
-            // Windowed pagination: show at most 5 page buttons centred on currentPage
-            const windowSize = 5;
-            const halfWindow = Math.floor(windowSize / 2);
-            const windowStart = Math.max(1, Math.min(currentPage - halfWindow, totalPages - windowSize + 1));
-            const windowEnd = Math.min(totalPages, windowStart + windowSize - 1);
-
-            pageButtons.forEach((button) => {
-                const page = parseInt(button.dataset.page || "1", 10);
-                
-                // Update styles for current page (must happen before classList.toggle
-                // since setting className replaces the entire class list)
-                if (page === currentPage) {
-                    button.className = "flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-lg shadow-brand-500/30 cursor-pointer";
-                } else {
-                    button.className = "flex items-center justify-center w-12 h-12 rounded-full font-medium text-base transition-all duration-300 bg-white/70 backdrop-blur-sm border border-brand-200/50 text-brand-600 hover:bg-white hover:text-brand-700 hover:shadow-lg hover:shadow-brand-500/10 cursor-pointer";
-                }
-
-                button.classList.toggle("hidden", page > totalPages || page < windowStart || page > windowEnd);
-            });
-
-            if (prevButton) {
-                prevButton.disabled = currentPage === 1;
-            }
-            if (nextButton) {
-                nextButton.disabled = currentPage >= totalPages;
-            }
-
-            // Show or hide no results message
-            const noResultsMessage = document.getElementById("no-articles-found");
-            if (noResultsMessage) {
-                noResultsMessage.classList.toggle("hidden", visibleCount > 0);
+            if (emptyState) {
+                emptyState.hidden = visibleCount > 0;
             }
         }
 
-        searchInput?.addEventListener("input", () => {
-            currentPage = 1;
-            updateArticlesVisibility();
-        });
+        // Tag filtering
+        tagPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                activeTag = pill.dataset.tag || 'all';
+                tagPills.forEach(p => {
+                    const isActive = p === pill;
+                    p.classList.toggle('active', isActive);
+                    p.setAttribute('aria-pressed', String(isActive));
+                });
 
-        tagButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                const tag = button.dataset.tag as string;
-                if (selectedTags.has(tag)) {
-                    selectedTags.delete(tag);
-                    button.dataset.selected = "false";
-                    button.setAttribute("aria-pressed", "false");
+                moveIndicator(pill);
+
+                // Update URL
+                const url = new URL(window.location.href);
+                if (activeTag === 'all') {
+                    url.searchParams.delete('tag');
                 } else {
-                    selectedTags.add(tag);
-                    button.dataset.selected = "true";
-                    button.setAttribute("aria-pressed", "true");
+                    url.searchParams.set('tag', activeTag);
                 }
-                currentPage = 1;
-                updateArticlesVisibility();
+                history.replaceState({}, '', url.toString());
+
+                filterArticles();
             });
         });
 
-        pageButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                currentPage = parseInt(button.dataset.page || "1", 10);
-                updateArticlesVisibility();
+        // View toggle
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const view = btn.dataset.view || 'grid';
+                grid.dataset.view = view;
+                localStorage.setItem('articles-view', view);
+                viewBtns.forEach(b => {
+                    b.classList.toggle('active', b === btn);
+                    b.setAttribute('aria-pressed', String(b === btn));
+                });
             });
         });
 
-        prevButton?.addEventListener("click", () => {
-            if (currentPage > 1) {
-                currentPage--;
-                updateArticlesVisibility();
-            }
-        });
+        // Sort
+        sortSelect?.addEventListener('change', () => {
+            const value = sortSelect.value;
+            const gridContainer = grid;
+            const articleEls = [...gridContainer.querySelectorAll<HTMLElement>('.article-card')];
 
-        nextButton?.addEventListener("click", () => {
-            // Count only visible (filtered) articles for totalPages
-            const searchTerm = searchInput?.value.toLowerCase() || "";
-            let filteredCount = 0;
-            articles.forEach((article) => {
-                const matchesSearch = (article.dataset.search || "").includes(searchTerm);
-                const matchesTags =
-                    selectedTags.size === 0 ||
-                    Array.from(selectedTags).every((tag) =>
-                        (article.dataset.tags || "")
-                            .toLowerCase()
-                            .includes((tag as string).toLowerCase()),
-                    );
-                if (matchesSearch && matchesTags) filteredCount++;
+            articleEls.sort((a, b) => {
+                const dateA = Number(a.dataset.date || 0);
+                const dateB = Number(b.dataset.date || 0);
+                switch (value) {
+                    case 'oldest': return dateA - dateB;
+                    case 'newest':
+                    default: return dateB - dateA;
+                }
             });
-            const totalPages = Math.ceil(filteredCount / itemsPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                updateArticlesVisibility();
-            }
+
+            articleEls.forEach(el => gridContainer.appendChild(el));
         });
 
-        // Initial display
-        updateArticlesVisibility();
-
-        // Clear search functionality
-        clearSearchButton?.addEventListener("click", () => {
-            if (searchInput) {
-                searchInput.value = "";
-            }
-            selectedTags.clear();
-            tagButtons.forEach((button) => {
-                button.dataset.selected = "false";
-                button.setAttribute("aria-pressed", "false");
+        // Clear filter
+        clearFilterBtn?.addEventListener('click', () => {
+            activeTag = 'all';
+            tagPills.forEach(p => {
+                p.classList.toggle('active', p.dataset.tag === 'all');
+                p.setAttribute('aria-pressed', String(p.dataset.tag === 'all'));
             });
-            currentPage = 1;
-            updateArticlesVisibility();
+            const allPill = document.querySelector<HTMLElement>('.tag-pill[data-tag="all"]');
+            if (allPill) moveIndicator(allPill);
+            const url = new URL(window.location.href);
+            url.searchParams.delete('tag');
+            history.replaceState({}, '', url.toString());
+            filterArticles();
         });
+
+        // Initial filter
+        filterArticles();
     });
 </script>

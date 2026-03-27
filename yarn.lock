@@ -330,26 +330,6 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.27.4.tgz#1f7ba71a3d6155d44a6faa8dbe249c62ab3e408c"
   integrity sha512-+knoa0BDoeXgkNvvV1vvbZX4+hizelrkwmGJBdT17t8FNPwG2lKemmuMZlmaNQ3ws3DKKCxpb4zRZEIp3UxFCg==
 
-"@fontsource-variable/inter@^5.2.8":
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/@fontsource-variable/inter/-/inter-5.2.8.tgz#29b11476f5149f6a443b4df6516e26002d87941a"
-  integrity sha512-kOfP2D+ykbcX/P3IFnokOhVRNoTozo5/JxhAIVYLpea/UBmCQ/YWPBfWIDuBImXX/15KH+eKh4xpEUyS2sQQGQ==
-
-"@fontsource-variable/montserrat@^5.2.8":
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/@fontsource-variable/montserrat/-/montserrat-5.2.8.tgz#344d2fbe14ebf0c6923df3a8ba1654d7646cd50f"
-  integrity sha512-d8wykq7GCKhEOlLwEuQIOK3w3qsXNxwDlH0meru4AZZzQ4/+rZyvHWKL6BBtHdmbovSHEEQDkwkD8qYUKlcFtQ==
-
-"@fontsource-variable/red-hat-display@^5.2.8":
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/@fontsource-variable/red-hat-display/-/red-hat-display-5.2.8.tgz#261ed24377b184410f2766d4020edaa338e14724"
-  integrity sha512-OslUyiQ5y9MqU5G020NbJALqY2obalyCoxy+0f9mU2tXmhw35uFTnNQvncuOooxXApKnGCadKh6sdhpSnOAV8Q==
-
-"@fontsource-variable/red-hat-text@^5.2.8":
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/@fontsource-variable/red-hat-text/-/red-hat-text-5.2.8.tgz#e4ba578d6c5ccc37f78d01c20e84b59a217e852f"
-  integrity sha512-v0MGnXpADm1gTffdFJiFbEqddl0oCBbQaSviF9srUDvj01WVBljHjyC38EeyFsWSciY00vkye8et7MS+4QphEQ==
-
 "@img/colour@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@img/colour/-/colour-1.0.0.tgz#d2fabb223455a793bf3bf9c70de3d28526aa8311"

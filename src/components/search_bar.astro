@@ -29,16 +29,16 @@ const sizeClasses = {
       name="q"
       placeholder={placeholder}
       class={`
-        w-full rounded-lg border border-brand-200 bg-white/90 backdrop-blur-sm 
+        w-full rounded-lg border border-brand-200 bg-[var(--color-surface)]/90 backdrop-blur-sm 
         focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 focus:outline-none 
-        transition-all duration-200 font-['Montserrat_Variable'] text-brand-900 
+        transition-all duration-200 font-heading text-brand-900 
         placeholder-brand-400 ${sizeClasses[size]}
       `}
       autocomplete="off"
     />
     <button
       type="submit"
-      class="absolute right-2 top-1/2 -translate-y-1/2 bg-brand-600 hover:bg-brand-700 text-white p-2 rounded-md transition-colors duration-200"
+      class="absolute right-2 top-1/2 -translate-y-1/2 bg-btn hover:bg-btn-hover text-white p-2 rounded-md transition-colors duration-200"
       aria-label="Search"
     >
       <svg

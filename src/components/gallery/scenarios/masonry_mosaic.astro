@@ -86,7 +86,7 @@ const sizeClasses = [
 <article class="masonry-mosaic bg-gallery-bg text-gallery-text" aria-label={title}>
   <!-- Header -->
   <header class="px-6 sm:px-10 py-16 sm:py-24 max-w-4xl mx-auto text-center">
-    <h1 class="font-['Red_Hat_Display_Variable'] text-3xl sm:text-5xl font-bold leading-[1.1] tracking-tight text-gallery-text gallery-reveal">
+    <h1 class="font-display text-3xl sm:text-5xl font-bold leading-[1.1] tracking-tight text-gallery-text gallery-reveal">
       {title}
     </h1>
     <p class="mt-6 text-gallery-text/60 text-lg sm:text-xl leading-[1.7] font-light gallery-reveal" style="transition-delay: 150ms;">
@@ -127,7 +127,7 @@ const sizeClasses = [
           >
             <button
               type="button"
-              class="lightbox-trigger group block w-full h-full cursor-pointer border-0 bg-transparent p-0 relative overflow-hidden rounded-lg"
+              data-cursor="image" class="lightbox-trigger group block w-full h-full cursor-pointer border-0 bg-transparent p-0 relative overflow-hidden rounded-lg"
               data-caption={img.caption || ""}
               data-camera={img.camera || ""}
               data-lens={img.lens || ""}
@@ -167,7 +167,7 @@ const sizeClasses = [
           )}
           {section.type === "quote" && section.content && (
             <blockquote class="gallery-reveal py-8 border-l-2 border-gallery-vivid/50 pl-6">
-              <p class="font-['Red_Hat_Display_Variable'] text-xl sm:text-2xl text-gallery-text/80 font-light italic leading-relaxed">
+              <p class="font-display text-xl sm:text-2xl text-gallery-text/80 font-light italic leading-relaxed">
                 {section.content}
               </p>
               {section.attribution && (
@@ -282,6 +282,19 @@ const sizeClasses = [
 
     mosaic.querySelectorAll(".gallery-reveal").forEach(function (el) {
       observer.observe(el);
+    });
+
+    // Immediately reveal elements to prevent invisible content on page load
+    requestAnimationFrame(function() {
+      var vh = window.innerHeight || 800;
+      mosaic.querySelectorAll(".gallery-reveal").forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        var delay = rect.top > vh ? Math.min(800, ((rect.top - vh) / vh) * 100) : 0;
+        el.style.transitionDelay = Math.round(delay) + "ms";
+        el.classList.add("visible");
+        el.classList.add("revealed");
+        observer.unobserve(el);
+      });
     });
   });
 </script>

@@ -2,365 +2,519 @@
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
-import BitsPreview from "./bits_preview.astro";
 
 const allArticles = await getCollection("articles");
-const articles = allArticles
+const sortedArticles = allArticles
   .sort(
     (a: CollectionEntry<"articles">, b: CollectionEntry<"articles">) =>
       new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+  );
+
+const featured = sortedArticles[0];
+const recent = sortedArticles.slice(1, 3);
+
+const allBits = await getCollection("bits");
+const latestBits = allBits
+  .sort(
+    (a: CollectionEntry<"bits">, b: CollectionEntry<"bits">) =>
+      new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
   )
-  .map((article: CollectionEntry<"articles">) => ({
-    title: article.data.title,
-    subtitle: article.data.subtitle,
-    description: article.data.description,
-    image: article.data.hero_image,
-    link: article.data.path,
-    date: new Date(article.data.date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
-  }));
+  .slice(0, 2);
+
+function formatDate(date: string | Date) {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
 ---
 
-<section class="font-['Red_Hat_Display_Variable'] py-16 sm:py-20 lg:py-24 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-light text-gray-900 mb-4">
-        Latest Thoughts & Insights
-      </h2>
-      <p class="text-lg sm:text-xl text-gray-600 font-['Montserrat_Variable'] font-light max-w-3xl mx-auto">
-        Exploring the intersection of technology, creativity, and human experience through writing
+<section class="section-writing" data-reveal>
+  <div class="section-container">
+    <div class="section-header-left">
+      <span class="overline">LATEST THOUGHTS</span>
+      <h2 class="section-title">Latest Writing</h2>
+      <p class="section-subtitle">
+        Exploring the intersection of technology, creativity, and human experience
       </p>
     </div>
 
-    <BitsPreview />
-
-    <div class="mb-16">
-      <h3 class="text-xl sm:text-2xl font-medium text-gray-700 mb-6 font-['Red_Hat_Display_Variable']">
-        In-Depth Articles
-      </h3>
-      
-      <div class="relative flex flex-row items center" id="blog-carousel">
-      <button
-        class="bg-white/80 backdrop-blur-sm max-w-fit m-auto rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 sm:block cursor-pointer"
-        style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;"
-        id="prev-btn"
-        type="button"
-        aria-label="Previous slide"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 sm:h-6 sm:w-6 pointer-events-none"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+    <div class="bento-grid" data-reveal-group>
+      {/* Featured article — large card, spans 2 rows */}
+      {featured && (
+        <a
+          href={featured.data.path}
+          class="bento-featured"
+          data-reveal-item
+          data-cursor="card"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"></path>
-        </svg>
-      </button>
-
-      <div class="relative overflow-hidden w-full mx-2" id="carousel-viewport">
-        <div
-          class="flex gap-3 sm:gap-4 lg:gap-5 transition-transform duration-300 ease-in-out"
-          id="carousel-container"
-        >
-          {
-            articles.map((article) => (
-              <div class="lg:max-w-[32%] md:max-w-[48%] max-w-[90%] flex-shrink-0 group">
-                <a 
-                  href={article.link}
-                  class="block bg-white rounded-2xl shadow-sm border border-brand-100/50 group-hover:shadow-xl group-hover:shadow-brand-100/30 transition-all duration-300 overflow-hidden h-full"
-                >
-                  {/* Image Section */}
-                  <div class="aspect-[4/3] overflow-hidden">
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      width={340}
-                      class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  
-                  {/* Content Section */}
-                  <div class="p-6 flex flex-col h-auto">
-                    <p class="font-['Montserrat_Variable'] text-gray-400 mb-2 text-xs font-medium uppercase tracking-wider">
-                      {article.date}
-                    </p>
-                    <h3 class="text-lg sm:text-xl font-medium text-gray-900 mb-3 line-clamp-2 font-['Red_Hat_Display_Variable'] group-hover:text-brand-700 transition-colors">
-                      {article.title}
-                    </h3>
-                    <p class="font-['Montserrat_Variable'] text-gray-600 mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3">
-                      {article.description}
-                    </p>
-                    <div class="mt-auto">
-                      <span class="text-brand-700 font-['Montserrat_Variable'] hover:text-brand-600 font-medium text-sm sm:text-base inline-flex items-center gap-x-2 group-hover:translate-x-1 transition-transform duration-200">
-                        Read article
-                        <svg
-                          class="w-4 h-4 transition-transform group-hover:translate-x-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </a>
+          <div class="featured-image">
+            <Image
+              src={featured.data.hero_image}
+              alt={featured.data.hero_image_alt || featured.data.title}
+              width={800}
+              class="featured-img"
+              transition:name={`article-hero-${featured.id}`}
+            />
+          </div>
+          <div class="featured-content">
+            <div class="article-meta">
+              <time>{formatDate(featured.data.date)}</time>
+            </div>
+            <h3 class="featured-title">{featured.data.title}</h3>
+            {featured.data.subtitle && (
+              <p class="featured-subtitle">{featured.data.subtitle}</p>
+            )}
+            {featured.data.tags && (
+              <div class="article-tags">
+                {featured.data.tags.slice(0, 3).map((tag: string) => (
+                  <span class="tag">{tag}</span>
+                ))}
               </div>
-            ))
-          }
-        </div>
-      </div>
+            )}
+          </div>
+        </a>
+      )}
 
-      <button
-        class="bg-white/80 backdrop-blur-sm max-w-fit m-auto rounded-full p-3 shadow-lg border border-brand-200/50 text-brand-600 hover:text-brand-800 hover:bg-white transition-all duration-200 sm:block cursor-pointer"
-        style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;"
-        id="next-btn"
-        type="button"
-        aria-label="Next slide"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 sm:h-6 sm:w-6 pointer-events-none"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"></path>
+      {/* Right column: recent articles + bits */}
+      <div class="bento-sidebar">
+        {/* Recent articles */}
+        {recent.map((article) => (
+          <a
+            href={article.data.path}
+            class="recent-card"
+            data-reveal-item
+            data-cursor="card"
+          >
+            <div class="recent-image">
+              <Image
+                src={article.data.hero_image}
+                alt={article.data.hero_image_alt || article.data.title}
+                width={300}
+                class="recent-img"
+              />
+            </div>
+            <div class="recent-content">
+              <div class="article-meta">
+                <time>{formatDate(article.data.date)}</time>
+              </div>
+              <h3 class="recent-title">{article.data.title}</h3>
+              <p class="recent-desc">{article.data.description}</p>
+            </div>
+          </a>
+        ))}
+
+        {/* Bits preview embedded in bento */}
+        {latestBits.length > 0 && (
+          <div class="bits-bento" data-reveal-item>
+            <div class="bits-bento-header">
+              <span class="bits-label">Bits &amp; Thoughts</span>
+              <a href="/bits/" class="bits-all-link">
+                View all
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+            <div class="bits-mini-grid">
+              {latestBits.map((bit) => (
+                <a href={bit.data.path} class="bit-mini" data-cursor="card">
+                  <h4 class="bit-mini-title">{bit.data.title}</h4>
+                  <p class="bit-mini-desc">{bit.data.description}</p>
+                  <span class="bit-mini-date">{formatDate(bit.data.date)}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div class="section-link-wrap">
+      <a href="/articles/" class="section-link">
+        View All Articles
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 5l7 7-7 7" />
         </svg>
-      </button>
-    </div>
-    <div class="flex justify-center gap-2 mt-6 sm:mt-8" id="carousel-dots">
-    </div>
+      </a>
     </div>
   </div>
 </section>
 
-<script>
-  document.addEventListener('astro:page-load', () => {
-    const carousel = document.getElementById("blog-carousel");
-    const viewport = document.getElementById("carousel-viewport");
-    const container = document.getElementById("carousel-container");
-    const prevBtn = document.getElementById("prev-btn");
-    const nextBtn = document.getElementById("next-btn");
-    const dotsContainer = document.getElementById("carousel-dots");
-
-    if (
-      carousel &&
-      container &&
-      viewport &&
-      prevBtn &&
-      nextBtn &&
-      dotsContainer
-    ) {
-      const eventHandlers: {
-        prevBtn: (() => void) | null;
-        nextBtn: (() => void) | null;
-        dots: ((e: Event) => void) | null;
-        resize: (() => void) | null;
-        touchstart: ((e: TouchEvent) => void) | null;
-        touchend: ((e: TouchEvent) => void) | null;
-      } = {
-        prevBtn: null,
-        nextBtn: null,
-        dots: null,
-        resize: null,
-        touchstart: null,
-        touchend: null
-      };
-      
-      const items = container.children;
-      let currentIndex = 0;
-
-      function calculateLayout() {
-        if (!viewport) return { itemWidth: 280, itemsPerView: 1, totalSlides: 1, gap: 12 };
-        
-        const viewportWidth = viewport.offsetWidth;
-        const gap =
-          window.innerWidth < 640 ? 12 : window.innerWidth < 1024 ? 16 : 20;
-        const minItemWidth = 280;
-        const maxItemWidth = 380;
-
-        let itemsPerView = Math.floor(viewportWidth / (minItemWidth + gap));
-        // Limit maximum cards per view to 3 for better readability
-        itemsPerView = Math.max(1, Math.min(itemsPerView, Math.min(3, items.length)));
-
-        let itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
-
-        if (itemWidth > maxItemWidth) {
-          itemsPerView = Math.floor(viewportWidth / (maxItemWidth + gap));
-          // Limit maximum cards per view to 3 for better readability  
-          itemsPerView = Math.max(1, Math.min(itemsPerView, Math.min(3, items.length)));
-          itemWidth = (viewportWidth - gap * (itemsPerView - 1)) / itemsPerView;
-        }
-
-        // Apply the calculated width to all items
-        Array.from(items).forEach((item) => {
-          (item as HTMLElement).style.width = `${itemWidth}px`;
-        });
-
-        // Update container width to accommodate all items
-        const totalWidth = itemWidth * items.length + gap * (items.length - 1);
-        (container as HTMLElement).style.width = `${totalWidth}px`;
-
-        // Calculate total slides, ensuring we only show complete slides
-        const totalSlides = Math.ceil((items.length - itemsPerView + 1) / itemsPerView);
-
-        return { itemWidth, itemsPerView, totalSlides, gap };
-      }
-
-      function updateDots(totalSlides: number) {
-        if (dotsContainer) {
-          // Only create dots if they don't exist or count has changed
-          const existingDots = dotsContainer.querySelectorAll('button[data-index]');
-          if (existingDots.length !== totalSlides) {
-            dotsContainer.innerHTML = "";
-            for (let i = 0; i < totalSlides; i++) {
-              const dot = document.createElement("button");
-              dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-200 cursor-pointer bg-brand-200 hover:bg-brand-400`;
-              dot.setAttribute("data-index", i.toString());
-              dot.setAttribute("type", "button");
-              dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
-              dot.style.touchAction = "manipulation";
-              (dot.style as any).webkitTapHighlightColor = "transparent";
-              dotsContainer.appendChild(dot);
-            }
-          }
-
-          // Windowed dots: show at most 7 centred on currentIndex
-          const windowSize = 7;
-          const halfWindow = Math.floor(windowSize / 2);
-          const windowStart = Math.max(0, Math.min(currentIndex - halfWindow, totalSlides - windowSize));
-          const windowEnd = Math.min(totalSlides - 1, windowStart + windowSize - 1);
-
-          // Update dot states
-          const dots = dotsContainer.querySelectorAll('button[data-index]');
-          dots.forEach((dot, index) => {
-            (dot as HTMLElement).classList.toggle('hidden', index < windowStart || index > windowEnd);
-            if (index === currentIndex) {
-              dot.classList.add('bg-brand-600', 'w-8');
-              dot.classList.remove('bg-brand-200', 'hover:bg-brand-400');
-            } else {
-              dot.classList.remove('bg-brand-600', 'w-8');
-              dot.classList.add('bg-brand-200', 'hover:bg-brand-400');
-            }
-          });
-        }
-      }
-
-      function updateCarousel() {
-        const { itemWidth, itemsPerView, totalSlides, gap } = calculateLayout();
-        const offset =
-          -currentIndex * (itemWidth + gap) * itemsPerView;
-        (container as HTMLElement).style.transform = `translateX(${offset}px)`;
-
-        // Update button states
-        (prevBtn as HTMLElement).classList.toggle("opacity-50", currentIndex === 0);
-        (nextBtn as HTMLElement).classList.toggle("opacity-50", currentIndex >= totalSlides - 1);
-
-        updateDots(totalSlides);
-      }
-
-      function cleanup() {
-        if (eventHandlers.prevBtn) (prevBtn as HTMLElement).removeEventListener("click", eventHandlers.prevBtn);
-        if (eventHandlers.nextBtn) (nextBtn as HTMLElement).removeEventListener("click", eventHandlers.nextBtn);
-        if (eventHandlers.dots) (dotsContainer as HTMLElement).removeEventListener("click", eventHandlers.dots);
-        if (eventHandlers.resize) window.removeEventListener("resize", eventHandlers.resize);
-        if (eventHandlers.touchstart) (viewport as HTMLElement).removeEventListener("touchstart", eventHandlers.touchstart as EventListener);
-        if (eventHandlers.touchend) (viewport as HTMLElement).removeEventListener("touchend", eventHandlers.touchend as EventListener);
-      }
-
-      document.addEventListener('astro:before-preparation', cleanup, { once: true });
-      
-      // Set up new event handlers
-      eventHandlers.prevBtn = () => {
-        if (currentIndex > 0) {
-          currentIndex--;
-          updateCarousel();
-        }
-      };
-      
-      eventHandlers.nextBtn = () => {
-        const { totalSlides } = calculateLayout();
-        if (currentIndex < totalSlides - 1) {
-          currentIndex++;
-          updateCarousel();
-        }
-      };
-      
-      eventHandlers.dots = (e: Event) => {
-        const target = e.target as HTMLElement;
-        if (target && target.hasAttribute("data-index")) {
-          currentIndex = parseInt(target.getAttribute("data-index") || "0");
-          updateCarousel();
-        }
-      };
-      
-      let resizeTimeout: number | undefined;
-      eventHandlers.resize = () => {
-        if (resizeTimeout) clearTimeout(resizeTimeout);
-        resizeTimeout = window.setTimeout(() => {
-          currentIndex = 0; // Reset to first slide on resize
-          updateCarousel();
-        }, 250);
-      };
-      
-      // Add event listeners
-      (prevBtn as HTMLElement).addEventListener("click", eventHandlers.prevBtn!);
-      (nextBtn as HTMLElement).addEventListener("click", eventHandlers.nextBtn!);
-      (dotsContainer as HTMLElement).addEventListener("click", eventHandlers.dots!);
-      window.addEventListener("resize", eventHandlers.resize!);
-
-      // Touch swipe support for mobile
-      let touchStartX = 0;
-      eventHandlers.touchstart = (e: TouchEvent) => {
-        touchStartX = e.changedTouches[0].screenX;
-      };
-      eventHandlers.touchend = (e: TouchEvent) => {
-        const touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        const { totalSlides } = calculateLayout();
-        if (Math.abs(diff) > 50) {
-          if (diff > 0 && currentIndex < totalSlides - 1) {
-            currentIndex++;
-            updateCarousel();
-          } else if (diff < 0 && currentIndex > 0) {
-            currentIndex--;
-            updateCarousel();
-          }
-        }
-      };
-      (viewport as HTMLElement).addEventListener("touchstart", eventHandlers.touchstart as EventListener, { passive: true });
-      (viewport as HTMLElement).addEventListener("touchend", eventHandlers.touchend as EventListener, { passive: true });
-
-      // Initial setup
-      updateCarousel();
-    }
-  });
-</script>
-
 <style>
-  #carousel-container {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  .section-writing {
+    padding: var(--space-12) 0;
   }
-  #carousel-container::-webkit-scrollbar {
-    display: none;
+
+  .section-container {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+  }
+
+  .section-header-left {
+    margin-bottom: var(--space-8);
+  }
+
+  .overline {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--text-overline);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-brand);
+    margin-bottom: var(--space-3);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+  }
+
+  .section-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    max-width: 540px;
+    line-height: 1.6;
+  }
+
+  /* ─── Bento Grid ─── */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    margin-bottom: var(--space-10);
+  }
+
+  @media (min-width: 1024px) {
+    .bento-grid {
+      grid-template-columns: 3fr 2fr;
+      align-items: start;
+    }
+    .bento-featured {
+      max-height: 520px;
+      display: flex;
+      flex-direction: column;
+    }
+    .bento-featured .featured-image {
+      flex-shrink: 0;
+      max-height: 280px;
+    }
+    .bento-featured .featured-content {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+  }
+
+  /* ─── Featured Card ─── */
+  .bento-featured {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-raised);
+    transition: transform var(--duration-normal) ease,
+                box-shadow var(--duration-normal) ease;
+  }
+
+  .bento-featured:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .featured-image {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .featured-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-normal) ease;
+  }
+
+  .bento-featured:hover .featured-img {
+    transform: scale(1.03);
+  }
+
+  .featured-content {
+    padding: var(--space-5) var(--space-6);
+  }
+
+  .article-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-2);
+  }
+
+  .featured-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-2);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .bento-featured:hover .featured-title {
+    color: var(--color-brand);
+  }
+
+  .featured-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: var(--space-3);
+  }
+
+  .article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 2px var(--space-3);
+    font-family: var(--font-ui);
+    font-size: var(--text-ui-small);
+    color: var(--color-brand-dark);
+    background: var(--color-brand-lighter);
+    border-radius: var(--radius-full);
+  }
+
+  /* ─── Sidebar (right column) ─── */
+  .bento-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  /* ─── Recent Cards ─── */
+  .recent-card {
+    display: flex;
+    gap: var(--space-4);
+    text-decoration: none;
+    color: inherit;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-raised);
+    transition: transform var(--duration-normal) ease,
+                box-shadow var(--duration-normal) ease;
+  }
+
+  .recent-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .recent-image {
+    flex-shrink: 0;
+    width: 120px;
+    overflow: hidden;
+  }
+
+  @media (min-width: 640px) {
+    .recent-image {
+      width: 150px;
+    }
+  }
+
+  .recent-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-normal) ease;
+  }
+
+  .recent-card:hover .recent-img {
+    transform: scale(1.03);
+  }
+
+  .recent-content {
+    padding: var(--space-3) var(--space-3) var(--space-3) 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .recent-title {
+    font-family: var(--font-display);
+    font-size: var(--text-body);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+    margin-bottom: var(--space-1);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .recent-card:hover .recent-title {
+    color: var(--color-brand);
+  }
+
+  .recent-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-caption);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ─── Bits Bento Panel ─── */
+  .bits-bento {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    translate: 0 var(--space-8);
+  }
+
+  .bits-bento-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+  }
+
+  .bits-label {
+    font-family: var(--font-ui);
+    font-size: var(--text-ui-small);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-tertiary);
+  }
+
+  .bits-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-ui);
+    font-size: var(--text-caption);
+    font-weight: 500;
+    color: var(--color-brand);
+    text-decoration: none;
+    transition: gap var(--duration-fast) ease;
+  }
+
+  .bits-all-link:hover {
+    gap: 6px;
+  }
+
+  .bits-mini-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+  }
+
+  .bit-mini {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--duration-fast) ease,
+                box-shadow var(--duration-fast) ease;
+  }
+
+  .bit-mini:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .bit-mini-title {
+    font-family: var(--font-display);
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+    margin-bottom: var(--space-1);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .bit-mini:hover .bit-mini-title {
+    color: var(--color-brand);
+  }
+
+  .bit-mini-desc {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: auto;
+    flex: 1;
+  }
+
+  .bit-mini-date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    margin-top: var(--space-2);
+  }
+
+  /* ─── Section Link ─── */
+  .section-link-wrap {
+    text-align: right;
+  }
+
+  .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-brand-dark);
+    text-decoration: none;
+    transition: gap var(--duration-fast) ease;
+  }
+
+  .section-link:hover {
+    gap: var(--space-3);
   }
 </style>

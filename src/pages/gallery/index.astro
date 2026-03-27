@@ -4,9 +4,8 @@ import "../../styles/global.css";
 import "../../styles/gallery.css";
 import StoryCard from "../../components/gallery/story_card.astro";
 import ProjectCard from "../../components/gallery/project_card.astro";
-import CustomCursor from "../../components/gallery/custom_cursor.astro";
 import { getCollection } from "astro:content";
-import { Schema } from "astro-seo-schema";
+import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
 import type { ListItem, ImageGallery as SchemaImageGallery } from "schema-dts";
 
 import { Image } from "astro:assets";
@@ -85,82 +84,30 @@ const itemListElements: ListItem[] = galleryItems.map(
 const hasStories = sortedStories.length > 0;
 const featuredStory = sortedStories[0];
 const remainingStories = sortedStories.slice(1);
+
+const pageSchemaEntities = [
+  buildWebPageEntity({
+    type: "CollectionPage",
+    url: pageUrl,
+    name: "Photography Gallery",
+    description: page_info.description,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: itemListElements,
+    },
+  }),
+];
 ---
 
-<BaseLayout page_info={page_info}>
-  <Schema
-    slot="head"
-    item={{
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      name: "Photography Gallery",
-      description: page_info.description,
-      mainEntity: {
-        "@type": "ItemList",
-        itemListElement: itemListElements,
-      },
-      author: {
-        "@type": "Person",
-        name: profile.name,
-        url: "https://rishikc.com",
-        sameAs: profile.socials.map((social: Social) => social.url),
-      },
-      url: pageUrl,
-      potentialAction: [
-        {
-          "@type": "ViewAction",
-          target: pageUrl,
-          name: "Browse Photography Portfolio"
-        },
-        {
-          "@type": "ShareAction",
-          target: [
-            {
-              "@type": "EntryPoint",
-              urlTemplate: `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(`Check out ${profile.name}'s Photography Portfolio`)}`,
-              actionPlatform: "https://schema.org/DesktopWebPlatform"
-            },
-            {
-              "@type": "EntryPoint",
-              urlTemplate: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`,
-              actionPlatform: "https://schema.org/DesktopWebPlatform"
-            }
-          ],
-          name: "Share Gallery"
-        }
-      ]
-    }}
-  />
+<BaseLayout page_info={page_info} pageSchemaEntities={pageSchemaEntities}>
 
-  <main class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gallery-bg">
+  <main class="gallery-page min-h-screen">
     <!-- Hero Section -->
-    <div class="relative py-20 sm:py-28 lg:py-36 px-6 sm:px-8">
-      <div class="max-w-5xl mx-auto text-center">
-        <a
-          href="/"
-          class="group inline-flex items-center px-4 py-2.5 bg-gallery-bg-secondary/80 backdrop-blur-sm border border-gallery-border rounded-full text-gallery-text/70 hover:text-gallery-text hover:bg-gallery-bg-secondary transition-all duration-300 text-sm font-light mb-16 sm:mb-20"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            ></path>
-          </svg>
-          Home
-        </a>
-
-        <h1 class="text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-6">
-          Visual Stories
-        </h1>
-        <p class="text-gallery-text-muted text-lg sm:text-xl leading-relaxed font-light max-w-2xl mx-auto mb-8">
+    <header class="page-header">
+      <div class="header-inner">
+        <span class="overline">Visual Stories</span>
+        <h1 class="page-title">Gallery</h1>
+        <p class="page-subtitle">
           Photo essays and visual narratives — exploring the world one frame at a time.
         </p>
         {instagramSocial && (
@@ -168,56 +115,56 @@ const remainingStories = sortedStories.slice(1);
             href={instagramSocial.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center text-sm text-gallery-text-muted hover:text-gallery-accent transition-colors duration-300 group"
+            class="instagram-link group"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 mr-2 opacity-70 group-hover:opacity-100 transition-opacity"
+              class="icon"
               viewBox="0 0 24 24"
               fill="currentColor"
             >
               <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
             </svg>
             Instagram
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
             </svg>
           </a>
         )}
       </div>
-    </div>
+    </header>
 
     <!-- Featured Story Hero -->
     {featuredStory && (
-      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20" aria-label="Featured story">
+      <section class="featured-section" aria-label="Featured story">
         <a
           href={featuredStory.data.path}
-          class="group block relative overflow-hidden rounded-2xl aspect-[21/9] gallery-reveal gallery-ripple"
+          class="featured-card group gallery-reveal gallery-ripple"
         >
           <Image
             src={featuredStory.data.cover_image}
             alt={featuredStory.data.cover_image_alt || featuredStory.data.title}
-            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            class="featured-image"
             widths={[640, 1024, 1920]}
             sizes="(max-width: 768px) 100vw, 1280px"
             loading="eager"
             transition:name={`story-cover-${featuredStory.id}`}
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-gallery-bg via-gallery-bg/40 to-transparent"></div>
-          <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-10">
-            <span class="meta-label text-gallery-accent mb-3 block">Featured Story</span>
+          <div class="featured-gradient"></div>
+          <div class="featured-content">
+            <span class="featured-label">Featured Story</span>
             <h2
-              class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl lg:text-4xl font-bold text-gallery-text leading-[1.1] mb-3 group-hover:text-gallery-accent transition-colors duration-300"
+              class="featured-title"
               transition:name={`${featuredStory.id}-title`}
             >
               {featuredStory.data.title}
             </h2>
-            <p class="text-gallery-text-muted text-base sm:text-lg font-light max-w-2xl line-clamp-2">
+            <p class="featured-desc">
               {featuredStory.data.description}
             </p>
-            <span class="inline-flex items-center text-gallery-text-muted group-hover:text-gallery-accent transition-colors duration-300 text-sm mt-4">
+            <span class="featured-cta">
               Read Story
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="featured-cta-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
               </svg>
             </span>
@@ -228,7 +175,7 @@ const remainingStories = sortedStories.slice(1);
 
     <!-- Stories Bento Grid -->
     {remainingStories.length > 0 && (
-      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-28" aria-label="Visual stories">
+      <section class="stories-section" aria-label="Visual stories">
         <div class="bento-grid">
           {remainingStories.map((story, index) => (
             <StoryCard story={story} featured={index === 0} />
@@ -236,16 +183,17 @@ const remainingStories = sortedStories.slice(1);
         </div>
       </section>
     )}
+
     <!-- Browse by Category -->
-    <section class="border-t border-gallery-border" aria-label="Browse by category">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-        <div class="text-center mb-12 sm:mb-16">
-          <h2 class="meta-label text-gallery-text-muted mb-4">Browse by Category</h2>
-          <p class="text-gallery-text/70 text-base font-light max-w-lg mx-auto">
+    <section class="category-section" aria-label="Browse by category">
+      <div class="category-inner">
+        <div class="category-header">
+          <span class="overline">Browse by Category</span>
+          <p class="category-subtitle">
             Explore the full collection organized by theme and subject.
           </p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="category-grid">
           {sortedGalleries.map((gallery) => (
             <ProjectCard project={gallery} />
           ))}
@@ -254,8 +202,8 @@ const remainingStories = sortedStories.slice(1);
     </section>
 
     <!-- Copyright -->
-    <footer class="py-8 sm:py-12 px-6 sm:px-8 border-t border-gallery-border">
-      <p class="text-center text-xs text-gallery-text-muted/60 font-light max-w-2xl mx-auto">
+    <footer class="copyright-footer">
+      <p>
         All photographs displayed in this gallery are the intellectual property
         of {profile.name}. Any reproduction, distribution, or use of these
         images, in whole or in part, without explicit written permission from
@@ -263,16 +211,324 @@ const remainingStories = sortedStories.slice(1);
       </p>
     </footer>
   </main>
-
-  <CustomCursor />
 </BaseLayout>
+
+<style>
+  /* ─── Page Header ─── */
+  .page-header {
+    padding: var(--space-20) var(--space-6) var(--space-12);
+    text-align: center;
+  }
+
+  @media (min-width: 640px) {
+    .page-header {
+      padding: var(--space-24) var(--space-8) var(--space-16);
+    }
+  }
+
+  .header-inner {
+    max-width: var(--max-content);
+    margin: 0 auto;
+  }
+
+  .overline {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-overline);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-brand);
+    margin-bottom: var(--space-4);
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--text-display-xl);
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-6);
+  }
+
+  .page-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 640px;
+    margin: 0 auto var(--space-8);
+  }
+
+  .instagram-link {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--text-body-sm);
+    color: var(--color-text-tertiary);
+    transition: color var(--duration-normal) ease;
+    gap: var(--space-2);
+  }
+
+  .instagram-link:hover {
+    color: var(--color-brand);
+  }
+
+  .instagram-link .icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+    transition: opacity var(--duration-normal) ease;
+  }
+
+  .instagram-link:hover .icon {
+    opacity: 1;
+  }
+
+  .instagram-link .arrow-icon {
+    width: 12px;
+    height: 12px;
+    transition: transform var(--duration-normal) ease;
+  }
+
+  .instagram-link:hover .arrow-icon {
+    transform: translateX(2px);
+  }
+
+  /* ─── Featured Story ─── */
+  .featured-section {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 var(--space-4) var(--space-16);
+  }
+
+  @media (min-width: 640px) {
+    .featured-section {
+      padding: 0 var(--space-6) var(--space-20);
+    }
+  }
+
+  .featured-card {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    aspect-ratio: 21/9;
+  }
+
+  @media (max-width: 767px) {
+    .featured-card {
+      aspect-ratio: 4/3;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .featured-card {
+      aspect-ratio: 16/9;
+    }
+  }
+
+  .featured-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-emphasis) ease;
+  }
+
+  .featured-card:hover .featured-image {
+    transform: scale(1.05);
+  }
+
+  .featured-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 40%, transparent 70%);
+  }
+
+  .featured-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-6) var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .featured-content {
+      padding: var(--space-10);
+    }
+  }
+
+  .featured-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-overline);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-brand);
+    background: rgba(154, 167, 215, 0.15);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-3);
+  }
+
+  .featured-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: var(--space-3);
+    transition: color var(--duration-normal) ease;
+  }
+
+  .featured-card:hover .featured-title {
+    color: var(--color-brand);
+  }
+
+  .featured-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: var(--text-body);
+    font-weight: 300;
+    max-width: 640px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (min-width: 640px) {
+    .featured-desc {
+      font-size: var(--text-body-lg);
+    }
+  }
+
+  .featured-cta {
+    display: inline-flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: var(--text-body-sm);
+    margin-top: var(--space-4);
+    transition: color var(--duration-normal) ease;
+  }
+
+  .featured-card:hover .featured-cta {
+    color: var(--color-brand);
+  }
+
+  .featured-cta-arrow {
+    width: 16px;
+    height: 16px;
+    margin-left: var(--space-2);
+    transition: transform var(--duration-normal) ease;
+  }
+
+  .featured-card:hover .featured-cta-arrow {
+    transform: translateX(4px);
+  }
+
+  /* ─── Stories Section ─── */
+  .stories-section {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 var(--space-4) var(--space-20);
+  }
+
+  @media (min-width: 640px) {
+    .stories-section {
+      padding: 0 var(--space-6) var(--space-24);
+    }
+  }
+
+  /* ─── Category Section ─── */
+  .category-section {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .category-inner {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: var(--space-20) var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .category-inner {
+      padding: var(--space-24) var(--space-6);
+    }
+  }
+
+  .category-header {
+    text-align: center;
+    margin-bottom: var(--space-12);
+  }
+
+  @media (min-width: 640px) {
+    .category-header {
+      margin-bottom: var(--space-16);
+    }
+  }
+
+  .category-subtitle {
+    color: var(--color-text-tertiary);
+    font-size: var(--text-body);
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .category-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .category-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ─── Copyright Footer ─── */
+  .copyright-footer {
+    padding: var(--space-8) var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 640px) {
+    .copyright-footer {
+      padding: var(--space-12) var(--space-8);
+    }
+  }
+
+  .copyright-footer p {
+    text-align: center;
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+    font-weight: 300;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+</style>
 
 <script is:inline>
   document.addEventListener("astro:page-load", () => {
     const reveals = document.querySelectorAll(".gallery-reveal");
     if (reveals.length === 0) return;
 
-    const observer = new IntersectionObserver(
+    var viewportH = window.innerHeight;
+
+    var observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -284,7 +540,16 @@ const remainingStories = sortedStories.slice(1);
       { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
     );
 
-    reveals.forEach((el) => observer.observe(el));
+    reveals.forEach(function(el, i) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < viewportH * 5) {
+        // Near viewport — reveal immediately with stagger via transition-delay
+        el.style.transitionDelay = Math.min(800, Math.max(0, (rect.top / viewportH) * 150)) + "ms";
+        requestAnimationFrame(function() { el.classList.add("revealed"); });
+      } else {
+        observer.observe(el);
+      }
+    });
 
     // Ripple effect on clickable cards
     document.querySelectorAll(".gallery-ripple").forEach(function(el) {

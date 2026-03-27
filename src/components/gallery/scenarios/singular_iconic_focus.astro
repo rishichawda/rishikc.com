@@ -97,7 +97,7 @@ const textSections = sections.filter(s => s.type === "text" || s.type === "quote
     <div class="relative z-10 lg:z-auto">
       <!-- Title block: overlaps on mobile, separate on desktop -->
       <div class="lg:min-h-screen flex flex-col justify-center px-6 sm:px-8 lg:px-12 xl:px-16 py-20 lg:py-32">
-        <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8 narrative-slide" data-observe>
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8 narrative-slide" data-observe>
           {title}
         </h1>
         <p class="text-gallery-text/85 text-lg sm:text-xl leading-[1.8] font-light max-w-lg narrative-slide" data-observe style="transition-delay: 200ms;">
@@ -123,7 +123,7 @@ const textSections = sections.filter(s => s.type === "text" || s.type === "quote
           {section.type === "quote" && section.content && (
             <blockquote class="gallery-reveal relative my-8">
               <span class="absolute -top-6 -left-2 text-5xl text-gallery-accent/30 font-serif leading-none select-none" aria-hidden="true">&ldquo;</span>
-              <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed pl-4 border-l-2 border-gallery-accent/30">
+              <p class="font-display text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed pl-4 border-l-2 border-gallery-accent/30">
                 {section.content}
               </p>
               {section.attribution && (
@@ -138,7 +138,7 @@ const textSections = sections.filter(s => s.type === "text" || s.type === "quote
             <figure class="gallery-reveal lg:hidden my-8">
               <button
                 type="button"
-                class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
                 data-caption={section.caption || ""}
                 data-camera={section.camera || ""}
                 data-lens={section.lens || ""}
@@ -172,7 +172,7 @@ const textSections = sections.filter(s => s.type === "text" || s.type === "quote
                 <figure>
                   <button
                     type="button"
-                    class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                    data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
                     data-caption={img.caption || ""}
                     data-camera={img.camera || ""}
                     data-lens={img.lens || ""}
@@ -228,6 +228,18 @@ const textSections = sections.filter(s => s.type === "text" || s.type === "quote
 
     hero.querySelectorAll("[data-observe], .gallery-reveal").forEach((el) => {
       observer.observe(el);
+    });
+
+    // Immediately reveal elements to prevent invisible content on page load
+    requestAnimationFrame(() => {
+      const vh = window.innerHeight || 800;
+      hero.querySelectorAll("[data-observe], .gallery-reveal").forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        const delay = rect.top > vh ? Math.min(800, ((rect.top - vh) / vh) * 100) : 0;
+        el.style.transitionDelay = Math.round(delay) + "ms";
+        el.classList.add("visible");
+        observer.unobserve(el);
+      });
     });
   });
 </script>

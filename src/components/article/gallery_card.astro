@@ -10,7 +10,7 @@ const isHorizontal = orientation === "horizontal";
 
 <a
     href="/gallery/"
-    class="block p-6 bg-white/70 backdrop-blur-sm rounded-3xl border border-brand-200/30 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50 group"
+    class="block p-6 bg-[var(--color-surface)]/70 backdrop-blur-sm rounded-3xl border border-brand-200/30 hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50 group"
 >
     <div class:list={["flex", isHorizontal ? "flex-col gap-3" : "items-start gap-4"]}>
         <div class:list={["flex items-center", isHorizontal ? "gap-3" : "flex-col"]}>
@@ -23,18 +23,18 @@ const isHorizontal = orientation === "horizontal";
                 </svg>
             </div>
             {isHorizontal && (
-                <h3 class="text-gray-800 font-bold text-lg font-['Red_Hat_Display_Variable'] group-hover:text-brand-700 transition-colors">
+                <h3 class="text-[var(--color-text)] font-bold text-lg font-display group-hover:text-brand-700 transition-colors">
                     Photography Gallery
                 </h3>
             )}
         </div>
         <div class="flex-1">
             {!isHorizontal && (
-                <h3 class="text-gray-800 font-bold text-lg font-['Red_Hat_Display_Variable'] mb-2 group-hover:text-brand-700 transition-colors">
+                <h3 class="text-[var(--color-text)] font-bold text-lg font-display mb-2 group-hover:text-brand-700 transition-colors">
                     Photography Gallery
                 </h3>
             )}
-            <p class="text-gray-600 text-sm font-['Montserrat_Variable'] leading-relaxed">
+            <p class="text-[var(--color-text-secondary)] text-sm font-heading leading-relaxed">
                 Explore my photography collection featuring landscapes, portraits, and street photography
             </p>
         </div>

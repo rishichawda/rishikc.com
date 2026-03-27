@@ -38,7 +38,7 @@ const { section, index } = Astro.props;
     <figure class="relative">
       <button
         type="button"
-        class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+        data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
         data-caption={section.caption || ""}
         data-camera={section.camera || ""}
         data-lens={section.lens || ""}
@@ -78,7 +78,7 @@ const { section, index } = Astro.props;
       <figure>
         <button
           type="button"
-          class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+          data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
           data-caption={img.caption || ""}
           data-camera={img.camera || ""}
           data-lens={img.lens || ""}
@@ -111,7 +111,7 @@ const { section, index } = Astro.props;
       <figure>
         <button
           type="button"
-          class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+          data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
           data-caption={img.caption || ""}
           data-camera={img.camera || ""}
           data-lens={img.lens || ""}
@@ -147,7 +147,7 @@ const { section, index } = Astro.props;
             <figure class="horizontal-scroll-item">
               <button
                 type="button"
-                class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0"
+                data-cursor="image" class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0"
                 data-caption={img.caption || ""}
                 data-camera={img.camera || ""}
                 data-lens={img.lens || ""}
@@ -184,7 +184,7 @@ const { section, index } = Astro.props;
   <div class="gallery-reveal max-w-3xl mx-auto px-6 sm:px-8 my-16 sm:my-24 text-center" data-parallax="text">
     <blockquote class="relative">
       <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-6xl text-gallery-accent/30 font-serif leading-none select-none" aria-hidden="true">&ldquo;</span>
-      <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed">
+      <p class="font-display text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed">
         {section.content}
       </p>
       {section.attribution && (

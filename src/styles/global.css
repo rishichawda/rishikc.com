@@ -1,9 +1,114 @@
-@import "tailwindcss";
-@plugin "@tailwindcss/typography";
 
-/* ─── Design Tokens: Motion System ─── */
+/* ═══════════════════════════════════════════════════════
+   DESIGN TOKENS — Source of truth from 01-design-tokens.md
+   ═══════════════════════════════════════════════════════ */
+
 :root {
-  /* Motion Easing Curves */
+  /* ─── Color System: Light Mode (Default) ─── */
+  --color-bg: #FAFAF9;
+  --color-bg-alt: #F5F5F3;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #FEFEFE;
+  --color-border: rgba(0, 0, 0, 0.06);
+  --color-border-strong: rgba(0, 0, 0, 0.12);
+  --color-text: #1A1A1A;
+  --color-text-secondary: #4A4A4A;
+  --color-text-tertiary: #8A8A8A;
+  --color-text-muted: #B0B0B0;
+  --color-brand: #9aa7d7;
+  --color-brand-light: #C5CEE8;
+  --color-brand-lighter: #E8ECF5;
+  --color-brand-dark: #6B7AB0;
+  --color-brand-darker: #4A5A8A;
+  --color-accent: #E8A87C;
+  --color-accent-light: #FFF0E5;
+  --color-success: #4CAF7D;
+  --color-error: #D9534F;
+
+  /* ─── Button Colors (WCAG AA: ≥4.5:1 contrast with white text) ─── */
+  --btn-bg: #4A5A8A;
+  --btn-bg-hover: #3D4B73;
+
+  /* ─── Semantic Intent Tokens ─── */
+  --color-info-bg: var(--color-brand-lighter);
+  --color-info-border: var(--color-brand-light);
+  --color-info-text: var(--color-brand-dark);
+  --color-success-bg: #ECFDF5;
+  --color-success-border: #A7F3D0;
+  --color-success-text: #065F46;
+  --color-warning-bg: #FEF3C7;
+  --color-warning-border: #FDE68A;
+  --color-warning-text: #92400E;
+  --color-error-bg: #FEF2F2;
+  --color-error-border: #FECACA;
+  --color-error-text: #991B1B;
+
+  /* ─── Typography ─── */
+  --font-display: var(--font-red-hat-display), sans-serif;
+  --font-body: var(--font-inter), sans-serif;
+  --font-ui: var(--font-montserrat), sans-serif;
+  --font-text: var(--font-red-hat-text), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'SF Mono', 'Cascadia Code', 'Fira Code', ui-monospace, monospace;
+
+  /* ─── Type Scale (fluid, clamp-based) ─── */
+  --text-display-xl: clamp(3rem, 6vw, 5rem);
+  --text-display-lg: clamp(2.5rem, 5vw, 4rem);
+  --text-display: clamp(2.25rem, 4vw, 3.5rem);
+  --text-h1: clamp(2rem, 3.5vw, 3rem);
+  --text-h2: clamp(1.5rem, 2.5vw, 2.25rem);
+  --text-h3: clamp(1.25rem, 2vw, 1.75rem);
+  --text-h4: clamp(1.125rem, 1.5vw, 1.375rem);
+  --text-body-lg: 1.125rem;
+  --text-body: 1rem;
+  --text-body-sm: 0.875rem;
+  --text-ui-label: 0.875rem;
+  --text-ui-small: 0.75rem;
+  --text-caption: 0.75rem;
+  --text-overline: 0.6875rem;
+
+  /* ─── Spacing (4px base grid) ─── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* ─── Elevation & Shadows ─── */
+  --shadow-subtle: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-raised: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-elevated: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-floating: 0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-lifted: 0 16px 48px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06);
+
+  /* ─── Shape ─── */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ─── Animation Tokens ─── */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --duration-emphasis: 700ms;
+  --duration-dramatic: 1000ms;
+
+  /* ─── Easing Curves (CSS equivalents) ─── */
+  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* ─── Legacy Motion Tokens (preserved for existing animations) ─── */
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
   --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
@@ -12,59 +117,114 @@
   --ease-tactile-pop: cubic-bezier(0.68, -0.6, 0.32, 1.6);
   --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-gallery: cubic-bezier(0.215, 0.61, 0.355, 1);
-
-  /* Motion Durations */
-  --duration-small: 200ms;
-  --duration-medium: 300ms;
-  --duration-large: 500ms;
-  --duration-transition: 400ms;
-  --duration-narrative: 600ms;
-  --duration-heavy-entry: 800ms;
-  --duration-tactile-bounce: 400ms;
-  --duration-cursor-morph: 300ms;
-
-  /* Named Motion Tokens (from Holy Grail spec) */
   --ease-heavy-entry: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --ease-cursor-morph: ease-out;
-  --heavy-entry-distance: 40px;
-  --cursor-morph-from: 12px;
-  --cursor-morph-to: 40px;
 
-  /* Typography Scale (Major Third 1.25) */
-  --text-base: 1rem;       /* 16px */
-  --text-body: 1.125rem;   /* 18px */
-  --text-lg: 1.25rem;      /* 20px */
-  --text-xl: 1.563rem;     /* 25px */
-  --text-2xl: 1.953rem;    /* 31.25px */
-  --text-3xl: 2.441rem;    /* 39px */
-  --text-4xl: 3.052rem;    /* 48.83px */
-  --text-display: 6rem;    /* 96px */
-  --text-caption: 0.875rem; /* 14px */
-  --text-metadata: 0.75rem; /* 12px */
+  /* ─── Layout Constraints ─── */
+  --max-content: 1280px;
+  --reading-column: 720px;
+  --wide-content: 960px;
 
-  /* Spacing Tokens */
-  --grid-gap: 2rem;
-  --scroll-padding: 15vh;
+  /* ─── Focus Ring (WCAG) ─── */
+  --focus-ring: 0 0 0 2px var(--color-brand), 0 0 0 4px var(--color-brand-lighter);
 
-  /* Focus Ring (WCAG) */
-  --focus-halo: 0 0 0 4px var(--color-brand-blue, #2D31FA);
+  /* ─── Stagger Values ─── */
+  --stagger-cards: 60ms;
+  --stagger-nav: 40ms;
+  --stagger-text: 30ms;
+  --stagger-hero: 120ms;
+
+  /* ─── Nav Height ─── */
+  --nav-height: 56px;
+}
+
+/* ─── Color System: Dark Mode ─── */
+[data-theme="dark"] {
+  --color-bg: #141414;
+  --color-bg-alt: #1C1C1C;
+  --color-surface: #222222;
+  --color-surface-hover: #2A2A2A;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+  --color-text: #ECECEC;
+  --color-text-secondary: #B8B8B8;
+  --color-text-tertiary: #777777;
+  --color-text-muted: #555555;
+  --color-brand: #9aa7d7;
+  --color-brand-light: rgba(154, 167, 215, 0.15);
+  --color-brand-lighter: rgba(154, 167, 215, 0.08);
+  --color-brand-dark: #B8C3E5;
+  --color-brand-darker: #C5CEE8;
+  --color-accent: #E8A87C;
+  --color-accent-light: rgba(232, 168, 124, 0.12);
+
+  --btn-bg: #3D4B73;
+  --btn-bg-hover: #333F60;
+
+  --shadow-subtle: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-raised: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-elevated: 0 4px 12px rgba(0,0,0,0.16), 0 1px 3px rgba(0,0,0,0.12);
+  --shadow-floating: 0 8px 24px rgba(0,0,0,0.20), 0 2px 8px rgba(0,0,0,0.12);
+  --shadow-lifted: 0 16px 48px rgba(0,0,0,0.25), 0 4px 12px rgba(0,0,0,0.16);
+
+  --color-info-bg: rgba(154, 167, 215, 0.10);
+  --color-success-bg: rgba(76, 175, 125, 0.10);
+  --color-warning-bg: rgba(245, 158, 11, 0.10);
+  --color-error-bg: rgba(217, 83, 79, 0.10);
+}
+
+/* ─── Theme Toggle: Radial Clip Transitions (View Transitions API) ─── */
+/* Only apply clip-reveal when theme is transitioning (set by theme_toggle.astro) */
+:root[data-theme-transitioning]::view-transition-old(root),
+:root[data-theme-transitioning]::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+:root[data-theme-transitioning]::view-transition-new(root) {
+  animation: theme-clip-reveal 700ms ease-in-out;
+}
+
+@keyframes theme-clip-reveal {
+  from {
+    clip-path: circle(0% at var(--toggle-x, 50%) var(--toggle-y, 50%));
+  }
+  to {
+    clip-path: circle(150% at var(--toggle-x, 50%) var(--toggle-y, 50%));
+  }
+}
+
+/* Disable radial animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme-transitioning]::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* ─── Dark Mode: Prose Image Borders ─── */
+[data-theme="dark"] .prose img {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: var(--scroll-padding);
+    scroll-padding-top: calc(var(--nav-height) + 16px);
   }
   
   body {
-    color: #111827;
-    background-color: white;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* WCAG Focus Ring */
   :focus-visible {
-    outline: none;
-    box-shadow: var(--focus-halo);
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: inherit;
   }
 
   /* Reduced Motion: Disable transitions and animations */
@@ -103,7 +263,7 @@
 @layer utilities {
   .scroll-reveal {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(12px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
   }
   
@@ -134,6 +294,11 @@
     background: rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  :global([data-theme="dark"]) .glass {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
   
   /* Smooth hover animations */
@@ -317,7 +482,7 @@
     top: 0;
     left: 0;
     height: 2px;
-    background: linear-gradient(to right, var(--color-brand-500, #9aa7d7), var(--color-brand-700, #7989c9));
+    background: var(--color-brand);
     z-index: 100;
     width: 0%;
     transition: width 50ms linear;
@@ -366,12 +531,16 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 4px;
-    background: var(--color-brand-blue, #2D31FA);
+    height: 2px;
+    background: var(--color-brand);
     z-index: 9999;
     width: 0%;
     transition: width 50ms linear;
     pointer-events: none;
+  }
+
+  .reading-progress:hover {
+    height: 3px;
   }
 }
 
@@ -388,9 +557,272 @@ body {
 }
 
 .remark-note-content {
-  font-family: 'Montserrat Variable';
+  font-family: var(--font-ui);
+  color: var(--color-text-secondary);
 }
 
 .remark-note-title {
-  font-family: 'Red Hat Display Variable';
+  font-family: var(--font-display);
+}
+
+/* Dark mode overrides for remark-notes-plugin (hard-codes light-only colors) */
+[data-theme="dark"] blockquote[class*="remark-note"] {
+  box-shadow: none;
+}
+[data-theme="dark"] blockquote[class*="remark-note-note"] {
+  background-color: rgba(49, 140, 231, 0.08);
+  border-color: rgba(49, 140, 231, 0.5);
+}
+[data-theme="dark"] blockquote[class*="remark-note-tip"] {
+  background-color: rgba(124, 207, 0, 0.08);
+  border-color: rgba(124, 207, 0, 0.5);
+}
+[data-theme="dark"] blockquote[class*="remark-note-important"] {
+  background-color: rgba(239, 155, 15, 0.08);
+  border-color: rgba(239, 155, 15, 0.5);
+}
+[data-theme="dark"] blockquote[class*="remark-note-quote"] {
+  background-color: rgba(140, 146, 172, 0.08);
+  border-color: rgba(140, 146, 172, 0.5);
+}
+[data-theme="dark"] blockquote[class*="remark-note-bonus"] {
+  background-color: rgba(153, 102, 204, 0.08);
+  border-color: rgba(153, 102, 204, 0.5);
+}
+
+/* ─── Typography Utilities ─── */
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-ui { font-family: var(--font-ui); }
+.font-mono { font-family: var(--font-mono); }
+
+/* ─── Overline Style ─── */
+.overline {
+  font-family: var(--font-ui);
+  font-size: var(--text-overline);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+/* ─── Card Elevations ─── */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-raised);
+  transition: transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-elevated);
+  border-color: var(--color-border-strong);
+}
+
+/* ═══════════════════════════════════════════════════
+   Easter Eggs CSS
+   ═══════════════════════════════════════════════════ */
+
+/* Tier 1 #3: Article Completion Celebration */
+.article-celebration {
+  text-align: center;
+  padding: var(--space-8) 0;
+  position: relative;
+  transition: opacity 500ms ease;
+}
+
+.celebration-text {
+  font-family: var(--font-display);
+  font-size: var(--text-body-lg);
+  color: var(--color-text-secondary);
+  animation: celebration-fade-in 600ms ease both;
+}
+
+.celebration-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  left: calc(10% + var(--i) * 7%);
+  top: 50%;
+  opacity: 0;
+  animation: confetti-burst 1.5s ease-out both;
+  animation-delay: calc(var(--i) * 60ms);
+}
+
+.confetti-dot:nth-child(even) {
+  background: var(--color-brand-lighter);
+  width: 4px;
+  height: 4px;
+}
+
+@keyframes celebration-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes confetti-burst {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% {
+    opacity: 0;
+    transform: translate(
+      calc((var(--i) - 6) * 12px),
+      calc(-40px - var(--i) * 8px)
+    ) scale(0.3);
+  }
+}
+
+/* Tier 2 #4: Logo Click Tooltip */
+.logo-easter-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-ui);
+  font-size: var(--text-caption);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 4px 12px;
+  box-shadow: var(--shadow-raised);
+  opacity: 1;
+  transition: opacity 300ms ease;
+  z-index: 100;
+  pointer-events: none;
+  animation: tooltip-pop 300ms ease both;
+}
+
+@keyframes tooltip-pop {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px) scale(0.9); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+/* Tier 2 #6: "I'm Feeling Curious" */
+.feeling-curious-btn {
+  display: block;
+  margin: var(--space-3) auto 0;
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease;
+}
+
+.feeling-curious-btn:hover {
+  color: var(--color-brand);
+  background: var(--color-brand-lighter);
+}
+
+/* Tier 3 #7: Konami Code Confetti */
+.konami-confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+}
+
+.konami-piece {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--color);
+  top: -10px;
+  left: calc(var(--x) * 100%);
+  animation: konami-fall 2s ease-in both;
+  animation-delay: var(--delay);
+}
+
+.konami-piece:nth-child(odd) {
+  width: 6px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+@keyframes konami-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Tier 3 #9: Highlight-to-Share Toolbar */
+.highlight-toolbar {
+  position: absolute;
+  display: flex;
+  gap: 2px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  box-shadow: var(--shadow-elevated);
+  z-index: 1000;
+  animation: ht-pop 200ms ease both;
+}
+
+.ht-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease;
+}
+
+.ht-btn:hover {
+  color: var(--color-brand);
+  background: var(--color-brand-lighter);
+}
+
+@keyframes ht-pop {
+  from { opacity: 0; transform: translateX(-50%) scale(0.9); }
+  to { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+/* Toast notifications */
+.ee-toast {
+  position: fixed;
+  bottom: var(--space-8);
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  font-family: var(--font-ui);
+  font-size: var(--text-body-sm);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-6);
+  box-shadow: var(--shadow-elevated);
+  z-index: 99999;
+  opacity: 0;
+  transition: opacity 300ms ease, transform 300ms ease;
+  pointer-events: none;
+}
+
+.ee-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }

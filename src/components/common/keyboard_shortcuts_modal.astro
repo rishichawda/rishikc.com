@@ -1,0 +1,204 @@
+---
+---
+<div id="shortcuts-modal" class="shortcuts-overlay" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts" aria-hidden="true">
+  <div class="shortcuts-backdrop" data-shortcuts-close></div>
+  <div class="shortcuts-panel">
+    <div class="shortcuts-header">
+      <h2 class="shortcuts-title">Keyboard Shortcuts</h2>
+      <button class="shortcuts-close-btn" data-shortcuts-close aria-label="Close shortcuts">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="shortcuts-body">
+      <section class="shortcuts-group">
+        <h3 class="shortcuts-group-title">Navigation</h3>
+        <ul class="shortcuts-list">
+          <li class="shortcut-item"><kbd>H</kbd><span>Go to Home</span></li>
+          <li class="shortcut-item"><kbd>G</kbd> <kbd>A</kbd><span>Go to Articles</span></li>
+          <li class="shortcut-item"><kbd>G</kbd> <kbd>P</kbd><span>Go to Projects</span></li>
+          <li class="shortcut-item"><kbd>G</kbd> <kbd>G</kbd><span>Go to Gallery</span></li>
+          <li class="shortcut-item"><kbd>G</kbd> <kbd>C</kbd><span>Go to Contact</span></li>
+          <li class="shortcut-item"><kbd>G</kbd> <kbd>B</kbd><span>Go to Bits</span></li>
+          <li class="shortcut-item"><kbd>G</kbd> <kbd>Q</kbd><span>Go to Reads</span></li>
+        </ul>
+      </section>
+      <section class="shortcuts-group">
+        <h3 class="shortcuts-group-title">Actions</h3>
+        <ul class="shortcuts-list">
+          <li class="shortcut-item"><kbd>⌘</kbd> <kbd>K</kbd><span>Open search</span></li>
+          <li class="shortcut-item"><kbd>T</kbd><span>Toggle theme</span></li>
+          <li class="shortcut-item"><kbd>?</kbd><span>Show this modal</span></li>
+          <li class="shortcut-item"><kbd>Esc</kbd><span>Close overlay</span></li>
+        </ul>
+      </section>
+      <section class="shortcuts-group">
+        <h3 class="shortcuts-group-title">Reading</h3>
+        <ul class="shortcuts-list">
+          <li class="shortcut-item"><kbd>J</kbd><span>Scroll to next section</span></li>
+          <li class="shortcut-item"><kbd>K</kbd><span>Scroll to previous section</span></li>
+          <li class="shortcut-item"><kbd>←</kbd><span>Previous article</span></li>
+          <li class="shortcut-item"><kbd>→</kbd><span>Next article</span></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</div>
+
+<style>
+  .shortcuts-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .shortcuts-overlay[aria-hidden="false"] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .shortcuts-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+  }
+  .shortcuts-panel {
+    position: relative;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 520px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
+    transform: scale(0.95);
+    transition: transform 200ms ease;
+  }
+  .shortcuts-overlay[aria-hidden="false"] .shortcuts-panel {
+    transform: scale(1);
+  }
+  .shortcuts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .shortcuts-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h4);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    line-height: 1.35;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .shortcuts-close-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color 200ms, background 200ms;
+  }
+  .shortcuts-close-btn:hover {
+    color: var(--color-text);
+    background: var(--color-brand-lighter);
+  }
+  .shortcuts-body {
+    padding: var(--space-5) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .shortcuts-group-title {
+    font-family: var(--font-ui);
+    font-size: var(--text-caption);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 var(--space-3);
+  }
+  .shortcuts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-secondary);
+  }
+  .shortcut-item span {
+    margin-left: auto;
+  }
+  .shortcut-item kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    color: var(--color-text);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+</style>
+
+<script>
+  function initShortcutsModal() {
+    const modal = document.getElementById('shortcuts-modal');
+    if (!modal) return;
+
+    const closeBtns = modal.querySelectorAll('[data-shortcuts-close]');
+
+    function open() {
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      // Focus the close button for accessibility
+      const closeBtn = modal.querySelector<HTMLButtonElement>('.shortcuts-close-btn');
+      closeBtn?.focus();
+    }
+
+    function close() {
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('toggle-shortcuts-modal', () => {
+      const isHidden = modal.getAttribute('aria-hidden') === 'true';
+      if (isHidden) open(); else close();
+    });
+
+    closeBtns.forEach(btn => btn.addEventListener('click', close));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+        e.preventDefault();
+        close();
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initShortcutsModal);
+</script>

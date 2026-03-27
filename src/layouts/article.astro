@@ -2,6 +2,8 @@
 import { Image } from "astro:assets";
 import { Schema } from "astro-seo-schema";
 import { getCollection } from "astro:content";
+import { personRef } from "../utils/jsonLd";
+import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
 interface Social { platform: string; url: string; }
 interface ProfileData { name: string; socials: Social[]; }
@@ -37,9 +39,19 @@ const imageUrl = content.hero_image?.src
 			Astro.site || "https://rishikc.com",
 		).toString()
 	: "";
+
+// Check if article is older than 2 years without recent dateModified
+const twoYearsAgo = new Date();
+twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2);
+const isOutdated = content.date < twoYearsAgo && (!content.dateModified || content.dateModified < twoYearsAgo);
 ---
 
-<article class="max-w-[90%] flex flex-col mx-auto items-center pt-16">
+<article class="article-layout">
+	<!-- Reading Progress Bar -->
+	<div class="progress-bar" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="reading-progress-bar">
+		<div class="progress-fill" id="progress-fill"></div>
+	</div>
+
 	<Schema
 		item={{
 			"@context": "https://schema.org",
@@ -49,77 +61,18 @@ const imageUrl = content.hero_image?.src
 			image: imageUrl,
 			datePublished: isoDate,
 			dateModified: isoDateModified,
-			author: {
-				"@type": "Person",
-				name: profile.name,
-				url: "https://rishikc.com",
-				sameAs: profile.socials.map((social: Social) => social.url),
-			},
-			publisher: {
-				"@type": "Person",
-				name: profile.name,
-				url: "https://rishikc.com",
-				sameAs: profile.socials.map((social: Social) => social.url),
-			},
+			author: personRef,
+			publisher: personRef,
 			mainEntityOfPage: {
 				"@type": "WebPage",
 				"@id": articleUrl,
 			},
 			keywords: content.tags?.join(", "),
-			potentialAction: [
-				{
-					"@type": "ReadAction",
-					target: articleUrl,
-					name: "Read Article"
-				},
-				{
-					"@type": "ShareAction",
-					target: [
-						{
-							"@type": "EntryPoint",
-							urlTemplate: `https://twitter.com/intent/tweet?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(content.title)}`,
-							actionPlatform: "https://schema.org/DesktopWebPlatform"
-						},
-						{
-							"@type": "EntryPoint",
-							urlTemplate: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`,
-							actionPlatform: "https://schema.org/DesktopWebPlatform"
-						}
-					],
-					name: "Share Article"
-				},
-				{
-					"@type": "BookmarkAction",
-					target: articleUrl,
-					name: "Bookmark Article"
-				}
-			]
-		}}
-	/>
-	<Schema
-		item={{
-			"@context": "https://schema.org",
-			"@type": "BreadcrumbList",
-			itemListElement: [
-				{
-					"@type": "ListItem",
-					position: 1,
-					name: "Home",
-					item: "https://rishikc.com/",
-				},
-				{
-					"@type": "ListItem",
-					position: 2,
-					name: "Articles",
-					item: "https://rishikc.com/articles/",
-				},
-				{
-					"@type": "ListItem",
-					position: 3,
-					name: content.title,
-					item: articleUrl,
-				},
-			],
+			speakable: {
+				"@type": "SpeakableSpecification",
+				cssSelector: [".article-title", ".article-subtitle", ".article-meta"],
+			},
+			...(content.faq && content.faq.length > 0 ? {} : {}),
 		}}
 	/>
 	{content.faq && content.faq.length > 0 && (
@@ -130,107 +83,572 @@ const imageUrl = content.hero_image?.src
 				mainEntity: content.faq.map((item: { question: string; answer: string }) => ({
 					"@type": "Question",
 					name: item.question,
-					acceptedAnswer: {
-						"@type": "Answer",
-						text: item.answer,
-					},
+					acceptedAnswer: { "@type": "Answer", text: item.answer },
 				})),
 			}}
 		/>
 	)}
-	<div class="inline-flex flex-col justify-start items-center gap-2.5 mb-4">
-		<h1
-			transition:name={`${content.path}-title`}
-			class="justify-start text-black text-3xl md:text-4xl text-center font-semibold font-['Red_Hat_Display_Variable'] leading-tight mb-2"
-		>
+
+	<!-- Breadcrumbs -->
+	<Breadcrumbs items={[
+		{ label: "Articles", href: "/articles/" },
+		{ label: content.title },
+	]} />
+
+	<!-- Hero Image -->
+	<div class="hero-image-wrapper" style="margin-top: var(--space-6);">
+		<Image
+			class="hero-image"
+			src={content.hero_image}
+			alt={content.hero_image_alt || content.title}
+			transition:name={`${content.path}-image`}
+			widths={[480, 800, 1280]}
+			sizes="(max-width: 768px) 100vw, 1280px"
+		/>
+		{content.hero_image_credit_text && (
+			<span class="hero-credit">
+				Image credits: {content.hero_image_credit_link ? (
+					<a href={content.hero_image_credit_link} target="_blank" rel="noopener noreferrer">{content.hero_image_credit_text}</a>
+				) : content.hero_image_credit_text}
+			</span>
+		)}
+	</div>
+
+	<!-- Article Header -->
+	<header class="article-header">
+		{content.category && (
+			<span class="category-pill">{content.category}</span>
+		)}
+		<h1 class="article-title" transition:name={`${content.path}-title`}>
 			{content.title}
 		</h1>
-		{
-			content.subtitle && (
-				<h2 class="justify-start text-gray-700 text-center text-lg md:text-xl font-normal font-['Red_Hat_Display_Variable'] leading-normal mt-1">
-					{content.subtitle}
-				</h2>
-			)
-		}
-	</div>
-	<div
-		transition:name={`${content.path}-date`}
-		class="inline-flex items-center gap-3 mb-8 flex-wrap justify-center"
-	>
-		<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 rounded-full">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-3.5 w-3.5 text-gray-600"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke="currentColor"
-				stroke-width="2"
-			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-				></path>
-			</svg>
-			<small class="text-gray-700 text-xs font-medium font-['Montserrat_Variable'] leading-tight">
-				{date}
-			</small>
+		{content.subtitle && (
+			<p class="article-subtitle">{content.subtitle}</p>
+		)}
+		<div class="article-meta">
+			<a href="/about/" class="meta-author">{profile.name}</a>
+			<span class="meta-sep">&middot;</span>
+			<time datetime={isoDate}>{date}</time>
+			{hasBeenUpdated && (
+				<>
+					<span class="meta-sep">&middot;</span>
+					<span class="meta-updated">Updated {dateModified}</span>
+				</>
+			)}
+			{frontmatter.minutesRead && (
+				<>
+					<span class="meta-sep">&middot;</span>
+					<span>{frontmatter.minutesRead}</span>
+				</>
+			)}
 		</div>
-		{
-			hasBeenUpdated && (
-				<div class="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-50 rounded-full">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-3.5 w-3.5 text-brand-600"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						stroke-width="2"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-						></path>
-					</svg>
-					<small class="text-brand-700 text-xs font-medium font-['Montserrat_Variable'] leading-tight">
-						Updated {dateModified}
-					</small>
-				</div>
-			)
-		}
-	</div>
-	<div class="w-full md:max-w-[790px] mb-10">
-		<Image
-			class="w-full rounded-xl shadow-md"
-			src={content.hero_image}
-			alt={content.hero_image_alt || `${content.title}`}
-			transition:name={`${content.path}-image`}
-		/>
-		<div class="inline-flex w-full px-2 mt-5 justify-between items-center">
-			<div
-				class="inline-flex justify-start items-center gap-2 max-w-3/4 flex-wrap"
-			>
-				{
-					content.tags.map((tag: string) => (
-						<div class="px-3 py-1 bg-brand-500 rounded-md inline-flex flex-col justify-center items-center gap-2.5 overflow-hidden">
-							<span class="justify-start bg-brand-500 text-white text-xs font-medium font-['Montserrat_Variable'] leading-tight">
-								{tag}
-							</span>
-						</div>
-					))
-				}
+		<div class="article-tags">
+			{content.tags.map((tag: string) => (
+				<span class="tag-pill">{tag}</span>
+			))}
+		</div>
+	</header>
+
+	<!-- Outdated Banner -->
+	{isOutdated && (
+		<div class="outdated-banner" role="status">
+			<span class="outdated-icon">⏰</span>
+			<div>
+				<p class="outdated-text">This article was published over 2 years ago. Some information may be outdated.</p>
+				<a href={`/articles/?tag=${content.tags?.[0] || ''}`} class="outdated-link">Check for newer articles &rarr;</a>
 			</div>
-			<small
-				class="justify-end text-gray-500 text-xs font-normal font-['Montserrat_Variable'] leading-tight flex-shrink-0 ml-2"
-			>
-				{frontmatter.minutesRead}
-			</small>
 		</div>
-	</div>
-	<div
-		class="mb-20 font-['Montserrat_Variable'] max-w-full lg:flex lg:flex-row lg:gap-4"
-	>
+	)}
+
+	<!-- Article Body + TOC -->
+	<div class="article-body-wrapper" id="article-body">
 		<slot />
 	</div>
 </article>
+
+<style>
+	.article-layout {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		overflow-x: hidden;
+	}
+
+	/* Progress Bar */
+	.progress-bar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 3px;
+		z-index: 60;
+		background: transparent;
+		opacity: 0;
+		transition: opacity 300ms;
+	}
+	.progress-bar.visible { opacity: 1; }
+	.progress-fill {
+		height: 100%;
+		background: linear-gradient(90deg, var(--color-brand-light, var(--color-brand-lighter)), var(--color-brand));
+		transform-origin: left;
+		transform: scaleX(0);
+		transition: transform 100ms linear;
+	}
+
+	/* Hero Image */
+	.hero-image-wrapper {
+		width: 100%;
+		max-width: 1280px;
+		margin: 0 auto;
+		padding: 0 var(--space-6);
+	}
+	.hero-image {
+		width: 100%;
+		height: auto;
+		object-fit: contain;
+		border-radius: 16px;
+		display: block;
+	}
+	.hero-credit {
+		display: block;
+		text-align: right;
+		font-family: var(--font-mono);
+		font-size: var(--text-caption);
+		color: var(--color-text-muted);
+		margin-top: var(--space-2);
+	}
+	.hero-credit a {
+		color: var(--color-text-muted);
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+
+	/* Article Header */
+	.article-header {
+		max-width: 1072px;
+		width: 100%;
+		margin: var(--space-10) auto 0;
+		padding: 0 var(--space-6);
+		text-align: left;
+	}
+	.category-pill {
+		display: inline-block;
+		font-family: var(--font-ui);
+		font-size: 12px;
+		padding: 4px 12px;
+		border-radius: 9999px;
+		background: var(--color-brand-lighter);
+		color: var(--color-brand);
+		font-weight: 500;
+		margin-bottom: var(--space-4);
+	}
+	.article-title {
+		font-family: var(--font-display);
+		font-size: var(--text-display-lg);
+		font-weight: 700;
+		letter-spacing: -0.025em;
+		color: var(--color-text);
+		line-height: 1.15;
+		margin: 0 0 var(--space-3);
+	}
+	.article-subtitle {
+		font-family: var(--font-display);
+		font-size: var(--text-h3);
+		color: var(--color-text-secondary);
+		font-weight: 400;
+		letter-spacing: -0.01em;
+		margin: 0 0 var(--space-4);
+		line-height: 1.4;
+	}
+	.article-meta {
+		font-family: var(--font-mono);
+		font-size: var(--text-caption);
+		color: var(--color-text-tertiary);
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		flex-wrap: wrap;
+		margin-bottom: var(--space-4);
+	}
+	.meta-author {
+		color: var(--color-brand);
+		text-decoration: none;
+	}
+	.meta-author:hover { text-decoration: underline; }
+	.meta-sep { opacity: 0.5; }
+	.meta-updated { color: var(--color-brand); }
+	.article-tags {
+		display: flex;
+		gap: var(--space-2);
+		flex-wrap: wrap;
+		margin-bottom: var(--space-8);
+	}
+	.tag-pill {
+		font-family: var(--font-ui);
+		font-size: 12px;
+		padding: 3px 10px;
+		border-radius: 6px;
+		background: var(--color-brand-lighter);
+		color: var(--color-brand);
+	}
+
+	/* Outdated Banner */
+	.outdated-banner {
+		max-width: 720px;
+		width: 100%;
+		margin: 0 auto var(--space-8);
+		padding: var(--space-4) var(--space-5);
+		background: #FEF3C7;
+		border-left: 3px solid #F59E0B;
+		border-radius: 8px;
+		display: flex;
+		align-items: flex-start;
+		gap: var(--space-3);
+	}
+	[data-theme="dark"] .outdated-banner {
+		background: rgba(245, 158, 11, 0.1);
+	}
+	.outdated-icon { font-size: 20px; flex-shrink: 0; }
+	.outdated-text {
+		font-family: var(--font-body);
+		font-size: var(--text-body-sm);
+		color: var(--color-text);
+		margin: 0 0 4px;
+	}
+	.outdated-link {
+		font-family: var(--font-ui);
+		font-size: var(--text-caption);
+		color: #D97706;
+	}
+
+	/* Article Body Wrapper */
+	.article-body-wrapper {
+		max-width: 100%;
+		width: 100%;
+		padding: 0 var(--space-6);
+		margin-bottom: var(--space-20);
+		display: flex;
+		gap: var(--space-8);
+		justify-content: center;
+	}
+
+	@media (max-width: 767px) {
+		.article-title { font-size: var(--text-display); }
+		.article-header { padding: 0 var(--space-4); }
+		.article-body-wrapper {
+			flex-direction: column;
+			padding: 0 var(--space-4);
+		}
+	}
+	@media (min-width: 768px) and (max-width: 1023px) {
+	}
+</style>
+
+<script>
+	document.addEventListener('astro:page-load', () => {
+		const bar = document.getElementById('reading-progress-bar');
+		const fill = document.getElementById('progress-fill');
+		const body = document.getElementById('article-body');
+		if (!bar || !fill || !body) return;
+
+		const controller = new AbortController();
+
+		function updateProgress() {
+			const rect = body.getBoundingClientRect();
+			const bodyTop = rect.top + window.scrollY;
+			const bodyHeight = rect.height;
+			const scrollTop = window.scrollY;
+			const viewportHeight = window.innerHeight;
+
+			const progress = Math.min(1, Math.max(0, (scrollTop - bodyTop + viewportHeight) / bodyHeight));
+			fill.style.transform = `scaleX(${progress})`;
+			bar.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
+
+			// Show bar after scrolling past hero
+			bar.classList.toggle('visible', scrollTop > 200);
+		}
+
+		window.addEventListener('scroll', updateProgress, { passive: true, signal: controller.signal });
+		updateProgress();
+
+		document.addEventListener('astro:before-preparation', () => controller.abort(), { once: true });
+	});
+</script>
+
+<script>
+	// Heading anchor click-to-copy
+	document.addEventListener('astro:page-load', () => {
+		const body = document.getElementById('article-body');
+		if (!body) return;
+
+		body.addEventListener('click', (e) => {
+			const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>('h2 a[href^="#"], h3 a[href^="#"], h4 a[href^="#"]');
+			if (!anchor) return;
+
+			e.preventDefault();
+			const url = new URL(anchor.href, window.location.href).toString();
+			navigator.clipboard.writeText(url).then(() => {
+				const toast = document.createElement('div');
+				toast.className = 'copy-toast';
+				toast.textContent = 'Link copied!';
+				toast.setAttribute('role', 'status');
+				document.body.appendChild(toast);
+				requestAnimationFrame(() => toast.classList.add('visible'));
+				setTimeout(() => {
+					toast.classList.remove('visible');
+					setTimeout(() => toast.remove(), 200);
+				}, 1500);
+			});
+
+			// Still scroll to the heading
+			const id = anchor.getAttribute('href')?.slice(1);
+			if (id) {
+				const target = document.getElementById(id);
+				target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}
+		});
+	});
+</script>
+
+<style is:global>
+	.copy-toast {
+		position: fixed;
+		bottom: var(--space-6);
+		left: 50%;
+		transform: translateX(-50%) translateY(10px);
+		background: var(--color-text);
+		color: var(--color-bg);
+		font-family: var(--font-mono);
+		font-size: var(--text-caption);
+		padding: 8px 16px;
+		border-radius: 8px;
+		opacity: 0;
+		transition: opacity 200ms, transform 200ms;
+		z-index: 100;
+		pointer-events: none;
+	}
+	.copy-toast.visible {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+</style>
+
+<script>
+	// Blockquote line-by-line reveal + hover share
+	import gsap from 'gsap';
+
+	document.addEventListener('astro:page-load', () => {
+		const body = document.getElementById('article-body');
+		if (!body) return;
+
+		const blockquotes = body.querySelectorAll('blockquote');
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+		blockquotes.forEach((bq) => {
+			const children = Array.from(bq.children);
+
+			// Scroll reveal (skip if reduce-motion)
+			if (!reduceMotion && children.length) {
+				gsap.set(children, { opacity: 0, y: 10 });
+
+				const revealBlockquote = () => {
+					gsap.to(children, {
+						opacity: 1,
+						y: 0,
+						stagger: 0.03,
+						duration: 0.4,
+						ease: 'power2.out',
+						delay: 0.1,
+					});
+				};
+
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							revealBlockquote();
+							observer.unobserve(entry.target);
+						}
+					});
+				}, { threshold: 0.1 });
+
+				observer.observe(bq);
+			}
+
+			// Hover share button
+			(bq as HTMLElement).style.position = 'relative';
+			const shareBtn = document.createElement('button');
+			shareBtn.className = 'bq-share-btn';
+			shareBtn.setAttribute('aria-label', 'Copy quote');
+			shareBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>';
+			bq.appendChild(shareBtn);
+
+			shareBtn.addEventListener('click', () => {
+				const quoteText = (bq as HTMLElement).innerText.replace(shareBtn.innerText, '').trim();
+				const url = window.location.href;
+				const copyText = `"${quoteText}"\n\n— ${url}`;
+				navigator.clipboard.writeText(copyText).then(() => {
+					shareBtn.classList.add('copied');
+					setTimeout(() => shareBtn.classList.remove('copied'), 1500);
+				});
+			});
+		});
+	});
+</script>
+
+<style is:global>
+	.bq-share-btn {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		width: 28px;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 6px;
+		color: var(--color-text-muted);
+		cursor: pointer;
+		opacity: 0;
+		transition: opacity 200ms, color 200ms, background 200ms;
+	}
+	blockquote:hover .bq-share-btn {
+		opacity: 1;
+	}
+	.bq-share-btn:hover {
+		color: var(--color-brand);
+		background: var(--color-brand-lighter);
+	}
+	.bq-share-btn.copied {
+		color: #059669;
+		opacity: 1;
+	}
+</style>
+
+<script>
+	// Reading position memory
+	document.addEventListener('astro:page-load', () => {
+		const body = document.getElementById('article-body');
+		if (!body) return;
+
+		const slug = window.location.pathname.replace(/\/$/, '').split('/').pop() || '';
+		if (!slug) return;
+		const storageKey = `reading-progress-${slug}`;
+
+		function getScrollPercent(): number {
+			const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+			return docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+		}
+
+		// Save position throttled to 500ms
+		let saveTimer: ReturnType<typeof setTimeout> | null = null;
+		function onScroll() {
+			if (saveTimer) return;
+			saveTimer = setTimeout(() => {
+				saveTimer = null;
+				const pct = getScrollPercent();
+				if (pct > 95) {
+					localStorage.removeItem(storageKey);
+				} else if (pct > 2) {
+					localStorage.setItem(storageKey, String(Math.round(pct)));
+				}
+			}, 500);
+		}
+		window.addEventListener('scroll', onScroll, { passive: true });
+
+		// On load, check for saved position
+		const saved = localStorage.getItem(storageKey);
+		if (saved) {
+			const pct = parseInt(saved, 10);
+			if (pct > 10 && pct < 95) {
+				const pill = document.createElement('div');
+				pill.className = 'reading-resume-pill';
+				pill.setAttribute('role', 'status');
+				pill.innerHTML = 'Continue where you left off? <button class="resume-btn">Resume ↓</button>';
+				document.body.appendChild(pill);
+
+				requestAnimationFrame(() => pill.classList.add('visible'));
+
+				const resumeBtn = pill.querySelector('.resume-btn')!;
+				resumeBtn.addEventListener('click', () => {
+					const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+					const targetY = (pct / 100) * docHeight;
+					window.scrollTo({ top: targetY, behavior: 'smooth' });
+					dismiss();
+				});
+
+				let dismissed = false;
+				function dismiss() {
+					if (dismissed) return;
+					dismissed = true;
+					pill.classList.remove('visible');
+					setTimeout(() => pill.remove(), 300);
+				}
+
+				// Auto-dismiss after 8 seconds
+				const autoTimer = setTimeout(dismiss, 8000);
+
+				// Dismiss on manual scroll
+				let scrollCount = 0;
+				function onManualScroll() {
+					scrollCount++;
+					if (scrollCount > 3) {
+						dismiss();
+						clearTimeout(autoTimer);
+						window.removeEventListener('scroll', onManualScroll);
+					}
+				}
+				window.addEventListener('scroll', onManualScroll, { passive: true });
+			}
+		}
+
+		// Cleanup on navigation
+		document.addEventListener('astro:before-preparation', () => {
+			window.removeEventListener('scroll', onScroll);
+		}, { once: true });
+	});
+</script>
+
+<style is:global>
+	.reading-resume-pill {
+		position: fixed;
+		top: calc(var(--nav-height, 64px) + 12px);
+		left: 50%;
+		transform: translateX(-50%) translateY(-10px);
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 9999px;
+		padding: 8px 20px;
+		font-family: var(--font-ui);
+		font-size: 13px;
+		color: var(--color-text-secondary);
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+		opacity: 0;
+		transition: opacity 300ms, transform 300ms;
+		z-index: 100;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.reading-resume-pill.visible {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0);
+	}
+	.resume-btn {
+		background: none;
+		border: none;
+		color: var(--color-brand);
+		font-family: var(--font-ui);
+		font-size: 13px;
+		font-weight: 600;
+		cursor: pointer;
+		padding: 0;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+	.resume-btn:hover {
+		color: var(--color-brand-dark);
+	}
+</style>

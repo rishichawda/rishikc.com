@@ -1,922 +1,1128 @@
 ---
-// Now SSG compatible - no server-side query parameter handling
-import Layout from "../layouts/base_layout.astro";
-import { Schema } from "astro-seo-schema";
+import BaseLayout from "../layouts/base_layout.astro";
+import { buildWebPageEntity } from "../utils/jsonLd";
 
 const page_info = {
-    title: "Search | Rishi Chawda",
-    description:
-        "Search articles, bits, gallery, and content on Rishi Chawda's website",
-    keywords: "search, articles, bits, gallery, photography, development",
+  title: "Search | Rishi Chawda",
+  description: "Search articles, bits, gallery, and content on Rishi Chawda's website",
+  keywords: "search, articles, bits, gallery, photography, development",
+  noindex: true,
 };
 
-// Get current page URL for schema
 const pageUrl = new URL(
-    Astro.url.pathname,
-    Astro.site || "https://rishikc.com",
+  Astro.url.pathname,
+  Astro.site || "https://rishikc.com",
 ).toString();
+
+const pageSchemaEntities = [
+  buildWebPageEntity({
+    type: "SearchResultsPage",
+    url: pageUrl,
+    name: page_info.title,
+    description: page_info.description,
+  }),
+];
 ---
 
-<Layout page_info={page_info}>
-    <Schema
-        slot="head"
-        item={{
-            "@context": "https://schema.org",
-            "@type": "SearchResultsPage",
-            name: page_info.title,
-            description: page_info.description,
-            url: pageUrl,
-            potentialAction: [
-                {
-                    "@type": "SearchAction",
-                    target: `${new URL(Astro.url.pathname, Astro.site || "https://rishikc.com").toString()}?q={search_term_string}`,
-                    "query-input": "required name=search_term_string",
-                },
-            ],
-        }}
-    />
+<BaseLayout page_info={page_info} activeRoute="/search/" pageSchemaEntities={pageSchemaEntities}>
 
-    <main
-        class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-brand-50/20 via-white to-brand-100/10 relative overflow-hidden"
-    >
-        <!-- Background decoration -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-brand-200/50 to-transparent rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-brand-300/50 to-transparent rounded-full blur-3xl"></div>
+  <main class="search-page">
+    <!-- Page Header -->
+    <header class="page-header" data-reveal>
+      <h1 class="page-title" id="page-title">Search</h1>
+      <p class="page-subtitle" id="search-description">Discover articles, photography galleries, and inspiring quotes</p>
+
+      <!-- Search Results Info -->
+      <div id="search-results-info" class="results-info hidden">
+        <span id="results-count">0</span>
+        result<span id="results-plural">s</span> found for
+        &ldquo;<span id="search-query-display"></span>&rdquo;
+      </div>
+    </header>
+
+    <!-- Search Input -->
+    <section class="search-bar-section">
+      <form class="search-form" id="search-form">
+        <svg class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"></path>
+        </svg>
+        <input
+          type="text"
+          name="q"
+          placeholder="Search articles, gallery, quotes..."
+          class="search-input"
+          autocomplete="off"
+          id="search-input"
+          aria-label="Search articles, gallery, quotes. Press Command+K to focus."
+        />
+        <kbd class="search-kbd" aria-hidden="true">⌘K</kbd>
+        <button type="submit" class="search-submit" aria-label="Search">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"></path>
+          </svg>
+        </button>
+      </form>
+    </section>
+
+    <!-- Recent Searches -->
+    <div id="recent-searches" class="recent-searches hidden">
+      <div class="recent-searches-header">
+        <h2 class="recent-searches-title">Recent Searches</h2>
+        <button id="clear-recent" class="clear-recent" aria-label="Clear recent searches">Clear</button>
+      </div>
+      <div id="recent-searches-list" class="recent-searches-list"></div>
+    </div>
+
+    <!-- No Results -->
+    <div id="no-results" class="no-results hidden">
+      <h2 class="no-results-title">No results found</h2>
+      <p class="no-results-desc">Try different keywords or explore our content sections.</p>
+      <div class="no-results-links">
+        <a href="/articles/" class="browse-link">Browse Articles &rarr;</a>
+        <a href="/bits/" class="browse-link">Browse Bits &rarr;</a>
+        <a href="/gallery/" class="browse-link">View Gallery &rarr;</a>
+        <a href="/reads/" class="browse-link">Explore Quotes &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Search Results Container -->
+    <div id="search-results" class="results-container hidden">
+      <!-- Articles -->
+      <section id="articles-section" class="result-section hidden">
+        <div class="result-section-header">
+          <h2 class="result-section-title">Articles</h2>
+          <span class="result-count-badge"><span id="articles-count">0</span> results</span>
         </div>
-        
-        <div
-            class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12"
-        >
-            <!-- Header Section -->
-            <header class="mb-8 sm:mb-12 text-center">
-                <!-- Navigation -->
-                <nav class="mb-8 sm:mb-12">
-                    <a
-                        href="/"
-                        class="group inline-flex items-center px-4 py-2.5 bg-white/80 backdrop-blur-xl border border-brand-200/30 rounded-full text-brand-700 hover:text-brand-800 hover:bg-white/95 hover:border-brand-300/50 hover:shadow-lg hover:shadow-brand-100/25 transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-3.5 w-3.5 mr-2 group-hover:-translate-x-0.5 transition-transform duration-300"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2.5"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                            ></path>
-                        </svg>
-                        Back to home
-                    </a>
-                </nav>
-
-                <!-- Page Title and Description -->
-                <div class="max-w-4xl mx-auto space-y-6">
-                    <h1
-                        class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-[-0.04em] leading-[0.95]"
-                    >
-                        <span
-                            id="page-title"
-                            class="bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent"
-                            >Search</span
-                        >
-                    </h1>
-
-                    <!-- Search Results Info -->
-                    <div
-                        id="search-results-info"
-                        class="hidden animate-in slide-in-from-top-4 duration-500"
-                    >
-                        <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-xl border border-brand-200/40 rounded-2xl px-6 py-4 shadow-lg shadow-brand-100/20">
-                            <div class="flex items-center gap-2 text-brand-700">
-                                <div class="w-2 h-2 bg-brand-600 rounded-full animate-pulse"></div>
-                                <span class="font-semibold text-brand-800" id="results-count">0</span>
-                                <span class="text-brand-600">result<span id="results-plural">s</span> found</span>
-                            </div>
-                            <div class="w-px h-6 bg-brand-200"></div>
-                            <span class="text-brand-600 font-medium">
-                                for "<span class="font-semibold text-brand-800" id="search-query-display"></span>"
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Default Description -->
-                    <p
-                        id="search-description"
-                        class="text-brand-600 text-lg sm:text-xl lg:text-2xl leading-relaxed font-normal max-w-3xl mx-auto font-['Montserrat_Variable'] animate-in fade-in slide-in-from-bottom-4 duration-700"
-                    >
-                        Discover articles, photography galleries, and inspiring quotes
-                    </p>
-                </div>
-            </header>
-
-            <!-- Search Input -->
-            <section class="mb-12 sm:mb-16">
-                <div class="max-w-3xl mx-auto">
-                    <form class="relative group" id="search-form">
-                        <!-- Glow effect -->
-                        <div class="absolute -inset-1 bg-gradient-to-r from-brand-400/20 via-brand-500/20 to-brand-600/20 rounded-3xl blur-lg opacity-0 group-focus-within:opacity-100 group-hover:opacity-50 transition-opacity duration-500"></div>
-                        
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5 text-brand-400 group-focus-within:text-brand-600 transition-colors duration-300"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-                                    ></path>
-                                </svg>
-                            </div>
-                            
-                            <input
-                                type="text"
-                                name="q"
-                                placeholder="Search articles, gallery, quotes..."
-                                class="w-full pl-14 pr-32 sm:pr-40 py-5 sm:py-6 text-base sm:text-lg rounded-2xl sm:rounded-3xl border border-brand-200/40 bg-white/85 backdrop-blur-xl focus:ring-4 focus:ring-brand-500/15 focus:border-brand-400/60 focus:outline-none focus:bg-white/95 transition-all duration-300 font-['Montserrat_Variable'] text-brand-900 placeholder-brand-400 shadow-lg shadow-brand-100/20 hover:shadow-xl hover:shadow-brand-100/30"
-                                autocomplete="off"
-                                id="search-input"
-                                aria-label="Search articles, gallery, quotes. Press Command+K to focus."
-                                aria-describedby="search-shortcut-hint"
-                            />
-                            <span id="search-shortcut-hint" class="sr-only">Press Command+K or Control+K to focus the search field.</span>
-                            
-                            <div class="absolute inset-y-0 right-3 flex items-center gap-3">
-                                <kbd class="hidden sm:inline-flex items-center px-2.5 py-1.5 text-xs font-mono text-brand-500 bg-brand-50/80 backdrop-blur-sm rounded-lg border border-brand-200/50 shadow-sm" aria-hidden="true">
-                                    ⌘K
-                                </kbd>
-                                <button
-                                    type="submit"
-                                    class="bg-gradient-to-r from-brand-700 to-brand-800 hover:from-brand-800 hover:to-brand-900 text-white p-3 sm:p-3.5 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                                    aria-label="Search"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="h-5 w-5"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        stroke-width="2.5"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-                                        ></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </section>
-
-            <!-- No Results Message -->
-            <div id="no-results" class="text-center py-16 sm:py-24 hidden animate-in fade-in slide-in-from-bottom-8 duration-700">
-                <div class="max-w-lg mx-auto">
-                    <!-- Icon with subtle animation -->
-                    <div class="relative mb-8">
-                        <div class="text-7xl sm:text-8xl opacity-40 animate-pulse">🔍</div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-16 h-16 border-2 border-brand-200/50 rounded-full animate-ping"></div>
-                        </div>
-                    </div>
-                    
-                    <h2 class="text-2xl sm:text-3xl font-bold text-brand-900 mb-4">
-                        No results found
-                    </h2>
-                    <p class="text-brand-600 font-['Montserrat_Variable'] mb-10 text-base sm:text-lg leading-relaxed">
-                        We couldn't find what you're looking for. Try different keywords or explore our content sections.
-                    </p>
-                    
-                    <!-- Action buttons with improved styling -->
-                    <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
-                        <a
-                            href="/articles/"
-                            class="group bg-gradient-to-r from-brand-700 to-brand-800 hover:from-brand-800 hover:to-brand-900 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 text-sm sm:text-base"
-                        >
-                            <span class="flex items-center justify-center gap-2 text-nowrap">
-                                📚 Browse Articles
-                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </span>
-                        </a>
-                        <a
-                            href="/bits/"
-                            class="group bg-white/90 hover:bg-white text-brand-700 border border-brand-200/60 hover:border-brand-300 px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 backdrop-blur-sm text-sm sm:text-base"
-                        >
-                            <span class="flex items-center justify-center gap-2 text-nowrap">
-                                ⚡ Browse Bits
-                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </span>
-                        </a>
-                        <a
-                            href="/gallery/"
-                            class="group bg-white/90 hover:bg-white text-brand-700 border border-brand-200/60 hover:border-brand-300 px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 backdrop-blur-sm text-sm sm:text-base"
-                        >
-                            <span class="flex items-center justify-center gap-2 text-nowrap">
-                                📷 View Gallery
-                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </span>
-                        </a>
-                        <a
-                            href="/reads/"
-                            class="group bg-white/90 hover:bg-white text-brand-700 border border-brand-200/60 hover:border-brand-300 px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 backdrop-blur-sm text-sm sm:text-base"
-                        >
-                            <span class="flex items-center justify-center gap-2 text-nowrap">
-                                💭 Explore Quotes
-                                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Search Results Container -->
-            <div id="search-results" class="space-y-8 sm:space-y-10 hidden animate-in fade-in slide-in-from-bottom-8 duration-700">
-                <!-- Articles Results -->
-                <section id="articles-section" class="hidden">
-                    <div class="mb-6 sm:mb-8">
-                        <h2 class="text-xl sm:text-2xl font-bold text-brand-900 flex items-center mb-2">
-                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl flex items-center justify-center mr-3 shadow-lg">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4 sm:h-5 sm:w-5 text-white"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-                                    ></path>
-                                </svg>
-                            </div>
-                            Articles
-                            <span class="ml-3 bg-brand-600/10 text-brand-700 px-2.5 py-0.5 rounded-full text-sm font-medium">
-                                <span id="articles-count">0</span>&nbsp;results
-                            </span>
-                        </h2>
-                    </div>
-                    <div id="articles-container" class="space-y-4 sm:space-y-5">
-                        <!-- Articles will be populated by JavaScript -->
-                    </div>
-                    <div id="articles-show-more" class="hidden mt-6 text-center">
-                        <button class="inline-flex items-center px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium">
-                            <span>Show more articles</span>
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </section>
-
-                <!-- Bits Results -->
-                <section id="bits-section" class="hidden">
-                    <div class="mb-6 sm:mb-8">
-                        <h2 class="text-xl sm:text-2xl font-bold text-brand-900 flex items-center">
-                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl flex items-center justify-center mr-3 shadow-lg">
-                                <svg class="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                            </div>
-                            <span class="mr-3">Bits</span>
-                            <span id="bits-count" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-brand-100 text-brand-800">0</span>
-                        </h2>
-                    </div>
-
-                    <div id="bits-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-8"></div>
-
-                    <div id="bits-show-more" class="text-center hidden">
-                        <button class="group px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-700 text-white rounded-xl hover:from-brand-700 hover:to-brand-800 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 inline-flex items-center gap-2">
-                            Show More Bits
-                            <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                    </div>
-                </section>
-
-                <!-- Gallery Results -->
-                <section id="gallery-section" class="hidden">
-                    <div class="mb-6 sm:mb-8">
-                        <h2 class="text-xl sm:text-2xl font-bold text-brand-900 flex items-center">
-                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl flex items-center justify-center mr-3 shadow-lg">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4 sm:h-5 sm:w-5 text-white"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                                    ></path>
-                                </svg>
-                            </div>
-                            Photography
-                            <span class="ml-3 bg-brand-600/10 text-brand-700 px-2.5 py-0.5 rounded-full text-sm font-medium">
-                                <span id="gallery-count">0</span>&nbsp;results
-                            </span>
-                        </h2>
-                    </div>
-                    <div id="gallery-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
-                        <!-- Gallery items will be populated by JavaScript -->
-                    </div>
-                    <div id="gallery-show-more" class="hidden mt-6 text-center">
-                        <button class="inline-flex items-center px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium">
-                            <span>Show more galleries</span>
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </section>
-
-                <!-- Quotes Results -->
-                <section id="quotes-section" class="hidden">
-                    <div class="mb-6 sm:mb-8">
-                        <h2 class="text-xl sm:text-2xl font-bold text-brand-900 flex items-center">
-                            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl flex items-center justify-center mr-3 shadow-lg">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4 sm:h-5 sm:w-5 text-white"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-                                    ></path>
-                                </svg>
-                            </div>
-                            Quotes
-                            <span class="ml-3 bg-brand-600/10 text-brand-700 px-2.5 py-0.5 rounded-full text-sm font-medium">
-                                <span id="quotes-count">0</span>&nbsp;results
-                            </span>
-                        </h2>
-                    </div>
-                    <div id="quotes-container" class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                        <!-- Quotes will be populated by JavaScript -->
-                    </div>
-                    <div id="quotes-show-more" class="hidden mt-6 text-center">
-                        <button class="inline-flex items-center px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium">
-                            <span>Show more quotes</span>
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </section>
-            </div>
+        <div id="articles-container" class="articles-list"></div>
+        <div id="articles-show-more" class="show-more-wrap hidden">
+          <button class="show-more-btn">Show more articles</button>
         </div>
-    </main>
+      </section>
 
-</Layout>
+      <!-- Bits -->
+      <section id="bits-section" class="result-section hidden">
+        <div class="result-section-header">
+          <h2 class="result-section-title">Bits</h2>
+          <span class="result-count-badge"><span id="bits-count">0</span> results</span>
+        </div>
+        <div id="bits-container" class="bits-grid"></div>
+        <div id="bits-show-more" class="show-more-wrap hidden">
+          <button class="show-more-btn">Show more bits</button>
+        </div>
+      </section>
+
+      <!-- Gallery -->
+      <section id="gallery-section" class="result-section hidden">
+        <div class="result-section-header">
+          <h2 class="result-section-title">Photography</h2>
+          <span class="result-count-badge"><span id="gallery-count">0</span> results</span>
+        </div>
+        <div id="gallery-container" class="gallery-grid"></div>
+        <div id="gallery-show-more" class="show-more-wrap hidden">
+          <button class="show-more-btn">Show more galleries</button>
+        </div>
+      </section>
+
+      <!-- Quotes -->
+      <section id="quotes-section" class="result-section hidden">
+        <div class="result-section-header">
+          <h2 class="result-section-title">Quotes</h2>
+          <span class="result-count-badge"><span id="quotes-count">0</span> results</span>
+        </div>
+        <div id="quotes-container" class="quotes-grid"></div>
+        <div id="quotes-show-more" class="show-more-wrap hidden">
+          <button class="show-more-btn">Show more quotes</button>
+        </div>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
 
 <style>
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    
-    .line-clamp-3 {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    
-    /* Custom animations for modern feel */
-    @keyframes fade-in {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slide-in-from-top-4 {
-        from {
-            opacity: 0;
-            transform: translateY(-1rem);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes slide-in-from-bottom-4 {
-        from {
-            opacity: 0;
-            transform: translateY(1rem);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes slide-in-from-bottom-8 {
-        from {
-            opacity: 0;
-            transform: translateY(2rem);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .animate-in {
-        animation-fill-mode: both;
-    }
-    
-    .fade-in {
-        animation-name: fade-in;
-    }
-    
-    .slide-in-from-top-4 {
-        animation-name: slide-in-from-top-4;
-    }
-    
-    .slide-in-from-bottom-4 {
-        animation-name: slide-in-from-bottom-4;
-    }
-    
-    .slide-in-from-bottom-8 {
-        animation-name: slide-in-from-bottom-8;
-    }
-    
-    .duration-300 {
-        animation-duration: 300ms;
-    }
-    
-    .duration-500 {
-        animation-duration: 500ms;
-    }
-    
-    .duration-700 {
-        animation-duration: 700ms;
-    }
-    
-    /* Enhanced glass morphism effect */
-    .backdrop-blur-xl {
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-    }
-    
-    /* Smooth focus states */
-    input:focus {
-        box-shadow: 
-            0 0 0 4px rgba(137, 152, 208, 0.15),
-            0 20px 25px -5px rgba(0, 0, 0, 0.1),
-            0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-    
-    /* Custom scrollbar for search results */
-    #search-results::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    #search-results::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    
-    #search-results::-webkit-scrollbar-thumb {
-        background: rgba(137, 152, 208, 0.3);
-        border-radius: 3px;
-    }
-    
-    #search-results::-webkit-scrollbar-thumb:hover {
-        background: rgba(137, 152, 208, 0.5);
-    }
+  .search-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--space-6) var(--space-20);
+  }
+
+  /* Header */
+  .page-header {
+    text-align: center;
+    padding: var(--space-20) 0 var(--space-8);
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--text-display-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+    line-height: 1.1;
+  }
+  .page-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.6;
+  }
+  .results-info {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-secondary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 8px 16px;
+    margin-top: var(--space-4);
+  }
+  .results-info.hidden { display: none; }
+  #results-count { font-weight: 700; color: var(--color-brand); }
+  #search-query-display { font-weight: 600; color: var(--color-text); }
+
+  /* Search Bar */
+  .search-bar-section {
+    max-width: 640px;
+    margin: 0 auto var(--space-12);
+  }
+  .search-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    width: 20px;
+    height: 20px;
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    padding: 14px 100px 14px 48px;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: 16px;
+    outline: none;
+    transition: border-color 200ms, box-shadow 200ms;
+  }
+  .search-input::placeholder { color: var(--color-text-muted); }
+  .search-input:focus {
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px var(--color-brand-lighter);
+  }
+  .search-kbd {
+    position: absolute;
+    right: 56px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 4px 8px;
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    color: var(--color-text-muted);
+  }
+  .search-submit {
+    position: absolute;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--btn-bg);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: filter 200ms;
+  }
+  .search-submit:hover { filter: brightness(0.9); }
+  .search-submit svg { width: 18px; height: 18px; }
+
+  /* No Results */
+  .no-results {
+    text-align: center;
+    padding: var(--space-16) 0;
+  }
+  .no-results.hidden { display: none; }
+  .no-results-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+  }
+  .no-results-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-8);
+  }
+  .no-results-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
+  }
+  .browse-link {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 20px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: border-color 200ms, color 200ms;
+  }
+  .browse-link:hover {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+  }
+
+  /* Results Container */
+  .results-container { display: flex; flex-direction: column; gap: var(--space-10); }
+  .results-container.hidden { display: none; }
+
+  /* Result Sections */
+  .result-section.hidden { display: none; }
+  .result-section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+  .result-section-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .result-count-badge {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 3px 10px;
+    background: var(--color-brand-lighter);
+    color: var(--color-brand-dark);
+    border-radius: 8px;
+  }
+
+  /* Articles List — dynamically populated */
+  .articles-list { display: flex; flex-direction: column; gap: var(--space-4); }
+
+  /* Bits Grid */
+  .bits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+
+  /* Gallery Grid */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+
+  /* Quotes Grid */
+  .quotes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+  }
+
+  /* Show More */
+  .show-more-wrap { text-align: center; margin-top: var(--space-5); }
+  .show-more-wrap.hidden { display: none; }
+  .show-more-btn {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 24px;
+    background: var(--btn-bg);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: filter 200ms;
+  }
+  .show-more-btn:hover { filter: brightness(0.9); }
+
+  /* ============================================================
+     Dynamic element styles (used by JS STYLES object via classes)
+     ============================================================ */
+
+  /* Article result card (created by JS) */
+  :global(.sr-article) { }
+  :global(.sr-article-link) {
+    display: flex;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    transition: transform 250ms, box-shadow 250ms;
+  }
+  :global(.sr-article-link:hover) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevated);
+  }
+  :global(.sr-article-img-wrap) {
+    flex-shrink: 0;
+    width: 240px;
+    overflow: hidden;
+  }
+  :global(.sr-article-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms;
+  }
+  :global(.sr-article-link:hover .sr-article-img) {
+    transform: scale(1.05);
+  }
+  :global(.sr-article-body) {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+  }
+  :global(.sr-article-title) {
+    font-family: var(--font-display);
+    font-size: var(--text-body-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 200ms;
+  }
+  :global(.sr-article-link:hover .sr-article-title) {
+    color: var(--color-brand);
+  }
+  :global(.sr-article-desc) {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0 0 8px;
+  }
+  :global(.sr-article-tags) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  :global(.sr-article-tag) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--color-bg-alt);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+  :global(.sr-article-meta) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--color-border);
+    margin-top: 8px;
+  }
+  :global(.sr-article-date) {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+  }
+  :global(.sr-article-read) {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-brand);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Bit result card */
+  :global(.sr-bit) {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 250ms, box-shadow 250ms;
+  }
+  :global(.sr-bit:hover) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevated);
+  }
+  :global(.sr-bit-link) {
+    display: block;
+    padding: 20px;
+    text-decoration: none;
+    height: 100%;
+  }
+  :global(.sr-bit-inner) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  :global(.sr-bit-date) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-tertiary);
+    margin-bottom: 8px;
+  }
+  :global(.sr-bit-title) {
+    font-family: var(--font-display);
+    font-size: var(--text-body-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 200ms;
+  }
+  :global(.sr-bit:hover .sr-bit-title) {
+    color: var(--color-brand);
+  }
+  :global(.sr-bit-desc) {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+    margin-bottom: 8px;
+  }
+  :global(.sr-bit-tags) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  :global(.sr-bit-tag) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--color-brand-lighter);
+    color: var(--color-brand-dark);
+  }
+  :global(.sr-bit-readmore) {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-brand);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: auto;
+  }
+
+  /* Gallery result card */
+  :global(.sr-gallery) {
+    display: block;
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: 12px;
+    text-decoration: none;
+  }
+  :global(.sr-gallery-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms;
+  }
+  :global(.sr-gallery:hover .sr-gallery-img) {
+    transform: scale(1.05);
+  }
+  :global(.sr-gallery-overlay) {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  :global(.sr-gallery-content) {
+    padding: 16px;
+  }
+  :global(.sr-gallery-title) {
+    font-family: var(--font-display);
+    font-size: var(--text-body-lg);
+    font-weight: 500;
+    color: white;
+    margin: 0 0 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  :global(.sr-gallery-desc) {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: rgba(255,255,255,0.8);
+    margin: 0 0 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  :global(.sr-gallery-meta) {
+    display: flex;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+  }
+  :global(.sr-gallery-tags) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  :global(.sr-gallery-tag) {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    border-radius: 9999px;
+  }
+
+  /* Quote result card */
+  :global(.sr-quote) {
+    position: relative;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+  :global(.sr-quote-decoration) {
+    position: absolute;
+    top: -8px;
+    left: -4px;
+    font-size: 96px;
+    font-family: serif;
+    color: var(--color-brand-lighter);
+    opacity: 0.3;
+    user-select: none;
+    z-index: 0;
+  }
+  :global(.sr-quote-text) {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text);
+    line-height: 1.7;
+    font-style: italic;
+    margin: 0 0 12px;
+    position: relative;
+    z-index: 1;
+  }
+  :global(.sr-quote-cite) {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-style: italic;
+    color: var(--color-text-tertiary);
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 767px) {
+    :global(.sr-article-link) { flex-direction: column; }
+    :global(.sr-article-img-wrap) { width: 100%; height: 180px; }
+    .bits-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .quotes-grid { grid-template-columns: 1fr; }
+    .search-kbd { display: none; }
+    .search-input { padding-right: 56px; }
+  }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .bits-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Recent Searches */
+  .recent-searches {
+    max-width: 640px;
+    margin: 0 auto var(--space-10);
+  }
+  .recent-searches.hidden { display: none; }
+  .recent-searches-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-3);
+  }
+  .recent-searches-title {
+    font-family: var(--font-ui);
+    font-size: var(--text-caption);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+  .clear-recent {
+    background: none;
+    border: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .clear-recent:hover { color: var(--color-text); }
+  .recent-searches-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  :global(.recent-search-pill) {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 200ms, color 200ms;
+    text-decoration: none;
+  }
+  :global(.recent-search-pill:hover) {
+    background: var(--color-brand-lighter);
+    color: var(--color-brand);
+  }
 </style>
 
 <script>
-    import { initializeSearch, type SearchRenderer, type SearchResults, type ArticleItem, type BitsItem, type GalleryItem, type QuoteItem } from "../utils/search.ts";
+  import { initializeSearch, type SearchRenderer, type SearchResults, type ArticleItem, type BitsItem, type GalleryItem, type QuoteItem } from "../utils/search.ts";
 
-    const PAGINATION = { articles: { initial: 3, increment: 3 }, bits: { initial: 4, increment: 4 }, gallery: { initial: 3, increment: 3 }, quotes: { initial: 4, increment: 4 } };
-    
-    const STYLES = {
-        article: {
-            container: "group",
-            link: "block bg-white/70 backdrop-blur-sm rounded-2xl border border-brand-200/30 overflow-hidden hover:shadow-xl hover:shadow-brand-500/10 transition-all duration-500 hover:-translate-y-1 hover:border-brand-300/50",
-            flex: "flex flex-col sm:flex-row",
-            imageContainer: "flex-shrink-0 w-full sm:w-64",
-            imageWrapper: "relative h-full overflow-hidden",
-            image: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-700",
-            overlay: "absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent",
-            content: "flex-1 p-5 flex flex-col justify-between",
-            title: "font-['Red_Hat_Display_Variable'] text-lg sm:text-xl font-bold text-gray-900 group-hover:text-brand-700 transition-colors duration-300 mb-3 line-clamp-2 leading-tight",
-            description: "font-['Montserrat_Variable'] text-gray-600 line-clamp-2 leading-relaxed text-sm mb-3",
-            tags: "flex flex-wrap gap-1.5",
-            tag: "font-['Montserrat_Variable'] text-xs text-brand-600 border border-brand-200 px-2 py-0.5 rounded-md",
-            meta: "flex items-center justify-between mt-4 pt-3 border-t border-brand-100/50",
-            date: "font-['Montserrat_Variable'] text-xs font-medium text-gray-400/90 tracking-wide leading-tight whitespace-nowrap",
-            readMore: "font-['Montserrat_Variable'] text-sm font-medium text-brand-600 group-hover:text-brand-700 transition-colors flex items-center"
-        },
-        gallery: {
-            container: "group relative block aspect-[4/3] overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300",
-            image: "w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105",
-            overlay: "absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end",
-            content: "p-4 md:p-6 transform translate-y-0 transition-transform duration-300 ease-in-out",
-            title: "text-lg md:text-xl font-medium text-white mb-1 md:mb-2 line-clamp-2",
-            description: "text-white/80 text-sm mb-3 line-clamp-2",
-            meta: "flex items-center gap-3 text-sm",
-            location: "text-white/70 font-['Montserrat_Variable'] font-light flex items-center gap-1.5 text-xs",
-            count: "text-white/70 font-['Montserrat_Variable'] font-light text-xs",
-            tags: "flex flex-wrap gap-1.5",
-            tag: "text-xs bg-white/20 text-white/90 px-2.5 py-1 rounded-full tracking-wide font-light"
-        },
-        quote: {
-            container: "relative bg-white rounded-xl shadow-lg p-6 py-8 md:p-8 md:py-10 flex flex-col justify-center items-center overflow-hidden",
-            text: "text-center sm:text-md text-brand-800/90 leading-relaxed font-light font-['Montserrat_Variable'] mb-5 z-10",
-            cite: "text-center block text-brand-900/70 text-sm font-medium italic font-['Montserrat_Variable'] z-10",
-            decoration: "absolute -top-2 -left-2 text-[6rem] text-brand-100/50 font-serif opacity-80 z-0 select-none"
+  const PAGINATION = {
+    articles: { initial: 3, increment: 3 },
+    bits: { initial: 4, increment: 4 },
+    gallery: { initial: 3, increment: 3 },
+    quotes: { initial: 4, increment: 4 },
+  };
+
+  const el = (tag: string, className?: string, attrs?: Record<string, string>) => {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (attrs) Object.entries(attrs).forEach(([k, v]) => element.setAttribute(k, v));
+    return element;
+  };
+
+  class DOMSearchRenderer implements SearchRenderer {
+    private elements: Record<string, HTMLElement> = {};
+    private currentResults: SearchResults = { articles: [], bits: [], gallery: [], quotes: [] };
+    private displayed = { articles: 0, bits: 0, gallery: 0, quotes: 0 };
+
+    constructor() { this.initElements(); }
+
+    private initElements(): void {
+      const init = () => {
+        const ids = [
+          "page-title", "search-results-info", "search-description", "no-results", "search-results",
+          "articles-section", "articles-container", "articles-count", "articles-show-more",
+          "bits-section", "bits-container", "bits-count", "bits-show-more",
+          "gallery-section", "gallery-container", "gallery-count", "gallery-show-more",
+          "quotes-section", "quotes-container", "quotes-count", "quotes-show-more",
+          "results-count", "results-plural", "search-query-display",
+        ];
+        if (!document.getElementById("page-title")) return setTimeout(init, 50);
+        ids.forEach(id => this.elements[id] = document.getElementById(id) as HTMLElement);
+        ['articles', 'bits', 'gallery', 'quotes'].forEach(type => {
+          const btn = this.elements[`${type}-show-more`]?.querySelector('button');
+          if (btn) btn.addEventListener('click', () => this.showMore(type));
+        });
+        if (window.location.search.includes("q=")) {
+          window.clientSideSearchInstance?.initializeFromURL();
         }
-    };
-
-    const el = (tag: string, className?: string, attrs?: Record<string, string>) => {
-        const element = document.createElement(tag);
-        if (className) element.className = className;
-        if (attrs) Object.entries(attrs).forEach(([k, v]) => element.setAttribute(k, v));
-        return element;
-    };
-
-    class DOMSearchRenderer implements SearchRenderer {
-        private elements: Record<string, HTMLElement> = {};
-        private currentResults: SearchResults = { articles: [], bits: [], gallery: [], quotes: [] };
-        private displayed = { articles: 0, bits: 0, gallery: 0, quotes: 0 };
-
-        constructor() {
-            this.initElements();
-        }
-
-        private initElements(): void {
-            const init = () => {
-                const ids = ["page-title", "search-results-info", "search-description", "no-results", "search-results", 
-                           "articles-section", "articles-container", "articles-count", "articles-show-more",
-                           "bits-section", "bits-container", "bits-count", "bits-show-more",
-                           "gallery-section", "gallery-container", "gallery-count", "gallery-show-more",
-                           "quotes-section", "quotes-container", "quotes-count", "quotes-show-more",
-                           "results-count", "results-plural", "search-query-display"];
-                
-                if (!document.getElementById("page-title")) return setTimeout(init, 50);
-                
-                ids.forEach(id => this.elements[id] = document.getElementById(id) as HTMLElement);
-                
-                ['articles', 'bits', 'gallery', 'quotes'].forEach(type => {
-                    const btn = this.elements[`${type}-show-more`]?.querySelector('button');
-                    if (btn) btn.addEventListener('click', () => this.showMore(type));
-                });
-
-                if (window.location.search.includes("q=")) {
-                    window.clientSideSearchInstance?.initializeFromURL();
-                }
-            };
-            init();
-        }
-
-        private showMore(type: string): void {
-            const config = PAGINATION[type as keyof typeof PAGINATION];
-            const newCount = Math.min(this.currentResults[type as keyof SearchResults].length, this.displayed[type as keyof typeof this.displayed] + config.increment);
-            this.displayed[type as keyof typeof this.displayed] = newCount;
-            
-            // Call the appropriate render method
-            if (type === 'articles') this.renderArticles();
-            else if (type === 'bits') this.renderBits();
-            else if (type === 'gallery') this.renderGallery();
-            else if (type === 'quotes') this.renderQuotes();
-            
-            if (newCount >= this.currentResults[type as keyof SearchResults].length) {
-                this.elements[`${type}-show-more`].classList.add("hidden");
-            }
-        }
-
-        showDefaultState(): void {
-            this.elements["page-title"].textContent = "Search";
-            this.elements["search-results-info"].classList.add("hidden");
-            this.elements["search-description"].classList.remove("hidden");
-            this.elements["no-results"].classList.add("hidden");
-            this.elements["search-results"].classList.add("hidden");
-            ["articles", "bits", "gallery", "quotes"].forEach(type => {
-                this.elements[`${type}-section`].classList.add("hidden");
-                this.elements[`${type}-show-more`]?.classList.add("hidden");
-            });
-        }
-
-        displayResults(query: string, results: SearchResults): void {
-            const total = results.articles.length + results.bits.length + results.gallery.length + results.quotes.length;
-            this.currentResults = results;
-            this.displayed = { articles: 0, bits: 0, gallery: 0, quotes: 0 };
-
-            this.elements["page-title"].textContent = "Search Results";
-            this.elements["search-query-display"].textContent = query;
-            this.elements["results-count"].textContent = total.toString();
-            this.elements["results-plural"].textContent = total === 1 ? "" : "s";
-            this.elements["search-results-info"].classList.remove("hidden");
-            this.elements["search-description"].classList.add("hidden");
-
-            if (total === 0) {
-                this.elements["no-results"].classList.remove("hidden");
-                this.elements["search-results"].classList.add("hidden");
-                return;
-            }
-
-            this.elements["no-results"].classList.add("hidden");
-            this.elements["search-results"].classList.remove("hidden");
-            this.displayArticles(results.articles);
-            this.displayBits(results.bits);
-            this.displayGallery(results.gallery);
-            this.displayQuotes(results.quotes);
-        }
-
-        hideAllSections(): void {
-            ["articles", "bits", "gallery", "quotes"].forEach(type => this.elements[`${type}-section`].classList.add("hidden"));
-        }
-
-        private displaySection(type: 'articles' | 'bits' | 'gallery' | 'quotes', items: any[]): void {
-            if (items.length === 0) {
-                this.elements[`${type}-section`].classList.add("hidden");
-                return;
-            }
-            this.elements[`${type}-count`].textContent = items.length.toString();
-            this.elements[`${type}-section`].classList.remove("hidden");
-            this.displayed[type] = Math.min(items.length, PAGINATION[type].initial);
-            
-            // Call the appropriate render method
-            if (type === 'articles') this.renderArticles();
-            else if (type === 'bits') this.renderBits();
-            else if (type === 'gallery') this.renderGallery();
-            else if (type === 'quotes') this.renderQuotes();
-            
-            this.elements[`${type}-show-more`].classList.toggle("hidden", items.length <= PAGINATION[type].initial);
-        }
-
-        displayArticles(articles: ArticleItem[]): void { this.displaySection('articles', articles); }
-        displayBits(bits: BitsItem[]): void { this.displaySection('bits', bits); }
-        displayGallery(gallery: GalleryItem[]): void { this.displaySection('gallery', gallery); }
-        displayQuotes(quotes: QuoteItem[]): void { this.displaySection('quotes', quotes); }
-
-        private renderArticles(): void {
-            this.elements["articles-container"].innerHTML = "";
-            this.currentResults.articles.slice(0, this.displayed.articles).forEach(article => {
-                this.elements["articles-container"].appendChild(this.createArticleElement(article));
-            });
-        }
-
-        private renderBits(): void {
-            this.elements["bits-container"].innerHTML = "";
-            this.currentResults.bits.slice(0, this.displayed.bits).forEach(bit => {
-                this.elements["bits-container"].appendChild(this.createBitsElement(bit));
-            });
-        }
-
-        private renderGallery(): void {
-            this.elements["gallery-container"].innerHTML = "";
-            this.currentResults.gallery.slice(0, this.displayed.gallery).forEach(item => {
-                this.elements["gallery-container"].appendChild(this.createGalleryElement(item));
-            });
-        }
-
-        private renderQuotes(): void {
-            this.elements["quotes-container"].innerHTML = "";
-            this.currentResults.quotes.slice(0, this.displayed.quotes).forEach(quote => {
-                this.elements["quotes-container"].appendChild(this.createQuoteElement(quote));
-            });
-        }
-
-        private createArticleElement(article: ArticleItem): HTMLElement {
-            const s = window.clientSideSearchInstance;
-            if (!s) return el("div", "p-4 bg-white rounded border", { innerHTML: article.title });
-
-            const articleEl = el("article", STYLES.article.container);
-            const linkEl = el("a", STYLES.article.link, { href: s.escapeForAttribute(article.path) });
-            const flexEl = el("div", STYLES.article.flex);
-            
-            const imgContainer = el("div", STYLES.article.imageContainer);
-            const imgWrapper = el("div", STYLES.article.imageWrapper);
-            const imgEl = el("img", STYLES.article.image, { 
-                src: s.escapeForAttribute(article.hero_image.src), 
-                alt: s.escapeForAttribute(article.hero_image_alt),
-                width: "256", height: "160"
-            });
-            const overlay = el("div", STYLES.article.overlay);
-            imgWrapper.append(imgEl, overlay);
-            imgContainer.appendChild(imgWrapper);
-
-            const contentEl = el("div", STYLES.article.content);
-            const titleEl = el("h2", STYLES.article.title);
-            titleEl.textContent = article.title;
-            const descEl = el("p", STYLES.article.description);
-            descEl.textContent = article.description;
-            
-            const tagsEl = el("div", STYLES.article.tags);
-            article.tags.slice(0, 4).forEach(tag => {
-                const tagEl = el("span", STYLES.article.tag);
-                tagEl.textContent = tag;
-                tagsEl.appendChild(tagEl);
-            });
-
-            const metaEl = el("div", STYLES.article.meta);
-            const timeEl = el("time", STYLES.article.date);
-            timeEl.textContent = s.formatDate(article.date);
-            const readMoreEl = el("span", STYLES.article.readMore);
-            readMoreEl.innerHTML = `Read article <svg class="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>`;
-            metaEl.append(timeEl, readMoreEl);
-
-            const wrapper = el("div", "mb-4");
-            wrapper.append(titleEl, descEl, tagsEl);
-            contentEl.append(wrapper, metaEl);
-            flexEl.append(imgContainer, contentEl);
-            linkEl.appendChild(flexEl);
-            articleEl.appendChild(linkEl);
-            return articleEl;
-        }
-
-        private createBitsElement(bit: BitsItem): HTMLElement {
-            const s = window.clientSideSearchInstance;
-            if (!s) return el("div", "p-4 bg-white rounded border", { innerHTML: bit.title });
-
-            const bitEl = el("article", "group bg-gradient-to-br from-brand-50/20 to-white rounded-xl shadow-sm border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/30 transition-all duration-300 overflow-hidden");
-            const linkEl = el("a", "block p-6 h-full", { href: s.escapeForAttribute(bit.path) });
-            
-            const contentEl = el("div", "flex flex-col h-full");
-            
-            const dateEl = el("p", "font-['Montserrat_Variable'] text-brand-500 mb-3 text-xs font-medium uppercase tracking-wider");
-            dateEl.textContent = s.formatDate(bit.date);
-            
-            const titleEl = el("h2", "text-xl sm:text-2xl font-medium text-gray-900 mb-3 line-clamp-2 font-['Red_Hat_Display_Variable'] group-hover:text-brand-700 transition-colors");
-            titleEl.textContent = bit.title;
-            
-            const descEl = el("p", "font-['Montserrat_Variable'] text-gray-600 mb-4 font-light leading-relaxed text-sm sm:text-base line-clamp-3 flex-grow");
-            descEl.textContent = bit.description;
-            
-            const tagsEl = el("div", "flex flex-wrap gap-2 mb-4");
-            if (bit.tags && bit.tags.length > 0) {
-                bit.tags.forEach(tag => {
-                    const tagEl = el("span", "text-xs font-['Montserrat_Variable'] text-brand-600 bg-brand-100/50 px-2 py-1 rounded-full");
-                    tagEl.textContent = tag;
-                    tagsEl.appendChild(tagEl);
-                });
-            }
-            
-            const readMoreEl = el("div", "mt-auto");
-            const readMoreSpan = el("span", "text-brand-700 font-['Montserrat_Variable'] hover:text-brand-600 font-medium text-sm inline-flex items-center gap-x-2 group-hover:translate-x-1 transition-transform duration-200");
-            readMoreSpan.innerHTML = `Read more <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>`;
-            readMoreEl.appendChild(readMoreSpan);
-            
-            contentEl.append(dateEl, titleEl, descEl, tagsEl, readMoreEl);
-            linkEl.appendChild(contentEl);
-            bitEl.appendChild(linkEl);
-            return bitEl;
-        }
-
-        private createGalleryElement(item: GalleryItem): HTMLElement {
-            const s = window.clientSideSearchInstance;
-            if (!s) return el("div", "p-4 bg-white rounded border", { innerHTML: item.title });
-
-            const linkEl = el("a", STYLES.gallery.container, { href: `/gallery/${s.escapeForAttribute(item.directory)}/` });
-            const imgEl = el("img", STYLES.gallery.image, { 
-                src: s.escapeForAttribute(item.featured_image.src), 
-                alt: s.escapeForAttribute(item.featured_image_alt),
-                width: "400", height: "300"
-            });
-            
-            const overlayEl = el("div", STYLES.gallery.overlay);
-            const contentEl = el("div", STYLES.gallery.content);
-            const titleEl = el("h3", STYLES.gallery.title);
-            titleEl.textContent = item.title;
-            contentEl.appendChild(titleEl);
-
-            if (item.description) {
-                const descEl = el("p", STYLES.gallery.description);
-                descEl.textContent = item.description;
-                contentEl.appendChild(descEl);
-            }
-
-            if (item.location || item.images_count > 0) {
-                const metaEl = el("div", STYLES.gallery.meta);
-                if (item.location) {
-                    const locationEl = el("span", STYLES.gallery.location);
-                    locationEl.innerHTML = `<svg class="w-3 h-3 text-white/60 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>${item.location}`;
-                    metaEl.appendChild(locationEl);
-                }
-                if (item.images_count > 0) {
-                    const countEl = el("span", STYLES.gallery.count);
-                    countEl.innerHTML = `<svg class="w-3 h-3 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>${item.images_count} photos`;
-                    metaEl.appendChild(countEl);
-                }
-                contentEl.appendChild(metaEl);
-            }
-
-            if (item.tags?.length) {
-                const tagsEl = el("div", STYLES.gallery.tags);
-                item.tags.slice(0, 3).forEach(tag => {
-                    const tagEl = el("span", STYLES.gallery.tag);
-                    tagEl.textContent = tag;
-                    tagsEl.appendChild(tagEl);
-                });
-                contentEl.appendChild(tagsEl);
-            }
-
-            overlayEl.appendChild(contentEl);
-            linkEl.append(imgEl, overlayEl);
-            return linkEl;
-        }
-
-        private createQuoteElement(quote: QuoteItem): HTMLElement {
-            const blockquoteEl = el("div", STYLES.quote.container);
-            const decorationEl = el("span", STYLES.quote.decoration, { "aria-hidden": "true" });
-            decorationEl.innerHTML = '"';
-            
-            const quoteTextEl = el("p", STYLES.quote.text);
-            quoteTextEl.textContent = quote.quote;
-            
-            blockquoteEl.append(decorationEl, quoteTextEl);
-            
-            if (quote.info) {
-                const citeEl = el("cite", STYLES.quote.cite);
-                citeEl.textContent = `— ${quote.info}`;
-                blockquoteEl.appendChild(citeEl);
-            }
-            return blockquoteEl;
-        }
+      };
+      init();
     }
 
-    const setupKeyboardShortcuts = () => {
-        const searchInput = document.getElementById('search-input') as HTMLInputElement;
-        if (!searchInput) return;
-        document.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault();
-                searchInput.focus();
-                searchInput.select();
-            }
-            if (e.key === 'Escape' && document.activeElement === searchInput) {
-                searchInput.blur();
-            }
+    private showMore(type: string): void {
+      const config = PAGINATION[type as keyof typeof PAGINATION];
+      const newCount = Math.min(this.currentResults[type as keyof SearchResults].length, this.displayed[type as keyof typeof this.displayed] + config.increment);
+      this.displayed[type as keyof typeof this.displayed] = newCount;
+      if (type === 'articles') this.renderArticles();
+      else if (type === 'bits') this.renderBits();
+      else if (type === 'gallery') this.renderGallery();
+      else if (type === 'quotes') this.renderQuotes();
+      if (newCount >= this.currentResults[type as keyof SearchResults].length) {
+        this.elements[`${type}-show-more`].classList.add("hidden");
+      }
+    }
+
+    showDefaultState(): void {
+      this.elements["page-title"].textContent = "Search";
+      this.elements["search-results-info"].classList.add("hidden");
+      this.elements["search-description"].classList.remove("hidden");
+      this.elements["no-results"].classList.add("hidden");
+      this.elements["search-results"].classList.add("hidden");
+      ["articles", "bits", "gallery", "quotes"].forEach(type => {
+        this.elements[`${type}-section`].classList.add("hidden");
+        this.elements[`${type}-show-more`]?.classList.add("hidden");
+      });
+      renderRecentSearches();
+    }
+
+    displayResults(query: string, results: SearchResults): void {
+      saveRecentSearch(query);
+      const recentEl = document.getElementById('recent-searches');
+      if (recentEl) recentEl.classList.add('hidden');
+
+      const total = results.articles.length + results.bits.length + results.gallery.length + results.quotes.length;
+      this.currentResults = results;
+      this.displayed = { articles: 0, bits: 0, gallery: 0, quotes: 0 };
+      this.elements["page-title"].textContent = "Search Results";
+      this.elements["search-query-display"].textContent = query;
+      this.elements["results-count"].textContent = total.toString();
+      this.elements["results-plural"].textContent = total === 1 ? "" : "s";
+      this.elements["search-results-info"].classList.remove("hidden");
+      this.elements["search-description"].classList.add("hidden");
+      if (total === 0) {
+        this.elements["no-results"].classList.remove("hidden");
+        this.elements["search-results"].classList.add("hidden");
+        return;
+      }
+      this.elements["no-results"].classList.add("hidden");
+      this.elements["search-results"].classList.remove("hidden");
+      this.displayArticles(results.articles);
+      this.displayBits(results.bits);
+      this.displayGallery(results.gallery);
+      this.displayQuotes(results.quotes);
+    }
+
+    hideAllSections(): void {
+      ["articles", "bits", "gallery", "quotes"].forEach(type => this.elements[`${type}-section`].classList.add("hidden"));
+    }
+
+    private displaySection(type: 'articles' | 'bits' | 'gallery' | 'quotes', items: any[]): void {
+      if (items.length === 0) {
+        this.elements[`${type}-section`].classList.add("hidden");
+        return;
+      }
+      this.elements[`${type}-count`].textContent = items.length.toString();
+      this.elements[`${type}-section`].classList.remove("hidden");
+      this.displayed[type] = Math.min(items.length, PAGINATION[type].initial);
+      if (type === 'articles') this.renderArticles();
+      else if (type === 'bits') this.renderBits();
+      else if (type === 'gallery') this.renderGallery();
+      else if (type === 'quotes') this.renderQuotes();
+      this.elements[`${type}-show-more`].classList.toggle("hidden", items.length <= PAGINATION[type].initial);
+    }
+
+    displayArticles(articles: ArticleItem[]): void { this.displaySection('articles', articles); }
+    displayBits(bits: BitsItem[]): void { this.displaySection('bits', bits); }
+    displayGallery(gallery: GalleryItem[]): void { this.displaySection('gallery', gallery); }
+    displayQuotes(quotes: QuoteItem[]): void { this.displaySection('quotes', quotes); }
+
+    private renderArticles(): void {
+      this.elements["articles-container"].innerHTML = "";
+      this.currentResults.articles.slice(0, this.displayed.articles).forEach(article => {
+        this.elements["articles-container"].appendChild(this.createArticleElement(article));
+      });
+    }
+    private renderBits(): void {
+      this.elements["bits-container"].innerHTML = "";
+      this.currentResults.bits.slice(0, this.displayed.bits).forEach(bit => {
+        this.elements["bits-container"].appendChild(this.createBitsElement(bit));
+      });
+    }
+    private renderGallery(): void {
+      this.elements["gallery-container"].innerHTML = "";
+      this.currentResults.gallery.slice(0, this.displayed.gallery).forEach(item => {
+        this.elements["gallery-container"].appendChild(this.createGalleryElement(item));
+      });
+    }
+    private renderQuotes(): void {
+      this.elements["quotes-container"].innerHTML = "";
+      this.currentResults.quotes.slice(0, this.displayed.quotes).forEach(quote => {
+        this.elements["quotes-container"].appendChild(this.createQuoteElement(quote));
+      });
+    }
+
+    private createArticleElement(article: ArticleItem): HTMLElement {
+      const s = window.clientSideSearchInstance;
+      if (!s) return el("div");
+
+      const articleEl = el("article", "sr-article");
+      const linkEl = el("a", "sr-article-link", { href: s.escapeForAttribute(article.path) });
+      const imgWrap = el("div", "sr-article-img-wrap");
+      const imgEl = el("img", "sr-article-img", {
+        src: s.escapeForAttribute(article.hero_image.src),
+        alt: s.escapeForAttribute(article.hero_image_alt),
+        width: "240", height: "160",
+      });
+      imgWrap.appendChild(imgEl);
+
+      const body = el("div", "sr-article-body");
+      const titleEl = el("h2", "sr-article-title");
+      titleEl.textContent = article.title;
+      const descEl = el("p", "sr-article-desc");
+      descEl.textContent = article.description;
+
+      const tagsEl = el("div", "sr-article-tags");
+      article.tags.slice(0, 4).forEach(tag => {
+        const tagEl = el("span", "sr-article-tag");
+        tagEl.textContent = tag;
+        tagsEl.appendChild(tagEl);
+      });
+
+      const metaEl = el("div", "sr-article-meta");
+      const dateEl = el("time", "sr-article-date");
+      dateEl.textContent = s.formatDate(article.date);
+      const readEl = el("span", "sr-article-read");
+      readEl.textContent = "Read article →";
+      metaEl.append(dateEl, readEl);
+
+      const upper = el("div");
+      upper.append(titleEl, descEl, tagsEl);
+      body.append(upper, metaEl);
+      linkEl.append(imgWrap, body);
+      articleEl.appendChild(linkEl);
+      return articleEl;
+    }
+
+    private createBitsElement(bit: BitsItem): HTMLElement {
+      const s = window.clientSideSearchInstance;
+      if (!s) return el("div");
+
+      const bitEl = el("article", "sr-bit");
+      const linkEl = el("a", "sr-bit-link", { href: s.escapeForAttribute(bit.path) });
+      const inner = el("div", "sr-bit-inner");
+
+      const dateEl = el("p", "sr-bit-date");
+      dateEl.textContent = s.formatDate(bit.date);
+      const titleEl = el("h2", "sr-bit-title");
+      titleEl.textContent = bit.title;
+      const descEl = el("p", "sr-bit-desc");
+      descEl.textContent = bit.description;
+
+      const tagsEl = el("div", "sr-bit-tags");
+      if (bit.tags && bit.tags.length > 0) {
+        bit.tags.forEach(tag => {
+          const tagEl = el("span", "sr-bit-tag");
+          tagEl.textContent = tag;
+          tagsEl.appendChild(tagEl);
         });
-    };
+      }
 
-    const fetchSearchIndex = async () => {
-        if (window.searchIndex) return;
-        try {
-            const response = await fetch('/api/search-index.json');
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            window.searchIndex = await response.json();
-        } catch (error) {
-            console.error('Failed to load search index:', error);
+      const readEl = el("div", "sr-bit-readmore");
+      readEl.textContent = "Read more →";
+
+      inner.append(dateEl, titleEl, descEl, tagsEl, readEl);
+      linkEl.appendChild(inner);
+      bitEl.appendChild(linkEl);
+      return bitEl;
+    }
+
+    private createGalleryElement(item: GalleryItem): HTMLElement {
+      const s = window.clientSideSearchInstance;
+      if (!s) return el("div");
+
+      const linkEl = el("a", "sr-gallery", { href: `/gallery/${s.escapeForAttribute(item.directory)}/` });
+      const imgEl = el("img", "sr-gallery-img", {
+        src: s.escapeForAttribute(item.featured_image.src),
+        alt: s.escapeForAttribute(item.featured_image_alt),
+        width: "400", height: "300",
+      });
+
+      const overlay = el("div", "sr-gallery-overlay");
+      const content = el("div", "sr-gallery-content");
+      const titleEl = el("h3", "sr-gallery-title");
+      titleEl.textContent = item.title;
+      content.appendChild(titleEl);
+
+      if (item.description) {
+        const descEl = el("p", "sr-gallery-desc");
+        descEl.textContent = item.description;
+        content.appendChild(descEl);
+      }
+
+      if (item.location || item.images_count > 0) {
+        const metaEl = el("div", "sr-gallery-meta");
+        if (item.location) {
+          const locEl = el("span");
+          locEl.textContent = item.location;
+          metaEl.appendChild(locEl);
         }
-    };
-
-    const initializeSearchWithRetry = async () => {
-        await fetchSearchIndex();
-        if (window.searchIndex) {
-            const renderer = new DOMSearchRenderer();
-            initializeSearch(renderer);
+        if (item.images_count > 0) {
+          const countEl = el("span");
+          countEl.textContent = `${item.images_count} photos`;
+          metaEl.appendChild(countEl);
         }
-    };
+        content.appendChild(metaEl);
+      }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        initializeSearchWithRetry();
-        setupKeyboardShortcuts();
+      if (item.tags?.length) {
+        const tagsEl = el("div", "sr-gallery-tags");
+        item.tags.slice(0, 3).forEach(tag => {
+          const tagEl = el("span", "sr-gallery-tag");
+          tagEl.textContent = tag;
+          tagsEl.appendChild(tagEl);
+        });
+        content.appendChild(tagsEl);
+      }
+
+      overlay.appendChild(content);
+      linkEl.append(imgEl, overlay);
+      return linkEl;
+    }
+
+    private createQuoteElement(quote: QuoteItem): HTMLElement {
+      const quoteEl = el("div", "sr-quote");
+      const decoration = el("span", "sr-quote-decoration", { "aria-hidden": "true" });
+      decoration.innerHTML = '\u201C';
+      const textEl = el("p", "sr-quote-text");
+      textEl.textContent = quote.quote;
+      quoteEl.append(decoration, textEl);
+      if (quote.info) {
+        const citeEl = el("cite", "sr-quote-cite");
+        citeEl.textContent = `— ${quote.info}`;
+        quoteEl.appendChild(citeEl);
+      }
+      return quoteEl;
+    }
+  }
+
+  const RECENT_SEARCHES_KEY = 'recent-searches';
+  const MAX_RECENT = 8;
+
+  function getRecentSearches(): string[] {
+    try {
+      return JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) || '[]');
+    } catch { return []; }
+  }
+
+  function saveRecentSearch(query: string) {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    const recent = getRecentSearches().filter(q => q !== trimmed);
+    recent.unshift(trimmed);
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)));
+  }
+
+  function renderRecentSearches() {
+    const container = document.getElementById('recent-searches');
+    const list = document.getElementById('recent-searches-list');
+    const clearBtn = document.getElementById('clear-recent');
+    const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+    if (!container || !list) return;
+
+    const recent = getRecentSearches();
+    if (recent.length === 0) {
+      container.classList.add('hidden');
+      return;
+    }
+
+    list.innerHTML = '';
+    recent.forEach(q => {
+      const pill = document.createElement('button');
+      pill.className = 'recent-search-pill';
+      pill.textContent = q;
+      pill.type = 'button';
+      pill.addEventListener('click', () => {
+        if (searchInput) {
+          searchInput.value = q;
+          searchInput.form?.requestSubmit();
+        }
+      });
+      list.appendChild(pill);
     });
 
-    document.addEventListener("astro:page-load", () => {
-        setTimeout(() => {
-            initializeSearchWithRetry();
-            setupKeyboardShortcuts();
-        }, 50);
+    container.classList.remove('hidden');
+
+    clearBtn?.addEventListener('click', () => {
+      localStorage.removeItem(RECENT_SEARCHES_KEY);
+      container.classList.add('hidden');
+    }, { once: true });
+  }
+
+  const setupKeyboardShortcuts = () => {
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    if (!searchInput) return;
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+      }
+      if (e.key === 'Escape' && document.activeElement === searchInput) {
+        searchInput.blur();
+      }
     });
+  };
+
+  const fetchSearchIndex = async () => {
+    if (window.searchIndex) return;
+    try {
+      const response = await fetch('/api/search-index.json');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      window.searchIndex = await response.json();
+    } catch (error) {
+      console.error('Failed to load search index:', error);
+    }
+  };
+
+  const initializeSearchWithRetry = async () => {
+    await fetchSearchIndex();
+    if (window.searchIndex) {
+      const renderer = new DOMSearchRenderer();
+      initializeSearch(renderer);
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initializeSearchWithRetry();
+    setupKeyboardShortcuts();
+    renderRecentSearches();
+  });
+
+  document.addEventListener("astro:page-load", () => {
+    setTimeout(() => {
+      initializeSearchWithRetry();
+      setupKeyboardShortcuts();
+      renderRecentSearches();
+    }, 50);
+  });
 </script>

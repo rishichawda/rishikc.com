@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
-import { Schema } from "astro-seo-schema";
+import { buildWebPageEntity, personRef } from "../utils/jsonLd";
 import { Image } from "astro:assets";
 import profileImage from "../../content/assets/me.jpg";
 
@@ -18,553 +18,587 @@ interface ProfileData { name: string; title: string; intro: string; location: st
 const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
+const servicesEntry = await getCollection("services");
+const services = (servicesEntry[0]?.data as any)?.services || [];
+
+const projectsEntry = await getCollection("projects");
+// Collection entries are split by top-level JSON keys; find the stats entry
+const statsEntry = projectsEntry.find((e: any) => e.id === "open_source_contributions_stats");
+const osStats = (statsEntry?.data as any) || {};
+const totalContributions = osStats.total_contributions || 0;
+
+const dataEntry = projectsEntry.find((e: any) => e.id === "data");
+const ossEntry = projectsEntry.find((e: any) => e.id === "open_source_contributions");
+const totalProjects = ((dataEntry?.data as any) || []).length + ((ossEntry?.data as any) || []).length;
+
+// Organize skills into categories for the Skills section
+const skillCategories = [
+  { name: "Frontend", accent: "var(--color-brand)", skills: ["React", "TypeScript", "Astro", "Next.js", "Tailwind CSS", "Accessibility"] },
+  { name: "Backend", accent: "var(--color-accent)", skills: ["Node.js", "Ruby on Rails", "Python", "PostgreSQL", "Go"] },
+  { name: "Mobile", accent: "var(--color-brand-light)", skills: ["React Native", "iOS", "Android"] },
+  { name: "DevOps & Infra", accent: "var(--color-brand-dark)", skills: ["Chef", "Docker", "Kubernetes", "CI/CD", "AWS", "GCP"] },
+  { name: "Creative", accent: "var(--color-text-tertiary)", skills: ["Photography", "Technical Writing", "UI/UX"] },
+];
+
 const page_info = {
   title: `About | ${profile.name}`,
-  description: profile.summary || `Learn more about ${profile.name, profile.title}.`,
+  description: profile.summary || `Learn more about ${profile.name}.`,
   keywords: `Rishi Chawda, About Me, Software Engineer, ${profile.skills.join(', ')}`,
 };
 
 const siteUrl = new URL(Astro.url.pathname, Astro.site || "https://rishikc.com").toString();
 const profileImageUrl = `${siteUrl.replace(/\/$/, "")}/${profileImage.src}`;
 
-function pluralize(count: number, singular: string, plural: string): string {
-  return count === 1 ? `1 ${singular}` : `${count} ${plural}`;
-}
-
 const firstJobStartDate = new Date("2018-07-01");
 const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear();
+
+const socialIconPaths: Record<string, string> = {
+  GitHub: "M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z",
+  LinkedIn: "M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z",
+  Instagram: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z",
+  Twitter: "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z",
+  Dribbble: "M12 24C5.385 24 0 18.615 0 12S5.385 0 12 0s12 5.385 12 12-5.385 12-12 12zm10.12-10.358c-.35-.11-3.17-.953-6.384-.438 1.34 3.684 1.887 6.684 1.992 7.308 2.3-1.555 3.936-4.02 4.395-6.87zm-6.115 7.808c-.153-.9-.75-4.032-2.19-7.77l-.066.02c-5.79 2.015-7.86 6.025-8.04 6.4 1.73 1.358 3.92 2.166 6.29 2.166 1.42 0 2.77-.29 4-.81zm-11.62-2.58c.232-.4 3.045-5.055 8.332-6.765.135-.045.27-.084.405-.12-.26-.585-.54-1.167-.832-1.74C7.17 11.775 2.206 11.71 1.756 11.7l-.004.312c0 2.633.998 5.037 2.634 6.855zm-2.42-8.955c.46.008 4.683.026 9.477-1.248-1.698-3.018-3.53-5.558-3.8-5.928-2.868 1.35-5.01 3.99-5.676 7.17zM9.6 2.052c.282.38 2.145 2.914 3.822 6 3.645-1.365 5.19-3.44 5.373-3.702-1.81-1.61-4.19-2.586-6.795-2.586-.825 0-1.63.1-2.4.285zm10.335 3.483c-.218.29-1.91 2.493-5.724 4.04.24.49.47.985.68 1.486.08.18.15.36.22.53 3.41-.43 6.8.26 7.14.33-.02-2.42-.88-4.64-2.31-6.38z",
+};
+
+const pageSchemaEntities = [
+  buildWebPageEntity({
+    type: "ProfilePage",
+    url: siteUrl,
+    name: page_info.title,
+    description: page_info.description,
+    mainEntity: personRef,
+  }),
+];
 ---
 
-<BaseLayout page_info={page_info}>
-  <Schema
-    slot="head"
-    item={{
-      "@context": "https://schema.org",
-      "@type": "Person",
-      name: profile.name,
-      jobTitle: profile.title,
-      worksFor: {
-        "@type": "Organization",
-        name: profile.experience[0]?.company || "Unknown Company",
-      },
-      url: siteUrl,
-      image: profileImageUrl,
-      description: profile.summary,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Bengaluru",
-        addressRegion: "KA",
-        addressCountry: "IN"
-      },
-      alumniOf: profile.education.map(edu => ({
-        "@type": "EducationalOrganization",
-        name: edu.institution
-      })),
-      knowsLanguage: profile.languages.map(lang => lang.name),
-      sameAs: profile.socials.map((social: Social) => social.url),
-    }}
-  />
+<BaseLayout page_info={page_info} activeRoute="/about/" pageSchemaEntities={pageSchemaEntities}>
 
-  <main class="bg-white">
-    <section class="text-center py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 animate-on-scroll fade-in-up bg-brand-50/30">
-      <a
-        href="/"
-        class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium mb-10"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          ></path>
-        </svg>
-        Back to home
-      </a>
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold font-['Red_Hat_Display_Variable'] text-brand-900 mb-5 leading-tight sm:leading-tight lg:leading-tight">
-        Hi, I'm Rishi
-      </h1>
-      <p class="text-lg sm:text-xl lg:text-2xl font-light font-['Montserrat_Variable'] text-brand-700 max-w-3xl mx-auto leading-relaxed">
-        {profile.intro}
-      </p>
-      <p class="text-base font-light font-['Montserrat_Variable'] text-brand-600 mt-5 max-w-3xl mx-auto flex items-center justify-center">
-         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-        {profile.location}
-      </p>
+  <main>
+    {/* ─── Page Header ─── */}
+    <section class="page-header" data-reveal>
+      <span class="overline">GET TO KNOW ME</span>
+      <h1 class="page-title">About</h1>
+      <p class="page-subtitle">The person behind the code, the camera, and the curiosity.</p>
     </section>
 
-    <section class="relative bg-white py-20 sm:py-24 lg:py-32 overflow-x-hidden">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          <div class="lg:col-span-4 animate-on-scroll fade-in-left overflow-hidden lg:overflow-visible">
-            <div class="relative group max-w-full">
-              <div class="absolute inset-0 bg-gradient-to-br from-brand-500/20 via-brand-600/10 to-brand-700/20 rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-500"></div>                <div class="relative bg-white/90 backdrop-blur-sm p-8 lg:p-10 rounded-2xl border border-brand-100/60 hover:shadow-2xl transition-all duration-500">
-                <div class="relative mb-8">
-                  <div class="w-48 h-48 mx-auto rounded-2xl overflow-hidden border-4 border-white shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
-                    <Image
-                      src={profileImage}
-                      alt={`Profile picture of ${profile.name}`}
-                      width={192}
-                      height={192}
-                      class="w-full h-full object-cover"
-                      loading="eager"
-                      decoding="async"
-                      format="webp"
-                    />
-                  </div>
-                  <div class="absolute -top-2 -right-2 w-6 h-6 bg-brand-500 rounded-full animate-pulse"></div>
-                  <div class="absolute -bottom-2 -left-2 w-4 h-4 bg-brand-600 rounded-full animate-pulse delay-700"></div>
-                </div>
-
-                <div class="text-center space-y-4">
-                  <h3 class="text-2xl font-bold font-['Red_Hat_Display_Variable'] text-brand-900">
-                    {profile.name}
-                  </h3>
-                  <p class="text-brand-700 font-medium font-['Montserrat_Variable']">
-                    {profile.title}
-                  </p>
-                  <div class="flex items-center justify-center text-brand-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span class="font-['Montserrat_Variable']">{profile.location}</span>
-                  </div>
-                </div>
-
-                <div class="mt-8 p-4 rounded-xl border border-brand-200/50">
-                  <h5 class="text-lg font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-3 text-center">
-                    Interests & Hobbies
-                  </h5>
-                  <div class="flex flex-wrap gap-2 justify-center">
-                    {profile.interests.map((interest) => (
-                      <span class="interest-tag px-3 py-1.5 bg-white text-brand-700 text-sm font-medium font-['Montserrat_Variable'] rounded-full border border-brand-200/60 shadow-sm">
-                        {interest}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div class="mt-8">
-                  <h4 class="text-lg font-semibold font-['Red_Hat_Display_Variable'] text-brand-800 mb-4 text-center">
-                    Connect with Me
-                  </h4>
-                  <div class="flex flex-wrap gap-3 justify-center">
-                    {profile.socials.map((social) => (
-                      <a
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="social-link inline-flex items-center px-4 py-2 rounded-xl bg-white text-brand-700 hover:bg-brand-700 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg border border-brand-200/80 group transform hover:-translate-y-1"
-                        aria-label={`Visit my ${social.platform} profile`}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                        </svg>
-                        <span class="font-['Montserrat_Variable'] text-sm font-medium">{social.platform}</span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="lg:col-span-8 animate-on-scroll fade-in-right">
-            <div class="space-y-8">
-              <div class="prose prose-lg max-w-none">
-                {Array.isArray(profile.bio) ? (
-                  <div class="space-y-6">
-                    {profile.bio.map((paragraph, index) => (
-                      <div class={`text-lg sm:text-xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed ${index === 0 ? 'first-letter:text-6xl first-letter:font-bold first-letter:text-brand-700 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none' : ''}`}>
-                        {paragraph}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div class="text-lg sm:text-xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed mb-8 first-letter:text-6xl first-letter:font-bold first-letter:text-brand-700 first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:leading-none">
-                    {profile.bio}
-                  </div>
-                )}
-                
-                <div class="space-y-6 text-lg sm:text-xl font-light font-['Montserrat_Variable'] text-gray-800 leading-relaxed">
-                  <p>
-                    With over <strong class="font-medium text-brand-800">{pluralize(yearsExperience, 'year', 'years')}</strong> of experience in the tech industry, <em>and a couple more as a freelancer</em>, I've had the privilege of working on diverse projects, from developing scalable web applications to contributing to DevSecOps tooling at <a href={profile.experience[0]?.website?.[0] || '#'} target="_blank" rel="noopener noreferrer" class="text-brand-700 hover:text-brand-900 underline decoration-brand-300 hover:decoration-brand-500 decoration-1 underline-offset-2 transition-all duration-300 font-medium">{profile.experience[0]?.company || 'my current role'}</a>.
-                  </p>
-                  
-                  <p>
-                    My journey in software development is driven by a curiosity for technology and a desire to build things that are not only functional but also elegant and user-friendly. I believe in writing clean, maintainable code and creating experiences that make a difference.
-                  </p>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
-                <div class="bg-white/60 backdrop-blur-sm p-5 rounded-xl border border-brand-100/60 shadow-md hover:shadow-lg transition-all duration-300 text-center">
-                  <div class="text-2xl font-bold font-['Red_Hat_Display_Variable'] text-brand-700 mb-1">
-                    {pluralize(yearsExperience, 'Year', 'Years')}
-                  </div>
-                  <p class="text-sm font-medium font-['Montserrat_Variable'] text-gray-600">
-                    of Professional Experience
-                  </p>
-                </div>
-
-                <div class="bg-white/60 backdrop-blur-sm p-5 rounded-xl border border-brand-100/60 shadow-md hover:shadow-lg transition-all duration-300 text-center">
-                  <div class="text-2xl font-bold font-['Red_Hat_Display_Variable'] text-brand-700 mb-1">
-                    ∞
-                  </div>
-                  <p class="text-sm font-medium font-['Montserrat_Variable'] text-gray-600">
-                    Cups of Coffee Consumed
-                  </p>
-                </div>
-
-                <div class="bg-white/60 backdrop-blur-sm p-5 rounded-xl border border-brand-100/60 shadow-md hover:shadow-lg transition-all duration-300 text-center">
-                  <div class="text-2xl font-bold font-['Red_Hat_Display_Variable'] text-brand-700 mb-1">
-                    📸
-                  </div>
-                  <p class="text-sm font-medium font-['Montserrat_Variable'] text-gray-600">
-                    Always Ready for Adventure
-                  </p>
-                </div>
-              </div>
-
-              <div class="pt-8">
-                <a href="/career/" class="inline-flex items-center px-8 py-4 bg-brand-700 text-white font-semibold font-['Montserrat_Variable'] rounded-xl shadow-lg hover:shadow-xl hover:bg-brand-800 transition-all duration-300 transform hover:-translate-y-1 group">
-                  <span>Explore my career journey</span>
-                  <svg class="w-5 h-5 ml-3 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
+    {/* ─── Profile Section ─── */}
+    <section class="profile-section" data-reveal>
+      <div class="profile-grid">
+        <div class="profile-photo-col" data-reveal-item>
+          <Image
+            src={profileImage}
+            alt={`Profile picture of ${profile.name}`}
+            width={280}
+            height={280}
+            class="profile-photo"
+            loading="eager"
+            decoding="async"
+          />
         </div>
-      </div>
-    </section>
-
-    <section class="relative py-24 sm:py-32 lg:py-40 overflow-hidden animate-on-scroll fade-in-up">
-      <div class="absolute inset-0 bg-gradient-to-br from-brand-50/40 via-white to-brand-100/30"></div>
-      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-brand-200/20 to-brand-300/20 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-l from-brand-400/15 to-brand-500/15 rounded-full blur-3xl"></div>
-      
-      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-brand-500 to-brand-600 rounded-2xl mb-8 shadow-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </div>
-          
-          <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold font-['Red_Hat_Display_Variable'] text-gray-900 mb-6 leading-tight">
-            Beyond the <span class="bg-gradient-to-r from-brand-800 to-brand-400 bg-clip-text text-transparent">Code</span>
-          </h2>
-          
-          <p class="text-xl sm:text-2xl font-light font-['Montserrat_Variable'] text-gray-600 leading-relaxed max-w-4xl mx-auto">
-            When I step away from the keyboard, I often find myself behind a camera lens. Photography is a passion that allows me to capture moments and see the world from different perspectives.
+        <div class="profile-text-col">
+          <h2 class="profile-name" data-reveal-item>{profile.name}</h2>
+          <p class="profile-title" data-reveal-item>{profile.title}</p>
+          <p class="profile-location" data-reveal-item>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {profile.location}
           </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          <div class="group relative bg-white/80 backdrop-blur-sm p-8 rounded-2xl border border-gray-200/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-brand-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="relative">
-              <div class="w-14 h-14 bg-gradient-to-br from-brand-100 to-brand-200 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+          <div class="profile-socials" data-reveal-item>
+            {profile.socials.map((social: Social) => (
+              <a href={social.url} target="_blank" rel="noopener noreferrer" class="social-icon" aria-label={`Visit ${social.platform} profile`}>
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d={socialIconPaths[social.platform] || ""} fill="currentColor"></path>
                 </svg>
-              </div>
-              <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-gray-900 mb-4">Photography</h3>
-              <p class="text-gray-600 font-['Montserrat_Variable'] leading-relaxed mb-6">
-                Capturing life's fleeting moments through the lens, from street scenes to landscapes.
-              </p>
-            </div>
-          </div>
-
-          <div class="group relative bg-white/80 backdrop-blur-sm p-8 rounded-2xl border border-gray-200/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-brand-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="relative">
-              <div class="w-14 h-14 bg-gradient-to-br from-brand-100 to-brand-200 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
-                </svg>
-              </div>
-              <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-gray-900 mb-4">Adventure</h3>
-              <p class="text-gray-600 font-['Montserrat_Variable'] leading-relaxed mb-6">
-                Exploring new places and cultures, always ready for the next adventure.
-              </p>
-            </div>
-          </div>
-
-          <div class="group relative bg-white/80 backdrop-blur-sm p-8 rounded-2xl border border-gray-200/60 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 col-span-1">
-            <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-brand-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="relative">
-              <div class="w-14 h-14 bg-gradient-to-br from-brand-100 to-brand-200 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              <h3 class="text-xl font-semibold font-['Red_Hat_Display_Variable'] text-gray-900 mb-4">Lifelong Learning</h3>
-              <p class="text-gray-600 font-['Montserrat_Variable'] leading-relaxed mb-6">
-                Constantly exploring new technologies, books, and ideas to grow both personally and professionally.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="text-center">
-          <a href="/gallery/" class="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-700 text-white font-semibold font-['Montserrat_Variable'] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span>Explore My Photography</span>
-            <svg class="w-5 h-5 ml-3 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="relative py-24 sm:py-32 lg:py-40 overflow-hidden animate-on-scroll fade-in-up">
-      <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-brand-50/30"></div>
-      <div class="absolute inset-0 opacity-40">
-        <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);"></div>
-      </div>
-      
-      <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-brand-500 to-brand-600 rounded-3xl mb-8 shadow-2xl">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-          </div>
-          
-          <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold font-['Red_Hat_Display_Variable'] text-gray-900 mb-6 leading-tight">
-            Let's <span class="bg-gradient-to-r from-brand-500 to-brand-700 bg-clip-text text-transparent">Connect</span>
-          </h2>
-          
-          <p class="text-xl sm:text-2xl font-light font-['Montserrat_Variable'] text-gray-600 leading-relaxed max-w-3xl mx-auto mb-12">
-            Have a project in mind, a question, or just want to chat about tech or photography? I'd love to hear from you.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          <div class="group relative bg-white/90 backdrop-blur-sm p-8 lg:p-10 rounded-3xl border border-gray-200/60 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute inset-0 bg-gradient-to-br from-brand-500/2 to-brand-600/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="relative h-full flex flex-col">
-              <div class="w-16 h-16 bg-gradient-to-br from-brand-100 to-brand-200 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              
-              <h3 class="text-2xl font-semibold font-['Red_Hat_Display_Variable'] text-gray-900 mb-4">
-                Start a Conversation
-              </h3>
-              
-              <p class="text-gray-600 font-['Montserrat_Variable'] leading-relaxed mb-8 flex-grow">
-                Whether it's about a potential collaboration, technical discussion, or just saying hello – I'm always excited to connect with fellow creators and innovators.
-              </p>
-              
-              <a
-                href="/contact/"
-                class="group/btn inline-flex items-center justify-center w-full bg-gradient-to-r from-brand-600 to-brand-700 text-white px-8 py-4 rounded-2xl font-semibold font-['Montserrat_Variable'] text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 mt-auto"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 group-hover/btn:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Get in Touch
-                <svg class="w-5 h-5 ml-3 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-              </a>
-            </div>
-          </div>
-
-          <div class="group relative bg-white/90 backdrop-blur-sm p-8 lg:p-10 rounded-3xl border border-gray-200/60 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-            <div class="absolute inset-0 bg-gradient-to-br from-brand-500/2 to-brand-600/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div class="relative h-full flex flex-col">
-              <div class="w-16 h-16 bg-gradient-to-br from-brand-100 to-brand-200 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              
-              <h3 class="text-2xl font-semibold font-['Red_Hat_Display_Variable'] text-gray-900 mb-4">
-                Explore My Thoughts
-              </h3>
-              
-              <p class="text-gray-600 font-['Montserrat_Variable'] leading-relaxed mb-8 flex-grow">
-                Dive into my articles covering web development, technology insights, and lessons learned from real-world projects. Join the conversation through comments and discussions.
-              </p>
-              
-              <a
-                href="/articles/"
-                class="group/btn inline-flex items-center justify-center w-full bg-white text-brand-700 border-2 border-brand-200 hover:border-brand-300 px-8 py-4 rounded-2xl font-semibold font-['Montserrat_Variable'] text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 hover:bg-brand-50 mt-auto"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 group-hover/btn:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-                Read My Articles
-                <svg class="w-5 h-5 ml-3 transition-transform duration-300 group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="text-center">
-          <h3 class="text-2xl font-semibold font-['Red_Hat_Display_Variable'] text-gray-900 mb-8">
-            Or find me on social media
-          </h3>
-          
-          <div class="flex flex-wrap gap-4 justify-center md:flex-row flex-col items-center">
-            {profile.socials.map((social) => (
-              <a
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="group/social inline-flex items-center px-6 py-3 bg-white/80 backdrop-blur-sm text-gray-700 hover:text-brand-700 rounded-2xl shadow-lg hover:shadow-xl border border-gray-200/80 hover:border-brand-200 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 w-full md:w-auto max-w-xs md:max-w-none min-h-[44px]"
-                aria-label={`Visit my ${social.platform} profile`}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 group-hover/social:scale-110 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                </svg>
-                <span class="font-['Montserrat_Variable'] font-medium">{social.platform}</span>
+                <span class="sr-only">{social.platform}</span>
               </a>
             ))}
           </div>
+          <div class="profile-bio" data-reveal-item>
+            {Array.isArray(profile.bio) ? profile.bio[0] : profile.bio}
+          </div>
         </div>
       </div>
     </section>
 
+    {/* ─── Narrative Section ─── */}
+    <section class="narrative-section" data-reveal>
+      <div class="narrative-content">
+        {Array.isArray(profile.bio) && profile.bio.slice(1).map((paragraph: string, index: number) => (
+          <p class:list={["narrative-para", { "drop-cap": index === 0 }]} data-reveal-item>
+            {paragraph}
+          </p>
+        ))}
+        <p class="narrative-para" data-reveal-item>
+          With over <strong>{yearsExperience} years</strong> of experience in the tech industry, <em>and a couple more as a freelancer</em>, I've had the privilege of working on diverse projects from developing scalable web applications to contributing to DevSecOps tooling at <a href={profile.experience[0]?.website?.[0] || '#'} target="_blank" rel="noopener noreferrer" class="brand-link">{profile.experience[0]?.company || 'my current role'}</a>.
+        </p>
+      </div>
+    </section>
+
+    {/* ─── My Journey ─── */}
+    <section class="journey-section" data-reveal>
+      <div class="journey-container">
+        <span class="overline">MY JOURNEY</span>
+        <h2 class="section-heading">Building &amp; Growing</h2>
+        <div class="journey-cards" data-reveal-group>
+          <div class="journey-card" data-reveal-item>
+            <span class="journey-number">{yearsExperience}+</span>
+            <span class="journey-label">Years in Tech</span>
+            <p class="journey-desc">From freelance roots to principal engineering, building products that scale and teams that thrive.</p>
+          </div>
+          <div class="journey-card" data-reveal-item>
+            <span class="journey-number">{totalProjects}+</span>
+            <span class="journey-label">Projects</span>
+            <p class="journey-desc">From personal experiments to open source contributions, building solutions across the stack.</p>
+          </div>
+          <div class="journey-card" data-reveal-item>
+            <span class="journey-number">{totalContributions > 1000 ? `${Math.round(totalContributions / 100) / 10}k` : totalContributions}+</span>
+            <span class="journey-label">OSS Contributions</span>
+            <p class="journey-desc">PRs, issues, and commits across {osStats.total_repositories || 100}+ repositories in the open source ecosystem.</p>
+          </div>
+        </div>
+        <a href="/career/" class="journey-cta" data-magnetic data-reveal-item>
+          View Full Career History
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+
+    {/* ─── Beyond Code ─── */}
+    <section class="beyond-section" data-reveal>
+      <div class="beyond-container" data-reveal-group>
+        <div class="beyond-card" data-reveal-item>
+          <div class="beyond-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <h3 class="beyond-title">Photography</h3>
+          <p class="beyond-desc">Capturing life's fleeting moments through the lens, from street scenes to landscapes.</p>
+          <a href="/gallery/" class="beyond-link">Explore Gallery <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div class="beyond-card" data-reveal-item>
+          <div class="beyond-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <h3 class="beyond-title">Writing</h3>
+          <p class="beyond-desc">About web performance, architecture, photography, philosophy, and whatever else catches my attention.</p>
+          <a href="/articles/" class="beyond-link">Read Articles <span aria-hidden="true">&rarr;</span></a>
+        </div>
+        <div class="beyond-card" data-reveal-item>
+          <div class="beyond-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          </div>
+          <h3 class="beyond-title">Adventures</h3>
+          <p class="beyond-desc">Exploring new places and cultures, always ready for the next trail or the next city.</p>
+        </div>
+      </div>
+    </section>
+
+    {/* ─── Connect CTA ─── */}
+    <section class="connect-section" data-reveal>
+      <div class="connect-inner">
+        <h2 class="connect-heading" data-reveal-item>Want to collaborate or just say hello?</h2>
+        <p class="connect-text" data-reveal-item>Have a project in mind, a question, or just want to chat about tech or photography? I'd love to hear from you.</p>
+        <a href="/contact/" class="btn-primary" data-magnetic data-reveal-item>
+          Get in Touch
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
   </main>
 </BaseLayout>
 
-<!-- inlining this one to see if it improves the load time in astro -->
-<style type="text/css">
-  .fade-in-up {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  }
-  .fade-in-left {
-    opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  }
-  .fade-in-right {
-    opacity: 0;
-    transform: translateX(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  }
-  .visible.fade-in-up,
-  .visible.fade-in-left,
-  .visible.fade-in-right {
-    opacity: 1;
-    transform: translate(0, 0);
+<style>
+  /* ─── Page Header ─── */
+  .page-header {
+    padding: var(--space-16) var(--space-6) var(--space-12);
+    max-width: 720px;
+    margin: 0 auto;
   }
 
-  .prose .first-letter\:text-6xl:first-letter {
-    font-family: 'Red Hat Display Variable', sans-serif;
-    line-height: 0.8;
-    margin-right: 0.5rem;
-    margin-top: 0.2rem;
-    float: left;
+  .overline {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-overline);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-3);
   }
 
-  .social-link {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--text-display-lg);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
   }
-  .social-link:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+  .page-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
   }
-  .social-link::before {
-    content: '';
+
+  /* ─── Profile ─── */
+  .profile-section {
+    padding: 0 var(--space-6) var(--space-16);
+    max-width: var(--max-content);
+    margin: 0 auto;
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .profile-grid {
+      grid-template-columns: 280px 1fr;
+    }
+  }
+
+  .profile-photo-col {
+    display: flex;
+    justify-content: center;
+  }
+
+  .profile-photo {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 24px;
+    border: 1px solid var(--color-brand-lighter);
+    box-shadow: var(--shadow-floating);
+  }
+
+  @media (min-width: 768px) {
+    .profile-photo {
+      width: 280px;
+      height: 280px;
+    }
+  }
+
+  .profile-name {
+    font-family: var(--font-display);
+    font-size: var(--text-display);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .profile-title {
+    font-family: var(--font-body);
+    font-size: var(--text-h3);
+    color: var(--color-brand);
+    margin-bottom: var(--space-2);
+  }
+
+  .profile-location {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-4);
+  }
+
+  .profile-socials {
+    display: flex;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .social-icon {
+    color: var(--color-text-secondary);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .social-icon:hover {
+    color: var(--color-brand);
+  }
+
+  .sr-only {
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s;
-  }
-  .social-link:hover::before {
-    left: 100%;
-  }
-
-  .interest-tag {
-    cursor: default;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 
-  @keyframes pulse-slow {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.1); }
-  }
-  .animate-pulse {
-    animation: pulse-slow 3s ease-in-out infinite;
-  }
-  .delay-700 {
-    animation-delay: 0.7s;
+  .profile-bio {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text);
+    line-height: 1.7;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .fade-in-up,
-    .fade-in-left,
-    .fade-in-right {
-      opacity: 1;
-      transform: none;
-      transition: none;
-      animation: none;
+  /* ─── Narrative ─── */
+  .narrative-section {
+    padding: var(--space-20) var(--space-6);
+  }
+
+  .narrative-content {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .narrative-para {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text);
+    line-height: 1.8;
+    margin-bottom: var(--space-6);
+  }
+
+  .narrative-para.drop-cap::first-letter {
+    font-family: var(--font-display);
+    font-size: 3.5em;
+    float: left;
+    line-height: 0.8;
+    padding-right: 8px;
+    margin-top: 4px;
+    color: var(--color-brand);
+    font-weight: 400;
+  }
+
+  .narrative-para strong {
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .narrative-para em {
+    font-style: italic;
+    color: var(--color-text-secondary);
+  }
+
+  .brand-link {
+    color: var(--color-brand-dark);
+    text-decoration: underline;
+    text-decoration-color: var(--color-brand-lighter);
+    text-underline-offset: 3px;
+    transition: text-decoration-color var(--duration-fast) ease;
+  }
+
+  .brand-link:hover {
+    text-decoration-color: var(--color-brand);
+  }
+
+  /* ─── Skills ─── */
+  /* ─── My Journey ─── */
+  .journey-section {
+    padding: var(--space-16) var(--space-6);
+  }
+
+  .journey-container {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin-bottom: var(--space-10);
+  }
+
+  .journey-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+  }
+
+  .journey-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+
+  .journey-number {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: 700;
+    color: var(--color-brand);
+    line-height: 1;
+    margin-bottom: var(--space-1);
+  }
+
+  .journey-label {
+    font-family: var(--font-ui);
+    font-size: var(--text-ui-small);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-3);
+  }
+
+  .journey-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .journey-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--text-body);
+    font-weight: 500;
+    color: var(--color-brand);
+    text-decoration: none;
+    transition: gap var(--duration-fast) ease;
+  }
+
+  .journey-cta:hover {
+    gap: var(--space-3);
+  }
+
+  @media (max-width: 640px) {
+    .journey-cards {
+      grid-template-columns: 1fr;
     }
-    .social-link,
-    .group {
-      transition: none;
+  }
+
+  /* ─── Beyond Code ─── */
+  .beyond-section {
+    padding: var(--space-20) var(--space-6);
+    background: var(--color-bg-alt);
+  }
+
+  .beyond-container {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .beyond-container {
+      grid-template-columns: repeat(3, 1fr);
     }
+  }
+
+  .beyond-card {
+    padding: var(--space-6);
+  }
+
+  .beyond-icon {
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    background: var(--color-brand-lighter);
+    color: var(--color-brand);
+    margin-bottom: var(--space-4);
+  }
+
+  .beyond-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h4);
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .beyond-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-3);
+  }
+
+  .beyond-link {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-brand-dark);
+    text-decoration: none;
+    transition: gap var(--duration-fast) ease;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .beyond-link:hover {
+    gap: var(--space-2);
+  }
+
+  /* ─── Connect CTA ─── */
+  .connect-section {
+    padding: var(--space-24) var(--space-6);
+    background: linear-gradient(180deg, var(--color-brand-lighter), var(--color-bg));
+    text-align: center;
+  }
+
+  .connect-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .connect-heading {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin-bottom: var(--space-4);
+  }
+
+  .connect-text {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-10);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--btn-bg);
+    color: #fff;
+    font-family: var(--font-ui);
+    font-size: var(--text-body);
+    font-weight: 500;
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    box-shadow: var(--shadow-raised);
+    transition: background var(--duration-fast) ease,
+                box-shadow var(--duration-fast) ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--btn-bg-hover);
+    box-shadow: var(--shadow-elevated);
   }
 </style>
-
-<script>
-  function scrollObserver() {
-    try {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.15,
-        rootMargin: '0px 0px -30px 0px'
-      });
-
-      document.querySelectorAll('.animate-on-scroll').forEach(element => {
-        observer.observe(element);
-      });
-    } catch (error) {
-      // Fallback: show all content immediately
-      document.querySelectorAll('.animate-on-scroll').forEach(element => {
-        element.classList.add('visible');
-      });
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', scrollObserver, { passive: true });
-  document.addEventListener('astro:page-load', scrollObserver, { passive: true });
-</script>

@@ -1,0 +1,141 @@
+---
+// Dark/light mode toggle with icon crossfade animation
+// Uses View Transitions API for radial clip reveal when supported
+---
+
+<button
+  data-theme-toggle
+  type="button"
+  class="theme-toggle"
+  aria-label="Toggle dark mode"
+  title="Toggle theme"
+>
+  <svg class="theme-icon sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"></circle>
+    <line x1="12" y1="1" x2="12" y2="3"></line>
+    <line x1="12" y1="21" x2="12" y2="23"></line>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+    <line x1="1" y1="12" x2="3" y2="12"></line>
+    <line x1="21" y1="12" x2="23" y2="12"></line>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+  </svg>
+  <svg class="theme-icon moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color var(--duration-fast) ease, background var(--duration-fast) ease;
+    overflow: hidden;
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-text);
+    background: var(--color-brand-lighter);
+  }
+
+  .theme-icon {
+    position: absolute;
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+
+  /* Light mode: show sun, hide moon */
+  :global([data-theme="light"]) .sun-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  :global([data-theme="light"]) .moon-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  /* Dark mode: show moon, hide sun */
+  :global([data-theme="dark"]) .sun-icon {
+    opacity: 0;
+    transform: rotate(-90deg);
+  }
+  :global([data-theme="dark"]) .moon-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+</style>
+
+<script>
+  function initThemeToggle() {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+    if (!toggle) return;
+
+    // Prevent duplicate listeners across view transitions
+    if (toggle.dataset.initialized) return;
+    toggle.dataset.initialized = 'true';
+
+    function prefersReducedMotion(): boolean {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    function setTheme(theme: string) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      // Update aria-label to reflect new state
+      toggle!.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+
+    // Set initial aria-label based on current theme
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    toggle.setAttribute('aria-label', currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+
+    toggle.addEventListener('click', (event) => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const newTheme = isDark ? 'light' : 'dark';
+
+      // Use View Transitions API for radial clip reveal if available
+      if (
+        'startViewTransition' in document &&
+        typeof (document as any).startViewTransition === 'function' &&
+        !prefersReducedMotion()
+      ) {
+        // Set the origin of the clip animation to the toggle button position
+        const rect = toggle.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        document.documentElement.style.setProperty('--toggle-x', `${x}px`);
+        document.documentElement.style.setProperty('--toggle-y', `${y}px`);
+        document.documentElement.setAttribute('data-theme-transitioning', '');
+
+        const transition = (document as any).startViewTransition(() => {
+          setTheme(newTheme);
+        });
+        transition.finished.then(() => {
+          document.documentElement.removeAttribute('data-theme-transitioning');
+        }).catch(() => {
+          document.documentElement.removeAttribute('data-theme-transitioning');
+        });
+      } else {
+        setTheme(newTheme);
+      }
+    });
+
+    // Listen for system preference changes (only if user hasn't manually chosen)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initThemeToggle);
+</script>

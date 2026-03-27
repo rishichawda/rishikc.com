@@ -24,7 +24,7 @@ const finalErrorTitle = errorTitle || `Visit ${displayUrl}`;
 
 {
   error ? (
-    <div class={`max-w-xs w-fit p-4 bg-white/80 backdrop-blur-sm border border-brand-200/50 text-brand-700 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-100/20 transition-all duration-300 group`}>
+    <div class={`max-w-xs w-fit p-4 bg-[var(--color-surface)]/80 backdrop-blur-sm border border-brand-200/50 text-brand-700 rounded-2xl shadow-sm hover:shadow-md hover:shadow-brand-100/20 transition-all duration-300 group`}>
       <a
         href={url}
         target="_blank"
@@ -32,7 +32,7 @@ const finalErrorTitle = errorTitle || `Visit ${displayUrl}`;
         class={`w-full transition-all duration-300 text-brand-700 hover:text-brand-600 text-sm align-middle inline-flex flex-row justify-between gap-x-3 items-center group-hover:scale-[1.02]`}
         title={finalErrorTitle}
       >
-        <span class="font-['Montserrat_Variable'] font-medium">{displayUrl}</span>
+        <span class="font-heading font-medium">{displayUrl}</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-4 w-4 inline-block flex-shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -54,11 +54,11 @@ const finalErrorTitle = errorTitle || `Visit ${displayUrl}`;
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      class={`block w-full max-w-xs bg-white/90 backdrop-blur-sm border border-brand-200/30 rounded-2xl shadow-sm hover:shadow-lg hover:shadow-brand-100/25 hover:-translate-y-1 hover:bg-white transition-all duration-300 overflow-hidden group`}
+      class={`block w-full max-w-xs bg-[var(--color-surface)]/90 backdrop-blur-sm border border-brand-200/30 rounded-2xl shadow-sm hover:shadow-lg hover:shadow-brand-100/25 hover:-translate-y-1 hover:bg-[var(--color-surface)] transition-all duration-300 overflow-hidden group`}
       title={`Visit ${title || url}`}
     >
       <div class={`flex items-stretch relative`}>
-        <div class="absolute inset-0 bg-gradient-to-br from-brand-50/50 via-white/50 to-brand-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-brand-50/50 via-[var(--color-surface)]/50 to-brand-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         {image ? (
           <img
             src={image}
@@ -84,20 +84,20 @@ const finalErrorTitle = errorTitle || `Visit ${displayUrl}`;
         )}
         <div class={`p-4 overflow-hidden flex flex-col justify-center flex-grow min-w-0 relative z-10`}>
           <h4
-            class={`text-sm font-semibold text-gray-800 truncate font-['Red_Hat_Display_Variable'] group-hover:text-gray-900 transition-colors duration-300`}
+            class={`text-sm font-semibold text-[var(--color-text)] truncate font-display group-hover:text-[var(--color-text)] transition-colors duration-300`}
             title={title || "No title available"}
           >
             {title || displayUrl}
           </h4>
           {description && (
             <p
-              class={`text-xs description-truncate text-gray-600 mt-1 leading-tight line-clamp-2 font-['Montserrat_Variable'] font-light group-hover:text-gray-700 transition-colors duration-300`}
+              class={`text-xs description-truncate text-[var(--color-text-secondary)] mt-1 leading-tight line-clamp-2 font-heading font-light group-hover:text-[var(--color-text-secondary)] transition-colors duration-300`}
               title={description}
             >
               {description}
             </p>
           )}
-          <p class={`text-[10px] text-brand-600/80 mt-2 truncate font-['Montserrat_Variable'] font-medium group-hover:text-brand-700 transition-colors duration-300`}>
+          <p class={`text-[10px] text-brand-600/80 mt-2 truncate font-heading font-medium group-hover:text-brand-700 transition-colors duration-300`}>
             {displayUrl}
           </p>
         </div>

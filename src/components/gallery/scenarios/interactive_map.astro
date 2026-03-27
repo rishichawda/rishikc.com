@@ -69,7 +69,7 @@ sections.forEach((section, i) => {
     <div class="absolute inset-0 bg-gradient-to-b from-gallery-bg/60 via-transparent to-gallery-bg"></div>
 
     <div class="relative z-10 text-center max-w-3xl px-6 sm:px-10">
-      <h1 class="font-['Red_Hat_Display_Variable'] text-3xl sm:text-5xl font-bold leading-[1.1] tracking-tight text-gallery-text mb-6">
+      <h1 class="font-display text-3xl sm:text-5xl font-bold leading-[1.1] tracking-tight text-gallery-text mb-6">
         {title}
       </h1>
       <p class="text-gallery-text/60 text-lg sm:text-xl leading-[1.7] font-light">
@@ -133,7 +133,7 @@ sections.forEach((section, i) => {
             <figure>
               <button
                 type="button"
-                class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
                 data-caption={section.caption || ""}
                 data-camera={section.camera || ""}
                 data-lens={section.lens || ""}
@@ -164,7 +164,7 @@ sections.forEach((section, i) => {
                 <figure>
                   <button
                     type="button"
-                    class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                    data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
                     data-caption={img.caption || ""}
                     data-camera={img.camera || ""}
                     data-lens={img.lens || ""}
@@ -192,7 +192,7 @@ sections.forEach((section, i) => {
                 <figure>
                   <button
                     type="button"
-                    class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                    data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
                     data-caption={img.caption || ""}
                     data-camera={img.camera || ""}
                     data-lens={img.lens || ""}
@@ -216,7 +216,7 @@ sections.forEach((section, i) => {
 
           {section.type === "quote" && section.content && (
             <blockquote class="max-w-2xl border-l-2 border-gallery-accent/40 pl-5">
-              <p class="font-['Red_Hat_Display_Variable'] text-xl sm:text-2xl text-gallery-text/80 font-light italic leading-relaxed">
+              <p class="font-display text-xl sm:text-2xl text-gallery-text/80 font-light italic leading-relaxed">
                 {section.content}
               </p>
               {section.attribution && (
@@ -233,7 +233,7 @@ sections.forEach((section, i) => {
                 <figure class="flex-shrink-0 w-72 sm:w-80" role="listitem">
                   <button
                     type="button"
-                    class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
+                    data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0 group"
                     data-caption={img.caption || ""}
                     data-camera={img.camera || ""}
                     data-lens={img.lens || ""}
@@ -320,6 +320,19 @@ sections.forEach((section, i) => {
 
     map.querySelectorAll(".gallery-reveal").forEach(function (el) {
       observer.observe(el);
+    });
+
+    // Immediately reveal elements to prevent invisible content on page load
+    requestAnimationFrame(function() {
+      var vh = window.innerHeight || 800;
+      map.querySelectorAll(".gallery-reveal").forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        var delay = rect.top > vh ? Math.min(800, ((rect.top - vh) / vh) * 100) : 0;
+        el.style.transitionDelay = Math.round(delay) + "ms";
+        el.classList.add("visible");
+        el.classList.add("revealed");
+        observer.unobserve(el);
+      });
     });
   });
 </script>

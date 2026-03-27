@@ -5,62 +5,199 @@ const servicesData = await getCollection('services');
 const services = servicesData[0]?.data || [];
 ---
 
-<section id="services" class="py-16 sm:py-20 lg:py-24 bg-gradient-to-b from-gray-50/50 to-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-['Red_Hat_Display_Variable'] font-light text-gray-900 mb-4">
-        What I Craft & Create
-      </h2>
-      <p class="text-lg sm:text-xl text-gray-600 font-['Montserrat_Variable'] font-light max-w-3xl mx-auto">
+<section id="services" class="section-services" data-reveal>
+  <div class="section-container">
+    <div class="section-header">
+      <span class="overline">WHAT I CRAFT & CREATE</span>
+      <h2 class="section-title">What I Do</h2>
+      <p class="section-subtitle">
         Passionate about building meaningful digital experiences through code, design, and storytelling
       </p>
     </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+
+    <div class="services-grid" data-reveal-group>
       {services.map((service: any) => (
-        <div class="group bg-white rounded-2xl p-8 shadow-sm border border-brand-100/50 hover:shadow-xl hover:shadow-brand-100/20 transition-all duration-300 hover:-translate-y-1 relative overflow-hidden flex flex-col h-full">
-          <!-- Subtle gradient overlay on hover -->
-          <div class="absolute inset-0 bg-gradient-to-br from-brand-50/0 to-brand-100/0 group-hover:from-brand-50/1 group-hover:to-brand-100/25 transition-all duration-300 rounded-2xl"></div>
-          
-          <div class="relative z-10 flex flex-col h-full">
-            <div class="flex items-center mb-6">
-              <div class="bg-brand-50 rounded-xl p-3 mr-4 group-hover:bg-brand-100 transition-colors duration-300">
-                <div class="text-brand-700 group-hover:scale-110 transition-transform duration-300" set:html={service.icon}>
-                </div>
-              </div>
-              <h3 class="text-xl sm:text-2xl font-['Red_Hat_Display_Variable'] font-medium text-gray-900 group-hover:text-brand-600 transition-colors">
-                {service.title}
-              </h3>
-            </div>
-            
-            <p class="text-gray-600 font-['Montserrat_Variable'] font-light leading-relaxed mb-6 text-base flex-grow">
-              {service.description}
-            </p>
-            
-            <a
-              href={service.link}
-              class="inline-flex items-center text-brand-700 hover:text-brand-600 font-['Montserrat_Variable'] font-medium text-sm transition-all duration-200 group-hover:translate-x-1"
-              target={service.link.startsWith('http') ? '_blank' : undefined}
-              rel={service.link.startsWith('http') ? 'noopener noreferrer' : undefined}
-            >
-              {service.linkText}
-              <svg
-                class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
+        <div class="service-card" data-reveal-item data-cursor="card">
+          <div class="service-icon-wrap">
+            <div class="service-icon" set:html={service.icon}></div>
           </div>
+          <h3 class="service-title">{service.title}</h3>
+          <p class="service-desc">{service.description}</p>
+          <a
+            href={service.link}
+            class="service-link"
+            target={service.link.startsWith('http') ? '_blank' : undefined}
+            rel={service.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            {service.linkText}
+            <svg class="service-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
         </div>
       ))}
     </div>
   </div>
-</section> 
+</section>
+
+<style>
+  .section-services {
+    padding: var(--space-12) 0;
+  }
+
+  .section-container {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .overline {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--text-overline);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-brand);
+    margin-bottom: var(--space-3);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin-bottom: var(--space-4);
+  }
+
+  .section-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 640px) {
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-raised);
+    transition: transform var(--duration-normal) ease,
+                box-shadow var(--duration-normal) ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .service-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-xl);
+    background: var(--color-brand-lighter);
+    margin-bottom: var(--space-4);
+    transition: background var(--duration-fast) ease;
+  }
+
+  .service-card:hover .service-icon-wrap {
+    background: var(--color-brand-light);
+  }
+
+  .service-icon {
+    color: var(--color-brand-dark);
+    width: 24px;
+    height: 24px;
+    transition: transform var(--duration-fast) ease;
+  }
+
+  .service-icon :global(svg) {
+    width: 24px;
+    height: 24px;
+  }
+
+  .service-card:hover .service-icon {
+    transform: scale(1.1);
+  }
+
+  .service-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h4);
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .service-card:hover .service-title {
+    color: var(--color-brand);
+  }
+
+  .service-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+    flex: 1;
+  }
+
+  .service-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-brand-dark);
+    text-decoration: none;
+    transition: gap var(--duration-fast) ease;
+  }
+
+  .service-link:hover {
+    gap: var(--space-3);
+  }
+
+  .service-arrow {
+    transition: transform var(--duration-fast) ease;
+  }
+
+  .service-link:hover .service-arrow {
+    transform: translateX(2px);
+  }
+</style>

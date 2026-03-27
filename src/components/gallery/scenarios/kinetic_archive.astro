@@ -80,7 +80,7 @@ sections.forEach(section => {
       <div class="absolute inset-0 bg-gallery-bg/70"></div>
     </div>
     <div class="relative z-10 max-w-3xl">
-      <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8 narrative-slide" data-observe>
+      <h1 class="font-display text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8 narrative-slide" data-observe>
         {title}
       </h1>
       <p class="text-gallery-text/85 text-lg sm:text-xl leading-[1.8] font-light narrative-slide" data-observe style="transition-delay: 200ms;">
@@ -104,7 +104,7 @@ sections.forEach(section => {
               <figure class="horizontal-scroll-item kinetic-item group relative">
                 <button
                   type="button"
-                  class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0 relative overflow-hidden"
+                  data-cursor="image" class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0 relative overflow-hidden"
                   data-caption={img.caption || ""}
                   data-camera={img.camera || ""}
                   data-lens={img.lens || ""}
@@ -172,7 +172,7 @@ sections.forEach(section => {
         {section.type === "quote" && section.content && (
           <blockquote class="text-center">
             <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-6xl text-gallery-accent/30 font-serif leading-none select-none" aria-hidden="true">&ldquo;</span>
-            <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed">
+            <p class="font-display text-2xl sm:text-3xl text-gallery-text/90 font-light italic leading-relaxed">
               {section.content}
             </p>
             {section.attribution && (
@@ -205,6 +205,18 @@ sections.forEach(section => {
       { threshold: 0.2 }
     );
     archive.querySelectorAll("[data-observe], .gallery-reveal").forEach((el) => observer.observe(el));
+
+    // Immediately reveal elements to prevent invisible content on page load
+    requestAnimationFrame(function() {
+      var vh = window.innerHeight || 800;
+      archive.querySelectorAll("[data-observe], .gallery-reveal").forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        var delay = rect.top > vh ? Math.min(800, ((rect.top - vh) / vh) * 100) : 0;
+        el.style.transitionDelay = Math.round(delay) + "ms";
+        el.classList.add("visible");
+        observer.unobserve(el);
+      });
+    });
 
     // Horizontal scroll hijack
     const wrappers = archive.querySelectorAll("[data-horizontal-scroll]");

@@ -1,10 +1,13 @@
 ---
 import BaseLayout from "../../layouts/base_layout.astro";
 import "../../styles/global.css";
+import "../../styles/gallery.css";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
-import { Schema } from "astro-seo-schema";
+import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
 import type { ImageObject as SchemaImageObject } from "schema-dts";
+import Lightbox from "../../components/gallery/lightbox.astro";
+import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import masonry from "masonry-layout/dist/masonry.pkgd.min?url";
 import imagesloaded from "imagesloaded/imagesloaded.pkgd.min?url";
 
@@ -41,38 +44,35 @@ const {
 // Sort images: featured image first, then by date (newest first)
 const images =
   unsortedImages?.sort((a, b) => {
-    const isAFeatured = a.src.src === featured_image.src; // Compare source paths
-    const isBFeatured = b.src.src === featured_image.src; // Compare source paths
+    const isAFeatured = a.src.src === featured_image.src;
+    const isBFeatured = b.src.src === featured_image.src;
 
-    if (isAFeatured) return -1; // a comes first
-    if (isBFeatured) return 1; // b comes first
+    if (isAFeatured) return -1;
+    if (isBFeatured) return 1;
 
-    // If neither is featured, sort by date descending
     const dateA = a.date ? new Date(a.date) : new Date(0);
     const dateB = b.date ? new Date(b.date) : new Date(0);
     return dateB.getTime() - dateA.getTime();
   }) || [];
 
 const page_info = {
-  title: `${title} - ${profile.name}`, // Use profile name
+  title: `${title} - ${profile.name}`,
   description: description,
-  image: featured_image.src, // Use .src for Schema
-  keywords: `photography, ${title.toLowerCase()}, portfolio, ${profile.name}`, // Use profile name
+  image: featured_image.src,
+  keywords: `photography, ${title.toLowerCase()}, portfolio, ${profile.name}`,
 };
 
-// Prepare image array for JSON-LD and explicitly type it
+// Prepare image array for JSON-LD
 const galleryImageUrls: SchemaImageObject[] =
   images?.map((img) => {
-    // Construct the ImageObject ensuring all required fields are present
     const imageObject: SchemaImageObject = {
       "@type": "ImageObject",
       contentUrl: new URL(
-        img.src.src, // Assuming img.src has a src property
+        img.src.src,
         Astro.site || "https://rishikc.com",
       ).toString(),
       name: img.caption || img.alt || `${title} image`,
       description: img.caption || img.alt || `Image from ${title} gallery`,
-      // Potentially add 'thumbnailUrl' or other properties if available/needed
     };
     return imageObject;
   }) || [];
@@ -81,160 +81,91 @@ const pageUrl = new URL(
   Astro.url.pathname,
   Astro.site || "https://rishikc.com",
 ).toString();
----
 
-<BaseLayout page_info={page_info}>
-  <!-- ImageGallery JSON-LD Schema -->
-  <Schema
-    slot="head"
-    item={{
-      "@context": "https://schema.org",
+const pageSchemaEntities = [
+  buildWebPageEntity({
+    url: pageUrl,
+    name: page_info.title,
+    description: description,
+    mainEntity: {
       "@type": "ImageGallery",
       headline: title,
       description: description,
-      image: featured_image.src, // Ensure this is a URL string
-      author: {
-        "@type": "Person",
-        name: profile.name, // Use profile name
-        url: "https://rishikc.com",
-        sameAs: profile.socials.map((social: Social) => social.url), // Use fetched socials
-      },
-      mainEntityOfPage: {
-        "@type": "WebPage",
-        "@id": pageUrl,
-      },
+      author: personRef,
       keywords: tags?.join(", "),
-      associatedMedia: galleryImageUrls, // Use the explicitly typed array
-      potentialAction: [
-        {
-          "@type": "ViewAction",
-          target: pageUrl,
-          name: "View Gallery"
-        },
-        {
-          "@type": "ShareAction",
-          target: [
-            {
-              "@type": "EntryPoint",
-              urlTemplate: `https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(`Check out ${title} by ${profile.name}`)}`,
-              actionPlatform: "https://schema.org/DesktopWebPlatform"
-            },
-            {
-              "@type": "EntryPoint", 
-              urlTemplate: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`,
-              actionPlatform: "https://schema.org/DesktopWebPlatform"
-            }
-          ],
-          name: "Share Gallery"
-        }
-      ]
-    }}
-  />
-  <main
-    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gray-50"
-  >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-      {/* Adjusted padding */}
-      <a
-        href="/gallery/"
-        class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium mb-12 sm:mb-16"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          ></path>
-        </svg>
-        Back to Gallery
-      </a>
+      associatedMedia: galleryImageUrls,
+    },
+  }),
+];
+---
 
-      <div class="max-w-3xl mx-auto text-center mb-16 sm:mb-20">
-        {/* Adjusted margin */}
+<BaseLayout page_info={page_info} pageSchemaEntities={pageSchemaEntities}>
+
+  <main class="gallery-page min-h-screen">
+    <div class="page-container">
+      <Breadcrumbs items={[
+        { label: "Gallery", href: "/gallery/" },
+        { label: title },
+      ]} />
+
+      <div class="page-header">
         <h1
+          class="page-title"
           transition:name={`${gallery.id}-title`}
-          class="text-4xl sm:text-5xl lg:text-6xl font-light text-brand-900 mb-6 sm:mb-8 tracking-tight leading-tight"
         >
           {title}
         </h1>
         <p
+          class="page-subtitle"
           transition:name={`${gallery.id}-description`}
-          class="text-brand-700 text-lg sm:text-xl leading-relaxed font-light max-w-2xl mx-auto"
         >
           {description}
         </p>
-        {
-          tags && tags.length > 0 && (
-            <div class="flex flex-wrap gap-2 sm:gap-3 justify-center mt-8 sm:mt-10">
-              {" "}
-              {/* Adjusted gap and margin */}
-              {tags.map((tag) => (
-                <span
-                  transition:name={`${gallery.id}-${tag}`}
-                  class="text-xs bg-brand-950/10 text-brand-950 px-5 py-2 rounded-full tracking-wider uppercase font-medium hover:bg-brand-950/20 transition-colors duration-300 shadow-sm"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )
-        }
-      </div>
-      <div
-        class="mt-6 flex items-start p-4 rounded-lg bg-brand-100/[0.5] border border-brand-200 mx-auto shadow-sm"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 text-brand-700 flex-shrink-0 mr-3 mt-0.5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-            clip-rule="evenodd"></path>
-        </svg>
-        <p class="text-sm text-brand-800">
-          <strong class="font-medium">Heads up!</strong> I'm currently sorting through
-          and uploading lots of new photos to this gallery. It's a slow process,
-          but please feel free to check back often to see the latest additions. Enjoy
-          the photos that have been uploaded so far!
-        </p>
+        {tags && tags.length > 0 && (
+          <div class="tag-list">
+            {tags.map((tag) => (
+              <span
+                class="tag-pill"
+                transition:name={`${gallery.id}-${tag}`}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Masonry Grid Container */}
-      <div id="masonry-grid" class="relative py-4">
-        {
-          images.map((image, index) => (
-            <div
-              class="grid-item group relative aspect-auto overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 mb-4 sm:mb-6 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
-              role="img"
-              tabindex="0"
-              aria-label={image.alt || image.caption || `${title} photo ${index + 1}`}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt || `${title} photo ${index + 1}`}
-                data-caption={image.caption}
-                class="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-                widths={[400, 800, 1200]}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              />
-            </div>
-          ))
-        }
+      <!-- Masonry Grid -->
+      <div id="masonry-grid" class="masonry-grid">
+        {images.map((image, index) => (
+          <button
+            type="button"
+            class="grid-item group lightbox-trigger"
+            data-cursor="image"
+            data-caption={image.caption || ""}
+            data-camera={image.camera || ""}
+            data-lens={image.lens || ""}
+            data-settings={image.settings || ""}
+            data-location={image.location || ""}
+            aria-label={`View ${image.alt || image.caption || `${title} photo ${index + 1}`} in full size`}
+          >
+            <Image
+              src={image.src}
+              alt={image.alt || `${title} photo ${index + 1}`}
+              class="grid-image"
+              widths={[400, 800, 1200]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            />
+            {image.caption && (
+              <div class="caption-overlay">
+                <p class="caption-text">{image.caption}</p>
+              </div>
+            )}
+          </button>
+        ))}
       </div>
 
-      <p
-        class="text-center text-xs sm:text-sm text-gray-500 mt-12 sm:mt-16 font-light"
-      >
+      <p class="copyright-text">
         All photographs displayed in this gallery are the intellectual property
         of {profile.name}. Any reproduction, distribution, or use of these
         images, in whole or in part, without explicit written permission from
@@ -243,6 +174,8 @@ const pageUrl = new URL(
     </div>
   </main>
 
+  <Lightbox />
+
   <script src={masonry} is:inline></script>
   <script src={imagesloaded} is:inline></script>
 
@@ -250,30 +183,20 @@ const pageUrl = new URL(
     document.addEventListener("astro:page-load", () => {
       const grid = document.querySelector("#masonry-grid");
       if (grid) {
-        // Initialize imagesLoaded
         const imgLoad = imagesLoaded(grid);
 
-        // Initialize Masonry after images have loaded
         imgLoad.on("always", function () {
           const msnry = new Masonry(grid, {
             itemSelector: ".grid-item",
-            // Use columnWidth to help Masonry calculate positioning, especially useful for responsive layouts
-            // This selector targets the items themselves to determine width
             columnWidth: ".grid-item",
             percentPosition: true,
-            gutter: 16, // Set gutter based on desired base spacing (e.g., 1rem = 16px)
+            gutter: 16,
           });
 
-          // Recalculate gutter on resize if needed (optional, depends on design)
           window.addEventListener("resize", () => {
-            // Example: Adjust gutter based on viewport width
-            let newGutter = 16; // Default 1rem
-            if (window.innerWidth >= 640 && window.innerWidth < 1024) {
-              // sm to lg
-              newGutter = 24; // 1.5rem
-            } else if (window.innerWidth >= 1024) {
-              // lg and up
-              newGutter = 24; // 1.5rem
+            let newGutter = 16;
+            if (window.innerWidth >= 640) {
+              newGutter = 24;
             }
             msnry.options.gutter = newGutter;
             msnry.layout();
@@ -287,33 +210,227 @@ const pageUrl = new URL(
 </BaseLayout>
 
 <style>
+  .page-container {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: var(--space-16) var(--space-4) var(--space-12);
+  }
+
+  @media (min-width: 640px) {
+    .page-container {
+      padding: var(--space-20) var(--space-6) var(--space-16);
+    }
+  }
+
+  /* ─── Back Link ─── */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    transition: all var(--duration-normal) ease;
+    margin-bottom: var(--space-12);
+  }
+
+  @media (min-width: 640px) {
+    .back-link {
+      margin-bottom: var(--space-16);
+    }
+  }
+
+  .back-link:hover {
+    color: var(--color-brand);
+    border-color: var(--color-brand-light);
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .back-arrow {
+    width: 16px;
+    height: 16px;
+    margin-right: var(--space-2);
+    transition: transform var(--duration-normal) ease;
+  }
+
+  .back-link:hover .back-arrow {
+    transform: translateX(-2px);
+  }
+
+  /* ─── Page Header ─── */
+  .page-header {
+    max-width: 768px;
+    margin: 0 auto var(--space-16);
+    text-align: center;
+  }
+
+  @media (min-width: 640px) {
+    .page-header {
+      margin-bottom: var(--space-20);
+    }
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--text-display);
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin-bottom: var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .page-title {
+      margin-bottom: var(--space-8);
+    }
+  }
+
+  .page-subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--text-body-lg);
+    line-height: 1.6;
+    font-weight: 300;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: center;
+    margin-top: var(--space-8);
+  }
+
+  @media (min-width: 640px) {
+    .tag-list {
+      gap: var(--space-3);
+      margin-top: var(--space-10);
+    }
+  }
+
+  .tag-pill {
+    font-size: var(--text-caption);
+    background: var(--color-brand-lighter);
+    color: var(--color-brand-darker);
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--radius-full);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: background var(--duration-normal) ease;
+  }
+
+  .tag-pill:hover {
+    background: var(--color-brand-light);
+  }
+
+  /* ─── Masonry Grid ─── */
+  .masonry-grid {
+    position: relative;
+    margin: 0;
+    padding: var(--space-4) 0;
+  }
+
   .grid-item {
     width: 100%;
     margin-bottom: 1rem;
+    position: relative;
+    aspect-ratio: auto;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-subtle);
+    transition: box-shadow var(--duration-normal) ease;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    background: transparent;
+    display: block;
+    text-align: left;
+  }
+
+  .grid-item:hover {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .grid-item:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
   }
 
   @media (min-width: 640px) {
     .grid-item {
-      width: calc(50% - 8px);
+      width: calc(50% - 12px);
       margin-bottom: 1.5rem;
-    }
-    @media (min-width: 640px) and (max-width: 1023px) {
-      .grid-item {
-        width: calc(50% - 12px);
-      }
     }
   }
 
   @media (min-width: 1024px) {
     .grid-item {
-      width: calc(
-        33.333% - 16px
-      );
+      width: calc(33.333% - 16px);
       margin-bottom: 1.5rem;
     }
   }
 
-  #masonry-grid {
+  .grid-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-slow) ease;
+  }
+
+  .grid-item:hover .grid-image {
+    transform: scale(1.05);
+  }
+
+  /* ─── Caption Overlay ─── */
+  .caption-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+    padding: var(--space-8) var(--space-4) var(--space-4);
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity var(--duration-normal) ease,
+      transform var(--duration-normal) ease;
+    pointer-events: none;
+  }
+
+  .grid-item:hover .caption-overlay,
+  .grid-item:focus-visible .caption-overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .caption-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: var(--text-body-sm);
+    font-weight: 300;
+    line-height: 1.4;
     margin: 0;
+  }
+
+  /* ─── Copyright ─── */
+  .copyright-text {
+    text-align: center;
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+    margin-top: var(--space-12);
+    font-weight: 300;
+  }
+
+  @media (min-width: 640px) {
+    .copyright-text {
+      font-size: var(--text-body-sm);
+      margin-top: var(--space-16);
+    }
   }
 </style>

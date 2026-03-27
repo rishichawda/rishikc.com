@@ -1,0 +1,296 @@
+---
+// Site-wide custom cursor with contextual states
+// Desktop only — hidden on touch devices
+// Uses GSAP quickTo for smooth 60fps tracking
+---
+
+<div id="custom-cursor" aria-hidden="true" transition:persist="custom-cursor">
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+  <span class="cursor-label"></span>
+</div>
+
+<style>
+  #custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  #custom-cursor.visible {
+    opacity: 1;
+  }
+
+  .cursor-dot {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--color-text);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+  }
+
+  .cursor-ring {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid var(--color-text);
+    opacity: 0.2;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cursor-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+
+  /* Link/button state */
+  #custom-cursor.cursor-link .cursor-dot {
+    width: 4px;
+    height: 4px;
+  }
+  #custom-cursor.cursor-link .cursor-ring {
+    width: 40px;
+    height: 40px;
+    opacity: 0.4;
+  }
+
+  /* Card state */
+  #custom-cursor.cursor-card .cursor-dot {
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  #custom-cursor.cursor-card .cursor-ring {
+    width: 48px;
+    height: 48px;
+    background: var(--color-text);
+    opacity: 0.05;
+    border-color: transparent;
+  }
+  #custom-cursor.cursor-card .cursor-label {
+    opacity: 1;
+  }
+
+  /* Image state */
+  #custom-cursor.cursor-image .cursor-dot {
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  #custom-cursor.cursor-image .cursor-ring {
+    width: 56px;
+    height: 56px;
+    background: var(--color-text);
+    opacity: 0.08;
+    border-color: transparent;
+  }
+  #custom-cursor.cursor-image .cursor-label {
+    opacity: 1;
+  }
+
+  /* External link state */
+  #custom-cursor.cursor-external .cursor-ring {
+    width: 32px;
+    height: 32px;
+    opacity: 0.3;
+  }
+  #custom-cursor.cursor-external .cursor-label {
+    opacity: 1;
+    font-size: 9px;
+  }
+
+  /* Text state */
+  #custom-cursor.cursor-text .cursor-dot {
+    width: 2px;
+    height: 20px;
+    border-radius: 1px;
+  }
+  #custom-cursor.cursor-text .cursor-ring {
+    opacity: 0;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  function initCustomCursor() {
+    const cursor = document.getElementById('custom-cursor');
+    if (!cursor) return;
+
+    // Only on non-touch, non-reduced-motion devices
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      cursor.style.display = 'none';
+      return;
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      cursor.style.display = 'none';
+      return;
+    }
+
+    const dot = cursor.querySelector<HTMLElement>('.cursor-dot')!;
+    const ring = cursor.querySelector<HTMLElement>('.cursor-ring')!;
+    const label = cursor.querySelector<HTMLElement>('.cursor-label')!;
+
+    // Suppress native cursor on body, but keep on form inputs
+    document.body.style.cursor = 'none';
+
+    // GSAP quickTo for smooth tracking
+    const dotX = gsap.quickTo(dot, 'left', { duration: 0.05, ease: 'power2.out' });
+    const dotY = gsap.quickTo(dot, 'top', { duration: 0.05, ease: 'power2.out' });
+    const ringX = gsap.quickTo(ring, 'left', { duration: 0.5, ease: 'power3.out' });
+    const ringY = gsap.quickTo(ring, 'top', { duration: 0.5, ease: 'power3.out' });
+    const labelX = gsap.quickTo(label, 'left', { duration: 0.35, ease: 'power3.out' });
+    const labelY = gsap.quickTo(label, 'top', { duration: 0.35, ease: 'power3.out' });
+
+    document.addEventListener('mousemove', (e: MouseEvent) => {
+      if (!cursor.classList.contains('visible')) {
+        cursor.classList.add('visible');
+      }
+      dotX(e.clientX);
+      dotY(e.clientY);
+      ringX(e.clientX);
+      ringY(e.clientY);
+      labelX(e.clientX);
+      labelY(e.clientY);
+    });
+
+    document.addEventListener('mouseleave', () => {
+      cursor.classList.remove('visible');
+    });
+
+    document.addEventListener('mouseenter', () => {
+      cursor.classList.add('visible');
+    });
+
+    // Contextual cursor states via event delegation
+    const cursorStates: Record<string, string> = {
+      card: 'cursor-card',
+      image: 'cursor-image',
+      text: 'cursor-text',
+      external: 'cursor-external',
+    };
+
+    const cursorLabels: Record<string, string> = {
+      card: 'Read',
+      image: 'View',
+      external: '↗',
+    };
+
+    function getCursorType(el: Element): { state: string; label: string } | null {
+      // Check data-cursor attribute first
+      const cursorAttr = el.closest('[data-cursor]')?.getAttribute('data-cursor');
+      if (cursorAttr && cursorStates[cursorAttr]) {
+        const customLabel = el.closest('[data-cursor]')?.getAttribute('data-cursor-label');
+        return {
+          state: cursorStates[cursorAttr],
+          label: customLabel || cursorLabels[cursorAttr] || '',
+        };
+      }
+
+      // Auto-detect element types
+      const tagName = el.tagName.toLowerCase();
+
+      // Form inputs — keep native cursor
+      if (['input', 'textarea', 'select'].includes(tagName) || (el as HTMLElement).isContentEditable) {
+        return null;
+      }
+
+      // External links
+      if (tagName === 'a') {
+        const href = (el as HTMLAnchorElement).href;
+        const target = (el as HTMLAnchorElement).target;
+        if (target === '_blank' || (href && !href.startsWith(window.location.origin) && !href.startsWith('/'))) {
+          return { state: 'cursor-external', label: '↗' };
+        }
+        return { state: 'cursor-link', label: '' };
+      }
+
+      // Buttons
+      if (tagName === 'button' || el.closest('button')) {
+        return { state: 'cursor-link', label: '' };
+      }
+
+      // Links (via ancestor)
+      if (el.closest('a')) {
+        const anchor = el.closest('a')!;
+        const target = anchor.target;
+        if (target === '_blank') {
+          return { state: 'cursor-external', label: '↗' };
+        }
+        return { state: 'cursor-link', label: '' };
+      }
+
+      return null;
+    }
+
+    let currentState: string | null = null;
+
+    document.addEventListener('mouseover', (e: MouseEvent) => {
+      const target = e.target as Element;
+      if (!target) return;
+
+      const cursorType = getCursorType(target);
+
+      if (cursorType) {
+        if (currentState !== cursorType.state) {
+          if (currentState) cursor.classList.remove(currentState);
+          cursor.classList.add(cursorType.state);
+          label.textContent = cursorType.label;
+          currentState = cursorType.state;
+        }
+
+        // Restore native cursor for form inputs
+        if (cursorType === null) {
+          (target as HTMLElement).style.cursor = 'auto';
+        }
+      } else if (currentState) {
+        cursor.classList.remove(currentState);
+        label.textContent = '';
+        currentState = null;
+      }
+    });
+
+    // Re-show native cursor on form inputs
+    document.querySelectorAll('input, textarea, select, [contenteditable]').forEach(el => {
+      (el as HTMLElement).style.cursor = 'auto';
+    });
+  }
+
+  // Initialize once, persists across view transitions
+  let cursorInitialized = false;
+  document.addEventListener('astro:page-load', () => {
+    if (!cursorInitialized) {
+      initCustomCursor();
+      cursorInitialized = true;
+    }
+    // Re-apply cursor:none on body after navigation
+    if (!window.matchMedia('(pointer: coarse)').matches &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.body.style.cursor = 'none';
+      // Re-apply native cursor on form inputs after page change
+      document.querySelectorAll('input, textarea, select, [contenteditable]').forEach(el => {
+        (el as HTMLElement).style.cursor = 'auto';
+      });
+    }
+  });
+</script>

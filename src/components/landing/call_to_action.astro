@@ -1,42 +1,111 @@
-<section class="py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-brand-50 via-white to-brand-100/50">
-  <div class="max-w-4xl mx-auto text-center">
-    <div class="bg-white/80 backdrop-blur-sm p-12 md:p-16 rounded-3xl shadow-xl border border-brand-200/50 relative overflow-hidden">
-      <!-- Decorative elements -->
-      <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-brand-200/30 to-brand-300/30 rounded-full blur-2xl"></div>
-      <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-tr from-brand-100/30 to-brand-200/30 rounded-full blur-2xl"></div>
-      
-      <div class="relative z-10">
-        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-['Red_Hat_Display_Variable'] font-light text-gray-900 mb-6">
-          Ready to Build Something Amazing?
-        </h2>
-        <p class="text-lg sm:text-xl text-gray-600 mb-10 font-['Montserrat_Variable'] font-light max-w-2xl mx-auto leading-relaxed">
-          Whether you need a cutting-edge web application, want to discuss tech, or have an exciting project in mind — let's turn your vision into reality.
-        </p>
-        
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <a
-            transition:name="cta-cta-button"
-            href="/contact/"
-            class="bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-xl font-['Red_Hat_Display_Variable'] text-base font-medium tracking-wide transition-all duration-300 inline-flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-brand-400"
-            aria-label="Get in touch with Rishi"
-          >
-            Let's Connect
-            <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </a>
-          
-          <a
-            href="/projects/"
-            class="text-gray-700 hover:text-brand-600 px-8 py-4 rounded-xl font-['Montserrat_Variable'] text-base font-medium transition-colors inline-flex items-center gap-2 group"
-          >
-            Explore My Work
-            <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </a>
-        </div>
-      </div>
+<section class="section-cta" data-reveal>
+  <div class="cta-container">
+    <h2 class="cta-heading" data-reveal-item>Ready to Build Something Amazing?</h2>
+    <p class="cta-text" data-reveal-item>
+      Whether you need a cutting-edge web application, want to discuss tech, or have an exciting project in mind — let's turn your vision into reality.
+    </p>
+    <div class="cta-buttons" data-reveal-item>
+      <a
+        href="/contact/"
+        class="btn-primary"
+        data-magnetic
+        transition:name="cta-cta-button"
+        aria-label="Get in touch with Rishi"
+      >
+        Let's Connect
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
+      <a href="/projects/" class="btn-ghost" data-magnetic>
+        Explore My Work
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </div>
 </section>
+
+<style>
+  .section-cta {
+    padding: var(--space-20) 0 var(--space-14);
+    background: linear-gradient(180deg, var(--color-brand-lighter), var(--color-bg));
+    text-align: center;
+  }
+
+  .cta-container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+    padding-top: var(--space-6);
+  }
+
+  .cta-heading {
+    font-family: var(--font-display);
+    font-size: var(--text-display);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin-bottom: var(--space-10);
+    line-height: 1.1;
+  }
+
+  .cta-text {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-10);
+  }
+
+  .cta-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  @media (min-width: 640px) {
+    .cta-buttons {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--btn-bg);
+    color: #fff;
+    font-family: var(--font-ui);
+    font-size: var(--text-body);
+    font-weight: 500;
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    box-shadow: var(--shadow-raised);
+    transition: background var(--duration-fast) ease,
+                box-shadow var(--duration-fast) ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--btn-bg-hover);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    font-size: var(--text-body);
+    font-weight: 500;
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .btn-ghost:hover {
+    color: var(--color-brand);
+  }
+</style>

@@ -1,8 +1,7 @@
 ---
 import BaseLayout from "../layouts/base_layout.astro";
-import "../styles/global.css";
-import { Schema } from "astro-seo-schema";
 import { getCollection } from "astro:content";
+import { buildWebPageEntity, personRef } from "../utils/jsonLd";
 
 interface Social { platform: string; url: string; }
 interface ProfileData { name: string; socials: Social[]; }
@@ -12,8 +11,7 @@ const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
   title: `Contact - ${profile.name}`,
-  description:
-    `Get in touch with ${profile.name} for collaborations, job opportunities, or general inquiries`,
+  description: `Get in touch with ${profile.name} for collaborations, job opportunities, or general inquiries`,
   keywords: `contact, email, collaboration, ${profile.name}, software engineer`,
 };
 
@@ -21,331 +19,195 @@ const pageUrl = new URL(
   Astro.url.pathname,
   Astro.site || "https://rishikc.com",
 ).toString();
+
+const pageSchemaEntities = [
+  buildWebPageEntity({
+    type: "ContactPage",
+    url: pageUrl,
+    name: `Contact ${profile.name}`,
+    description: page_info.description,
+    mainEntity: personRef,
+  }),
+];
 ---
 
-<BaseLayout page_info={page_info}>
-  <Schema
-    slot="head"
-    item={{
-      "@context": "https://schema.org",
-      "@type": "ContactPage",
-      name: `Contact ${profile.name}`,
-      description: page_info.description,
-      url: pageUrl,
-      mainEntity: {
-        "@type": "Person",
-        name: profile.name,
-        email: "mailto:hello@rishikc.com",
-        url: "https://rishikc.com",
-        sameAs: profile.socials.map((social: Social) => social.url),
-      },
-    }}
-    }}
-  />
+<BaseLayout page_info={page_info} activeRoute="/contact/" pageSchemaEntities={pageSchemaEntities}>
 
-  <main
-    class="font-['Red_Hat_Display_Variable'] min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100/50 relative overflow-hidden"
-  >
-    <!-- Background decorative elements -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-brand-200/20 to-brand-300/10 rounded-full blur-3xl"></div>
-      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-brand-100/20 to-brand-200/10 rounded-full blur-3xl"></div>
-    </div>
+  <main class="contact-page">
+    <!-- Page Header -->
+    <section class="page-header" data-reveal>
+      <span class="overline">SAY HELLO</span>
+      <h1 class="page-title">Let's Connect</h1>
+      <p class="page-subtitle">Have a project in mind, want to collaborate, or just want to say hello? I'd love to hear from you.</p>
+    </section>
 
-    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 pt-12 sm:pt-16">
-      <a
-        href="/"
-        class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium mb-16 sm:mb-20"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          ></path>
-        </svg>
-        Back to home
-      </a>
+    <div class="contact-grid">
+      <!-- Left column - Contact Info -->
+      <aside class="info-col" data-reveal>
+        <h3 class="info-heading">Get in Touch</h3>
+        <p class="info-intro">I'm always open to conversations about engineering, photography, or collaboration. Feel free to reach out.</p>
 
-      <div class="grid lg:grid-cols-3 gap-12 lg:gap-16">
-        <!-- Left column - Contact Info -->
-        <div class="lg:col-span-1 space-y-8">
-          <div class="text-center lg:text-left">
-            <h1
-              class="text-4xl lg:text-5xl font-light text-slate-900 mb-6 tracking-tight leading-tight"
-            >
-              Let's Connect
-            </h1>
-            <p
-              class="text-slate-600 text-lg leading-relaxed font-light font-['Montserrat_Variable']"
-            >
-              Have a question, proposal, or just want to say hello? Drop me a message through this page and I'll get back to you as soon as possible.
-            </p>
+        <div class="contact-channels">
+          <div class="channel">
+            <svg class="channel-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+            <div>
+              <span class="channel-label">Email</span>
+              <a href="mailto:hello@rishikc.com" class="channel-value channel-link">hello@rishikc.com</a>
+            </div>
           </div>
 
-          <!-- Contact Cards -->
-          <div class="space-y-4">
-            <!-- Services & Expertise -->
-            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-brand-300/50 group">
-              <div class="flex items-start space-x-4">
-                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                  </svg>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <h3 class="text-lg font-semibold text-slate-900 font-['Red_Hat_Display_Variable'] mb-2">What I Do</h3>
-                  <div class="space-y-1.5">
-                    <div class="flex items-center text-sm text-slate-600 font-['Montserrat_Variable']">
-                      <div class="w-1.5 h-1.5 bg-brand-500 rounded-full mr-2"></div>
-                      Web Applications
-                    </div>
-                    <div class="flex items-center text-sm text-slate-600 font-['Montserrat_Variable']">
-                      <div class="w-1.5 h-1.5 bg-brand-500 rounded-full mr-2"></div>
-                      Mobile Applications
-                    </div>
-                    <div class="flex items-center text-sm text-slate-600 font-['Montserrat_Variable']">
-                      <div class="w-1.5 h-1.5 bg-brand-500 rounded-full mr-2"></div>
-                      DevSecOps & Consulting
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div class="channel">
+            <svg class="channel-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <div>
+              <span class="channel-label">Location</span>
+              <span class="channel-value">Bengaluru, India</span>
             </div>
+          </div>
 
-            <!-- Availability Status -->
-            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-brand-300/50 group">
-              <div class="flex items-start space-x-4">
-                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-brand-600 to-brand-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <div class="relative">
-                    <div class="w-2.5 h-2.5 bg-white rounded-full"></div>
-                    <div class="absolute top-0 left-0 w-2.5 h-2.5 bg-white rounded-full animate-ping"></div>
-                  </div>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <h3 class="text-lg font-semibold text-slate-900 font-['Red_Hat_Display_Variable']">Availability</h3>
-                  <p class="text-slate-600 font-['Montserrat_Variable']">Open to freelance projects & collaborations</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Quick Navigation -->
-            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-brand-300/50 group">
-              <div class="flex items-start space-x-4">
-                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-brand-700 to-brand-800 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <h3 class="text-lg font-semibold text-slate-900 font-['Red_Hat_Display_Variable'] mb-3">Learn More</h3>
-                  <div class="space-y-2">
-                    <a href="/about/" class="flex items-center justify-between text-sm text-slate-600 hover:text-brand-600 font-['Montserrat_Variable'] transition-colors duration-200 group/link">
-                      <span>About Me</span>
-                      <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                      </svg>
-                    </a>
-                    <a href="/career/" class="flex items-center justify-between text-sm text-slate-600 hover:text-brand-600 font-['Montserrat_Variable'] transition-colors duration-200 group/link">
-                      <span>Career Journey</span>
-                      <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                      </svg>
-                    </a>
-                    <a href="/articles/" class="flex items-center justify-between text-sm text-slate-600 hover:text-brand-600 font-['Montserrat_Variable'] transition-colors duration-200 group/link">
-                      <span>Articles & Insights</span>
-                      <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                      </svg>
-                    </a>
-                    <a href="/gallery/" class="flex items-center justify-between text-sm text-slate-600 hover:text-brand-600 font-['Montserrat_Variable'] transition-colors duration-200 group/link">
-                      <span>Photography</span>
-                      <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
+          <div class="channel">
+            <svg class="channel-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <div>
+              <span class="channel-label">Response Time</span>
+              <span class="channel-value">Usually within 48 hours</span>
             </div>
           </div>
         </div>
 
-        <!-- Right column - Contact Form -->
-        <div class="lg:col-span-2">
-          <div
-            class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-8 sm:p-10 lg:p-12 border border-slate-200/50 hover:shadow-2xl transition-all duration-500"
-            transition:animate="fade"
-          >
-            <div class="mb-8">
-              <h2 class="text-2xl lg:text-3xl font-light text-slate-900 mb-2 font-['Red_Hat_Display_Variable']">
-                Send me a message
-              </h2>
-              <p class="text-slate-600 font-['Montserrat_Variable']">
-                I'd love to hear from you!
-              </p>
+        <div class="social-links">
+          {profile.socials.filter((s: Social) => ['GitHub', 'LinkedIn', 'Instagram'].includes(s.platform)).map((social: Social) => (
+            <a href={social.url} target="_blank" rel="noopener noreferrer" class="social-link" aria-label={social.platform}>
+              {social.platform === 'GitHub' && (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+              )}
+              {social.platform === 'LinkedIn' && (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              )}
+              {social.platform === 'Instagram' && (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              )}
+            </a>
+          ))}
+        </div>
+      </aside>
+
+      <!-- Right column - Contact Form -->
+      <div class="form-col" data-reveal>
+        <div class="form-wrapper">
+          <h2 class="form-heading">Send me a message</h2>
+          <p class="form-subheading">I'll get back to you as soon as possible.</p>
+
+          <form id="contact-form">
+            <!-- Honeypot anti-spam -->
+            <div class="hp-field" aria-hidden="true">
+              <label for="hp-input">Leave empty</label>
+              <input type="text" id="hp-input" name="website" tabindex="-1" autocomplete="off" />
             </div>
 
-            <form id="contact-form" class="space-y-6">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div class="group">
-                  <label
-                    for="name"
-                    class="block text-sm font-semibold text-slate-700 mb-3 font-['Montserrat_Variable'] transition-colors duration-200 group-focus-within:text-brand-600"
-                    >Full Name</label
-                  >
-                  <input
-                    type="text"
-                    id="name"
-                    name="from_name"
-                    required
-                    class="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all duration-300 ease-in-out font-['Montserrat_Variable'] placeholder-slate-400 bg-slate-50/50 focus:bg-white hover:border-slate-300"
-                    placeholder="John Doe"
-                  />
-                  <div class="error-text text-red-500 text-sm mt-2 hidden font-['Montserrat_Variable']">
-                    <div class="flex items-center">
-                      <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="error-message"></span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="group">
-                  <label
-                    for="email"
-                    class="block text-sm font-semibold text-slate-700 mb-3 font-['Montserrat_Variable'] transition-colors duration-200 group-focus-within:text-brand-600"
-                    >Email Address</label
-                  >
-                  <input
-                    type="email"
-                    id="email"
-                    name="reply_to"
-                    required
-                    class="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all duration-300 ease-in-out font-['Montserrat_Variable'] placeholder-slate-400 bg-slate-50/50 focus:bg-white hover:border-slate-300"
-                    placeholder="john@example.com"
-                  />
-                  <div class="error-text text-red-500 text-sm mt-2 hidden font-['Montserrat_Variable']">
-                    <div class="flex items-center">
-                      <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                      </svg>
-                      <span class="error-message"></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="group">
-                <label
-                  for="subject"
-                  class="block text-sm font-semibold text-slate-700 mb-3 font-['Montserrat_Variable'] transition-colors duration-200 group-focus-within:text-brand-600"
-                  >Subject</label
-                >
-                <div class="relative">
-                  <select
-                    id="subject"
-                    name="subject"
-                    required
-                    class="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all duration-300 ease-in-out font-['Montserrat_Variable'] text-slate-700 bg-slate-50/50 focus:bg-white hover:border-slate-300 appearance-none cursor-pointer"
-                  >
-                    <option value="" disabled selected class="text-slate-400"
-                      >Please select a subject</option
-                    >
-                    <option value="General Inquiry">General Inquiry</option>
-                    <option value="Job Opportunity">Job Opportunity</option>
-                    <option value="Collaboration">Collaboration Proposal</option>
-                    <option value="Consulting">Consulting Request</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                    <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-                <div class="error-text text-red-500 text-sm mt-2 hidden font-['Montserrat_Variable']">
-                  <div class="flex items-center">
-                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="error-message"></span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="group">
-                <label
-                  for="message"
-                  class="block text-sm font-semibold text-slate-700 mb-3 font-['Montserrat_Variable'] transition-colors duration-200 group-focus-within:text-brand-600"
-                  >Message</label
-                >
-                <textarea
-                  id="message"
-                  name="message"
-                  rows="6"
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name" class="form-label">Full Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="from_name"
                   required
-                  class="w-full px-4 py-4 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all duration-300 ease-in-out font-['Montserrat_Variable'] placeholder-slate-400 bg-slate-50/50 focus:bg-white hover:border-slate-300 resize-y min-h-[120px]"
-                  placeholder="Tell me about your project, idea, or opportunity..."></textarea>
-                <div class="error-text text-red-500 text-sm mt-2 hidden font-['Montserrat_Variable']">
-                  <div class="flex items-center">
-                    <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span class="error-message"></span>
-                  </div>
+                  class="form-input"
+                  placeholder="John Doe"
+                />
+                <div class="error-text hidden">
+                  <span class="error-message"></span>
                 </div>
               </div>
 
-              <div class="pt-4">
-                <button
-                  type="submit"
-                  id="submit-button"
-                  class="group relative w-full sm:w-auto inline-flex items-center justify-center bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 text-white px-8 py-4 rounded-xl transition-all duration-300 ease-in-out text-base font-semibold font-['Montserrat_Variable'] shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1"
-                >
-                  <span class="flex items-center">
-                    <svg class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                    </svg>
-                    Send Message
-                  </span>
-                </button>
+              <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="reply_to"
+                  required
+                  class="form-input"
+                  placeholder="john@example.com"
+                />
+                <div class="error-text hidden">
+                  <span class="error-message"></span>
+                </div>
               </div>
+            </div>
 
-              <!-- Form Status Messages -->
-              <div id="form-status" class="text-center mt-6 hidden">
-                <div
-                  id="success-message"
-                  class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-6 py-4 rounded-xl font-medium font-['Montserrat_Variable'] text-sm hidden"
-                >
-                  <div class="flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                    </svg>
-                    Your message has been sent successfully! I'll get back to you soon.
-                  </div>
-                </div>
-                <div
-                  id="error-message"
-                  class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl font-medium font-['Montserrat_Variable'] text-sm hidden"
-                >
-                  <div class="flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                    </svg>
-                    There was an error sending your message. Please try again or contact me directly.
-                  </div>
-                </div>
+            <div class="form-group">
+              <label for="subject" class="form-label">Subject</label>
+              <div class="select-wrapper">
+                <select id="subject" name="subject" required class="form-input form-select">
+                  <option value="" disabled selected>Please select a subject</option>
+                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Job Opportunity">Job Opportunity</option>
+                  <option value="Collaboration">Collaboration Proposal</option>
+                  <option value="Consulting">Consulting Request</option>
+                  <option value="Other">Other</option>
+                </select>
+                <svg class="select-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
               </div>
-            </form>
+              <div class="error-text hidden">
+                <span class="error-message"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="message" class="form-label">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="6"
+                required
+                maxlength="2000"
+                class="form-input form-textarea"
+                placeholder="Tell me about your project, idea, or opportunity..."></textarea>
+              <div class="textarea-footer">
+                <div class="error-text hidden">
+                  <span class="error-message"></span>
+                </div>
+                <span class="char-count" id="char-count" aria-live="polite">0 / 2000</span>
+              </div>
+            </div>
+
+            <button type="submit" id="submit-button" class="submit-btn">
+              Send Message
+            </button>
+
+          </form>
+
+          <!-- Success State (replaces form area) -->
+          <div id="success-state" class="success-state hidden" role="status">
+            <svg class="success-checkmark" viewBox="0 0 52 52" aria-hidden="true">
+              <circle class="checkmark-circle" cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2" />
+              <path class="checkmark-check" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M14 27l7 7 16-16" />
+            </svg>
+            <h3 class="success-title">Message Sent!</h3>
+            <p class="success-text">Thanks for reaching out. I'll get back to you within 48 hours.</p>
+            <button type="button" id="send-another" class="send-another-link">Send Another Message</button>
+          </div>
+
+          <!-- Error State -->
+          <div id="error-message" class="status-msg status-error hidden" role="alert">
+            There was an error sending your message. Please try again or contact me directly.
           </div>
         </div>
       </div>
@@ -353,91 +215,459 @@ const pageUrl = new URL(
   </main>
 </BaseLayout>
 
+<style>
+  .contact-page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+  }
+
+  /* Page Header */
+  .page-header {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: var(--space-20) 0 var(--space-12);
+    text-align: center;
+  }
+  .overline {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-overline);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-4);
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--text-display-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 var(--space-4);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+  .page-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Grid Layout */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    padding-bottom: var(--space-20);
+  }
+
+  /* Info Column */
+  .info-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .info-heading {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .info-intro {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.6;
+  }
+  .contact-channels {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .channel {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+  .channel-icon {
+    color: var(--color-brand);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .channel-label {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--text-ui-small);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-tertiary);
+    margin-bottom: 2px;
+  }
+  .channel-value {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text);
+  }
+  .channel-link {
+    text-decoration: none;
+    transition: color 200ms;
+  }
+  .channel-link:hover { color: var(--color-brand); }
+  .social-links {
+    display: flex;
+    gap: var(--space-4);
+  }
+  .social-link {
+    color: var(--color-text-secondary);
+    transition: color 200ms;
+  }
+  .social-link:hover { color: var(--color-brand); }
+
+  /* Form Column */
+  .form-wrapper {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 40px;
+  }
+  .form-heading {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin: 0 0 var(--space-2);
+  }
+  .form-subheading {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-8);
+  }
+
+  /* Honeypot */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    opacity: 0;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
+  /* Form Elements */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+  }
+  .form-group {
+    margin-bottom: var(--space-5);
+  }
+  .form-label {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-2);
+  }
+  .form-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 200ms, box-shadow 200ms;
+    box-sizing: border-box;
+  }
+  .form-input::placeholder { color: var(--color-text-muted); }
+  .form-input:focus {
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px var(--color-brand-lighter);
+  }
+  .form-input.is-valid {
+    border-color: #10b981;
+  }
+  .form-input.is-valid:focus {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  }
+  .form-input.is-invalid {
+    border-color: #ef4444;
+  }
+  .form-input.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+  .select-wrapper {
+    position: relative;
+  }
+  .form-select {
+    appearance: none;
+    cursor: pointer;
+    padding-right: 40px;
+  }
+  .select-chevron {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+  .form-textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  .textarea-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: var(--space-2);
+  }
+  .char-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .char-count.near-limit { color: #f59e0b; }
+  .char-count.at-limit { color: #ef4444; }
+
+  /* Error */
+  .error-text {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: #ef4444;
+    margin-top: var(--space-2);
+  }
+  .error-text.hidden { display: none; }
+
+  /* Submit */
+  .submit-btn {
+    font-family: var(--font-ui);
+    font-size: var(--text-body);
+    font-weight: 600;
+    padding: 14px 32px;
+    background: var(--btn-bg);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: filter 200ms, transform 200ms;
+    width: 100%;
+  }
+  .submit-btn:hover:not(:disabled) {
+    filter: brightness(0.9);
+    transform: translateY(-1px);
+  }
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Status Messages */
+  .status-msg {
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    text-align: center;
+    line-height: 1.5;
+    margin-top: var(--space-5);
+  }
+  .status-msg.hidden { display: none; }
+  .status-error {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #dc2626;
+  }
+
+  /* Success State */
+  .success-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-12) var(--space-6);
+    min-height: 320px;
+  }
+  .success-state.hidden { display: none; }
+
+  /* Animated checkmark SVG */
+  .success-checkmark {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    color: var(--color-brand);
+    margin-bottom: var(--space-5);
+  }
+  .checkmark-circle {
+    stroke-dasharray: 150;
+    stroke-dashoffset: 150;
+    animation: checkmark-circle-draw 600ms ease-out forwards;
+  }
+  .checkmark-check {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: checkmark-draw 400ms ease-out 400ms forwards;
+  }
+  @keyframes checkmark-circle-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes checkmark-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  .success-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--color-text);
+    margin: 0 0 var(--space-2);
+  }
+  .success-text {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-6);
+  }
+  .send-another-link {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    color: var(--color-brand);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 200ms;
+  }
+  .send-another-link:hover {
+    color: var(--color-brand-dark);
+  }
+
+  @media (max-width: 767px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+    .form-wrapper { padding: 24px; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+
 <script>
   import emailjs from '@emailjs/browser';
+  import gsap from 'gsap';
 
   const emailJSPublicKey = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY;
   const emailJSServiceID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID;
   const emailJSTemplateID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID;
 
   function setUpForm() {
-    // Initialize EmailJS
     emailjs.init(emailJSPublicKey);
 
-    // Check if the form is already set up
-    if (document.getElementById("contact-form").dataset.initialized) {
-      return;
+    const form = document.getElementById("contact-form") as HTMLFormElement | null;
+    if (!form || form.dataset.initialized) return;
+    form.dataset.initialized = "true";
+
+    const submitButton = document.getElementById("submit-button") as HTMLButtonElement;
+    const successState = document.getElementById("success-state")!;
+    const errorMessageEl = document.getElementById("error-message")!;
+    const sendAnother = document.getElementById("send-another")!;
+    const honeypot = document.getElementById("hp-input") as HTMLInputElement;
+
+    // Track form load time for timing-based anti-spam
+    const formLoadTime = Date.now();
+
+    // Character count for textarea
+    const textarea = document.getElementById('message') as HTMLTextAreaElement | null;
+    const charCountEl = document.getElementById('char-count');
+    if (textarea && charCountEl) {
+      const maxLen = textarea.maxLength || 2000;
+      const updateCount = () => {
+        const len = textarea.value.length;
+        charCountEl.textContent = `${len} / ${maxLen}`;
+        charCountEl.classList.toggle('near-limit', len >= maxLen * 0.85 && len < maxLen);
+        charCountEl.classList.toggle('at-limit', len >= maxLen);
+      };
+      textarea.addEventListener('input', updateCount);
+      updateCount();
     }
 
-    // Mark the form as initialized
-    document.getElementById("contact-form").dataset.initialized = "true";
-
-    // Cache DOM elements
-    const form = document.getElementById("contact-form");
-    const submitButton = document.getElementById("submit-button");
-    const formStatus = document.getElementById("form-status");
-    const successMessage = document.getElementById("success-message");
-    const errorMessage = document.getElementById("error-message");
-
-    // Form configuration - centralizing validation rules and messages
-    const formFields = {
+    const formFields: Record<string, { validator: (v: string) => boolean; errorMessage: string; emptyMessage?: string }> = {
       name: {
-        validator: (value) => value.trim() !== "",
+        validator: (value: string) => value.trim() !== "",
         errorMessage: "Please enter your name",
       },
       email: {
-        validator: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        validator: (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
         errorMessage: "Please enter a valid email address",
         emptyMessage: "Please enter your email address",
       },
       subject: {
-        validator: (value) => value.trim() !== "",
+        validator: (value: string) => value.trim() !== "",
         errorMessage: "Please select a subject",
       },
       message: {
-        validator: (value) => value.trim() !== "",
+        validator: (value: string) => value.trim() !== "",
         errorMessage: "Please enter your message",
       },
     };
 
-    // Single function to validate any field
-    function validateField(fieldId, showError = true) {
-      const field = document.getElementById(fieldId);
-      const errorElement = field.nextElementSibling; // Assumes error div is always next sibling
+    function validateField(fieldId: string, showError = true): boolean {
+      const field = document.getElementById(fieldId) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
       const fieldConfig = formFields[fieldId];
+
+      // Find error-text sibling within the same form-group
+      const formGroup = field.closest('.form-group') || field.parentElement;
+      const errorElement = formGroup?.querySelector('.error-text') as HTMLElement | null;
 
       let isValid = true;
       let message = "";
 
-      // For empty email field
       if (fieldId === "email" && !field.value.trim()) {
         isValid = false;
-        message = fieldConfig.emptyMessage;
-      }
-      // Normal validation
-      else if (!fieldConfig.validator(field.value)) {
+        message = fieldConfig.emptyMessage || fieldConfig.errorMessage;
+      } else if (!fieldConfig.validator(field.value)) {
         isValid = false;
         message = fieldConfig.errorMessage;
       }
 
-      // Only update UI if showError is true
-      if (showError) {
+      if (showError && errorElement) {
         if (!isValid) {
           const errorMessageSpan = errorElement.querySelector('.error-message');
-          errorMessageSpan.textContent = message;
+          if (errorMessageSpan) errorMessageSpan.textContent = message;
           errorElement.classList.remove("hidden");
-          field.classList.add("border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
-          field.classList.remove("border-emerald-500", "focus:border-emerald-500", "focus:ring-emerald-500/50");
-          field.classList.remove("border-slate-200", "focus:border-brand-500", "focus:ring-brand-500/30"); // Remove default focus styles on error
-
-          // Announce error for screen readers
+          field.classList.remove("is-valid");
+          field.classList.add("is-invalid");
           field.setAttribute("aria-invalid", "true");
           errorElement.setAttribute("role", "alert");
         } else {
           errorElement.classList.add("hidden");
-          field.classList.remove("border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
-          field.classList.add("border-emerald-500", "focus:border-emerald-500", "focus:ring-emerald-500/50"); // Add emerald border on valid input
-          field.classList.remove("border-slate-200", "focus:border-brand-500", "focus:ring-brand-500/30"); // Remove default focus styles on success
+          field.classList.remove("is-invalid");
+          field.classList.add("is-valid");
           field.setAttribute("aria-invalid", "false");
         }
       }
@@ -445,129 +675,121 @@ const pageUrl = new URL(
       return isValid;
     }
 
-    // Attach event listeners using event delegation
-    form.addEventListener("input", function (event) {
-      const target = event.target;
-      const fieldId = target.id;
-
-      // Only run for our monitored fields
-      if (formFields[fieldId]) {
-        validateField(fieldId);
-      }
+    form.addEventListener("input", function (event: Event) {
+      const target = event.target as HTMLElement;
+      if (target.id && formFields[target.id]) validateField(target.id);
     });
 
-    form.addEventListener(
-      "blur",
-      function (event) {
-        const target = event.target;
-        const fieldId = target.id;
+    form.addEventListener("blur", function (event: Event) {
+      const target = event.target as HTMLElement;
+      if (target.id && formFields[target.id]) validateField(target.id);
+    }, true);
 
-        // Only run for our monitored fields
-        if (formFields[fieldId]) {
-          validateField(fieldId);
-        }
-      },
-      true,
-    ); // Using capture to ensure blur is captured for all elements
-
-    // Special case for select field, which needs change event
-    document.getElementById("subject").addEventListener("change", function () {
+    document.getElementById("subject")?.addEventListener("change", function () {
       validateField("subject");
     });
 
-    // Form submission handler
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", function (event: Event) {
       event.preventDefault();
 
-      // Validate all fields at once
+      // Anti-spam: honeypot check
+      if (honeypot && honeypot.value) return;
+
+      // Anti-spam: timing check (form filled in < 2 seconds is likely a bot)
+      if (Date.now() - formLoadTime < 2000) return;
+
       const isFormValid = Object.keys(formFields).every((fieldId) =>
         validateField(fieldId, true),
       );
 
       if (!isFormValid) {
-        // Focus the first invalid field for accessibility
         const firstInvalidField = Object.keys(formFields).find(
           (fieldId) => !validateField(fieldId, false),
         );
-
-        if (firstInvalidField) {
-          document.getElementById(firstInvalidField).focus();
-        }
+        if (firstInvalidField) document.getElementById(firstInvalidField)?.focus();
         return;
       }
 
-      // Show loading state
       submitButton.disabled = true;
-      submitButton.innerHTML =
-        '<span class="inline-block animate-pulse">Sending...</span>';
+      submitButton.textContent = "Sending...";
       submitButton.setAttribute("aria-busy", "true");
 
-      // Prepare form data for submission
       const templateParams = {
-        from_name: document.getElementById("name").value,
-        reply_to: document.getElementById("email").value,
-        subject: document.getElementById("subject").value,
-        message: document.getElementById("message").value,
+        from_name: (document.getElementById("name") as HTMLInputElement).value,
+        reply_to: (document.getElementById("email") as HTMLInputElement).value,
+        subject: (document.getElementById("subject") as HTMLSelectElement).value,
+        message: (document.getElementById("message") as HTMLTextAreaElement).value,
       };
 
-      // Send the form using EmailJS
       emailjs
         .send(emailJSServiceID, emailJSTemplateID, templateParams)
         .then(function () {
-          // Success handling
-          submitButton.innerHTML = "Send Message";
+          submitButton.textContent = "Send Message";
           submitButton.disabled = false;
           submitButton.setAttribute("aria-busy", "false");
 
-          // Reset form and validation styles
           form.reset();
           Object.keys(formFields).forEach((fieldId) => {
             const field = document.getElementById(fieldId);
-            field.classList.remove("border-emerald-500", "focus:border-emerald-500", "focus:ring-emerald-500/50", "border-red-500", "focus:border-red-500", "focus:ring-red-500/50");
-            field.classList.add("border-slate-200", "focus:border-brand-500", "focus:ring-brand-500/30"); // Restore default border/focus
-            field.setAttribute("aria-invalid", "false");
-            const errorElement = field.nextElementSibling;
-            if (errorElement && errorElement.classList.contains('error-text')) {
-                errorElement.classList.add('hidden');
-                const errorMessageSpan = errorElement.querySelector('.error-message');
-                if (errorMessageSpan) {
-                    errorMessageSpan.textContent = '';
-                }
+            if (field) {
+              field.classList.remove("is-valid", "is-invalid");
+              field.setAttribute("aria-invalid", "false");
+            }
+            const formGroup = field?.closest('.form-group') || field?.parentElement;
+            const errorEl = formGroup?.querySelector('.error-text') as HTMLElement | null;
+            if (errorEl) {
+              errorEl.classList.add("hidden");
+              const span = errorEl.querySelector('.error-message');
+              if (span) span.textContent = "";
             }
           });
 
-          formStatus.classList.remove("hidden");
-          successMessage.classList.remove("hidden");
-          successMessage.querySelector('div').classList.add("flex");
-          errorMessage.classList.add("hidden");
+          errorMessageEl.classList.add("hidden");
 
-          // Announce success for screen readers
-          successMessage.setAttribute("role", "alert");
-
-          // Hide success message after 5 seconds
-          setTimeout(function () {
-            formStatus.classList.add("hidden");
-            successMessage.classList.add("hidden");
-            successMessage.querySelector('div').classList.remove("flex");
-            successMessage.removeAttribute("role");
-          }, 5000);
+          // GSAP: Form fades out, then success fades in
+          gsap.to(form, {
+            opacity: 0,
+            y: -10,
+            duration: 0.3,
+            ease: 'power2.inOut',
+            onComplete: () => {
+              form.style.display = 'none';
+              successState.classList.remove('hidden');
+              gsap.fromTo(successState,
+                { opacity: 0, y: 10 },
+                { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+              );
+            }
+          });
         })
-        .catch(function (error) {
-          // Error handling
+        .catch(function (error: Error) {
           console.error("EmailJS error:", error);
 
-          submitButton.innerHTML = "Send Message";
+          submitButton.textContent = "Send Message";
           submitButton.disabled = false;
           submitButton.setAttribute("aria-busy", "false");
 
-          formStatus.classList.remove("hidden");
-          errorMessage.classList.remove("hidden");
-          errorMessage.querySelector('div').classList.add("flex");
-          successMessage.classList.add("hidden");
-
-          // Announce error for screen readers
-          errorMessage.setAttribute("role", "alert");
+          errorMessageEl.classList.remove("hidden");
+          successState.classList.add("hidden");
         });
+    });
+
+    // "Send Another Message" resets back to form
+    sendAnother.addEventListener('click', () => {
+      gsap.to(successState, {
+        opacity: 0,
+        y: -10,
+        duration: 0.3,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          successState.classList.add('hidden');
+          form.style.display = '';
+          gsap.fromTo(form,
+            { opacity: 0, y: 10 },
+            { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+          );
+        }
+      });
     });
   }
 

@@ -72,7 +72,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
     </svg>
 
     <div class="relative z-10 max-w-3xl mx-auto px-6 sm:px-8 text-center">
-      <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-indigo leading-[1.1] tracking-tight mb-8 narrative-slide" data-observe>
+      <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-indigo leading-[1.1] tracking-tight mb-8 narrative-slide" data-observe>
         {title}
       </h1>
       <p class="text-brand-indigo/70 text-lg sm:text-xl leading-[1.8] font-light narrative-slide" data-observe style="transition-delay: 200ms;">
@@ -99,7 +99,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
           <figure class="gallery-reveal my-12 sm:my-20">
             <button
               type="button"
-              class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+              data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
               data-caption={section.caption || ""}
               data-camera={section.camera || ""}
               data-lens={section.lens || ""}
@@ -130,7 +130,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
               <figure>
                 <button
                   type="button"
-                  class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                  data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
                   data-caption={img.caption || ""}
                   data-camera={img.camera || ""}
                   data-lens={img.lens || ""}
@@ -163,7 +163,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
               <figure>
                 <button
                   type="button"
-                  class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
+                  data-cursor="image" class="lightbox-trigger block w-full cursor-pointer border-0 bg-transparent p-0"
                   data-caption={img.caption || ""}
                   data-camera={img.camera || ""}
                   data-lens={img.lens || ""}
@@ -188,7 +188,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
         {section.type === "quote" && section.content && (
           <div class="gallery-reveal py-12 sm:py-20 text-center">
             <blockquote class="relative max-w-2xl mx-auto border-l-4 border-earth-clay/50 pl-6 text-left">
-              <p class="font-['Red_Hat_Display_Variable'] text-2xl sm:text-3xl text-brand-indigo/80 font-light italic leading-relaxed">
+              <p class="font-display text-2xl sm:text-3xl text-brand-indigo/80 font-light italic leading-relaxed">
                 {section.content}
               </p>
               {section.attribution && (
@@ -209,7 +209,7 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
                     <figure class="horizontal-scroll-item">
                       <button
                         type="button"
-                        class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0"
+                        data-cursor="image" class="lightbox-trigger block w-full h-full cursor-pointer border-0 bg-transparent p-0"
                         data-caption={img.caption || ""}
                         data-camera={img.camera || ""}
                         data-lens={img.lens || ""}
@@ -258,6 +258,19 @@ const { title, prologue, cover_image, cover_image_alt, sections, storyId } = Ast
 
     story.querySelectorAll("[data-observe], .gallery-reveal").forEach(function(el) {
       observer.observe(el);
+    });
+
+    // Immediately reveal elements to prevent invisible content on page load
+    requestAnimationFrame(function() {
+      var vh = window.innerHeight || 800;
+      story.querySelectorAll("[data-observe], .gallery-reveal").forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        var delay = rect.top > vh ? Math.min(800, ((rect.top - vh) / vh) * 100) : 0;
+        el.style.transitionDelay = Math.round(delay) + "ms";
+        el.classList.add("visible");
+        el.classList.add("revealed");
+        observer.unobserve(el);
+      });
     });
   });
 </script>

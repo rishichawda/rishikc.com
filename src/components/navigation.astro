@@ -1,0 +1,503 @@
+---
+// Sticky navigation bar with blur backdrop
+// Becomes compact on scroll, magnetic hover effects on nav items
+import { Image } from "astro:assets";
+import ThemeToggle from "./common/theme_toggle.astro";
+import logo from "../../content/assets/logo/logo.svg";
+
+interface Props {
+  activeRoute?: string;
+}
+
+const { activeRoute } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { label: "Articles", path: "/articles/" },
+  { label: "Projects", path: "/projects/" },
+  { label: "Gallery", path: "/gallery/" },
+  { label: "About", path: "/about/" },
+];
+
+function isActive(path: string): boolean {
+  const route = activeRoute || currentPath;
+  return route === path || route.startsWith(path);
+}
+---
+
+<header
+  class="site-header"
+  data-header
+  role="banner"
+>
+  <nav
+    class="nav-container"
+    aria-label="Primary navigation"
+  >
+    <!-- Logo -->
+    <a
+      href="/"
+      class="nav-logo"
+      aria-label="Go to homepage"
+      data-magnetic
+      data-magnetic-strength="4"
+      transition:name="site-logo"
+    >
+      <Image
+        alt=""
+        width={32}
+        height={32}
+        class="logo-img"
+        src={logo}
+        loading="eager"
+      />
+      <span class="logo-text">Rishi</span>
+    </a>
+
+    <!-- Desktop nav items -->
+    <div class="nav-links" role="list">
+      {navItems.map((item) => (
+        <a
+          href={item.path}
+          class:list={["nav-link", { active: isActive(item.path) }]}
+          aria-current={isActive(item.path) ? "page" : undefined}
+          data-magnetic
+          data-magnetic-strength="4"
+          role="listitem"
+        >
+          {item.label}
+        </a>
+      ))}
+    </div>
+
+    <!-- Actions -->
+    <div class="nav-actions">
+      <ThemeToggle />
+
+      <!-- Search trigger -->
+      <button
+        class="nav-search-btn"
+        aria-label="Search (⌘K)"
+        title="Search"
+        data-magnetic
+        data-magnetic-strength="4"
+        data-open-search
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <kbd class="search-kbd">⌘K</kbd>
+      </button>
+
+      <!-- Mobile menu toggle -->
+      <button
+        class="mobile-menu-btn"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-mobile-menu-toggle
+      >
+        <span class="hamburger-line line-1"></span>
+        <span class="hamburger-line line-2"></span>
+        <span class="hamburger-line line-3"></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Mobile menu overlay -->
+<div
+  id="mobile-menu"
+  class="mobile-menu"
+  role="dialog"
+  aria-label="Navigation menu"
+  aria-hidden="true"
+  data-mobile-menu
+>
+  <nav class="mobile-menu-nav" aria-label="Mobile navigation">
+    {navItems.map((item, i) => (
+      <a
+        href={item.path}
+        class:list={["mobile-menu-link", { active: isActive(item.path) }]}
+        aria-current={isActive(item.path) ? "page" : undefined}
+        style={`--stagger: ${i}`}
+      >
+        {item.label}
+      </a>
+    ))}
+    <a
+      href="/contact/"
+      class:list={["mobile-menu-link mobile-menu-cta", { active: isActive("/contact/") }]}
+      style={`--stagger: ${navItems.length}`}
+    >
+      Get in Touch
+    </a>
+  </nav>
+</div>
+
+<style>
+  /* ─── Header ─── */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: var(--nav-height);
+    transition: background var(--duration-normal) ease,
+                box-shadow var(--duration-normal) ease,
+                backdrop-filter var(--duration-normal) ease;
+  }
+
+  .site-header.scrolled {
+    background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-subtle);
+  }
+
+  /* When nav overlays the hero gradient, use white text */
+  .site-header.over-hero:not(.scrolled) .nav-logo { color: #fff; }
+  .site-header.over-hero:not(.scrolled) .nav-link { color: rgba(255,255,255,0.85); }
+  .site-header.over-hero:not(.scrolled) .nav-link:hover { color: #fff; background: rgba(255,255,255,0.12); }
+  .site-header.over-hero:not(.scrolled) .nav-link.active { color: #fff; }
+  .site-header.over-hero:not(.scrolled) .nav-link.active::after { background: #fff; }
+  .site-header.over-hero:not(.scrolled) :global(.theme-toggle-btn) { color: rgba(255,255,255,0.85); }
+  .site-header.over-hero:not(.scrolled) :global(.theme-toggle-btn:hover) { color: #fff; }
+  .site-header.over-hero:not(.scrolled) [data-open-search] { color: rgba(255,255,255,0.85); }
+  .site-header.over-hero:not(.scrolled) .kbd-hint { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.2); }
+  .site-header.over-hero:not(.scrolled) .hamburger-line { background: #fff; }
+
+  .nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+    height: 100%;
+  }
+
+  /* ─── Logo ─── */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: opacity var(--duration-fast) ease;
+  }
+
+  .nav-logo:hover {
+    opacity: 0.8;
+  }
+
+  .logo-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-text {
+    letter-spacing: -0.02em;
+  }
+
+  /* ─── Desktop Nav Links ─── */
+  .nav-links {
+    display: none;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  @media (min-width: 768px) {
+    .nav-links {
+      display: flex;
+    }
+  }
+
+  .nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--duration-fast) ease,
+                background var(--duration-fast) ease;
+  }
+
+  .nav-link:hover {
+    color: var(--color-text);
+    background: var(--color-brand-lighter);
+  }
+
+  .nav-link.active {
+    color: var(--color-brand-dark);
+    font-weight: 600;
+  }
+
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 2px;
+    border-radius: var(--radius-full);
+    background: var(--color-brand);
+  }
+
+  /* ─── Actions ─── */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .nav-search-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color var(--duration-fast) ease,
+                background var(--duration-fast) ease;
+  }
+
+  .nav-search-btn:hover {
+    color: var(--color-text);
+    background: var(--color-brand-lighter);
+  }
+
+  .search-kbd {
+    display: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    line-height: 1;
+  }
+
+  @media (min-width: 768px) {
+    .search-kbd {
+      display: inline;
+    }
+  }
+
+  /* ─── Mobile Menu Button ─── */
+  .mobile-menu-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  @media (min-width: 768px) {
+    .mobile-menu-btn {
+      display: none;
+    }
+  }
+
+  .hamburger-line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--color-text);
+    border-radius: 2px;
+    transition: transform var(--duration-normal) ease,
+                opacity var(--duration-fast) ease;
+    transform-origin: center;
+  }
+
+  .mobile-menu-btn[aria-expanded="true"] .line-1 {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .mobile-menu-btn[aria-expanded="true"] .line-2 {
+    opacity: 0;
+  }
+  .mobile-menu-btn[aria-expanded="true"] .line-3 {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* ─── Mobile Menu Overlay ─── */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--color-bg) 98%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--duration-normal) ease,
+                visibility var(--duration-normal) ease;
+  }
+
+  .mobile-menu.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (min-width: 768px) {
+    .mobile-menu {
+      display: none;
+    }
+  }
+
+  .mobile-menu-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .mobile-menu-link {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--duration-fast) ease,
+                opacity var(--duration-normal) ease,
+                transform var(--duration-normal) ease;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .mobile-menu.open .mobile-menu-link {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: calc(var(--stagger, 0) * 40ms + 100ms);
+  }
+
+  .mobile-menu-link:hover,
+  .mobile-menu-link.active {
+    color: var(--color-brand);
+  }
+
+  .mobile-menu-cta {
+    margin-top: var(--space-4);
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    padding: var(--space-3) var(--space-8);
+    border: 1px solid var(--color-brand);
+    border-radius: var(--radius-full);
+    color: var(--color-brand);
+  }
+
+  .mobile-menu-cta:hover {
+    background: var(--btn-bg);
+    color: #fff;
+  }
+</style>
+
+<script>
+  function initNavigation() {
+    const header = document.querySelector<HTMLElement>('[data-header]');
+    const mobileMenuBtn = document.querySelector<HTMLButtonElement>('[data-mobile-menu-toggle]');
+    const mobileMenu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+    const searchBtn = document.querySelector<HTMLButtonElement>('[data-open-search]');
+
+    if (!header) return;
+
+    // Scroll-based sticky header styling
+    let lastScroll = 0;
+    const scrollHandler = () => {
+      const scrollY = window.scrollY;
+      if (scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+
+      // Hero-aware nav: white text when hero is visible behind nav
+      const hero = document.querySelector<HTMLElement>('[data-hero]');
+      if (hero) {
+        const heroBottom = hero.getBoundingClientRect().bottom;
+        if (heroBottom > 0) {
+          header.classList.add('over-hero');
+        } else {
+          header.classList.remove('over-hero');
+        }
+      }
+
+      lastScroll = scrollY;
+    };
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+    scrollHandler(); // Check initial state
+
+    // Mobile menu toggle
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.contains('open');
+        mobileMenu.classList.toggle('open');
+        mobileMenuBtn.setAttribute('aria-expanded', String(!isOpen));
+        mobileMenu.setAttribute('aria-hidden', String(isOpen));
+        document.body.style.overflow = isOpen ? '' : 'hidden';
+      });
+
+      // Close on escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+          mobileMenu.classList.remove('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+          mobileMenu.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          mobileMenuBtn.focus();
+        }
+      });
+
+      // Close on link click
+      mobileMenu.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('open');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+          mobileMenu.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        });
+      });
+    }
+
+    // Search button opens search overlay
+    if (searchBtn) {
+      searchBtn.addEventListener('click', () => {
+        window.location.assign('/search/');
+      });
+    }
+
+    // Cmd+K / Ctrl+K shortcut
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        window.location.assign('/search/');
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initNavigation);
+</script>

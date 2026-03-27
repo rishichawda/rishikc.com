@@ -88,7 +88,7 @@ if (currentChapter.sections.length > 0 || currentChapter.backgroundImage) {
     </div>
 
     <div class="relative z-10 max-w-4xl mx-auto px-6 sm:px-8 pb-32 sm:pb-40 text-center">
-      <h1 class="font-['Red_Hat_Display_Variable'] text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8">
+      <h1 class="font-display text-4xl sm:text-5xl lg:text-[64px] font-bold text-gallery-text leading-[1.1] tracking-tight mb-8">
         {title}
       </h1>
       <p class="text-gallery-text/85 text-lg sm:text-xl leading-relaxed font-light max-w-2xl mx-auto">
@@ -151,7 +151,7 @@ if (currentChapter.sections.length > 0 || currentChapter.backgroundImage) {
                 <div class="bg-gallery-bg/80 backdrop-blur-sm rounded-lg p-8 sm:p-12 text-center">
                   <blockquote>
                     <span class="text-4xl text-gallery-accent/40 font-serif leading-none" aria-hidden="true">&ldquo;</span>
-                    <p class="font-['Red_Hat_Display_Variable'] text-xl sm:text-2xl text-gallery-text/90 font-light italic leading-relaxed mt-2">
+                    <p class="font-display text-xl sm:text-2xl text-gallery-text/90 font-light italic leading-relaxed mt-2">
                       {section.content}
                     </p>
                     {section.attribution && (
@@ -239,5 +239,17 @@ if (currentChapter.sections.length > 0 || currentChapter.backgroundImage) {
       { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
     );
     reveals.forEach(function(el) { revealObserver.observe(el); });
+
+    // Immediately reveal elements to prevent invisible content on page load
+    requestAnimationFrame(function() {
+      var vh = window.innerHeight || 800;
+      reveals.forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        var delay = rect.top > vh ? Math.min(800, ((rect.top - vh) / vh) * 100) : 0;
+        el.style.transitionDelay = Math.round(delay) + "ms";
+        el.classList.add("revealed");
+        revealObserver.unobserve(el);
+      });
+    });
   });
 </script>

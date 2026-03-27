@@ -1,10 +1,15 @@
 ---
 const { href } = Astro.props;
 const isExternal = href && !href.startsWith("/") && !href.startsWith("#") && !href.startsWith(".");
+let domain = '';
+if (isExternal && href) {
+  try { domain = new URL(href).hostname; } catch { domain = ''; }
+}
 ---
 <a
   href={href}
   target={isExternal ? "_blank" : undefined}
   rel={isExternal ? "noopener noreferrer" : undefined}
+  data-spatial-tooltip={isExternal && domain ? domain : undefined}
   {...Astro.props}
 ><slot /></a>

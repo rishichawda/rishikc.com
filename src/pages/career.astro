@@ -1,21 +1,16 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
-import { Schema } from "astro-seo-schema";
+import { buildWebPageEntity, personRef } from "../utils/jsonLd";
 import { Image } from "astro:assets";
 import favicon from "../../content/assets/logo/logo.png";
 import profilePhoto from "../../content/assets/me-profesh.jpg";
 import { fetchMetadata, type WebsiteMeta } from "../utils/metadataFetcher";
 import LinkCard from "../components/LinkCard.astro";
-interface Language {
-  name: string;
-  level: string;
-}
+import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
-interface Social {
-  platform: string;
-  url: string;
-}
+interface Language { name: string; level: string; }
+interface Social { platform: string; url: string; }
 
 interface Position {
   title: string;
@@ -41,10 +36,7 @@ interface ClubPosition {
   responsibilities?: string[];
 }
 
-interface ExtraCurricular {
-  club: string;
-  positions: ClubPosition[];
-}
+interface ExtraCurricular { club: string; positions: ClubPosition[]; }
 
 interface Experience {
   company: string;
@@ -64,10 +56,7 @@ interface Education {
   extra_curriculars?: ExtraCurricular[];
 }
 
-interface Certification {
-  institution: string;
-  title: string;
-}
+interface Certification { institution: string; title: string; }
 
 interface ProfileData {
   name: string;
@@ -75,9 +64,7 @@ interface ProfileData {
   location: string;
   summary: string;
   bio: string | string[];
-  contact: {
-    linkedin: string;
-  };
+  contact: { linkedin: string; };
   skills: string[];
   languages: Language[];
   certifications: Certification[];
@@ -91,7 +78,6 @@ const profileEntry = await getCollection("profile");
 const profileData = profileEntry[0].data as ProfileData;
 const profile = profileData;
 
-// --- Metadata Fetching Logic ---
 const experiencesWithMeta = await Promise.all(
   profile.experience.map(async (exp): Promise<Experience> => {
     let companyWebsitesMeta: WebsiteMeta[] = [];
@@ -100,7 +86,6 @@ const experiencesWithMeta = await Promise.all(
         exp.website.map((url) => fetchMetadata(url)),
       );
     }
-
     const positionsWithMeta = await Promise.all(
       exp.positions.map(async (pos): Promise<Position> => {
         if (pos.links && pos.links.length > 0) {
@@ -112,14 +97,12 @@ const experiencesWithMeta = await Promise.all(
         return pos;
       }),
     );
-
-    return {
-      ...exp,
-      websitesMeta: companyWebsitesMeta,
-      positions: positionsWithMeta,
-    };
+    return { ...exp, websitesMeta: companyWebsitesMeta, positions: positionsWithMeta };
   }),
 );
+
+const currentRole = experiencesWithMeta[0];
+const pastExperiences = experiencesWithMeta.slice(1);
 
 const page_info = {
   title: `Career | ${profile.name}`,
@@ -131,865 +114,745 @@ const siteUrl = new URL(
   Astro.url.pathname,
   Astro.site || "https://rishikc.com",
 ).toString();
+
+const pageSchemaEntities = [
+  buildWebPageEntity({
+    type: "ProfilePage",
+    url: siteUrl,
+    name: page_info.title,
+    description: page_info.description,
+    mainEntity: personRef,
+  }),
+];
 ---
 
-<BaseLayout page_info={page_info}>
-  <Schema
-    slot="head"
-    item={{
-      "@context": "https://schema.org",
-      "@type": "Person",
-      name: profile.name,
-      jobTitle: profile.title,
-      worksFor: {
-        "@type": "Organization",
-        name: profile.experience[0]?.company || "Unknown Company",
-      },
-      url: siteUrl,
-      image: `${siteUrl.replace(/\/$/, "")}/${favicon.src}`,
-      description: profile.summary,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Bengaluru",
-        addressRegion: "KA",
-        addressCountry: "IN",
-      },
-      alumniOf: profile.education.map((edu) => ({
-        "@type": "EducationalOrganization",
-        name: edu.university,
-      })),
-      knowsLanguage: profile.languages.map((lang) => lang.name),
-      sameAs: profile.socials.map((social: Social) => social.url),
-    }}
-  />
+<BaseLayout page_info={page_info} activeRoute="/career/" pageSchemaEntities={pageSchemaEntities}>
 
-  <main
-    class="min-h-screen bg-gradient-to-b from-brand-50/30 via-white to-gray-50/50"
-  >
-    <div class="relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-brand-100/20 opacity-70"></div>
-      <div class="absolute inset-0 bg-pattern opacity-30"></div>
-      
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-16">
-          <div class="space-y-4">
-            <h1
-              class="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 leading-tight font-['Red_Hat_Display_Variable']"
-            >
-              Career Journey
-            </h1>
-            <p class="text-lg sm:text-xl text-gray-700 font-['Montserrat_Variable'] font-light max-w-2xl">
-              Exploring the path of innovation, growth, and meaningful impact in technology
-            </p>
+  <main class="career-page">
+    <Breadcrumbs items={[{ label: "Career" }]} />
+
+    <!-- Page Header -->
+    <section class="page-header" data-reveal>
+      <span class="overline">PROFESSIONAL JOURNEY</span>
+      <h1 class="page-title">Career</h1>
+      <p class="page-subtitle">A timeline of building, learning, and growing.</p>
+    </section>
+
+    <!-- Current Role Spotlight -->
+    {currentRole && (
+      <section class="current-role" data-reveal aria-current="true">
+        <div class="role-accent" aria-hidden="true"></div>
+        <div class="role-content">
+          <div class="role-header">
+            <span class="current-badge">Current</span>
+            <h2 class="role-title">{currentRole.positions[0]?.title}</h2>
+            <h3 class="role-company">{currentRole.company}</h3>
+            <span class="role-duration company-duration" data-positions={JSON.stringify(currentRole.positions)}>
+              {currentRole.positions[0]?.period}
+            </span>
           </div>
-          <a
-            href="/"
-            class="group inline-flex items-center px-6 py-3 bg-white/90 backdrop-blur-sm border border-brand-200/50 rounded-xl text-brand-700 hover:text-brand-600 hover:bg-white hover:shadow-lg transition-all duration-300 font-['Montserrat_Variable'] text-sm font-medium"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 mr-2 group-hover:-translate-x-0.5 transition-transform duration-200"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            Back to Home
-          </a>
-        </div>
-      </div>
-    </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-    <div class="mb-24 scroll-reveal">
-      <div class="relative">
-        <div class="absolute inset-0 bg-gradient-to-r from-brand-100/30 via-brand-50/20 to-brand-200/30 rounded-2xl transform rotate-1 hover:rotate-2 transition-transform duration-500"></div>
-        <div class="relative bg-white/95 backdrop-blur-sm rounded-2xl p-8 sm:p-10 lg:p-12 shadow-lg border border-brand-100/30 hover:shadow-xl hover:shadow-brand-100/20 transition-all duration-300">
-          <div class="flex flex-col lg:flex-row gap-12">
-            <div class="lg:w-2/3 space-y-6">
-              <div class="flex flex-col sm:flex-row gap-6 sm:gap-8 items-start">
-                <div class="flex-shrink-0">
-                  <div class="relative group">
-                    <div class="absolute inset-0 bg-gradient-to-br from-brand-400/20 to-brand-600/30 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500 opacity-70"></div>
-                    <Image 
-                      src={profilePhoto} 
-                      alt={`${profile.name} - Professional Photo`}
-                      class="relative w-32 h-32 sm:w-40 sm:h-40 object-cover rounded-full shadow-lg border-4 border-white/80 group-hover:scale-105 transition-transform duration-300"
-                      width={146}
-                      height={146}
-                      loading="eager"
-                      decoding="async"
-                      format="webp"
-                    />
-                  </div>
-                </div>
-                <div class="flex-1 space-y-3">
-                  <h2 class="text-3xl sm:text-4xl font-light text-gray-900 font-['Red_Hat_Display_Variable']">
-                    {profile.name}
-                  </h2>
-                  <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-brand-600 to-brand-300 rounded-full">
-                    <p class="text-white font-['Montserrat_Variable'] text-sm font-medium">
-                      {profile.title}
-                    </p>
-                  </div>
-                  
-                  <div class="flex flex-col sm:flex-row gap-4 pt-2">
-                    <div class="flex items-center text-gray-600 group">
-                      <div class="p-2 bg-gray-50 rounded-xl mr-3 group-hover:bg-gray-100 transition-colors">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 text-brand-600 group-hover:text-brand-700 transition-colors"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                          ></path>
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                      </div>
-                      <span class="font-['Montserrat_Variable'] font-medium text-gray-700">{profile.location}</span>
-                    </div>
+          {currentRole.positions[0]?.description && (
+            <p class="role-desc">{currentRole.positions[0].description}</p>
+          )}
 
-                    <a
-                      href={profile.contact.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="inline-flex items-center text-gray-600 hover:text-brand-700 group transition-colors"
-                    >
-                      <div class="p-2 bg-gray-50 rounded-xl mr-3 group-hover:bg-gray-100 transition-colors">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 text-brand-600 group-hover:text-brand-700 transition-colors"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-                          ></path>
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M2 9h4v12H2z"></path>
-                          <circle
-                            cx="4"
-                            cy="4"
-                            r="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"></circle>
-                        </svg>
-                      </div>
-                      <span class="font-['Montserrat_Variable'] font-medium text-gray-700">LinkedIn Profile</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="prose prose-lg max-w-none">
-                {Array.isArray(profile.bio) ? (
-                  <div class="space-y-5">
-                    {profile.bio.map((paragraph, index) => (
-                      <p class={`text-gray-700 font-['Montserrat_Variable'] leading-relaxed font-light ${
-                        index === 0 ? 'text-xl font-medium text-gray-800' : ''
-                      }`}>
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                ) : (
-                  <p class="text-gray-700 font-['Montserrat_Variable'] leading-relaxed text-xl font-light">
-                    {profile.bio}
-                  </p>
-                )}
-              </div>
-
-              <div class="flex flex-wrap gap-3 pt-2">
-                {profile.socials.map((social) => (
-                  <a
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="group inline-flex items-center px-4 py-2 bg-gray-50 hover:bg-gradient-to-r hover:from-brand-400 hover:to-brand-700 rounded-xl text-gray-700 hover:text-white transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5"
-                  >
-                    <span class="font-['Montserrat_Variable'] text-sm font-medium">
-                      {social.platform}
-                    </span>
-                  </a>
-                ))}
-              </div>
-
-              <!-- Projects Link -->
-              <div class="pt-2">
-                <div class="bg-gradient-to-br from-brand-50/50 to-white rounded-2xl p-6 border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/20 transition-all duration-300">
-                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div class="flex items-start gap-4">
-                      <div>
-                        <h3 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-2 flex items-center">
-                          <div class="w-2 h-6 bg-gradient-to-b from-brand-500 to-brand-700 rounded-full mr-3"></div>
-                          Projects & Portfolio
-                        </h3>
-                        <p class="text-sm text-gray-600 font-['Montserrat_Variable'] font-light">
-                          Explore my technical projects and creative work
-                        </p>
-                      </div>
-                    </div>
-                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center">
-                      <a
-                      href="/projects/"
-                      class="group relative inline-flex items-center justify-center w-full sm:w-auto overflow-hidden bg-gradient-to-r from-brand-600 to-brand-700 text-white px-4 py-3 rounded-xl font-['Montserrat_Variable'] font-medium text-sm hover:from-brand-700 hover:to-brand-800 transition-all duration-300 shadow-lg hover:shadow-brand-500/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 whitespace-nowrap"
-                    >
-                      <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                      <span class="relative z-10">View Projects</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 ml-1 relative z-10 group-hover:translate-x-1 transition-transform duration-200"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M9 5l7 7-7 7"
-                        ></path>
-                      </svg>
-                    </a>
-                    <a
-                      href="/gallery/"
-                      class="group relative inline-flex items-center justify-center w-full sm:w-auto overflow-hidden bg-gradient-to-r from-brand-600 to-brand-700 text-white px-4 py-3 rounded-xl font-['Montserrat_Variable'] font-medium text-sm hover:from-brand-700 hover:to-brand-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-brand-500/25 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 whitespace-nowrap"
-                    >
-                      <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                      <span class="relative z-10">View Gallery</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-4 w-4 ml-1 relative z-10 group-hover:translate-x-1 transition-transform duration-200"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M9 5l7 7-7 7"
-                        ></path>
-                      </svg>
-                    </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          {currentRole.websitesMeta && currentRole.websitesMeta.length > 0 && (
+            <div class="role-links">
+              {currentRole.websitesMeta.map((site) => (
+                <LinkCard
+                  {...site}
+                  altText={`${site.title || currentRole.company} preview`}
+                  errorTitle={`Visit ${currentRole.company} website`}
+                />
+              ))}
             </div>
+          )}
 
-            <div class="lg:w-1/3">
-              <div class="sticky top-8 space-y-8">
-                <div class="bg-gradient-to-br from-brand-50/50 to-white rounded-2xl p-6 border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/20 transition-shadow duration-300">
-                  <h3 class="text-xl font-medium text-gray-900 font-['Red_Hat_Display_Variable'] mb-5 flex items-center">
-                    <div class="w-2 h-8 bg-gradient-to-b from-brand-600 to-brand-700 rounded-full mr-3"></div>
-                    Core Skills
-                  </h3>
-                  <div class="flex flex-wrap gap-2">
-                    {profile.skills.map((skill, index) => (
-                      <span class="inline-block px-3 py-2 rounded-xl text-xs font-medium font-['Montserrat_Variable'] border-1 border-brand-200/50 text-brand-600">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {profile.certifications && profile.certifications.length > 0 && (
-                  <div class="bg-gradient-to-br from-brand-50/50 to-white rounded-2xl p-6 border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/20 transition-shadow duration-300">
-                    <h3 class="text-xl font-medium text-gray-900 font-['Red_Hat_Display_Variable'] mb-5 flex items-center">
-                      <div class="w-2 h-8 bg-gradient-to-b from-brand-500 to-brand-600 rounded-full mr-3"></div>
-                      Certifications
-                    </h3>
-                    <div class="space-y-4">
-                      {profile.certifications.map((certification) => (
-                        <div class="group p-3 rounded-xl hover:bg-brand-50 transition-all duration-200">
-                          <p class="text-sm font-semibold font-['Montserrat_Variable'] text-brand-700">
-                            {certification.title}
-                          </p>
-                          <p class="text-xs text-gray-600 font-['Montserrat_Variable'] mt-1">
-                            {certification.institution}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {profile.interests && profile.interests.length > 0 && (
-                  <div class="bg-gradient-to-br from-brand-50/50 to-white rounded-2xl p-6 border border-brand-100/50 hover:shadow-lg hover:shadow-brand-100/20 transition-shadow duration-300">
-                    <h3 class="text-xl font-medium text-gray-900 font-['Red_Hat_Display_Variable'] mb-5 flex items-center">
-                      <div class="w-2 h-8 bg-gradient-to-b from-brand-400 to-brand-500 rounded-full mr-3"></div>
-                      Interests & Hobbies
-                    </h3>
-                    <div class="flex flex-wrap gap-2">
-                      {profile.interests.map((interest, index) => (
-                        <span class="inline-block px-3 py-2 rounded-xl text-xs font-medium font-['Montserrat_Variable']  border-1 border-brand-200/50 text-brand-600">
-                          {interest}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-20 md:mb-32 scroll-reveal">
-      <div class="text-center mb-16">
-        <div class="inline-flex items-center justify-center w-16 h-1 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 rounded-full mb-6"></div>
-        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-['Red_Hat_Display_Variable'] font-light text-gray-900 mb-4 tracking-tight">
-          Work Experience
-        </h2>
-        <p class="text-lg text-gray-600 font-['Montserrat_Variable'] font-light max-w-2xl mx-auto">
-          A journey through innovation, growth, and meaningful contributions
-        </p>
-      </div>
-
-      <div class="relative max-w-6xl mx-auto">
-        <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-brand-200 via-brand-300 to-brand-200 transform md:-translate-x-0.5">
-          <div class="absolute inset-0 bg-gradient-to-b from-brand-400/20 via-brand-500/30 to-brand-400/20 blur-sm"></div>
-        </div>
-
-        <div class="space-y-16 md:space-y-20">
-          {experiencesWithMeta.map((exp, index) => (
-            <div
-              class={`relative timeline-item group ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} flex flex-col md:flex md:items-center`}
-            >
-              <div class="absolute left-6 md:left-1/2 top-12 md:top-8 z-20 transform -translate-x-1/2">
-                <div class="relative timeline-dot-container">
-                  <div class="absolute inset-0 w-8 h-8 bg-brand-400/20 rounded-full timeline-pulse-ring"></div>
-                  <div class="absolute inset-0 w-10 h-10 -top-1 -left-1 bg-gradient-to-br from-brand-400/30 to-brand-600/30 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out blur-sm group-hover:scale-110"></div>
-                  <div class="relative w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full shadow-lg timeline-main-dot flex items-center justify-center">
-                    <div class="w-3 h-3 bg-white rounded-full shadow-inner timeline-inner-dot"></div>
-                  </div>
-                  <div class="absolute inset-0 w-8 h-8 border-2 border-white/50 rounded-full timeline-outer-ring"></div>
-                </div>
-              </div>
-
-              <div class={`mb-8 ml-16 md:ml-0 md:mb-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-16 md:text-right" : "md:pl-16 md:text-left"}`}>
-                <div class="space-y-4">
-                  <div class={`inline-flex items-center px-4 py-2 bg-gradient-to-r from-brand-50 to-brand-100/50 rounded-full border border-brand-200/50 ${index % 2 === 0 ? "md:ml-auto" : ""}`}>
-                    <div class="w-2 h-2 bg-brand-500 rounded-full mr-2 timeline-company-dot"></div>
-                    <span class="text-sm font-medium text-brand-700 font-['Montserrat_Variable']">Company</span>
-                  </div>
-
-                  <h3 class="text-2xl md:text-3xl font-medium text-gray-900 font-['Red_Hat_Display_Variable'] tracking-tight">
-                    {exp.company}
-                  </h3>
-
-                  <p class="text-base text-gray-600 font-['Montserrat_Variable'] font-light">
-                    <span class="company-duration" data-positions={JSON.stringify(exp.positions)}>
-                    </span>
-                  </p>
-
-                  {exp.websitesMeta && exp.websitesMeta.length > 0 && (
-                    <div class={`flex flex-col gap-4 mt-6 ${index % 2 === 0 ? "md:items-end" : "md:items-start"}`}>
-                      {exp.websitesMeta.map((site) => (
-                        <LinkCard
-                          {...site}
-                          altText={`${site.title || exp.company} preview`}
-                          errorTitle={`Visit ${exp.company} website`}
-                        />
+          {currentRole.positions.length > 1 && (
+            <div class="past-positions">
+              <h4 class="past-positions-title">Previous Positions</h4>
+              {currentRole.positions.slice(1).map((pos) => (
+                <div class="past-position">
+                  <span class="past-pos-title">{pos.title}</span>
+                  <span class="past-pos-period">
+                    {pos.period}
+                    <span class="position-duration" data-start-date={pos.start_date} data-end-date={pos.end_date}></span>
+                  </span>
+                  {pos.description && (
+                    <p class="past-pos-desc">{pos.description}</p>
+                  )}
+                  {pos.linksMeta && pos.linksMeta.length > 0 && (
+                    <div class="past-pos-links">
+                      <span class="pos-link-label">Related Projects</span>
+                      {pos.linksMeta.map((site) => (
+                        <LinkCard {...site} />
                       ))}
                     </div>
                   )}
                 </div>
-              </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    )}
 
-              <div class={`ml-16 md:ml-0 md:w-1/2 ${index % 2 === 0 ? "md:pl-16" : "md:pr-16"}`}>
-                <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-white/50 hover:shadow-2xl hover:shadow-brand-200/40 transition-shadow duration-300 group-hover:bg-white/90">
-                  <div class="absolute inset-0 bg-gradient-to-br from-white/40 via-white/30 to-brand-50/20 rounded-3xl backdrop-blur-sm"></div>
-                  
-                  <div class="relative z-10 space-y-8">
-                    {exp.positions.map((position, posIndex) => (
-                      <div class={`${posIndex > 0 ? 'pt-8 border-t border-gray-100' : ''}`}>
-                        <div class="mb-6">
-                          <h4 class="text-xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-2 tracking-tight">
-                            {position.title}
-                          </h4>
-                          
-                          <div class="flex flex-wrap gap-4 text-sm text-gray-600 font-['Montserrat_Variable']">
-                            <span class="inline-flex items-center">
-                              <svg class="w-4 h-4 mr-1.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                              {position.period}
-                              <span class="position-duration" data-start-date={position.start_date} data-end-date={position.end_date}>
-                              </span>
-                            </span>
-                            
-                            {position.location && (
-                              <span class="inline-flex items-center">
-                                <svg class="w-4 h-4 mr-1.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                {position.location}
-                              </span>
-                            )}
-                          </div>
-                        </div>
+    <!-- Work Experience Timeline -->
+    {pastExperiences.length > 0 && (
+      <section class="timeline-section">
+        <div class="section-header" data-reveal>
+          <h2 class="section-title">Work Experience</h2>
+        </div>
 
-                        {position.description && (
-                          <div class="mb-6">
-                            <p class="text-gray-700 font-['Montserrat_Variable'] font-light leading-relaxed text-sm italic">
-                              {position.description}
-                            </p>
-                          </div>
-                        )}
+        <ol class="timeline" role="list">
+          {pastExperiences.map((exp, index) => (
+            <li class="timeline-entry" data-reveal>
+              <div class="timeline-dot" aria-hidden="true"></div>
+              <div class="timeline-card">
+                <h3 class="entry-company">{exp.company}</h3>
+                <span class="entry-duration company-duration" data-positions={JSON.stringify(exp.positions)}>
+                </span>
 
-
-
-                        {position.linksMeta && position.linksMeta.length > 0 && (
-                          <div class="mt-6 p-4 bg-gradient-to-br from-brand-50/5 to-brand-100/30 rounded-2xl border border-brand-100/50">
-                            <h5 class="text-sm font-semibold text-gray-800 font-['Red_Hat_Display_Variable'] mb-3 uppercase tracking-wide">
-                              Related Projects
-                            </h5>
-                            <div class="space-y-3">
-                              {position.linksMeta.map((site) => (
-                                <LinkCard {...site} />
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                {exp.websitesMeta && exp.websitesMeta.length > 0 && (
+                  <div class="entry-link-cards">
+                    {exp.websitesMeta.map((site) => (
+                      <LinkCard
+                        {...site}
+                        altText={`${site.title || exp.company} preview`}
+                        errorTitle={`Visit ${exp.company} website`}
+                      />
                     ))}
                   </div>
+                )}
+
+                <div class="positions-list">
+                  {exp.positions.map((position, posIndex) => (
+                    <div class={`position ${posIndex > 0 ? 'position-border' : ''}`}>
+                      <h4 class="pos-title">{position.title}</h4>
+                      <div class="pos-meta">
+                        <span>{position.period}<span class="position-duration" data-start-date={position.start_date} data-end-date={position.end_date}></span></span>
+                        {position.location && <span>{position.location}</span>}
+                      </div>
+                      {position.description && (
+                        <p class="pos-desc">{position.description}</p>
+                      )}
+                      {position.linksMeta && position.linksMeta.length > 0 && (
+                        <div class="pos-link-cards">
+                          <span class="pos-link-label">Related Projects</span>
+                          {position.linksMeta.map((site) => (
+                            <LinkCard {...site} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
-      </div>
-    </div>
-    <div class="mb-20 md:mb-32 scroll-reveal">
-      <div class="text-center mb-16">
-        <div class="inline-flex items-center justify-center w-16 h-1 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 rounded-full mb-6"></div>
-        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-['Red_Hat_Display_Variable'] font-light text-gray-900 mb-4 tracking-tight">
-          Education
-        </h2>
-        <p class="text-lg text-gray-600 font-['Montserrat_Variable'] font-light max-w-2xl mx-auto">
-          Highlights from my academic journey
-        </p>
+        </ol>
+      </section>
+    )}
+
+    <!-- Education -->
+    <section class="education-section">
+      <div class="section-header" data-reveal>
+        <h2 class="section-title">Education</h2>
       </div>
 
-      <div class="max-w-4xl mx-auto space-y-8">
-        {profile.education.map((edu, index) => (
-          <div class="group relative">
-            <div class="absolute inset-0 bg-gradient-to-br from-brand-50/30 via-white to-brand-100/20 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-500 opacity-50"></div>
-            
-            <div class="relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-lg border border-white/50 hover:shadow-2xl hover:shadow-brand-200/40 transition-shadow duration-300 group-hover:bg-white/95">
-              <div class="absolute inset-0 bg-gradient-to-br from-white/60 via-white/40 to-brand-50/30 rounded-3xl"></div>
-              
-              <div class="relative z-10">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-                  <div>
-                    {/* <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-brand-50 to-brand-100/50 rounded-full border border-brand-200/50 mb-3">
-                      <div class="w-2 h-2 bg-brand-500 rounded-full mr-2"></div>
-                      <span class="text-sm font-medium text-brand-700 font-['Montserrat_Variable']">Education</span>
-                    </div> */}
-                    
-                    <h3 class="text-2xl md:text-3xl font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-2 tracking-tight">
-                      {edu.university}
-                    </h3>
-                    
-                    <p class="text-base text-gray-600 font-['Montserrat_Variable'] font-medium mb-3">
-                      {edu.institution}
-                    </p>
-                    
-                    <p class="text-lg text-gray-700 font-['Montserrat_Variable'] font-medium mb-2">
-                      {edu.degree}
-                    </p>
-                  </div>
-                  
-                  <div class="flex items-center text-gray-600">
-                    <svg class="w-5 h-5 mr-2 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    <span class="font-['Montserrat_Variable'] font-medium">
-                      {edu.period}
-                    </span>
-                  </div>
-                </div>
+      <div class="edu-list">
+        {profile.education.map((edu) => (
+          <div class="edu-card" data-reveal>
+            <div class="edu-accent" aria-hidden="true"></div>
+            <div class="edu-body">
+              <h3 class="edu-university">{edu.university}</h3>
+              <p class="edu-institution">{edu.institution}</p>
+              <p class="edu-degree">{edu.degree}</p>
+              <span class="edu-period">{edu.period}</span>
 
-                {edu.extra_curriculars && edu.extra_curriculars.length > 0 && (
-                  <div class="mt-8 p-6 bg-gradient-to-br from-brand-50/50 to-brand-100/30 rounded-2xl border border-brand-100/50">
-                    <h4 class="text-lg font-semibold text-gray-900 font-['Red_Hat_Display_Variable'] mb-6 flex items-center">
-                      <div class="w-2 h-6 bg-gradient-to-b from-brand-500 to-brand-600 rounded-full mr-3"></div>
-                      Extra-Curricular Activities
-                    </h4>
-                    
-                    <div class="space-y-6">
-                      {edu.extra_curriculars.map((activity) => (
-                        <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/50">
-                          <h5 class="text-xl font-medium text-gray-800 font-['Red_Hat_Display_Variable'] mb-4">
-                            {activity.club}
-                          </h5>
-                          
-                          <div class="space-y-4">
-                            {activity.positions.map((position) => (
-                              <div class="pl-4 border-l-2 border-brand-300/50 relative">
-                                <div class="absolute left-[-5px] top-2 w-2 h-2 bg-brand-500 rounded-full"></div>
-                                
-                                <div class="space-y-2">
-                                  <h6 class="text-base font-medium text-gray-800 font-['Montserrat_Variable']">
-                                    {position.title}
-                                  </h6>
-                                  
-                                  <div class="flex flex-wrap gap-4 text-sm text-gray-600 font-['Montserrat_Variable']">
-                                    <span class="inline-flex items-center">
-                                      <svg class="w-4 h-4 mr-1.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                      </svg>
-                                      {position.period}
-                                      <span class="position-duration" data-start-date={position.start_date} data-end-date={position.end_date}>
-                                      </span>
-                                    </span>
-                                    
-                                    {position.location && (
-                                      <span class="inline-flex items-center">
-                                        <svg class="w-4 h-4 mr-1.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                        {position.location}
-                                      </span>
-                                    )}
-                                  </div>
-                                  
-                                  {position.description && (
-                                    <p class="text-sm text-gray-700 font-['Montserrat_Variable'] font-light leading-relaxed italic">
-                                      {position.description}
-                                    </p>
-                                  )}
-                                  
-
-                                </div>
-                              </div>
-                            ))}
-                          </div>
+              {edu.extra_curriculars && edu.extra_curriculars.length > 0 && (
+                <div class="edu-extras">
+                  <h4 class="extras-title">Extra-Curricular Activities</h4>
+                  {edu.extra_curriculars.map((activity) => (
+                    <div class="extra-activity">
+                      <h5 class="activity-club">{activity.club}</h5>
+                      {activity.positions.map((pos) => (
+                        <div class="activity-position">
+                          <span class="activity-pos-title">{pos.title}</span>
+                          <span class="activity-pos-period">
+                            {pos.period}
+                            <span class="position-duration" data-start-date={pos.start_date} data-end-date={pos.end_date}></span>
+                          </span>
+                          {pos.description && <p class="activity-desc">{pos.description}</p>}
                         </div>
                       ))}
                     </div>
-                  </div>
-                )}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ))}
       </div>
-    </div>
-    <div class="relative bg-white/60 backdrop-blur-sm rounded-3xl p-12 md:p-16 lg:p-20 text-center border border-white/50 shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden">
-      <!-- Background Elements -->
-      <div class="absolute inset-0 bg-gradient-to-br from-brand-50/40 via-white to-brand-100/30"></div>
-      <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-brand-200/20 to-transparent rounded-full blur-3xl"></div>
-      <div class="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-brand-300/15 to-transparent rounded-full blur-2xl"></div>
-      
-      <!-- Main Content -->
-      <div class="relative z-10">
-        <!-- Decorative Line -->
-        <div class="w-16 h-1 bg-gradient-to-r from-brand-400 to-brand-600 rounded-full mx-auto mb-8"></div>
-        
-        <h2 class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-['Red_Hat_Display_Variable'] font-light text-gray-900 mb-6 tracking-tight">
-          Let's Connect
-        </h2>
-        
-        <p class="text-gray-600 font-['Montserrat_Variable'] font-light mb-12 max-w-3xl mx-auto text-lg sm:text-xl leading-relaxed">
-          Ready to turn ideas into impactful solutions? Let's explore how we can collaborate and create something extraordinary together.
-        </p>
+    </section>
 
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-8">
-          <a
-            href="/contact/"
-            class="group relative inline-flex items-center justify-center w-full sm:w-auto overflow-hidden bg-gradient-to-r from-brand-600 to-brand-700 text-white px-10 py-4 rounded-2xl font-['Montserrat_Variable'] font-medium text-base hover:from-brand-700 hover:to-brand-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-brand-500/25 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
-          >
-            <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            <span class="relative z-10">Get in Touch</span>
-          </a>
-          
-          <a
-            href="/about/"
-            class="group inline-flex items-center justify-center w-full sm:w-auto bg-white/80 backdrop-blur-sm text-gray-700 border-2 border-gray-200/80 px-10 py-4 rounded-2xl font-['Montserrat_Variable'] font-medium text-base hover:bg-white hover:border-brand-300 hover:text-brand-700 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-300"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            <span>About Me</span>
-          </a>
-        </div>
-        
-        <!-- Subtle Divider -->
-        <div class="mt-12 pt-8 border-t border-gray-200/50">
-          <p class="text-sm text-gray-500 font-['Montserrat_Variable'] font-light">
-            Available for freelance projects and full-time opportunities
-          </p>
-        </div>
+    <!-- Skills Snapshot -->
+    <section class="skills-section" data-reveal>
+      <ul class="skills-inline" role="list">
+        {profile.skills.slice(0, 10).map((skill, i) => (
+          <li>{skill}{i < Math.min(profile.skills.length, 10) - 1 ? ' ·' : ''}</li>
+        ))}
+      </ul>
+      {profile.skills.length > 10 && (
+        <span class="skills-more">and {profile.skills.length - 10} more</span>
+      )}
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" data-reveal>
+      <h2 class="cta-title">Interested in collaborating?</h2>
+      <p class="cta-desc">Let's build something meaningful together.</p>
+      <div class="cta-links">
+        <a href="/contact/" class="btn-primary">Let's Connect</a>
+        <a href="/projects/" class="btn-ghost">View Projects</a>
       </div>
-    </div>
-  </div>
+    </section>
   </main>
-
-  <script>
-    import { updateCareerDurations } from '../scripts/careerDurations';
-
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px 20% 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-        }
-      });
-    }, observerOptions);
-
-    // Add scroll reveal to sections
-    document.addEventListener('DOMContentLoaded', () => {
-      updateCareerDurations();
-      const sections = document.querySelectorAll('.scroll-reveal');
-      sections.forEach(section => {
-        observer.observe(section);
-      });
-    });
-
-    // Re-initialize on page load for Astro
-    document.addEventListener('astro:page-load', () => {
-      updateCareerDurations();
-      const sections = document.querySelectorAll('.scroll-reveal');
-      sections.forEach(section => {
-        observer.observe(section);
-      });
-    });
-  </script>
 </BaseLayout>
 
 <style>
-  /* Scroll-reveal: elements start hidden, transition in when .revealed is added */
-  .scroll-reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  .career-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
   }
 
-  .scroll-reveal.revealed {
-    opacity: 1;
-    transform: translateY(0);
+  /* Page Header */
+  .page-header {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: var(--space-20) 0 var(--space-12);
+    text-align: center;
+  }
+  .overline {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-overline);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-4);
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--text-display-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 var(--space-4);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+  .page-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.6;
   }
 
+  /* Current Role */
+  .current-role {
+    display: flex;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: var(--shadow-elevated);
+    margin-bottom: var(--space-16);
+    overflow: hidden;
+  }
+  .role-accent {
+    width: 4px;
+    flex-shrink: 0;
+    background: var(--color-brand);
+    border-radius: 2px;
+    margin-right: 32px;
+  }
+  .role-content { flex: 1; min-width: 0; }
+  .role-header { margin-bottom: var(--space-5); }
+  .current-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    background: var(--btn-bg);
+    color: white;
+    border-radius: 8px;
+    margin-bottom: var(--space-3);
+  }
+  .role-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-2);
+    line-height: 1.2;
+  }
+  .role-company {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--color-brand);
+    margin: 0 0 var(--space-2);
+  }
+  .role-duration {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-tertiary);
+  }
+  .role-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin: 0 0 var(--space-5);
+  }
+  .role-links {
+    margin-top: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  @media (min-width: 768px) {
+    .role-links {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+  .past-positions {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .past-positions-title {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-3);
+  }
+  .past-position {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .past-position:first-child {
+    border-top: none;
+  }
+  .past-pos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .past-pos-title {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text);
+    font-weight: 500;
+  }
+  .past-pos-period {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-tertiary);
+  }
+  .past-pos-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: var(--space-1) 0 0;
+  }
+  .past-pos-links {
+    margin-top: var(--space-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  @media (min-width: 768px) {
+    .past-pos-links {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Timeline Section */
+  .timeline-section {
+    padding-bottom: var(--space-16);
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--space-10);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  /* Timeline */
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-border);
+  }
+  .timeline-entry {
+    position: relative;
+    padding-bottom: var(--space-10);
+  }
+  .timeline-entry:last-child { padding-bottom: 0; }
   .timeline-dot {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Smooth Timeline Dot Animations */
-  .timeline-pulse-ring {
-    animation: smooth-pulse 4s ease-in-out infinite;
-  }
-
-  .timeline-main-dot {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .timeline-inner-dot {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .timeline-outer-ring {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .timeline-company-dot {
-    animation: gentle-pulse 3s ease-in-out infinite;
-  }
-
-  /* Hover Effects for Timeline Dots */
-  .timeline-item:hover .timeline-main-dot {
-    transform: scale(1.1);
-    box-shadow: 0 8px 25px rgba(107, 123, 176, 0.4);
-  }
-
-  .timeline-item:hover .timeline-inner-dot {
-    transform: scale(0.9);
-  }
-
-  .timeline-item:hover .timeline-outer-ring {
-    transform: scale(1.25);
-    border-color: rgba(255, 255, 255, 0.8);
-  }
-
-  .timeline-item:hover .timeline-pulse-ring {
-    animation-duration: 2s;
-  }
-
-  /* Smooth Keyframe Animations */
-  @keyframes smooth-pulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 0.6;
-    }
-    50% {
-      transform: scale(1.2);
-      opacity: 0.2;
-    }
-  }
-
-  @keyframes gentle-pulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.7;
-      transform: scale(1.05);
-    }
-  }
-
-  .timeline-item-container:hover .timeline-dot {
-    transform: scale(1.1);
-    animation: pulse 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
-  }
-
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(90, 106, 159, 0.7);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(90, 106, 159, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(90, 106, 159, 0);
-    }
-  }
-
-  a {
-    transition: all 0.2s ease-in-out;
-  }
-
-  .social-link {
-    position: relative;
-    overflow: hidden;
-    transition:
-      color 0.3s ease,
-      background-color 0.3s ease;
-  }
-
-  .social-link::after {
-    content: "";
     position: absolute;
+    left: -32px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-border);
+    border: 2px solid var(--color-bg);
+    z-index: 1;
+    transition: background 200ms;
+  }
+  .timeline-entry:hover .timeline-dot {
+    background: var(--color-brand);
+  }
+  .timeline-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-subtle);
+    transition: transform 250ms, box-shadow 250ms;
+  }
+  .timeline-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-raised);
+  }
+  .entry-company {
+    font-family: var(--font-display);
+    font-size: var(--text-h4);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    line-height: 1.35;
+    color: var(--color-text);
+    margin: 0 0 var(--space-1);
+  }
+  .entry-duration {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-tertiary);
+    display: block;
+    margin-bottom: var(--space-4);
+  }
+  .entry-link-cards {
+    margin-bottom: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  @media (min-width: 768px) {
+    .entry-link-cards {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Positions */
+  .positions-list {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
+  }
+  .position { padding: var(--space-3) 0; }
+  .position-border {
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-3);
+    padding-top: var(--space-4);
+  }
+  .pos-title {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    font-weight: 500;
+    color: var(--color-brand);
+    margin: 0 0 var(--space-1);
+  }
+  .pos-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-2);
+  }
+  .pos-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    font-style: italic;
+    margin: 0;
+  }
+  .pos-link-cards {
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-bg-alt);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  @media (min-width: 768px) {
+    .pos-link-cards {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+  .pos-link-label {
+    display: block;
     width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: radial-gradient(
-      circle,
-      transparent 70%,
-      rgba(255, 255, 255, 0.3) 100%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-tertiary);
+    margin-bottom: var(--space-3);
   }
 
-  .social-link:hover::after {
-    opacity: 1;
+  /* Education */
+  .education-section {
+    padding-bottom: var(--space-16);
   }
-
-  .shine-effect {
-    position: relative;
+  .edu-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  .edu-card {
+    display: flex;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 32px;
     overflow: hidden;
   }
-
-  .shine-effect::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -75%;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.5) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    transform: skewX(-25deg);
-    transition: all 0.7s ease;
+  .edu-accent {
+    width: 3px;
+    flex-shrink: 0;
+    background: var(--color-brand);
+    border-radius: 2px;
+    margin-right: 24px;
+  }
+  .edu-body { flex: 1; min-width: 0; }
+  .edu-university {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--color-text);
+    margin: 0 0 var(--space-1);
+  }
+  .edu-institution {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-2);
+  }
+  .edu-degree {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    font-weight: 500;
+    color: var(--color-text);
+    margin: 0 0 var(--space-2);
+  }
+  .edu-period {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-tertiary);
   }
 
-  .shine-effect:hover::before {
-    left: 125%;
+  /* Extra-curriculars */
+  .edu-extras {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .extras-title {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-4);
+  }
+  .extra-activity { margin-bottom: var(--space-4); }
+  .extra-activity:last-child { margin-bottom: 0; }
+  .activity-club {
+    font-family: var(--font-display);
+    font-size: var(--text-body-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-2);
+  }
+  .activity-position {
+    padding-left: 16px;
+    border-left: 2px solid var(--color-brand-lighter);
+    margin-bottom: var(--space-3);
+  }
+  .activity-pos-title {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    display: block;
+  }
+  .activity-pos-period {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-tertiary);
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+  .activity-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: var(--space-1) 0 0;
+    line-height: 1.5;
   }
 
-  .md\:w-1\/3 > div {
-    transition: box-shadow 0.3s ease-in-out;
+  /* Skills Snapshot */
+  .skills-section {
+    text-align: center;
+    padding-bottom: var(--space-12);
   }
-  .md\:w-1\/3 > div:hover {
-    box-shadow:
-      0 4px 6px -1px rgb(0 0 0 / 0.1),
-      0 2px 4px -2px rgb(0 0 0 / 0.1);
+  .skills-inline {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-1);
+  }
+  .skills-inline li {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-secondary);
+  }
+  .skills-more {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-tertiary);
+    font-style: italic;
   }
 
-  .list-disc li {
-    word-break: break-word;
+  /* CTA */
+  .cta-section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: var(--space-12) 0 var(--space-20);
+    text-align: center;
+  }
+  .cta-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    margin: 0 0 var(--space-3);
+  }
+  .cta-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-8);
+  }
+  .cta-links {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+  }
+  .btn-primary {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 28px;
+    background: var(--btn-bg);
+    color: white;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: filter 200ms, transform 200ms;
+  }
+  .btn-primary:hover { filter: brightness(0.9); transform: translateY(-1px); }
+  .btn-ghost {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 28px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: border-color 200ms, color 200ms;
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
   }
 
-  .description-truncate {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Respect reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    .scroll-reveal {
-      opacity: 1 !important;
-      transform: none !important;
-      transition: none !important;
-    }
-    .social-link,
-    .timeline-item-container,
-    .timeline-pulse-ring,
-    .timeline-company-dot {
-      transition: none !important;
-      animation: none !important;
-    }
-    .social-link:hover,
-    .timeline-item-container:hover *,
-    .timeline-item:hover * {
-      transform: none !important;
-      animation: none !important;
-    }
+  @media (max-width: 639px) {
+    .current-role { padding: 24px; flex-direction: column; }
+    .role-accent { width: 100%; height: 4px; margin: 0 0 24px 0; }
+    .cta-links { flex-direction: column; align-items: center; }
   }
 </style>
+
+<script>
+  import { updateCareerDurations } from '../scripts/careerDurations';
+
+  function initCareer() {
+    updateCareerDurations();
+  }
+
+  document.addEventListener('DOMContentLoaded', initCareer);
+  document.addEventListener('astro:page-load', initCareer);
+</script>

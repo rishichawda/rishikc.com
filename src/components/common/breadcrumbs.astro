@@ -1,0 +1,84 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item">
+      <a href="/" class="breadcrumb-link">Home</a>
+    </li>
+    {items.map((item, i) => (
+      <li class="breadcrumb-item">
+        <span class="breadcrumb-sep" aria-hidden="true">›</span>
+        {item.href && i < items.length - 1 ? (
+          <a href={item.href} class="breadcrumb-link">{item.label}</a>
+        ) : (
+          <span class="breadcrumb-current" aria-current="page">{item.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    max-width: 720px;
+    width: 100%;
+    margin: var(--space-4) auto 0;
+    padding: 0 var(--space-6);
+  }
+  .breadcrumb-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex-wrap: wrap;
+  }
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 0;
+  }
+  .breadcrumb-item:last-child {
+    overflow: hidden;
+  }
+  .breadcrumb-link {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--color-text-tertiary);
+    text-decoration: none;
+    transition: color 200ms;
+  }
+  .breadcrumb-link:hover {
+    color: var(--color-brand);
+  }
+  .breadcrumb-sep {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+  .breadcrumb-current {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--color-text-tertiary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 767px) {
+    .breadcrumbs { padding: 0 var(--space-4); }
+  }
+</style>

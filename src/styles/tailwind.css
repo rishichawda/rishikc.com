@@ -1,6 +1,17 @@
  @import "tailwindcss";
+ @plugin "@tailwindcss/typography";
+
+ /* Map dark: variant to our data-theme attribute instead of prefers-color-scheme */
+ @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
  @theme {
+     /* ─── Font Families (from Astro Fonts API CSS variables) ─── */
+     --font-sans: var(--font-inter), sans-serif;
+     --font-display: var(--font-red-hat-display), sans-serif;
+     --font-body: var(--font-inter), sans-serif;
+     --font-heading: var(--font-montserrat), sans-serif;
+     --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
      /* ─── Brand Palette (Blue/Indigo) ─── */
      --color-brand-950: #4C5781;
      --color-brand-900: #576cbc;
@@ -20,15 +31,19 @@
      --color-earth-clay: #D7BAA9;
      --color-brand-blue: #2D31FA;
 
-     /* ─── Gallery Dark Theme ─── */
-     --color-gallery-bg: #0D0D0D;
-     --color-gallery-bg-secondary: #1A1A1A;
-     --color-gallery-bg-tertiary: #242424;
-     --color-gallery-text: #F6EDE3;
-     --color-gallery-text-muted: #8C8C8C;
-     --color-gallery-accent: #B15D44;
-     --color-gallery-accent-vivid: #DC3E26;
-     --color-gallery-border: #2A2A2A;
+     /* ─── Gallery (unified with site palette per v2 design) ─── */
+     --color-gallery-bg: var(--color-bg);
+     --color-gallery-bg-secondary: var(--color-surface);
+     --color-gallery-bg-tertiary: var(--color-bg-alt);
+     --color-gallery-text: var(--color-text);
+     --color-gallery-text-muted: var(--color-text-muted);
+     --color-gallery-accent: var(--color-brand);
+     --color-gallery-accent-vivid: var(--color-brand-dark);
+     --color-gallery-border: var(--color-border);
+
+     /* ─── Button Fills (adapts to theme via CSS custom properties) ─── */
+     --color-btn: var(--btn-bg);
+     --color-btn-hover: var(--btn-bg-hover);
 
      /* ─── Dark Mode Surface (Storytelling Scenarios) ─── */
      --color-surface-dark: #121212;
