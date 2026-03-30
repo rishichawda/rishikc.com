@@ -81,16 +81,66 @@ const pageSchemaEntities = [
 </BaseLayout>
 
 <script>
+    import gsap from 'gsap';
+
     document.addEventListener('astro:page-load', () => {
         const shuffleButton = document.getElementById('shuffle-button');
         const container = document.getElementById('quotes-container');
         if (!shuffleButton || !container) return;
 
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         shuffleButton.addEventListener('click', () => {
             const cards = Array.from(container.querySelectorAll('.quote-card'));
-            for (let i = cards.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                container.appendChild(cards[j]);
+            if (cards.length < 2) return;
+
+            if (reduceMotion) {
+                // Just reorder without animation
+                for (let i = cards.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    container.appendChild(cards[j]);
+                }
+                return;
+            }
+
+            // Animate out
+            gsap.to(cards, {
+                opacity: 0,
+                y: -20,
+                scale: 0.95,
+                stagger: 0.03,
+                duration: 0.25,
+                ease: 'power2.in',
+                onComplete: () => {
+                    // Fisher-Yates shuffle
+                    for (let i = cards.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        container.appendChild(cards[j]);
+                    }
+
+                    // Get new order
+                    const newCards = Array.from(container.querySelectorAll('.quote-card'));
+
+                    // Animate in
+                    gsap.fromTo(newCards, {
+                        opacity: 0,
+                        y: 30,
+                        scale: 0.95,
+                    }, {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        stagger: 0.05,
+                        duration: 0.4,
+                        ease: 'back.out(1.2)',
+                    });
+                }
+            });
+
+            // Rotate the shuffle icon
+            const svg = shuffleButton.querySelector('svg');
+            if (svg) {
+                gsap.to(svg, { rotation: '+=360', duration: 0.5, ease: 'power2.inOut' });
             }
         });
     });
@@ -164,40 +214,47 @@ const pageSchemaEntities = [
     }
 
     #quotes-container {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-8);
+        columns: 1;
+        column-gap: var(--space-6);
+    }
+
+    @media (min-width: 640px) {
+        #quotes-container {
+            columns: 2;
+        }
     }
 
     /* Quote Card */
     .quote-card {
         position: relative;
         background: var(--color-surface);
-        border-left: 3px solid var(--color-brand-light);
-        border-radius: 12px;
-        padding: 32px;
-        margin: 0;
+        border: 1px solid var(--color-border);
+        border-radius: 16px;
+        padding: 28px;
+        margin: 0 0 var(--space-6);
+        break-inside: avoid;
         box-shadow: var(--shadow-subtle);
-        transition: box-shadow 300ms, border-color 200ms;
+        transition: box-shadow 300ms, transform 300ms, border-color 200ms;
     }
     .quote-card:hover {
         box-shadow: var(--shadow-raised);
-        border-color: var(--color-brand);
+        transform: translateY(-2px);
+        border-color: var(--color-brand-light);
     }
     .quote-mark {
         font-family: var(--font-display);
-        font-size: 64px;
+        font-size: 48px;
         font-weight: 700;
-        color: var(--color-brand-lighter);
-        opacity: 0.3;
+        color: var(--color-brand);
+        opacity: 0.15;
         position: absolute;
-        top: -8px;
+        top: 8px;
         left: 16px;
         line-height: 1;
     }
     .quote-text {
         font-family: var(--font-body);
-        font-size: var(--text-body-lg);
+        font-size: var(--text-body);
         color: var(--color-text);
         line-height: 1.75;
         font-style: italic;
@@ -205,13 +262,15 @@ const pageSchemaEntities = [
     }
     .quote-author {
         display: block;
-        font-family: var(--font-ui);
-        font-size: 14px;
+        font-family: var(--font-mono);
+        font-size: 13px;
         font-weight: 500;
-        color: var(--color-text-secondary);
+        color: var(--color-text-tertiary);
         text-align: right;
         margin-top: var(--space-4);
         font-style: normal;
+        padding-top: var(--space-3);
+        border-top: 1px solid var(--color-border);
     }
 
     /* Empty State */

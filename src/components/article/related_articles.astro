@@ -134,22 +134,26 @@ function formatDate(date: Date): string {
   }
 
   .related-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: var(--space-6);
+    columns: 1;
+    column-gap: var(--space-6);
   }
 
   @media (min-width: 640px) {
-    .related-grid { grid-template-columns: repeat(2, 1fr); }
+    .related-grid { columns: 2; }
   }
   @media (min-width: 1024px) {
-    .related-grid { grid-template-columns: repeat(3, 1fr); }
+    .related-grid { columns: 3; }
+  }
+
+  .related-card-wrap {
+    break-inside: avoid;
+    margin-bottom: var(--space-6);
   }
 
   .related-card {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: auto;
     text-decoration: none;
     color: inherit;
     background: var(--color-surface);

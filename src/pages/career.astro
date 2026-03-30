@@ -133,9 +133,28 @@ const pageSchemaEntities = [
 
     <!-- Page Header -->
     <section class="page-header" data-reveal>
+      <div class="header-photo">
+        <Image
+          src={profilePhoto}
+          alt={`${profile.name} — professional headshot`}
+          width={120}
+          height={120}
+          class="headshot"
+        />
+      </div>
       <span class="overline">PROFESSIONAL JOURNEY</span>
       <h1 class="page-title">Career</h1>
       <p class="page-subtitle">A timeline of building, learning, and growing.</p>
+    </section>
+
+    <!-- Skills Snapshot -->
+    <section class="skills-section skills-top" data-reveal>
+      <h2 class="skills-heading">Skills &amp; Expertise</h2>
+      <ul class="skills-pills" role="list">
+        {profile.skills.map((skill) => (
+          <li class="skill-pill">{skill}</li>
+        ))}
+      </ul>
     </section>
 
     <!-- Current Role Spotlight -->
@@ -296,17 +315,7 @@ const pageSchemaEntities = [
       </div>
     </section>
 
-    <!-- Skills Snapshot -->
-    <section class="skills-section" data-reveal>
-      <ul class="skills-inline" role="list">
-        {profile.skills.slice(0, 10).map((skill, i) => (
-          <li>{skill}{i < Math.min(profile.skills.length, 10) - 1 ? ' ·' : ''}</li>
-        ))}
-      </ul>
-      {profile.skills.length > 10 && (
-        <span class="skills-more">and {profile.skills.length - 10} more</span>
-      )}
-    </section>
+
 
     <!-- CTA -->
     <section class="cta-section" data-reveal>
@@ -757,30 +766,59 @@ const pageSchemaEntities = [
     line-height: 1.5;
   }
 
-  /* Skills Snapshot */
-  .skills-section {
-    text-align: center;
-    padding-bottom: var(--space-12);
+  /* Headshot */
+  .header-photo {
+    margin-bottom: var(--space-6);
+    display: flex;
+    justify-content: center;
   }
-  .skills-inline {
+  .headshot {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-brand-lighter);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Skills Section (top) */
+  .skills-top {
+    max-width: 720px;
+    margin: 0 auto var(--space-12);
+    text-align: center;
+  }
+  .skills-heading {
+    font-family: var(--font-display);
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-tertiary);
+    margin: 0 0 var(--space-4);
+  }
+  .skills-pills {
     list-style: none;
     padding: 0;
-    margin: 0 0 var(--space-3);
+    margin: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: var(--space-1);
+    gap: var(--space-2);
   }
-  .skills-inline li {
-    font-family: var(--font-body);
-    font-size: var(--text-body-sm);
-    color: var(--color-text-secondary);
-  }
-  .skills-more {
+  .skill-pill {
     font-family: var(--font-ui);
-    font-size: var(--text-body-sm);
-    color: var(--color-text-tertiary);
-    font-style: italic;
+    font-size: 13px;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    background: var(--color-brand-lighter);
+    color: var(--color-brand);
+    font-weight: 500;
+    transition: background 200ms, transform 200ms;
+  }
+  .skill-pill:hover {
+    background: var(--color-brand);
+    color: #fff;
+    transform: translateY(-1px);
   }
 
   /* CTA */

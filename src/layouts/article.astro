@@ -40,10 +40,7 @@ const imageUrl = content.hero_image?.src
 		).toString()
 	: "";
 
-// Check if article is older than 2 years without recent dateModified
-const twoYearsAgo = new Date();
-twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2);
-const isOutdated = content.date < twoYearsAgo && (!content.dateModified || content.dateModified < twoYearsAgo);
+
 ---
 
 <article class="article-layout">
@@ -149,16 +146,7 @@ const isOutdated = content.date < twoYearsAgo && (!content.dateModified || conte
 		</div>
 	</header>
 
-	<!-- Outdated Banner -->
-	{isOutdated && (
-		<div class="outdated-banner" role="status">
-			<span class="outdated-icon">⏰</span>
-			<div>
-				<p class="outdated-text">This article was published over 2 years ago. Some information may be outdated.</p>
-				<a href={`/articles/?tag=${content.tags?.[0] || ''}`} class="outdated-link">Check for newer articles &rarr;</a>
-			</div>
-		</div>
-	)}
+
 
 	<!-- Article Body + TOC -->
 	<div class="article-body-wrapper" id="article-body">
@@ -172,7 +160,7 @@ const isOutdated = content.date < twoYearsAgo && (!content.dateModified || conte
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
-		overflow-x: hidden;
+		overflow-x: clip;
 	}
 
 	/* Progress Bar */
@@ -293,44 +281,16 @@ const isOutdated = content.date < twoYearsAgo && (!content.dateModified || conte
 		color: var(--color-brand);
 	}
 
-	/* Outdated Banner */
-	.outdated-banner {
-		max-width: 720px;
-		width: 100%;
-		margin: 0 auto var(--space-8);
-		padding: var(--space-4) var(--space-5);
-		background: #FEF3C7;
-		border-left: 3px solid #F59E0B;
-		border-radius: 8px;
-		display: flex;
-		align-items: flex-start;
-		gap: var(--space-3);
-	}
-	[data-theme="dark"] .outdated-banner {
-		background: rgba(245, 158, 11, 0.1);
-	}
-	.outdated-icon { font-size: 20px; flex-shrink: 0; }
-	.outdated-text {
-		font-family: var(--font-body);
-		font-size: var(--text-body-sm);
-		color: var(--color-text);
-		margin: 0 0 4px;
-	}
-	.outdated-link {
-		font-family: var(--font-ui);
-		font-size: var(--text-caption);
-		color: #D97706;
-	}
+
 
 	/* Article Body Wrapper */
 	.article-body-wrapper {
-		max-width: 100%;
+		max-width: var(--max-content, 1200px);
 		width: 100%;
 		padding: 0 var(--space-6);
-		margin-bottom: var(--space-20);
+		margin: 0 auto var(--space-20);
 		display: flex;
 		gap: var(--space-8);
-		justify-content: center;
 	}
 
 	@media (max-width: 767px) {
@@ -341,7 +301,14 @@ const isOutdated = content.date < twoYearsAgo && (!content.dateModified || conte
 			padding: 0 var(--space-4);
 		}
 	}
+	/* When TOC is hidden, center prose content with readable max-width */
 	@media (min-width: 768px) and (max-width: 1023px) {
+		.article-body-wrapper {
+			justify-content: center;
+		}
+		.article-body-wrapper .prose-content {
+			max-width: 720px;
+		}
 	}
 </style>
 

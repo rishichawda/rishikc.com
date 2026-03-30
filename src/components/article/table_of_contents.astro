@@ -9,7 +9,7 @@ const { headings } = Astro.props;
 let filteredHeadings = headings.filter((heading) => heading.depth <= (headings.length > 10 ? 3 : 4));
 ---
 
-<div class="lg:sticky top-6 py-6 max-w-xs hidden lg:block" id="table-of-contents">
+<div class="lg:sticky top-[4.5rem] py-6 max-w-xs hidden lg:block self-start" id="table-of-contents">
     <nav class="toc-nav">
         <div class="toc-inner">
             <!-- Header -->

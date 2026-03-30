@@ -43,6 +43,16 @@ const seo = {
 		<script is:inline>
 			// FOUC prevention: set data-theme synchronously before first paint
 			(function() {
+				var isGallery = window.location.pathname.startsWith('/gallery');
+				// Restore previous theme when leaving gallery (handles hard navigations)
+				if (!isGallery) {
+					var galleryPrev = sessionStorage.getItem('gallery-prev-theme');
+					if (galleryPrev) {
+						localStorage.setItem('theme', galleryPrev);
+						sessionStorage.removeItem('gallery-prev-theme');
+						sessionStorage.removeItem('gallery-manual-override');
+					}
+				}
 				var saved = localStorage.getItem('theme');
 				var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 				document.documentElement.setAttribute('data-theme', theme);
@@ -50,6 +60,18 @@ const seo = {
 
 			// Preserve theme across View Transitions (ClientRouter SPA navigation)
 			document.addEventListener('astro:before-swap', function(e) {
+				var newPath = e.newDocument?.querySelector('link[rel="canonical"]')?.getAttribute('href') || '';
+				var isLeavingGallery = window.location.pathname.startsWith('/gallery') && !newPath.includes('/gallery');
+				if (isLeavingGallery) {
+					var galleryPrev = sessionStorage.getItem('gallery-prev-theme');
+					if (galleryPrev) {
+						e.newDocument.documentElement.setAttribute('data-theme', galleryPrev);
+						localStorage.setItem('theme', galleryPrev);
+						sessionStorage.removeItem('gallery-prev-theme');
+						sessionStorage.removeItem('gallery-manual-override');
+						return;
+					}
+				}
 				var theme = document.documentElement.getAttribute('data-theme');
 				if (theme) {
 					e.newDocument.documentElement.setAttribute('data-theme', theme);

@@ -80,10 +80,10 @@ const pageSchemaEntities = [
                 </div>
                 <div class="series-scroll" role="region" aria-label="Article series">
                     {allSeries.map((series) => (
-                        <a href={series.articles[0]?.data.path || "/articles/series/"} class="series-card">
+                        <a href="/articles/series/" class="series-card">
                             <h4 class="series-card-title">{series.seriesTitle}</h4>
                             <span class="series-card-meta">{series.totalParts} parts</span>
-                            <span class="series-card-link">Start Reading <span class="arrow">&rarr;</span></span>
+                            <span class="series-card-link">View Series <span class="arrow">&rarr;</span></span>
                         </a>
                     ))}
                 </div>
@@ -93,12 +93,19 @@ const pageSchemaEntities = [
         <!-- Filter Bar -->
         <div class="filter-bar" id="filter-bar">
             <div class="filter-inner">
-                <div class="tag-filters" role="radiogroup" aria-label="Filter by tag">
-                    <div class="tag-indicator" id="tag-indicator" aria-hidden="true"></div>
-                    <button class="tag-pill active" data-tag="all" aria-pressed="true">All</button>
-                    {allTags.map((tag) => (
-                        <button class="tag-pill" data-tag={tag} aria-pressed="false">{tag}</button>
-                    ))}
+                <div class="tag-filters-wrapper">
+                    <div class="tag-filters" role="group" aria-label="Filter by tag" id="tag-filters">
+                        <div class="tag-indicator" id="tag-indicator" aria-hidden="true"></div>
+                        <button class="tag-pill active" data-tag="all" aria-pressed="true">All</button>
+                        {allTags.map((tag, i) => (
+                            <button class:list={["tag-pill", i >= 8 ? "tag-overflow" : ""]} data-tag={tag} aria-pressed="false">{tag}<span class="tag-dismiss" aria-hidden="true">×</span></button>
+                        ))}
+                    </div>
+                    {allTags.length > 8 && (
+                        <button class="tag-expand-btn" id="tag-expand" aria-expanded="false">
+                            <span class="tag-expand-text">+{allTags.length - 8} more</span>
+                        </button>
+                    )}
                 </div>
                 <div class="filter-controls">
                     <div class="view-toggle" role="group" aria-label="View mode">
@@ -194,6 +201,15 @@ const pageSchemaEntities = [
                         </a>
                         <!-- List view variant -->
                         <a href={article.data.path} class="list-link">
+                            <div class="list-thumb">
+                                <Image
+                                    src={article.data.hero_image}
+                                    alt=""
+                                    width={340}
+                                    height={190}
+                                    class="list-thumb-img"
+                                />
+                            </div>
                             <div class="list-body">
                                 <h3 class="list-title">{article.data.title}</h3>
                                 <p class="list-desc">{article.data.description}</p>
@@ -276,6 +292,13 @@ const pageSchemaEntities = [
         align-items: center;
         gap: var(--space-4);
     }
+    .tag-filters-wrapper {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        flex: 1;
+        min-width: 0;
+    }
     .tag-filters {
         display: flex;
         gap: var(--space-2);
@@ -285,15 +308,37 @@ const pageSchemaEntities = [
         -ms-overflow-style: none;
         padding: 2px 0;
         position: relative;
+        flex-wrap: wrap;
     }
     .tag-filters::-webkit-scrollbar { display: none; }
+    .tag-overflow {
+        display: none;
+    }
+    .tag-filters.expanded .tag-overflow {
+        display: inline-flex;
+    }
+    .tag-expand-btn {
+        font-family: var(--font-ui);
+        font-size: 13px;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        border: 1px dashed var(--color-border);
+        background: transparent;
+        color: var(--color-text-tertiary);
+        cursor: pointer;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: color 200ms, border-color 200ms;
+    }
+    .tag-expand-btn:hover {
+        color: var(--color-brand);
+        border-color: var(--color-brand);
+    }
     .tag-indicator {
         position: absolute;
-        height: calc(100% - 4px);
-        top: 2px;
         border-radius: 9999px;
         background: var(--btn-bg);
-        transition: left 250ms cubic-bezier(0.7, 0, 0.3, 1), width 250ms cubic-bezier(0.7, 0, 0.3, 1);
+        transition: left 250ms cubic-bezier(0.7, 0, 0.3, 1), width 250ms cubic-bezier(0.7, 0, 0.3, 1), top 250ms cubic-bezier(0.7, 0, 0.3, 1), height 250ms cubic-bezier(0.7, 0, 0.3, 1);
         pointer-events: none;
         z-index: 0;
     }
@@ -319,6 +364,16 @@ const pageSchemaEntities = [
         background: transparent;
         color: #fff;
         border-color: transparent;
+    }
+    .tag-pill .tag-dismiss {
+        display: none;
+        margin-left: 4px;
+        font-size: 12px;
+        line-height: 1;
+        opacity: 0.8;
+    }
+    .tag-pill.active:not([data-tag="all"]) .tag-dismiss {
+        display: inline;
     }
     .filter-controls {
         display: flex;
@@ -561,19 +616,20 @@ const pageSchemaEntities = [
         padding: var(--space-8) var(--space-6) var(--space-20);
     }
     .articles-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
+        columns: 3;
+        column-gap: 24px;
     }
     .articles-grid[data-view="list"] {
-        grid-template-columns: 1fr;
-        gap: 0;
+        columns: 1;
+        column-gap: 0;
         overflow: hidden;
     }
 
     /* Grid Card */
     .article-card {
         transition: opacity 200ms;
+        break-inside: avoid;
+        margin-bottom: 24px;
     }
     .article-card[hidden] { display: none; }
     .card-link {
@@ -669,11 +725,10 @@ const pageSchemaEntities = [
         display: none;
         text-decoration: none;
         color: inherit;
-        padding: var(--space-4) 0;
+        padding: var(--space-5) 0;
         border-bottom: 1px solid var(--color-border);
         align-items: center;
-        justify-content: space-between;
-        gap: var(--space-4);
+        gap: var(--space-5);
         transition: background 200ms;
     }
     .list-link:hover {
@@ -686,16 +741,33 @@ const pageSchemaEntities = [
     }
     .articles-grid[data-view="list"] .card-link { display: none; }
     .articles-grid[data-view="list"] .list-link { display: flex; }
+    .list-thumb {
+        width: 340px;
+        height: 190px;
+        flex-shrink: 0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .list-thumb-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 400ms;
+    }
+    .list-link:hover .list-thumb-img {
+        transform: scale(1.05);
+    }
     .list-body { flex: 1; min-width: 0; }
     .list-title {
         font-family: var(--font-display);
-        font-size: var(--text-body);
+        font-size: var(--text-body-lg);
         font-weight: 600;
         color: var(--color-text);
-        margin: 0 0 4px;
-        white-space: nowrap;
+        margin: 0 0 6px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis;
         transition: color 200ms;
     }
     .list-link:hover .list-title { color: var(--color-brand); }
@@ -704,9 +776,10 @@ const pageSchemaEntities = [
         font-size: var(--text-body-sm);
         color: var(--color-text-secondary);
         margin: 0;
-        white-space: nowrap;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
         overflow: hidden;
-        text-overflow: ellipsis;
     }
     .list-meta {
         font-family: var(--font-mono);
@@ -752,16 +825,18 @@ const pageSchemaEntities = [
 
     /* Responsive */
     @media (max-width: 1023px) {
-        .articles-grid { grid-template-columns: repeat(2, 1fr); }
+        .articles-grid { columns: 2; }
         .featured-card { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 767px) {
-        .articles-grid { grid-template-columns: 1fr; }
+        .articles-grid { columns: 1; }
         .featured-card { grid-template-columns: 1fr; }
         .featured-content { padding: var(--space-6); }
         .featured-title { font-size: var(--text-h2); }
         .filter-controls { display: none; }
         .page-header { padding: var(--space-12) var(--space-4) var(--space-8); }
+        .list-link { flex-direction: column; }
+        .list-thumb { width: 100%; height: 180px; }
     }
 </style>
 
@@ -787,7 +862,9 @@ const pageSchemaEntities = [
             const containerRect = container.getBoundingClientRect();
             const pillRect = pill.getBoundingClientRect();
             indicator.style.left = `${pillRect.left - containerRect.left + container.scrollLeft}px`;
+            indicator.style.top = `${pillRect.top - containerRect.top + container.scrollTop}px`;
             indicator.style.width = `${pillRect.width}px`;
+            indicator.style.height = `${pillRect.height}px`;
         }
 
         // Restore view preference
@@ -833,17 +910,29 @@ const pageSchemaEntities = [
             }
         }
 
-        // Tag filtering
+        // Tag filtering (toggle deselect: clicking active tag resets to "all")
         tagPills.forEach(pill => {
             pill.addEventListener('click', () => {
-                activeTag = pill.dataset.tag || 'all';
-                tagPills.forEach(p => {
-                    const isActive = p === pill;
-                    p.classList.toggle('active', isActive);
-                    p.setAttribute('aria-pressed', String(isActive));
-                });
+                const clickedTag = pill.dataset.tag || 'all';
 
-                moveIndicator(pill);
+                if (clickedTag !== 'all' && activeTag === clickedTag) {
+                    // Deselect: reset to "all"
+                    activeTag = 'all';
+                    tagPills.forEach(p => {
+                        p.classList.toggle('active', p.dataset.tag === 'all');
+                        p.setAttribute('aria-pressed', String(p.dataset.tag === 'all'));
+                    });
+                    const allPill = document.querySelector<HTMLElement>('.tag-pill[data-tag="all"]');
+                    if (allPill) moveIndicator(allPill);
+                } else {
+                    activeTag = clickedTag;
+                    tagPills.forEach(p => {
+                        const isActive = p === pill;
+                        p.classList.toggle('active', isActive);
+                        p.setAttribute('aria-pressed', String(isActive));
+                    });
+                    moveIndicator(pill);
+                }
 
                 // Update URL
                 const url = new URL(window.location.href);
@@ -857,6 +946,18 @@ const pageSchemaEntities = [
                 filterArticles();
             });
         });
+
+        // Expand/collapse tags
+        const tagExpandBtn = document.getElementById('tag-expand') as HTMLButtonElement | null;
+        const tagFiltersEl = document.getElementById('tag-filters') as HTMLElement | null;
+        if (tagExpandBtn && tagFiltersEl) {
+            tagExpandBtn.addEventListener('click', () => {
+                const isExpanded = tagFiltersEl.classList.toggle('expanded');
+                tagExpandBtn.setAttribute('aria-expanded', String(isExpanded));
+                const overflowCount = tagFiltersEl.querySelectorAll('.tag-overflow').length;
+                tagExpandBtn.querySelector('.tag-expand-text')!.textContent = isExpanded ? 'Show fewer' : `+${overflowCount} more`;
+            });
+        }
 
         // View toggle
         viewBtns.forEach(btn => {

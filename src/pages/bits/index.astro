@@ -14,7 +14,14 @@ const sortedBits = allBits.sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 
-// Group bits by year for year dividers
+// Collect all tags
+const allTags = new Set<string>();
+sortedBits.forEach((bit) => {
+    bit.data.tags?.forEach((tag: string) => allTags.add(tag));
+});
+const tagList = Array.from(allTags).sort();
+
+// Group bits by year for list view
 const currentYear = new Date().getFullYear();
 const bitsByYear = new Map<number, typeof sortedBits>();
 sortedBits.forEach((bit) => {
@@ -23,12 +30,11 @@ sortedBits.forEach((bit) => {
     bitsByYear.get(year)!.push(bit);
 });
 const yearGroups = Array.from(bitsByYear.entries()).sort(([a], [b]) => b - a);
-const shouldGroupByYear = sortedBits.length > 20;
 
 function formatDate(date: Date): string {
     return new Date(date).toLocaleDateString("en-US", {
         day: "numeric",
-        month: "long",
+        month: "short",
         year: "numeric",
     });
 }
@@ -75,10 +81,57 @@ const pageSchemaEntities = [
         </section>
 
         {sortedBits.length > 0 ? (
-            <section class="bits-list">
-                {shouldGroupByYear ? (
-                    yearGroups.map(([year, bits]) => (
-                        <details class="year-group" open={year === currentYear}>
+            <>
+                <!-- Controls bar -->
+                <div class="controls-bar">
+                    <div class="tag-filters-wrapper">
+                        <div class="tag-filters" role="tablist" aria-label="Filter by tag">
+                            <button class="tag-pill active" data-tag="all" role="tab" aria-selected="true">All</button>
+                            {tagList.map((tag) => (
+                                <button class="tag-pill" data-tag={tag} role="tab" aria-selected="false">{tag}</button>
+                            ))}
+                        </div>
+                    </div>
+                    <div class="controls-right">
+                        <select class="sort-select" aria-label="Sort order">
+                            <option value="newest">Newest first</option>
+                            <option value="oldest">Oldest first</option>
+                        </select>
+                        <div class="view-toggle" role="radiogroup" aria-label="View style">
+                            <button class="view-btn active" data-view="grid" aria-label="Grid view" aria-checked="true" role="radio">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                            </button>
+                            <button class="view-btn" data-view="list" aria-label="List view" aria-checked="false" role="radio">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid view (default) -->
+                <section class="bits-grid active-view" data-view-target="grid">
+                    {sortedBits.map((bit) => (
+                        <a href={bit.data.path} class="bit-card" data-tags={JSON.stringify(bit.data.tags || [])} data-date={bit.data.date.toISOString()} data-reveal>
+                            <h3 class="bit-card-title">{bit.data.title}</h3>
+                            <p class="bit-card-desc">{bit.data.description}</p>
+                            <div class="bit-card-meta">
+                                <time datetime={bit.data.date.toISOString()}>{formatDate(bit.data.date)}</time>
+                                {bit.data.tags && bit.data.tags.length > 0 && (
+                                    <span class="bit-card-tags">
+                                        {bit.data.tags.slice(0, 3).map((tag: string) => (
+                                            <span class="bit-card-tag">{tag}</span>
+                                        ))}
+                                    </span>
+                                )}
+                            </div>
+                        </a>
+                    ))}
+                </section>
+
+                <!-- List view -->
+                <section class="bits-list" data-view-target="list">
+                    {yearGroups.map(([year, bits], idx) => (
+                        <details class="year-group" open={idx === 0 || year === currentYear} data-year={year}>
                             <summary class="year-divider">
                                 <h3 class="year-heading">
                                     <span class="year-toggle" aria-hidden="true">▸</span>
@@ -89,7 +142,7 @@ const pageSchemaEntities = [
                             </summary>
                             <ul role="list">
                                 {bits.map((bit) => (
-                                    <li class="bit-item" data-reveal>
+                                    <li class="bit-item" data-tags={JSON.stringify(bit.data.tags || [])} data-date={bit.data.date.toISOString()} data-reveal>
                                         <a href={bit.data.path} class="bit-link">
                                             <h3 class="bit-title">{bit.data.title}</h3>
                                             <p class="bit-desc">{bit.data.description}</p>
@@ -108,30 +161,9 @@ const pageSchemaEntities = [
                                 ))}
                             </ul>
                         </details>
-                    ))
-                ) : (
-                    <ul role="list">
-                        {sortedBits.map((bit) => (
-                            <li class="bit-item" data-reveal>
-                                <a href={bit.data.path} class="bit-link">
-                                    <h3 class="bit-title">{bit.data.title}</h3>
-                                    <p class="bit-desc">{bit.data.description}</p>
-                                    <div class="bit-meta">
-                                        <time datetime={bit.data.date.toISOString()}>{formatDate(bit.data.date)}</time>
-                                        {bit.data.tags && bit.data.tags.length > 0 && (
-                                            <span class="bit-tags">
-                                                {bit.data.tags.map((tag: string) => (
-                                                    <span class="bit-tag">{tag}</span>
-                                                ))}
-                                            </span>
-                                        )}
-                                    </div>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </section>
+                    ))}
+                </section>
+            </>
         ) : (
             <div class="empty-state" data-reveal>
                 <p class="empty-title">Short-form thoughts coming soon.</p>
@@ -182,12 +214,167 @@ const pageSchemaEntities = [
         color: var(--color-text-muted);
     }
 
-    /* Bits List */
+    /* Controls */
+    .controls-bar {
+        max-width: 960px;
+        margin: 0 auto var(--space-8);
+        padding: 0 var(--space-6);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+    .tag-filters-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .tag-filters-wrapper::-webkit-scrollbar { display: none; }
+    .tag-filters {
+        display: flex;
+        gap: var(--space-2);
+        white-space: nowrap;
+        padding: 2px;
+    }
+    .tag-pill {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--color-border);
+        background: transparent;
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: all 200ms;
+        white-space: nowrap;
+    }
+    .tag-pill:hover {
+        border-color: var(--color-brand-light);
+        color: var(--color-brand);
+    }
+    .tag-pill.active {
+        background: var(--color-brand);
+        color: #fff;
+        border-color: var(--color-brand);
+    }
+    .controls-right {
+        display: flex;
+        gap: var(--space-3);
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .sort-select {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--color-border);
+        background: var(--color-surface);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+    }
+    .view-toggle {
+        display: flex;
+        gap: 2px;
+        background: var(--color-bg-alt);
+        border-radius: 8px;
+        padding: 2px;
+    }
+    .view-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: none;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--color-text-tertiary);
+        cursor: pointer;
+        transition: all 200ms;
+    }
+    .view-btn:hover { color: var(--color-text); }
+    .view-btn.active {
+        background: var(--color-surface);
+        color: var(--color-text);
+        box-shadow: var(--shadow-subtle);
+    }
+
+    /* Grid */
+    .bits-grid {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 var(--space-6) var(--space-20);
+        columns: 2;
+        column-gap: var(--space-6);
+    }
+    .bits-grid:not(.active-view) { display: none; }
+
+    .bit-card {
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-6);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        background: var(--color-surface);
+        text-decoration: none;
+        break-inside: avoid;
+        margin-bottom: var(--space-6);
+        color: inherit;
+        transition: border-color 200ms, box-shadow 200ms, transform 200ms;
+    }
+    .bit-card:hover {
+        border-color: var(--color-brand-light);
+        box-shadow: var(--shadow-raised);
+        transform: translateY(-2px);
+    }
+    .bit-card-title {
+        font-family: var(--font-display);
+        font-size: var(--text-h3);
+        font-weight: 600;
+        color: var(--color-text);
+        margin: 0 0 var(--space-2);
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+    }
+    .bit-card:hover .bit-card-title { color: var(--color-brand); }
+    .bit-card-desc {
+        font-family: var(--font-body);
+        font-size: var(--text-body-sm);
+        color: var(--color-text-secondary);
+        margin: 0;
+        line-height: 1.6;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .bit-card-meta {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--color-text-tertiary);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        flex-wrap: wrap;
+        margin-top: var(--space-4);
+        padding-top: var(--space-3);
+        border-top: 1px solid var(--color-border);
+    }
+    .bit-card-tags { display: flex; gap: var(--space-2); }
+    .bit-card-tag {
+        font-size: 11px;
+        color: var(--color-text-muted);
+    }
+    .bit-card-tag::before { content: "#"; }
+
+    /* List */
     .bits-list {
         max-width: 720px;
         margin: 0 auto;
         padding: 0 var(--space-6) var(--space-20);
     }
+    .bits-list:not(.active-view) { display: none; }
     .bits-list ul {
         list-style: none;
         padding: 0;
@@ -195,9 +382,7 @@ const pageSchemaEntities = [
     }
 
     /* Year grouping */
-    .year-group {
-        margin-bottom: var(--space-2);
-    }
+    .year-group { margin-bottom: var(--space-2); }
     .year-divider {
         display: flex;
         align-items: center;
@@ -225,9 +410,7 @@ const pageSchemaEntities = [
         transition: transform 200ms;
         font-size: 0.7em;
     }
-    .year-group[open] .year-toggle {
-        transform: rotate(90deg);
-    }
+    .year-group[open] .year-toggle { transform: rotate(90deg); }
     .year-count {
         font-family: var(--font-mono);
         font-size: var(--text-caption);
@@ -239,10 +422,11 @@ const pageSchemaEntities = [
         height: 1px;
         background: var(--color-border);
     }
-    .bit-item {
-        border-bottom: 1px solid var(--color-border);
-    }
+    .year-group.hidden { display: none; }
+    .bit-item { border-bottom: 1px solid var(--color-border); }
     .bit-item:last-child { border-bottom: none; }
+    .bit-item.hidden { display: none; }
+    .bit-card.hidden { display: none; }
 
     .bit-link {
         display: block;
@@ -252,9 +436,7 @@ const pageSchemaEntities = [
         border-radius: 8px;
         transition: background 150ms;
     }
-    .bit-link:hover {
-        background: var(--color-bg-alt);
-    }
+    .bit-link:hover { background: var(--color-bg-alt); }
     .bit-title {
         font-family: var(--font-display);
         font-size: var(--text-h3);
@@ -289,10 +471,7 @@ const pageSchemaEntities = [
         gap: var(--space-3);
         flex-wrap: wrap;
     }
-    .bit-tags {
-        display: flex;
-        gap: var(--space-2);
-    }
+    .bit-tags { display: flex; gap: var(--space-2); }
     .bit-tag {
         font-family: var(--font-mono);
         font-size: var(--text-caption);
@@ -327,4 +506,120 @@ const pageSchemaEntities = [
         font-weight: 500;
     }
     .back-link:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+        .bits-grid { columns: 1; }
+    }
 </style>
+
+<script is:inline>
+    document.addEventListener('astro:page-load', () => {
+        // View toggle
+        var viewBtns = document.querySelectorAll('.view-btn');
+        var viewTargets = document.querySelectorAll('[data-view-target]');
+        viewBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var view = btn.getAttribute('data-view');
+                viewBtns.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-checked', 'false'); });
+                btn.classList.add('active');
+                btn.setAttribute('aria-checked', 'true');
+                viewTargets.forEach(function(t) {
+                    t.classList.toggle('active-view', t.getAttribute('data-view-target') === view);
+                });
+            });
+        });
+
+        // Tag filter — works on grid cards and list items
+        var pills = document.querySelectorAll('.tag-pill');
+        var gridCards = document.querySelectorAll('.bit-card');
+        var listItems = document.querySelectorAll('.bit-item');
+        var yearGroups = document.querySelectorAll('.year-group');
+
+        pills.forEach(function(pill) {
+            pill.addEventListener('click', function() {
+                var tag = pill.getAttribute('data-tag');
+                var isActive = pill.classList.contains('active');
+
+                // Toggle: clicking active tag resets to All
+                if (isActive && tag !== 'all') {
+                    pills.forEach(function(p) { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
+                    var allPill = document.querySelector('.tag-pill[data-tag="all"]');
+                    if (allPill) { allPill.classList.add('active'); allPill.setAttribute('aria-selected', 'true'); }
+                    gridCards.forEach(function(c) { c.classList.remove('hidden'); });
+                    listItems.forEach(function(c) { c.classList.remove('hidden'); });
+                    yearGroups.forEach(function(g) { g.classList.remove('hidden'); });
+                    return;
+                }
+
+                pills.forEach(function(p) { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
+                pill.classList.add('active');
+                pill.setAttribute('aria-selected', 'true');
+
+                // Filter grid cards
+                gridCards.forEach(function(card) {
+                    if (tag === 'all') { card.classList.remove('hidden'); return; }
+                    var tags = JSON.parse(card.getAttribute('data-tags') || '[]');
+                    card.classList.toggle('hidden', !tags.includes(tag));
+                });
+
+                // Filter list items and hide empty year groups
+                listItems.forEach(function(item) {
+                    if (tag === 'all') { item.classList.remove('hidden'); return; }
+                    var tags = JSON.parse(item.getAttribute('data-tags') || '[]');
+                    item.classList.toggle('hidden', !tags.includes(tag));
+                });
+
+                yearGroups.forEach(function(group) {
+                    if (tag === 'all') { group.classList.remove('hidden'); return; }
+                    var visibleItems = group.querySelectorAll('.bit-item:not(.hidden)');
+                    group.classList.toggle('hidden', visibleItems.length === 0);
+                });
+            });
+        });
+
+        // Sort — grid is flat, list uses year groups
+        var sortSelect = document.querySelector('.sort-select');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', function() {
+                var order = sortSelect.value;
+
+                // Sort grid
+                var gridContainer = document.querySelector('.bits-grid');
+                if (gridContainer) {
+                    var cards = Array.from(gridContainer.querySelectorAll('.bit-card'));
+                    cards.sort(function(a, b) {
+                        var da = a.getAttribute('data-date') || '';
+                        var db = b.getAttribute('data-date') || '';
+                        return order === 'newest' ? db.localeCompare(da) : da.localeCompare(db);
+                    });
+                    cards.forEach(function(card) { gridContainer.appendChild(card); });
+                }
+
+                // Sort year groups and items within
+                var listContainer = document.querySelector('.bits-list');
+                if (listContainer) {
+                    var groups = Array.from(listContainer.querySelectorAll('.year-group'));
+                    groups.sort(function(a, b) {
+                        var ya = parseInt(a.getAttribute('data-year') || '0');
+                        var yb = parseInt(b.getAttribute('data-year') || '0');
+                        return order === 'newest' ? yb - ya : ya - yb;
+                    });
+                    groups.forEach(function(group) { listContainer.appendChild(group); });
+
+                    // Sort items within each year group
+                    groups.forEach(function(group) {
+                        var ul = group.querySelector('ul');
+                        if (!ul) return;
+                        var items = Array.from(ul.querySelectorAll('.bit-item'));
+                        items.sort(function(a, b) {
+                            var da = a.getAttribute('data-date') || '';
+                            var db = b.getAttribute('data-date') || '';
+                            return order === 'newest' ? db.localeCompare(da) : da.localeCompare(db);
+                        });
+                        items.forEach(function(item) { ul.appendChild(item); });
+                    });
+                }
+            });
+        }
+    });
+</script>

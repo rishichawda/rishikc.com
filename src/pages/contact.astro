@@ -39,177 +39,177 @@ const pageSchemaEntities = [
       <span class="overline">SAY HELLO</span>
       <h1 class="page-title">Let's Connect</h1>
       <p class="page-subtitle">Have a project in mind, want to collaborate, or just want to say hello? I'd love to hear from you.</p>
+      <p class="response-note">I typically respond within 24–48 hours.</p>
     </section>
 
-    <div class="contact-grid">
-      <!-- Left column - Contact Info -->
-      <aside class="info-col" data-reveal>
-        <h3 class="info-heading">Get in Touch</h3>
-        <p class="info-intro">I'm always open to conversations about engineering, photography, or collaboration. Feel free to reach out.</p>
+    <div class="form-container" data-reveal>
+      <!-- Progress Steps -->
+      <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4">
+        <div class="progress-steps">
+          <div class="step-dot active" data-step="1"><span>1</span></div>
+          <div class="step-line"><div class="step-line-fill"></div></div>
+          <div class="step-dot" data-step="2"><span>2</span></div>
+          <div class="step-line"><div class="step-line-fill"></div></div>
+          <div class="step-dot" data-step="3"><span>3</span></div>
+          <div class="step-line"><div class="step-line-fill"></div></div>
+          <div class="step-dot" data-step="4"><span>4</span></div>
+        </div>
+        <div class="progress-labels">
+          <span class="step-label active">Topic</span>
+          <span class="step-label">About You</span>
+          <span class="step-label">Message</span>
+          <span class="step-label">Review</span>
+        </div>
+      </div>
 
-        <div class="contact-channels">
-          <div class="channel">
-            <svg class="channel-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-            </svg>
-            <div>
-              <span class="channel-label">Email</span>
-              <a href="mailto:hello@rishikc.com" class="channel-value channel-link">hello@rishikc.com</a>
-            </div>
-          </div>
-
-          <div class="channel">
-            <svg class="channel-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-            <div>
-              <span class="channel-label">Location</span>
-              <span class="channel-value">Bengaluru, India</span>
-            </div>
-          </div>
-
-          <div class="channel">
-            <svg class="channel-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            <div>
-              <span class="channel-label">Response Time</span>
-              <span class="channel-value">Usually within 48 hours</span>
-            </div>
-          </div>
+      <form id="contact-form">
+        <!-- Honeypot anti-spam -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="hp-input">Leave empty</label>
+          <input type="text" id="hp-input" name="website" tabindex="-1" autocomplete="off" />
         </div>
 
-        <div class="social-links">
-          {profile.socials.filter((s: Social) => ['GitHub', 'LinkedIn', 'Instagram'].includes(s.platform)).map((social: Social) => (
-            <a href={social.url} target="_blank" rel="noopener noreferrer" class="social-link" aria-label={social.platform}>
-              {social.platform === 'GitHub' && (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-              )}
-              {social.platform === 'LinkedIn' && (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-              )}
-              {social.platform === 'Instagram' && (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              )}
-            </a>
-          ))}
-        </div>
-      </aside>
-
-      <!-- Right column - Contact Form -->
-      <div class="form-col" data-reveal>
-        <div class="form-wrapper">
-          <h2 class="form-heading">Send me a message</h2>
-          <p class="form-subheading">I'll get back to you as soon as possible.</p>
-
-          <form id="contact-form">
-            <!-- Honeypot anti-spam -->
-            <div class="hp-field" aria-hidden="true">
-              <label for="hp-input">Leave empty</label>
-              <input type="text" id="hp-input" name="website" tabindex="-1" autocomplete="off" />
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="name" class="form-label">Full Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="from_name"
-                  required
-                  class="form-input"
-                  placeholder="John Doe"
-                />
-                <div class="error-text hidden">
-                  <span class="error-message"></span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="email" class="form-label">Email Address</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="reply_to"
-                  required
-                  class="form-input"
-                  placeholder="john@example.com"
-                />
-                <div class="error-text hidden">
-                  <span class="error-message"></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="subject" class="form-label">Subject</label>
-              <div class="select-wrapper">
-                <select id="subject" name="subject" required class="form-input form-select">
-                  <option value="" disabled selected>Please select a subject</option>
-                  <option value="General Inquiry">General Inquiry</option>
-                  <option value="Job Opportunity">Job Opportunity</option>
-                  <option value="Collaboration">Collaboration Proposal</option>
-                  <option value="Consulting">Consulting Request</option>
-                  <option value="Other">Other</option>
-                </select>
-                <svg class="select-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-              </div>
-              <div class="error-text hidden">
-                <span class="error-message"></span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="message" class="form-label">Message</label>
-              <textarea
-                id="message"
-                name="message"
-                rows="6"
-                required
-                maxlength="2000"
-                class="form-input form-textarea"
-                placeholder="Tell me about your project, idea, or opportunity..."></textarea>
-              <div class="textarea-footer">
-                <div class="error-text hidden">
-                  <span class="error-message"></span>
-                </div>
-                <span class="char-count" id="char-count" aria-live="polite">0 / 2000</span>
-              </div>
-            </div>
-
-            <button type="submit" id="submit-button" class="submit-btn">
-              Send Message
+        <!-- Step 1: Subject -->
+        <div class="form-step active" data-form-step="1">
+          <h2 class="step-title">What brings you here?</h2>
+          <p class="step-desc">Pick the topic that best describes your message.</p>
+          <div class="subject-grid" role="radiogroup" aria-label="Select a subject">
+            <button type="button" class="subject-card" data-subject="General Inquiry" role="radio" aria-checked="false">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span class="subject-label">General Inquiry</span>
+              <span class="subject-hint">Say hi or ask a question</span>
             </button>
-
-          </form>
-
-          <!-- Success State (replaces form area) -->
-          <div id="success-state" class="success-state hidden" role="status">
-            <svg class="success-checkmark" viewBox="0 0 52 52" aria-hidden="true">
-              <circle class="checkmark-circle" cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2" />
-              <path class="checkmark-check" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M14 27l7 7 16-16" />
-            </svg>
-            <h3 class="success-title">Message Sent!</h3>
-            <p class="success-text">Thanks for reaching out. I'll get back to you within 48 hours.</p>
-            <button type="button" id="send-another" class="send-another-link">Send Another Message</button>
+            <button type="button" class="subject-card" data-subject="Job Opportunity" role="radio" aria-checked="false">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              <span class="subject-label">Job Opportunity</span>
+              <span class="subject-hint">Discuss a role or position</span>
+            </button>
+            <button type="button" class="subject-card" data-subject="Collaboration" role="radio" aria-checked="false">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span class="subject-label">Collaboration</span>
+              <span class="subject-hint">Work on something together</span>
+            </button>
+            <button type="button" class="subject-card" data-subject="Consulting" role="radio" aria-checked="false">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span class="subject-label">Consulting</span>
+              <span class="subject-hint">Expert advice on a project</span>
+            </button>
+            <button type="button" class="subject-card" data-subject="Other" role="radio" aria-checked="false">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span class="subject-label">Other</span>
+              <span class="subject-hint">Something else entirely</span>
+            </button>
           </div>
+          <input type="hidden" id="subject" name="subject" required />
+          <div class="error-text hidden"><span class="error-message"></span></div>
+        </div>
 
-          <!-- Error State -->
-          <div id="error-message" class="status-msg status-error hidden" role="alert">
-            There was an error sending your message. Please try again or contact me directly.
+        <!-- Step 2: Name & Email -->
+        <div class="form-step" data-form-step="2">
+          <h2 class="step-title">Tell me about yourself</h2>
+          <p class="step-desc">So I know who I'm talking to and how to reach you.</p>
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name</label>
+            <input type="text" id="name" name="from_name" required class="form-input" placeholder="John Doe" />
+            <div class="error-text hidden"><span class="error-message"></span></div>
+          </div>
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" id="email" name="reply_to" required class="form-input" placeholder="john@example.com" />
+            <div class="error-text hidden"><span class="error-message"></span></div>
           </div>
         </div>
+
+        <!-- Step 3: Message -->
+        <div class="form-step" data-form-step="3">
+          <h2 class="step-title">What's on your mind?</h2>
+          <p class="step-desc">The more detail you share, the better I can help.</p>
+          <div class="form-group">
+            <label for="message" class="form-label">Your Message</label>
+            <textarea id="message" name="message" rows="8" required maxlength="2000" class="form-input form-textarea" placeholder="Tell me about your project, idea, or opportunity..."></textarea>
+            <div class="textarea-footer">
+              <div class="error-text hidden"><span class="error-message"></span></div>
+              <span class="char-count" id="char-count" aria-live="polite">0 / 2000</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Review -->
+        <div class="form-step" data-form-step="4">
+          <h2 class="step-title">Review & Send</h2>
+          <p class="step-desc">Take a moment to make sure everything looks good.</p>
+          <div class="review-card">
+            <div class="review-field">
+              <span class="review-label">Subject</span>
+              <span class="review-value" id="review-subject"></span>
+            </div>
+            <div class="review-field">
+              <span class="review-label">Name</span>
+              <span class="review-value" id="review-name"></span>
+            </div>
+            <div class="review-field">
+              <span class="review-label">Email</span>
+              <span class="review-value" id="review-email"></span>
+            </div>
+            <div class="review-field review-field-message">
+              <span class="review-label">Message</span>
+              <p class="review-value review-message" id="review-message"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="form-nav">
+          <button type="button" id="prev-btn" class="nav-btn nav-prev" style="visibility: hidden;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back
+          </button>
+          <button type="button" id="next-btn" class="nav-btn nav-next">
+            Continue
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+          <button type="submit" id="submit-button" class="nav-btn nav-submit" style="display: none;">
+            Send Message
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- Success State -->
+      <div id="success-state" class="success-state hidden" role="status">
+        <svg class="success-checkmark" viewBox="0 0 52 52" aria-hidden="true">
+          <circle class="checkmark-circle" cx="26" cy="26" r="24" fill="none" stroke="currentColor" stroke-width="2" />
+          <path class="checkmark-check" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M14 27l7 7 16-16" />
+        </svg>
+        <h3 class="success-title">Message Sent!</h3>
+        <p class="success-text">Thanks for reaching out. I'll get back to you within 24–48 hours.</p>
+        <button type="button" id="send-another" class="send-another-link">Send Another Message</button>
+      </div>
+
+      <!-- Error State -->
+      <div id="error-message" class="status-msg status-error hidden" role="alert">
+        There was an error sending your message. Please try again.
+      </div>
+    </div>
+
+    <!-- Social links -->
+    <div class="contact-footer" data-reveal>
+      <p class="footer-text">You can also find me on</p>
+      <div class="social-links">
+        {profile.socials.filter((s: Social) => ['GitHub', 'LinkedIn', 'Instagram'].includes(s.platform)).map((social: Social) => (
+          <a href={social.url} target="_blank" rel="noopener noreferrer" class="social-link" aria-label={social.platform}>
+            {social.platform === 'GitHub' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            )}
+            {social.platform === 'LinkedIn' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            )}
+            {social.platform === 'Instagram' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            )}
+            <span>{social.platform}</span>
+          </a>
+        ))}
       </div>
     </div>
   </main>
@@ -217,7 +217,7 @@ const pageSchemaEntities = [
 
 <style>
   .contact-page {
-    max-width: 1080px;
+    max-width: 680px;
     margin: 0 auto;
     padding: 0 var(--space-6);
   }
@@ -226,7 +226,7 @@ const pageSchemaEntities = [
   .page-header {
     max-width: 720px;
     margin: 0 auto;
-    padding: var(--space-20) 0 var(--space-12);
+    padding: var(--space-20) 0 var(--space-8);
     text-align: center;
   }
   .overline {
@@ -253,107 +253,157 @@ const pageSchemaEntities = [
     font-size: var(--text-body-lg);
     color: var(--color-text-secondary);
     max-width: 560px;
-    margin: 0 auto;
+    margin: 0 auto var(--space-3);
     line-height: 1.6;
   }
-
-  /* Grid Layout */
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-12);
-    padding-bottom: var(--space-20);
-  }
-
-  /* Info Column */
-  .info-col {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-  }
-  .info-heading {
-    font-family: var(--font-display);
-    font-size: var(--text-h3);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-    color: var(--color-text);
+  .response-note {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
     margin: 0;
   }
-  .info-intro {
-    font-family: var(--font-body);
-    font-size: var(--text-body);
-    color: var(--color-text-secondary);
-    margin: 0;
-    line-height: 1.6;
-  }
-  .contact-channels {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-  .channel {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-4);
-  }
-  .channel-icon {
-    color: var(--color-brand);
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .channel-label {
-    display: block;
-    font-family: var(--font-ui);
-    font-size: var(--text-ui-small);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-tertiary);
-    margin-bottom: 2px;
-  }
-  .channel-value {
-    display: block;
-    font-family: var(--font-body);
-    font-size: var(--text-body);
-    color: var(--color-text);
-  }
-  .channel-link {
-    text-decoration: none;
-    transition: color 200ms;
-  }
-  .channel-link:hover { color: var(--color-brand); }
-  .social-links {
-    display: flex;
-    gap: var(--space-4);
-  }
-  .social-link {
-    color: var(--color-text-secondary);
-    transition: color 200ms;
-  }
-  .social-link:hover { color: var(--color-brand); }
 
-  /* Form Column */
-  .form-wrapper {
+  /* Form Container */
+  .form-container {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 20px;
     padding: 40px;
+    margin-bottom: var(--space-12);
   }
-  .form-heading {
+
+  /* Progress */
+  .progress-bar { margin-bottom: var(--space-10); }
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .step-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-bg-alt);
+    border: 2px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    transition: all 300ms;
+    flex-shrink: 0;
+  }
+  .step-dot.active {
+    background: var(--color-brand);
+    border-color: var(--color-brand);
+    color: #fff;
+  }
+  .step-dot.completed {
+    background: var(--color-brand);
+    border-color: var(--color-brand);
+    color: #fff;
+  }
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: var(--color-border);
+    position: relative;
+    overflow: hidden;
+  }
+  .step-line-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background: var(--color-brand);
+    transition: width 400ms ease;
+  }
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-2);
+    padding: 0 2px;
+  }
+  .step-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-align: center;
+    width: 32px;
+    white-space: nowrap;
+    transition: color 200ms;
+  }
+  .step-label.active { color: var(--color-brand); font-weight: 600; }
+
+  /* Form Steps */
+  .form-step {
+    display: none;
+    min-height: 280px;
+  }
+  .form-step.active { display: block; }
+  .step-title {
     font-family: var(--font-display);
     font-size: var(--text-h2);
     font-weight: 600;
-    line-height: 1.2;
     letter-spacing: -0.015em;
     color: var(--color-text);
     margin: 0 0 var(--space-2);
+    line-height: 1.2;
   }
-  .form-subheading {
+  .step-desc {
     font-family: var(--font-body);
     font-size: var(--text-body);
     color: var(--color-text-secondary);
     margin: 0 0 var(--space-8);
+    line-height: 1.6;
+  }
+
+  /* Subject Grid */
+  .subject-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+  .subject-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    border: 1.5px solid var(--color-border);
+    border-radius: 14px;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: all 200ms;
+    color: var(--color-text);
+  }
+  .subject-card:hover {
+    border-color: var(--color-brand-light);
+    background: var(--color-bg-alt);
+  }
+  .subject-card.selected {
+    border-color: var(--color-brand);
+    background: var(--color-brand-lighter);
+  }
+  .subject-card svg { color: var(--color-brand); flex-shrink: 0; }
+  .subject-label {
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .subject-hint {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    line-height: 1.4;
+  }
+  @media (max-width: 480px) {
+    .subject-grid { grid-template-columns: 1fr; }
   }
 
   /* Honeypot */
@@ -368,14 +418,7 @@ const pageSchemaEntities = [
   }
 
   /* Form Elements */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-5);
-  }
-  .form-group {
-    margin-bottom: var(--space-5);
-  }
+  .form-group { margin-bottom: var(--space-5); }
   .form-label {
     display: block;
     font-family: var(--font-ui);
@@ -402,40 +445,11 @@ const pageSchemaEntities = [
     border-color: var(--color-brand);
     box-shadow: 0 0 0 3px var(--color-brand-lighter);
   }
-  .form-input.is-valid {
-    border-color: #10b981;
-  }
-  .form-input.is-valid:focus {
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
-  }
-  .form-input.is-invalid {
-    border-color: #ef4444;
-  }
-  .form-input.is-invalid:focus {
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
-  }
-  .select-wrapper {
-    position: relative;
-  }
-  .form-select {
-    appearance: none;
-    cursor: pointer;
-    padding-right: 40px;
-  }
-  .select-chevron {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-    color: var(--color-text-muted);
-    pointer-events: none;
-  }
-  .form-textarea {
-    resize: vertical;
-    min-height: 120px;
-  }
+  .form-input.is-valid { border-color: #10b981; }
+  .form-input.is-valid:focus { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+  .form-input.is-invalid { border-color: #ef4444; }
+  .form-input.is-invalid:focus { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15); }
+  .form-textarea { resize: vertical; min-height: 160px; }
   .textarea-footer {
     display: flex;
     justify-content: space-between;
@@ -461,28 +475,79 @@ const pageSchemaEntities = [
   }
   .error-text.hidden { display: none; }
 
-  /* Submit */
-  .submit-btn {
+  /* Review Card */
+  .review-card {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    padding: var(--space-6);
+  }
+  .review-field {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .review-field:last-child { border-bottom: none; }
+  .review-field-message { flex-direction: column; }
+  .review-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+  .review-value {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text);
+  }
+  .review-message {
+    margin: var(--space-2) 0 0;
+    white-space: pre-wrap;
+    line-height: 1.6;
+  }
+
+  /* Navigation */
+  .form-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-8);
+    gap: var(--space-4);
+  }
+  .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
     font-family: var(--font-ui);
     font-size: var(--text-body);
     font-weight: 600;
-    padding: 14px 32px;
-    background: var(--btn-bg);
-    color: white;
-    border: none;
+    padding: 12px 24px;
     border-radius: 12px;
+    border: none;
     cursor: pointer;
-    transition: filter 200ms, transform 200ms;
-    width: 100%;
+    transition: all 200ms;
   }
-  .submit-btn:hover:not(:disabled) {
+  .nav-prev {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+  .nav-prev:hover { border-color: var(--color-text-secondary); }
+  .nav-next, .nav-submit {
+    background: var(--btn-bg);
+    color: #fff;
+    margin-left: auto;
+  }
+  .nav-next:hover, .nav-submit:hover {
     filter: brightness(0.9);
     transform: translateY(-1px);
   }
-  .submit-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+  .nav-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
   /* Status Messages */
   .status-msg {
@@ -512,8 +577,6 @@ const pageSchemaEntities = [
     min-height: 320px;
   }
   .success-state.hidden { display: none; }
-
-  /* Animated checkmark SVG */
   .success-checkmark {
     width: 52px;
     height: 52px;
@@ -531,18 +594,12 @@ const pageSchemaEntities = [
     stroke-dashoffset: 50;
     animation: checkmark-draw 400ms ease-out 400ms forwards;
   }
-  @keyframes checkmark-circle-draw {
-    to { stroke-dashoffset: 0; }
-  }
-  @keyframes checkmark-draw {
-    to { stroke-dashoffset: 0; }
-  }
+  @keyframes checkmark-circle-draw { to { stroke-dashoffset: 0; } }
+  @keyframes checkmark-draw { to { stroke-dashoffset: 0; } }
   .success-title {
     font-family: var(--font-display);
     font-size: var(--text-h3);
     font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.3;
     color: var(--color-text);
     margin: 0 0 var(--space-2);
   }
@@ -561,19 +618,39 @@ const pageSchemaEntities = [
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 3px;
-    transition: color 200ms;
-  }
-  .send-another-link:hover {
-    color: var(--color-brand-dark);
   }
 
-  @media (max-width: 767px) {
-    .contact-grid {
-      grid-template-columns: 1fr;
-      gap: var(--space-8);
-    }
-    .form-wrapper { padding: 24px; }
-    .form-row { grid-template-columns: 1fr; }
+  /* Contact Footer */
+  .contact-footer {
+    text-align: center;
+    padding-bottom: var(--space-20);
+  }
+  .footer-text {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-4);
+  }
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-5);
+  }
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    transition: color 200ms;
+  }
+  .social-link:hover { color: var(--color-brand); }
+
+  @media (max-width: 640px) {
+    .form-container { padding: 24px; }
+    .form-nav { flex-wrap: wrap; }
   }
 </style>
 
@@ -592,16 +669,24 @@ const pageSchemaEntities = [
     if (!form || form.dataset.initialized) return;
     form.dataset.initialized = "true";
 
-    const submitButton = document.getElementById("submit-button") as HTMLButtonElement;
+    const steps = document.querySelectorAll<HTMLElement>('.form-step');
+    const dots = document.querySelectorAll<HTMLElement>('.step-dot');
+    const labels = document.querySelectorAll<HTMLElement>('.step-label');
+    const lineFills = document.querySelectorAll<HTMLElement>('.step-line-fill');
+    const prevBtn = document.getElementById('prev-btn') as HTMLButtonElement;
+    const nextBtn = document.getElementById('next-btn') as HTMLButtonElement;
+    const submitBtn = document.getElementById('submit-button') as HTMLButtonElement;
     const successState = document.getElementById("success-state")!;
     const errorMessageEl = document.getElementById("error-message")!;
     const sendAnother = document.getElementById("send-another")!;
     const honeypot = document.getElementById("hp-input") as HTMLInputElement;
+    const subjectInput = document.getElementById("subject") as HTMLInputElement;
 
-    // Track form load time for timing-based anti-spam
+    let currentStep = 1;
+    const totalSteps = 4;
     const formLoadTime = Date.now();
 
-    // Character count for textarea
+    // Character count
     const textarea = document.getElementById('message') as HTMLTextAreaElement | null;
     const charCountEl = document.getElementById('char-count');
     if (textarea && charCountEl) {
@@ -616,6 +701,90 @@ const pageSchemaEntities = [
       updateCount();
     }
 
+    // Subject card selection
+    document.querySelectorAll('.subject-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.subject-card').forEach(c => {
+          c.classList.remove('selected');
+          c.setAttribute('aria-checked', 'false');
+        });
+        card.classList.add('selected');
+        card.setAttribute('aria-checked', 'true');
+        subjectInput.value = card.getAttribute('data-subject') || '';
+        // Clear error
+        const errorEl = card.closest('.form-step')?.querySelector('.error-text');
+        if (errorEl) errorEl.classList.add('hidden');
+      });
+    });
+
+    function goToStep(step: number) {
+      const prevStep = currentStep;
+      currentStep = step;
+
+      // Animate step transition
+      const outgoing = document.querySelector(`[data-form-step="${prevStep}"]`) as HTMLElement;
+      const incoming = document.querySelector(`[data-form-step="${step}"]`) as HTMLElement;
+      const direction = step > prevStep ? 1 : -1;
+
+      if (outgoing && incoming) {
+        gsap.to(outgoing, {
+          opacity: 0,
+          x: -30 * direction,
+          duration: 0.2,
+          ease: 'power2.in',
+          onComplete: () => {
+            outgoing.classList.remove('active');
+            incoming.classList.add('active');
+            gsap.fromTo(incoming,
+              { opacity: 0, x: 30 * direction },
+              { opacity: 1, x: 0, duration: 0.3, ease: 'power2.out' }
+            );
+          }
+        });
+      }
+
+      // Update progress
+      dots.forEach((dot, i) => {
+        const s = i + 1;
+        dot.classList.toggle('active', s === step);
+        dot.classList.toggle('completed', s < step);
+      });
+      labels.forEach((label, i) => {
+        label.classList.toggle('active', i + 1 === step);
+      });
+      lineFills.forEach((fill, i) => {
+        fill.style.width = (i + 1 < step) ? '100%' : '0%';
+      });
+
+      // Update navigation
+      prevBtn.style.visibility = step === 1 ? 'hidden' : 'visible';
+      if (step === totalSteps) {
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'inline-flex';
+        populateReview();
+      } else {
+        nextBtn.style.display = 'inline-flex';
+        submitBtn.style.display = 'none';
+      }
+
+      // Focus first input in step
+      setTimeout(() => {
+        const firstInput = incoming?.querySelector<HTMLElement>('input:not([type="hidden"]), textarea, select, .subject-card');
+        if (firstInput) firstInput.focus();
+      }, 350);
+    }
+
+    function populateReview() {
+      const reviewSubject = document.getElementById('review-subject');
+      const reviewName = document.getElementById('review-name');
+      const reviewEmail = document.getElementById('review-email');
+      const reviewMessage = document.getElementById('review-message');
+      if (reviewSubject) reviewSubject.textContent = subjectInput.value;
+      if (reviewName) reviewName.textContent = (document.getElementById('name') as HTMLInputElement).value;
+      if (reviewEmail) reviewEmail.textContent = (document.getElementById('email') as HTMLInputElement).value;
+      if (reviewMessage) reviewMessage.textContent = (document.getElementById('message') as HTMLTextAreaElement).value;
+    }
+
     const formFields: Record<string, { validator: (v: string) => boolean; errorMessage: string; emptyMessage?: string }> = {
       name: {
         validator: (value: string) => value.trim() !== "",
@@ -626,10 +795,6 @@ const pageSchemaEntities = [
         errorMessage: "Please enter a valid email address",
         emptyMessage: "Please enter your email address",
       },
-      subject: {
-        validator: (value: string) => value.trim() !== "",
-        errorMessage: "Please select a subject",
-      },
       message: {
         validator: (value: string) => value.trim() !== "",
         errorMessage: "Please enter your message",
@@ -639,8 +804,8 @@ const pageSchemaEntities = [
     function validateField(fieldId: string, showError = true): boolean {
       const field = document.getElementById(fieldId) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
       const fieldConfig = formFields[fieldId];
+      if (!fieldConfig) return true;
 
-      // Find error-text sibling within the same form-group
       const formGroup = field.closest('.form-group') || field.parentElement;
       const errorElement = formGroup?.querySelector('.error-text') as HTMLElement | null;
 
@@ -657,13 +822,12 @@ const pageSchemaEntities = [
 
       if (showError && errorElement) {
         if (!isValid) {
-          const errorMessageSpan = errorElement.querySelector('.error-message');
-          if (errorMessageSpan) errorMessageSpan.textContent = message;
+          const span = errorElement.querySelector('.error-message');
+          if (span) span.textContent = message;
           errorElement.classList.remove("hidden");
           field.classList.remove("is-valid");
           field.classList.add("is-invalid");
           field.setAttribute("aria-invalid", "true");
-          errorElement.setAttribute("role", "alert");
         } else {
           errorElement.classList.add("hidden");
           field.classList.remove("is-invalid");
@@ -671,82 +835,92 @@ const pageSchemaEntities = [
           field.setAttribute("aria-invalid", "false");
         }
       }
-
       return isValid;
     }
 
-    form.addEventListener("input", function (event: Event) {
-      const target = event.target as HTMLElement;
+    function validateStep(step: number): boolean {
+      if (step === 1) {
+        if (!subjectInput.value) {
+          const errorEl = document.querySelector('[data-form-step="1"] .error-text');
+          const span = errorEl?.querySelector('.error-message');
+          if (span) span.textContent = 'Please select a subject';
+          if (errorEl) errorEl.classList.remove('hidden');
+          return false;
+        }
+        return true;
+      }
+      if (step === 2) {
+        const nameValid = validateField('name', true);
+        const emailValid = validateField('email', true);
+        return nameValid && emailValid;
+      }
+      if (step === 3) {
+        return validateField('message', true);
+      }
+      return true;
+    }
+
+    // Real-time validation
+    form.addEventListener("input", (e: Event) => {
+      const target = e.target as HTMLElement;
       if (target.id && formFields[target.id]) validateField(target.id);
     });
-
-    form.addEventListener("blur", function (event: Event) {
-      const target = event.target as HTMLElement;
+    form.addEventListener("blur", (e: Event) => {
+      const target = e.target as HTMLElement;
       if (target.id && formFields[target.id]) validateField(target.id);
     }, true);
 
-    document.getElementById("subject")?.addEventListener("change", function () {
-      validateField("subject");
+    nextBtn.addEventListener('click', () => {
+      if (validateStep(currentStep) && currentStep < totalSteps) {
+        goToStep(currentStep + 1);
+      }
     });
 
-    form.addEventListener("submit", function (event: Event) {
+    prevBtn.addEventListener('click', () => {
+      if (currentStep > 1) goToStep(currentStep - 1);
+    });
+
+    // Keyboard: Enter to advance (except textarea)
+    form.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && (e.target as HTMLElement).tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        if (currentStep < totalSteps) {
+          if (validateStep(currentStep)) goToStep(currentStep + 1);
+        }
+      }
+    });
+
+    form.addEventListener("submit", (event: Event) => {
       event.preventDefault();
 
-      // Anti-spam: honeypot check
       if (honeypot && honeypot.value) return;
-
-      // Anti-spam: timing check (form filled in < 2 seconds is likely a bot)
       if (Date.now() - formLoadTime < 2000) return;
 
-      const isFormValid = Object.keys(formFields).every((fieldId) =>
-        validateField(fieldId, true),
-      );
-
-      if (!isFormValid) {
-        const firstInvalidField = Object.keys(formFields).find(
-          (fieldId) => !validateField(fieldId, false),
-        );
-        if (firstInvalidField) document.getElementById(firstInvalidField)?.focus();
-        return;
-      }
-
-      submitButton.disabled = true;
-      submitButton.textContent = "Sending...";
-      submitButton.setAttribute("aria-busy", "true");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+      submitBtn.setAttribute("aria-busy", "true");
 
       const templateParams = {
         from_name: (document.getElementById("name") as HTMLInputElement).value,
         reply_to: (document.getElementById("email") as HTMLInputElement).value,
-        subject: (document.getElementById("subject") as HTMLSelectElement).value,
+        subject: subjectInput.value,
         message: (document.getElementById("message") as HTMLTextAreaElement).value,
       };
 
       emailjs
         .send(emailJSServiceID, emailJSTemplateID, templateParams)
-        .then(function () {
-          submitButton.textContent = "Send Message";
-          submitButton.disabled = false;
-          submitButton.setAttribute("aria-busy", "false");
-
+        .then(() => {
+          submitBtn.textContent = "Send Message";
+          submitBtn.disabled = false;
+          submitBtn.setAttribute("aria-busy", "false");
           form.reset();
-          Object.keys(formFields).forEach((fieldId) => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-              field.classList.remove("is-valid", "is-invalid");
-              field.setAttribute("aria-invalid", "false");
-            }
-            const formGroup = field?.closest('.form-group') || field?.parentElement;
-            const errorEl = formGroup?.querySelector('.error-text') as HTMLElement | null;
-            if (errorEl) {
-              errorEl.classList.add("hidden");
-              const span = errorEl.querySelector('.error-message');
-              if (span) span.textContent = "";
-            }
+          document.querySelectorAll('.subject-card').forEach(c => {
+            c.classList.remove('selected');
+            c.setAttribute('aria-checked', 'false');
           });
 
           errorMessageEl.classList.add("hidden");
 
-          // GSAP: Form fades out, then success fades in
           gsap.to(form, {
             opacity: 0,
             y: -10,
@@ -754,6 +928,9 @@ const pageSchemaEntities = [
             ease: 'power2.inOut',
             onComplete: () => {
               form.style.display = 'none';
+              // Hide progress bar too
+              const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+              if (progressBar) progressBar.style.display = 'none';
               successState.classList.remove('hidden');
               gsap.fromTo(successState,
                 { opacity: 0, y: 10 },
@@ -762,19 +939,15 @@ const pageSchemaEntities = [
             }
           });
         })
-        .catch(function (error: Error) {
+        .catch((error: Error) => {
           console.error("EmailJS error:", error);
-
-          submitButton.textContent = "Send Message";
-          submitButton.disabled = false;
-          submitButton.setAttribute("aria-busy", "false");
-
+          submitBtn.textContent = "Send Message";
+          submitBtn.disabled = false;
+          submitBtn.setAttribute("aria-busy", "false");
           errorMessageEl.classList.remove("hidden");
-          successState.classList.add("hidden");
         });
     });
 
-    // "Send Another Message" resets back to form
     sendAnother.addEventListener('click', () => {
       gsap.to(successState, {
         opacity: 0,
@@ -784,6 +957,18 @@ const pageSchemaEntities = [
         onComplete: () => {
           successState.classList.add('hidden');
           form.style.display = '';
+          const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+          if (progressBar) progressBar.style.display = '';
+          // Reset to step 1
+          currentStep = 1;
+          steps.forEach((s, i) => s.classList.toggle('active', i === 0));
+          dots.forEach((d, i) => { d.classList.toggle('active', i === 0); d.classList.remove('completed'); });
+          labels.forEach((l, i) => l.classList.toggle('active', i === 0));
+          lineFills.forEach(f => f.style.width = '0%');
+          prevBtn.style.visibility = 'hidden';
+          nextBtn.style.display = 'inline-flex';
+          submitBtn.style.display = 'none';
+
           gsap.fromTo(form,
             { opacity: 0, y: 10 },
             { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }

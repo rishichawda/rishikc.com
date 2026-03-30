@@ -13,7 +13,7 @@ const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
     title: `Article Series | ${profile.name}`,
-    description: "Explore multi-part article series covering in-depth topics in web development, React architecture, SEO, and more.",
+    description: `Explore in-depth, multi-part article series by ${profile.name}. Each series takes a deep dive into complex topics like web development, React architecture, SEO, performance optimization, and modern engineering practices — broken into focused, digestible parts.`,
     keywords: "article series, multi-part articles, web development tutorials, React architecture, SEO guides",
 };
 
@@ -65,18 +65,24 @@ const pageSchemaEntities = [
     <main>
         <!-- Page Header -->
         <section class="page-header" data-reveal>
-            <span class="overline">ARTICLE SERIES</span>
-            <h1 class="page-title">Series</h1>
-            <p class="page-subtitle">In-depth, multi-part explorations of complex topics in web development and engineering.</p>
-            <span class="series-count">{allSeries.length} series published</span>
+            <span class="overline">DEEP DIVES</span>
+            <h1 class="page-title">Article Series</h1>
+            <p class="page-subtitle">Complex topics broken into focused, digestible parts. Each series takes you on a journey from fundamentals to advanced concepts.</p>
+            <span class="series-count">{allSeries.length} {allSeries.length === 1 ? 'series' : 'series'} · {allSeries.reduce((sum, s) => sum + s.totalParts, 0)} articles total</span>
         </section>
 
         {allSeries.length > 0 ? (
             <section class="series-list">
-                {allSeries.map((series) => (
+                {allSeries.map((series, seriesIndex) => (
                     <div class="series-block" data-reveal>
                         <div class="series-block-header">
-                            <h2 class="series-block-title">{series.seriesTitle}</h2>
+                            <div class="series-block-title-group">
+                                <h2 class="series-block-title">{series.seriesTitle}</h2>
+                                <p class="series-block-desc">
+                                    A {series.totalParts}-part series exploring {series.seriesTitle.toLowerCase()} in depth.
+                                    {series.isOngoing ? ' New parts are being added regularly.' : ''}
+                                </p>
+                            </div>
                             <div class="series-block-meta">
                                 <span>{series.totalParts} parts</span>
                                 {series.isOngoing && (
@@ -85,23 +91,47 @@ const pageSchemaEntities = [
                             </div>
                         </div>
 
-                        <ol class="chapter-list" aria-label="Article series chapters">
+                        <div class="journey-timeline">
                             {series.articles.map((article, index) => (
-                                <li class="chapter-item" data-reveal-item>
-                                    <a href={article.data.path} class="chapter-link">
-                                        <span class="chapter-number">{String(index + 1).padStart(2, '0')}</span>
-                                        <div class="chapter-body">
-                                            <h3 class="chapter-title">{article.data.title}</h3>
-                                            <p class="chapter-desc">{article.data.description}</p>
-                                            <div class="chapter-meta">
+                                <a href={article.data.path} class:list={["journey-item", index % 2 === 1 ? "journey-item--alt" : ""]}>
+                                    <div class="journey-connector" aria-hidden="true">
+                                        <div class="journey-dot">{index + 1}</div>
+                                        {index < series.articles.length - 1 && <div class="journey-line"></div>}
+                                    </div>
+                                    <div class="journey-content">
+                                        {article.data.hero_image && (
+                                            <div class="journey-image">
+                                                <Image
+                                                    src={article.data.hero_image}
+                                                    alt={article.data.hero_image_alt || article.data.title}
+                                                    width={480}
+                                                    height={270}
+                                                    class="journey-img"
+                                                />
+                                            </div>
+                                        )}
+                                        <div class="journey-body">
+                                            <span class="journey-part">Part {index + 1}</span>
+                                            <h3 class="journey-title">{article.data.title}</h3>
+                                            <p class="journey-desc">{article.data.description}</p>
+                                            <div class="journey-meta">
                                                 <time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time>
+                                                <span class="journey-read-link">Read article <span class="arrow">&rarr;</span></span>
                                             </div>
                                         </div>
-                                        <span class="chapter-cta">Read Part {index + 1} <span class="arrow">&rarr;</span></span>
-                                    </a>
-                                </li>
+                                    </div>
+                                </a>
                             ))}
-                        </ol>
+                        </div>
+
+                        <div class="series-start-cta">
+                            <a href={series.articles[0]?.data.path} class="start-reading-btn">
+                                Start Reading from Part 1
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                 ))}
             </section>
@@ -156,30 +186,41 @@ const pageSchemaEntities = [
 
     /* Series List */
     .series-list {
-        max-width: 720px;
+        max-width: 960px;
         margin: 0 auto;
         padding: 0 var(--space-6) var(--space-20);
         display: flex;
         flex-direction: column;
-        gap: var(--space-16);
+        gap: var(--space-20);
     }
 
     .series-block-header {
         display: flex;
-        align-items: baseline;
+        align-items: flex-start;
         justify-content: space-between;
         gap: var(--space-4);
-        margin-bottom: var(--space-6);
+        margin-bottom: var(--space-10);
         padding-bottom: var(--space-4);
         border-bottom: 1px solid var(--color-border);
     }
+    .series-block-title-group {
+        flex: 1;
+        min-width: 0;
+    }
     .series-block-title {
         font-family: var(--font-display);
-        font-size: var(--text-h2);
+        font-size: var(--text-h1);
         font-weight: 600;
         line-height: 1.2;
-        letter-spacing: -0.015em;
+        letter-spacing: -0.02em;
         color: var(--color-text);
+        margin: 0 0 var(--space-2);
+    }
+    .series-block-desc {
+        font-family: var(--font-body);
+        font-size: var(--text-body);
+        color: var(--color-text-secondary);
+        line-height: 1.6;
         margin: 0;
     }
     .series-block-meta {
@@ -190,6 +231,7 @@ const pageSchemaEntities = [
         align-items: center;
         gap: var(--space-3);
         flex-shrink: 0;
+        padding-top: var(--space-2);
     }
     .ongoing-badge {
         font-family: var(--font-ui);
@@ -204,82 +246,182 @@ const pageSchemaEntities = [
         color: #FBBF24;
     }
 
-    /* Chapter List */
-    .chapter-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
+    /* Journey Timeline */
+    .journey-timeline {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
     }
-    .chapter-item {
-        border-bottom: 1px solid var(--color-border);
-    }
-    .chapter-item:last-child { border-bottom: none; }
-    .chapter-link {
+
+    .journey-item {
         display: grid;
-        grid-template-columns: auto 1fr auto;
-        gap: var(--space-5);
-        padding: var(--space-6) var(--space-4);
+        grid-template-columns: 40px 1fr;
+        gap: var(--space-6);
         text-decoration: none;
         color: inherit;
-        align-items: center;
-        transition: background 100ms;
-        border-radius: 8px;
+        padding: var(--space-4) 0;
+        transition: transform 200ms;
     }
-    .chapter-link:hover {
-        background: var(--color-bg-alt);
+    .journey-item:hover {
+        transform: translateX(4px);
     }
-    .chapter-number {
-        font-family: var(--font-display);
-        font-size: var(--text-display);
-        font-weight: 700;
-        letter-spacing: -0.025em;
+    .journey-item:hover .journey-title {
         color: var(--color-brand);
-        opacity: 0.25;
-        line-height: 1;
     }
-    .chapter-body { min-width: 0; }
-    .chapter-title {
+
+    .journey-connector {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .journey-dot {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--color-brand-lighter);
+        color: var(--color-brand);
         font-family: var(--font-display);
-        font-size: var(--text-body-lg);
+        font-size: 14px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: background 200ms, color 200ms;
+    }
+    .journey-item:hover .journey-dot {
+        background: var(--btn-bg);
+        color: #fff;
+    }
+    .journey-line {
+        width: 2px;
+        flex: 1;
+        background: var(--color-border);
+        margin-top: var(--space-2);
+    }
+
+    .journey-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+        padding-bottom: var(--space-6);
+        border-bottom: 1px solid var(--color-border);
+    }
+    .journey-item:last-child .journey-content {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    @media (min-width: 768px) {
+        .journey-content {
+            grid-template-columns: 200px 1fr;
+            gap: var(--space-6);
+        }
+        .journey-item--alt .journey-content {
+            grid-template-columns: 1fr 200px;
+        }
+        .journey-item--alt .journey-image {
+            order: 2;
+        }
+        .journey-item--alt .journey-body {
+            order: 1;
+        }
+    }
+
+    .journey-image {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .journey-img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 12px;
+        transition: transform 400ms ease;
+    }
+    .journey-item:hover .journey-img {
+        transform: scale(1.03);
+    }
+
+    .journey-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .journey-part {
+        font-family: var(--font-mono);
+        font-size: var(--text-overline);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--color-brand);
+        margin-bottom: var(--space-1);
+    }
+    .journey-title {
+        font-family: var(--font-display);
+        font-size: var(--text-h3);
         font-weight: 600;
         color: var(--color-text);
         margin: 0 0 var(--space-2);
         line-height: 1.3;
+        letter-spacing: -0.01em;
         transition: color 200ms;
     }
-    .chapter-link:hover .chapter-title {
-        color: var(--color-brand);
-    }
-    .chapter-desc {
+    .journey-desc {
         font-family: var(--font-body);
         font-size: var(--text-body-sm);
         color: var(--color-text-secondary);
-        margin: 0 0 var(--space-2);
-        line-height: 1.5;
+        margin: 0 0 var(--space-3);
+        line-height: 1.6;
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    .chapter-meta {
+    .journey-meta {
         font-family: var(--font-mono);
         font-size: var(--text-caption);
         color: var(--color-text-tertiary);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
     }
-    .chapter-cta {
-        font-family: var(--font-ui);
-        font-size: 14px;
+    .journey-read-link {
         color: var(--color-brand);
+        font-family: var(--font-ui);
         font-weight: 500;
-        white-space: nowrap;
-        flex-shrink: 0;
     }
-    .chapter-cta .arrow {
+    .journey-read-link .arrow {
         display: inline-block;
         transition: transform 200ms;
     }
-    .chapter-link:hover .chapter-cta .arrow {
+    .journey-item:hover .journey-read-link .arrow {
         transform: translateX(4px);
+    }
+
+    /* Start Reading CTA */
+    .series-start-cta {
+        text-align: center;
+        margin-top: var(--space-8);
+    }
+    .start-reading-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-family: var(--font-ui);
+        font-size: var(--text-body);
+        font-weight: 600;
+        padding: 12px 28px;
+        border-radius: 12px;
+        background: var(--btn-bg);
+        color: #fff;
+        text-decoration: none;
+        transition: filter 200ms, transform 200ms;
+    }
+    .start-reading-btn:hover {
+        filter: brightness(0.9);
+        transform: translateY(-1px);
     }
 
     /* Empty State */
@@ -314,12 +456,9 @@ const pageSchemaEntities = [
     .back-link:hover { text-decoration: underline; }
 
     @media (max-width: 767px) {
-        .chapter-link {
-            grid-template-columns: auto 1fr;
-            gap: var(--space-3);
-        }
-        .chapter-cta { display: none; }
-        .chapter-number { font-size: var(--text-h2); }
         .series-block-header { flex-direction: column; gap: var(--space-2); }
+        .journey-item { grid-template-columns: 28px 1fr; gap: var(--space-3); }
+        .journey-dot { width: 28px; height: 28px; font-size: 12px; }
+        .journey-item:hover { transform: none; }
     }
 </style>

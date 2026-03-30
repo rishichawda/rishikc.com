@@ -3,6 +3,11 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
 import { buildWebPageEntity, personRef } from "../utils/jsonLd";
 
+interface ProjectLink {
+    url: string;
+    label: string;
+}
+
 interface Project {
     name: string;
     description: string;
@@ -11,6 +16,7 @@ interface Project {
     github: string;
     demo?: string;
     npm?: string;
+    links?: ProjectLink[];
     stars: number;
     forks: number;
     language: string;
@@ -130,18 +136,28 @@ const pageSchemaEntities = [
                                 ))}
                             </div>
                             <div class="featured-links">
-                                <a href={project.github} target="_blank" rel="noopener noreferrer" class="link-btn link-secondary">
-                                    Source Code <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-                                </a>
-                                {project.demo && (
-                                    <a href={project.demo} target="_blank" rel="noopener noreferrer" class="link-btn link-primary">
-                                        Live Demo <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-                                    </a>
-                                )}
-                                {project.npm && (
-                                    <a href={project.npm} target="_blank" rel="noopener noreferrer" class="link-btn link-npm">
-                                        NPM <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-                                    </a>
+                                {project.links && project.links.length > 0 ? (
+                                    project.links.map((link) => (
+                                        <a href={link.url} target="_blank" rel="noopener noreferrer" class:list={["link-btn", link.label === 'Source Code' ? 'link-secondary' : link.label.toLowerCase().includes('npm') ? 'link-npm' : 'link-primary']}>
+                                            {link.label} <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
+                                        </a>
+                                    ))
+                                ) : (
+                                    <>
+                                        <a href={project.github} target="_blank" rel="noopener noreferrer" class="link-btn link-secondary">
+                                            Source Code <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
+                                        </a>
+                                        {project.demo && (
+                                            <a href={project.demo} target="_blank" rel="noopener noreferrer" class="link-btn link-primary">
+                                                Live Demo <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
+                                            </a>
+                                        )}
+                                        {project.npm && (
+                                            <a href={project.npm} target="_blank" rel="noopener noreferrer" class="link-btn link-npm">
+                                                View on npm <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
+                                            </a>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -219,18 +235,28 @@ const pageSchemaEntities = [
                             <span class="badge badge-brand" style="margin-bottom: var(--space-3); display: inline-block;">{project.category}</span>
                             <p class="other-desc">{project.description}</p>
                             <div class="other-links">
-                                <a href={project.github} target="_blank" rel="noopener noreferrer" class="link-btn link-secondary link-sm">
-                                    Source Code <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-                                </a>
-                                {project.demo && (
-                                    <a href={project.demo} target="_blank" rel="noopener noreferrer" class="link-btn link-primary link-sm">
-                                        Live Demo <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-                                    </a>
-                                )}
-                                {project.npm && (
-                                    <a href={project.npm} target="_blank" rel="noopener noreferrer" class="link-btn link-npm link-sm">
-                                        NPM <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
-                                    </a>
+                                {project.links && project.links.length > 0 ? (
+                                    project.links.map((link) => (
+                                        <a href={link.url} target="_blank" rel="noopener noreferrer" class:list={["link-btn link-sm", link.label === 'Source Code' ? 'link-secondary' : link.label.toLowerCase().includes('npm') ? 'link-npm' : 'link-primary']}>
+                                            {link.label} <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
+                                        </a>
+                                    ))
+                                ) : (
+                                    <>
+                                        <a href={project.github} target="_blank" rel="noopener noreferrer" class="link-btn link-secondary link-sm">
+                                            Source Code <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
+                                        </a>
+                                        {project.demo && (
+                                            <a href={project.demo} target="_blank" rel="noopener noreferrer" class="link-btn link-primary link-sm">
+                                                Live Demo <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
+                                            </a>
+                                        )}
+                                        {project.npm && (
+                                            <a href={project.npm} target="_blank" rel="noopener noreferrer" class="link-btn link-npm link-sm">
+                                                View on npm <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:middle;" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M7 7h10v10"></path></svg>
+                                            </a>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>

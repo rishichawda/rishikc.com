@@ -134,52 +134,77 @@ const pageSchemaEntities = [
       </div>
     </header>
 
-    <!-- Featured Story Hero -->
-    {featuredStory && (
-      <section class="featured-section" aria-label="Featured story">
-        <a
-          href={featuredStory.data.path}
-          class="featured-card group gallery-reveal gallery-ripple"
-        >
-          <Image
-            src={featuredStory.data.cover_image}
-            alt={featuredStory.data.cover_image_alt || featuredStory.data.title}
-            class="featured-image"
-            widths={[640, 1024, 1920]}
-            sizes="(max-width: 768px) 100vw, 1280px"
-            loading="eager"
-            transition:name={`story-cover-${featuredStory.id}`}
-          />
-          <div class="featured-gradient"></div>
-          <div class="featured-content">
-            <span class="featured-label">Featured Story</span>
-            <h2
-              class="featured-title"
-              transition:name={`${featuredStory.id}-title`}
+    <!-- Stories Section -->
+    {hasStories ? (
+      <>
+        <!-- Featured Story Hero -->
+        {featuredStory && (
+          <section class="featured-section" aria-label="Featured story">
+            <a
+              href={featuredStory.data.path}
+              class="featured-card group gallery-reveal gallery-ripple"
             >
-              {featuredStory.data.title}
-            </h2>
-            <p class="featured-desc">
-              {featuredStory.data.description}
-            </p>
-            <span class="featured-cta">
-              Read Story
-              <svg xmlns="http://www.w3.org/2000/svg" class="featured-cta-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-              </svg>
-            </span>
-          </div>
-        </a>
-      </section>
-    )}
+              <Image
+                src={featuredStory.data.cover_image}
+                alt={featuredStory.data.cover_image_alt || featuredStory.data.title}
+                class="featured-image"
+                widths={[640, 1024, 1920]}
+                sizes="(max-width: 768px) 100vw, 1280px"
+                loading="eager"
+                transition:name={`story-cover-${featuredStory.id}`}
+              />
+              <div class="featured-gradient"></div>
+              <div class="featured-content">
+                <span class="featured-label">Featured Story</span>
+                <h2
+                  class="featured-title"
+                  transition:name={`${featuredStory.id}-title`}
+                >
+                  {featuredStory.data.title}
+                </h2>
+                <p class="featured-desc">
+                  {featuredStory.data.description}
+                </p>
+                <span class="featured-cta">
+                  Read Story
+                  <svg xmlns="http://www.w3.org/2000/svg" class="featured-cta-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </section>
+        )}
 
-    <!-- Stories Bento Grid -->
-    {remainingStories.length > 0 && (
-      <section class="stories-section" aria-label="Visual stories">
-        <div class="bento-grid">
-          {remainingStories.map((story, index) => (
-            <StoryCard story={story} featured={index === 0} />
-          ))}
+        <!-- Stories Bento Grid -->
+        {remainingStories.length > 0 && (
+          <section class="stories-section" aria-label="Visual stories">
+            <div class="bento-grid">
+              {remainingStories.map((story, index) => (
+                <StoryCard story={story} featured={index === 0} />
+              ))}
+            </div>
+          </section>
+        )}
+      </>
+    ) : (
+      <section class="stories-placeholder" aria-label="Stories coming soon">
+        <div class="placeholder-inner">
+          <div class="placeholder-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          </div>
+          <h2 class="placeholder-title">Stories & Essays Coming Soon</h2>
+          <p class="placeholder-text">
+            I'm currently curating photo stories and essays — immersive visual narratives
+            that go beyond single images. They'll be here soon.
+          </p>
+          <span class="placeholder-badge">
+            <span class="placeholder-dot" aria-hidden="true"></span>
+            In Progress
+          </span>
         </div>
       </section>
     )}
@@ -431,6 +456,79 @@ const pageSchemaEntities = [
     transform: translateX(4px);
   }
 
+  /* ─── Stories Placeholder ─── */
+  .stories-placeholder {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 var(--space-4) var(--space-20);
+  }
+
+  @media (min-width: 640px) {
+    .stories-placeholder {
+      padding: 0 var(--space-6) var(--space-24);
+    }
+  }
+
+  .placeholder-inner {
+    text-align: center;
+    padding: var(--space-16) var(--space-8);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--color-surface) 50%, transparent);
+  }
+
+  .placeholder-icon {
+    color: var(--color-brand);
+    opacity: 0.5;
+    margin-bottom: var(--space-6);
+  }
+
+  .placeholder-title {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: -0.015em;
+    margin: 0 0 var(--space-4);
+  }
+
+  .placeholder-text {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto var(--space-6);
+  }
+
+  .placeholder-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-overline);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    background: var(--color-bg-alt);
+  }
+
+  .placeholder-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-brand);
+    animation: pulse-dot 2s infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
   /* ─── Stories Section ─── */
   .stories-section {
     max-width: var(--max-content);
@@ -519,6 +617,30 @@ const pageSchemaEntities = [
     max-width: 640px;
     margin: 0 auto;
   }
+
+  /* Gallery dark mode notification */
+  .gallery-theme-note {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-raised);
+    opacity: 0;
+    transition: opacity 0.4s, transform 0.4s;
+    z-index: 1000;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .gallery-theme-note.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 </style>
 
 <script is:inline>
@@ -563,5 +685,49 @@ const pageSchemaEntities = [
         setTimeout(function() { el.classList.remove("rippling"); }, 400);
       });
     });
+  });
+</script>
+
+<script is:inline>
+  // Gallery dark mode auto-switch
+  document.addEventListener("astro:page-load", function() {
+    var isGallery = window.location.pathname.startsWith("/gallery");
+    if (!isGallery) return;
+
+    // Already manually overridden — respect it
+    if (sessionStorage.getItem("gallery-manual-override") === "true") return;
+
+    var current = document.documentElement.getAttribute("data-theme") || "light";
+    if (current === "dark") return; // already dark
+
+    // Save current theme and switch to dark
+    sessionStorage.setItem("gallery-prev-theme", current);
+    document.documentElement.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme", "dark");
+
+    // Show notification
+    var note = document.createElement("div");
+    note.className = "gallery-theme-note";
+    note.setAttribute("role", "status");
+    note.setAttribute("aria-live", "polite");
+    note.textContent = "Switched to dark mode for optimal viewing";
+    document.body.appendChild(note);
+    requestAnimationFrame(function() {
+      note.classList.add("visible");
+    });
+    setTimeout(function() {
+      note.classList.remove("visible");
+      setTimeout(function() { note.remove(); }, 400);
+    }, 3000);
+
+    // Listen for manual theme toggle on gallery
+    var toggle = document.querySelector("[data-theme-toggle]");
+    if (toggle) {
+      toggle.addEventListener("click", function handler() {
+        sessionStorage.setItem("gallery-manual-override", "true");
+        sessionStorage.removeItem("gallery-prev-theme");
+        toggle.removeEventListener("click", handler);
+      });
+    }
   });
 </script>

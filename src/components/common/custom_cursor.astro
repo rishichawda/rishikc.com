@@ -19,6 +19,7 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
+    mix-blend-mode: difference;
   }
 
   #custom-cursor.visible {
@@ -29,21 +30,21 @@
     position: absolute;
     width: 6px;
     height: 6px;
-    background: var(--color-text);
+    background: #fff;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
   }
 
   .cursor-ring {
     position: absolute;
     width: 28px;
     height: 28px;
-    border: 1.5px solid var(--color-text);
-    opacity: 0.2;
+    border: 1.5px solid #fff;
+    opacity: 0.5;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
   }
 
   .cursor-label {
@@ -56,7 +57,7 @@
     font-weight: 500;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--color-text);
+    color: #fff;
     white-space: nowrap;
     opacity: 0;
     transition: opacity 0.2s ease;
@@ -83,8 +84,8 @@
   #custom-cursor.cursor-card .cursor-ring {
     width: 48px;
     height: 48px;
-    background: var(--color-text);
-    opacity: 0.05;
+    background: #fff;
+    opacity: 0.08;
     border-color: transparent;
   }
   #custom-cursor.cursor-card .cursor-label {
@@ -100,8 +101,8 @@
   #custom-cursor.cursor-image .cursor-ring {
     width: 56px;
     height: 56px;
-    background: var(--color-text);
-    opacity: 0.08;
+    background: #fff;
+    opacity: 0.1;
     border-color: transparent;
   }
   #custom-cursor.cursor-image .cursor-label {
@@ -154,13 +155,13 @@
     // Suppress native cursor on body, but keep on form inputs
     document.body.style.cursor = 'none';
 
-    // GSAP quickTo for smooth tracking
+    // Track cursor position with GSAP quickTo for smooth 60fps
     const dotX = gsap.quickTo(dot, 'left', { duration: 0.05, ease: 'power2.out' });
     const dotY = gsap.quickTo(dot, 'top', { duration: 0.05, ease: 'power2.out' });
-    const ringX = gsap.quickTo(ring, 'left', { duration: 0.5, ease: 'power3.out' });
-    const ringY = gsap.quickTo(ring, 'top', { duration: 0.5, ease: 'power3.out' });
-    const labelX = gsap.quickTo(label, 'left', { duration: 0.35, ease: 'power3.out' });
-    const labelY = gsap.quickTo(label, 'top', { duration: 0.35, ease: 'power3.out' });
+    const ringX = gsap.quickTo(ring, 'left', { duration: 0.25, ease: 'power3.out' });
+    const ringY = gsap.quickTo(ring, 'top', { duration: 0.25, ease: 'power3.out' });
+    const labelX = gsap.quickTo(label, 'left', { duration: 0.2, ease: 'power3.out' });
+    const labelY = gsap.quickTo(label, 'top', { duration: 0.2, ease: 'power3.out' });
 
     document.addEventListener('mousemove', (e: MouseEvent) => {
       if (!cursor.classList.contains('visible')) {
@@ -182,6 +183,16 @@
       cursor.classList.add('visible');
     });
 
+    // Click animation
+    document.addEventListener('mousedown', () => {
+      gsap.to(dot, { scale: 0.6, duration: 0.15, ease: 'power2.in' });
+      gsap.to(ring, { scale: 0.85, duration: 0.15, ease: 'power2.in' });
+    });
+    document.addEventListener('mouseup', () => {
+      gsap.to(dot, { scale: 1, duration: 0.4, ease: 'elastic.out(1, 0.4)' });
+      gsap.to(ring, { scale: 1, duration: 0.4, ease: 'elastic.out(1, 0.4)' });
+    });
+
     // Contextual cursor states via event delegation
     const cursorStates: Record<string, string> = {
       card: 'cursor-card',
@@ -197,7 +208,6 @@
     };
 
     function getCursorType(el: Element): { state: string; label: string } | null {
-      // Check data-cursor attribute first
       const cursorAttr = el.closest('[data-cursor]')?.getAttribute('data-cursor');
       if (cursorAttr && cursorStates[cursorAttr]) {
         const customLabel = el.closest('[data-cursor]')?.getAttribute('data-cursor-label');
@@ -207,15 +217,12 @@
         };
       }
 
-      // Auto-detect element types
       const tagName = el.tagName.toLowerCase();
 
-      // Form inputs — keep native cursor
       if (['input', 'textarea', 'select'].includes(tagName) || (el as HTMLElement).isContentEditable) {
         return null;
       }
 
-      // External links
       if (tagName === 'a') {
         const href = (el as HTMLAnchorElement).href;
         const target = (el as HTMLAnchorElement).target;
@@ -225,16 +232,13 @@
         return { state: 'cursor-link', label: '' };
       }
 
-      // Buttons
       if (tagName === 'button' || el.closest('button')) {
         return { state: 'cursor-link', label: '' };
       }
 
-      // Links (via ancestor)
       if (el.closest('a')) {
         const anchor = el.closest('a')!;
-        const target = anchor.target;
-        if (target === '_blank') {
+        if (anchor.target === '_blank') {
           return { state: 'cursor-external', label: '↗' };
         }
         return { state: 'cursor-link', label: '' };
@@ -257,16 +261,13 @@
           cursor.classList.add(cursorType.state);
           label.textContent = cursorType.label;
           currentState = cursorType.state;
-        }
-
-        // Restore native cursor for form inputs
-        if (cursorType === null) {
-          (target as HTMLElement).style.cursor = 'auto';
+          gsap.fromTo(ring, { scale: 0.8 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' });
         }
       } else if (currentState) {
         cursor.classList.remove(currentState);
         label.textContent = '';
         currentState = null;
+        gsap.to(ring, { scale: 1, duration: 0.2, ease: 'power2.out' });
       }
     });
 
@@ -287,7 +288,6 @@
     if (!window.matchMedia('(pointer: coarse)').matches &&
         !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.body.style.cursor = 'none';
-      // Re-apply native cursor on form inputs after page change
       document.querySelectorAll('input, textarea, select, [contenteditable]').forEach(el => {
         (el as HTMLElement).style.cursor = 'auto';
       });

@@ -57,8 +57,8 @@ const finalErrorTitle = errorTitle || `Visit ${displayUrl}`;
       class={`block w-full max-w-xs bg-[var(--color-surface)]/90 backdrop-blur-sm border border-brand-200/30 rounded-2xl shadow-sm hover:shadow-lg hover:shadow-brand-100/25 hover:-translate-y-1 hover:bg-[var(--color-surface)] transition-all duration-300 overflow-hidden group`}
       title={`Visit ${title || url}`}
     >
-      <div class={`flex items-stretch relative`}>
-        <div class="absolute inset-0 bg-gradient-to-br from-brand-50/50 via-[var(--color-surface)]/50 to-brand-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div class={`flex items-stretch relative h-full`}>
+        <div class="absolute inset-0 bg-gradient-to-br from-brand-5/10 to-brand-50/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         {image ? (
           <img
             src={image}
