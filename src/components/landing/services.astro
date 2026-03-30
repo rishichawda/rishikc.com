@@ -1,7 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection } from "astro:content";
 
-const servicesData = await getCollection('services');
+const servicesData = await getCollection("services");
 const services = servicesData[0]?.data || [];
 ---
 
@@ -11,31 +11,51 @@ const services = servicesData[0]?.data || [];
       <span class="overline">WHAT I CRAFT & CREATE</span>
       <h2 class="section-title">What I Do</h2>
       <p class="section-subtitle">
-        Passionate about building meaningful digital experiences through code, design, and storytelling
+        Passionate about building meaningful digital experiences through code,
+        design, and storytelling
       </p>
     </div>
 
     <div class="services-grid" data-reveal-group>
-      {services.map((service: any) => (
-        <div class="service-card" data-reveal-item data-cursor="card">
-          <div class="service-icon-wrap">
-            <div class="service-icon" set:html={service.icon}></div>
-          </div>
-          <h3 class="service-title">{service.title}</h3>
-          <p class="service-desc">{service.description}</p>
+      {
+        services.map((service: any) => (
           <a
             href={service.link}
             class="service-link"
-            target={service.link.startsWith('http') ? '_blank' : undefined}
-            rel={service.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+            target={service.link.startsWith("http") ? "_blank" : undefined}
+            rel={
+              service.link.startsWith("http")
+                ? "noopener noreferrer"
+                : undefined
+            }
           >
-            {service.linkText}
-            <svg class="service-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M9 5l7 7-7 7" />
-            </svg>
+            <div class="service-card" data-reveal-item data-cursor="card">
+              <div class="service-icon-wrap">
+                <div class="service-icon" set:html={service.icon} />
+              </div>
+              <h3 class="service-title">{service.title}</h3>
+              <p class="service-desc">{service.description}</p>
+              <span class="inline-flex items-center gap-2 flex-1">
+                {service.linkText}
+                <svg
+                  class="service-arrow"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
           </a>
-        </div>
-      ))}
+        ))
+      }
     </div>
   </div>
 </section>
@@ -112,8 +132,9 @@ const services = servicesData[0]?.data || [];
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-raised);
-    transition: transform var(--duration-normal) ease,
-                box-shadow var(--duration-normal) ease;
+    transition:
+      transform var(--duration-normal) ease,
+      box-shadow var(--duration-normal) ease;
   }
 
   .service-card:hover {
