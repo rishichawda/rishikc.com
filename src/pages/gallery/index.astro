@@ -201,6 +201,9 @@ const pageSchemaEntities = [
             I'm currently curating photo stories and essays — immersive visual narratives
             that go beyond single images. They'll be here soon.
           </p>
+          <p class="placeholder-text italic opacity-70">
+            You can browse the existing photos below, and follow me on Instagram for the latest updates.
+          </p>
           <span class="placeholder-badge">
             <span class="placeholder-dot" aria-hidden="true"></span>
             In Progress
@@ -689,45 +692,70 @@ const pageSchemaEntities = [
 </script>
 
 <script is:inline>
-  // Gallery dark mode auto-switch
-  document.addEventListener("astro:page-load", function() {
-    var isGallery = window.location.pathname.startsWith("/gallery");
-    if (!isGallery) return;
+  // 1. Prevent multiple document-level event listeners
+  if (!window.hasGalleryThemeListener) {
+    window.hasGalleryThemeListener = true;
 
-    // Already manually overridden — respect it
-    if (sessionStorage.getItem("gallery-manual-override") === "true") return;
+    document.addEventListener("astro:page-load", function() {
+      var isGallery = window.location.pathname.startsWith("/gallery");
 
-    var current = document.documentElement.getAttribute("data-theme") || "light";
-    if (current === "dark") return; // already dark
+      // --- Restore Theme Logic ---
+      if (!isGallery) {
+        var prevTheme = sessionStorage.getItem("gallery-prev-theme");
 
-    // Save current theme and switch to dark
-    sessionStorage.setItem("gallery-prev-theme", current);
-    document.documentElement.setAttribute("data-theme", "dark");
-    localStorage.setItem("theme", "dark");
+        if (prevTheme) {
+          document.documentElement.setAttribute("data-theme", prevTheme);
+          localStorage.setItem("theme", prevTheme);
+          sessionStorage.removeItem("gallery-prev-theme");
+        }
 
-    // Show notification
-    var note = document.createElement("div");
-    note.className = "gallery-theme-note";
-    note.setAttribute("role", "status");
-    note.setAttribute("aria-live", "polite");
-    note.textContent = "Switched to dark mode for optimal viewing";
-    document.body.appendChild(note);
-    requestAnimationFrame(function() {
-      note.classList.add("visible");
-    });
-    setTimeout(function() {
-      note.classList.remove("visible");
-      setTimeout(function() { note.remove(); }, 400);
-    }, 3000);
+        sessionStorage.removeItem("gallery-manual-override");
+        return; 
+      }
 
-    // Listen for manual theme toggle on gallery
-    var toggle = document.querySelector("[data-theme-toggle]");
-    if (toggle) {
-      toggle.addEventListener("click", function handler() {
-        sessionStorage.setItem("gallery-manual-override", "true");
-        sessionStorage.removeItem("gallery-prev-theme");
-        toggle.removeEventListener("click", handler);
+      // --- Gallery Theme Logic ---
+      if (sessionStorage.getItem("gallery-manual-override") === "true") return;
+
+      var current = document.documentElement.getAttribute("data-theme") || "light";
+      if (current === "dark") return; 
+
+      sessionStorage.setItem("gallery-prev-theme", current);
+      document.documentElement.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+
+      // Notification logic
+      var note = document.createElement("div");
+      note.className = "gallery-theme-note";
+      note.setAttribute("role", "status");
+      note.setAttribute("aria-live", "polite");
+      note.textContent = "Switched to dark mode for optimal viewing";
+      document.body.appendChild(note);
+
+      requestAnimationFrame(function() {
+        note.classList.add("visible");
       });
-    }
-  });
+      setTimeout(function() {
+        note.classList.remove("visible");
+        setTimeout(function() { note.remove(); }, 400);
+      }, 3000);
+
+      // --- Manual Toggle Listener ---
+      var toggle = document.querySelector("[data-theme-toggle]");
+
+      // 2. Prevent multiple click listeners on the same button
+      if (toggle && !toggle.hasAttribute("data-gallery-listener-attached")) {
+        // Mark the button so we know it already has our listener
+        toggle.setAttribute("data-gallery-listener-attached", "true");
+
+        toggle.addEventListener("click", function handler() {
+          sessionStorage.setItem("gallery-manual-override", "true");
+          sessionStorage.removeItem("gallery-prev-theme");
+
+          // Cleanup this specific listener
+          toggle.removeEventListener("click", handler);
+          toggle.removeAttribute("data-gallery-listener-attached");
+        });
+      }
+    });
+  }
 </script>
