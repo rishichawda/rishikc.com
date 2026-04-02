@@ -7,6 +7,7 @@ import ProjectCard from "../../components/gallery/project_card.astro";
 import { getCollection } from "astro:content";
 import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
 import type { ListItem, ImageGallery as SchemaImageGallery } from "schema-dts";
+import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 
 import { Image } from "astro:assets";
 
@@ -102,6 +103,8 @@ const pageSchemaEntities = [
 <BaseLayout page_info={page_info} pageSchemaEntities={pageSchemaEntities}>
 
   <main class="gallery-page min-h-screen">
+    <Breadcrumbs items={[{ label: "Gallery" }]} />
+
     <!-- Hero Section -->
     <header class="page-header">
       <div class="header-inner">

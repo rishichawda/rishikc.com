@@ -5,6 +5,7 @@ import BaseLayout from "../../layouts/base_layout.astro";
 import Prose from "../../components/article/prose.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
 import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
+import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import "remark-notes-plugin/styles.css";
 
 export async function getStaticPaths() {
@@ -69,6 +70,11 @@ const pageSchemaEntities = [
 >
 
     <main class="bit-page">
+        <Breadcrumbs items={[
+            { label: "Bits", href: "/bits/" },
+            { label: bit.data.title },
+        ]} />
+
         <article>
             <header class="bit-header">
                 <h1 class="bit-title">{bit.data.title}</h1>

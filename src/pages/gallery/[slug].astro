@@ -151,7 +151,7 @@ const pageSchemaEntities = [
           >
             <Image
               src={image.src}
-              alt=""
+              alt={image.alt || image.caption || `${title} photo ${index + 1}`}
               class="grid-image"
               widths={[400, 800, 1200]}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

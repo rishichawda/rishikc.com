@@ -4,6 +4,7 @@ import BaseLayout from "../../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
 import { buildWebPageEntity } from "../../../utils/jsonLd";
 import { getAllSeries, getSeriesSlug } from "../../../utils/seriesUtils";
+import Breadcrumbs from "../../../components/common/breadcrumbs.astro";
 
 interface Social { platform: string; url: string; }
 interface ProfileData { name: string; socials: Social[]; }
@@ -63,6 +64,11 @@ const pageSchemaEntities = [
 <BaseLayout page_info={page_info} activeRoute="/articles/" pageSchemaEntities={pageSchemaEntities}>
 
     <main>
+        <Breadcrumbs items={[
+            { label: "Articles", href: "/articles/" },
+            { label: "Series" },
+        ]} />
+
         <!-- Page Header -->
         <section class="page-header" data-reveal>
             <span class="overline">DEEP DIVES</span>

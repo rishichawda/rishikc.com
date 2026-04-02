@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/base_layout.astro";
 import { getCollection } from "astro:content";
 import { buildWebPageEntity } from "../utils/jsonLd";
+import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
 const quotesData = await getCollection("quotes");
 const allQuotes = quotesData[1].data;
@@ -43,6 +44,8 @@ const pageSchemaEntities = [
 <BaseLayout page_info={page_info} activeRoute="/reads/" pageSchemaEntities={pageSchemaEntities}>
 
     <main>
+        <Breadcrumbs items={[{ label: "Reads" }]} />
+
         <section class="page-header" data-reveal>
             <span class="overline">WORDS THAT RESONATE</span>
             <h1 class="page-title">Reads</h1>

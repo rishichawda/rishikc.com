@@ -4,6 +4,7 @@ import BaseLayout from "../../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
 import { buildWebPageEntity } from "../../../utils/jsonLd";
 import { getAllSeries, getSeriesSlug } from "../../../utils/seriesUtils";
+import Breadcrumbs from "../../../components/common/breadcrumbs.astro";
 
 interface Social { platform: string; url: string; }
 interface ProfileData { name: string; socials: Social[]; }
@@ -76,8 +77,13 @@ const pageSchemaEntities = [
 
 <BaseLayout page_info={page_info} activeRoute="/articles/" pageSchemaEntities={pageSchemaEntities}>
     <main>
+        <Breadcrumbs items={[
+            { label: "Articles", href: "/articles/" },
+            { label: "Series", href: "/articles/series/" },
+            { label: series.seriesTitle },
+        ]} />
+
         <section class="page-header" data-reveal>
-            <a href="/articles/series/" class="breadcrumb">&larr; All Series</a>
             <h1 class="page-title">{series.seriesTitle}</h1>
             <p class="page-subtitle">{description}</p>
             <div class="series-meta-bar">
@@ -140,18 +146,6 @@ const pageSchemaEntities = [
         margin: 0 auto;
         padding: var(--space-20) var(--space-6) var(--space-12);
         text-align: center;
-    }
-    .breadcrumb {
-        display: inline-block;
-        font-family: var(--font-ui);
-        font-size: var(--text-body-sm);
-        color: var(--color-brand-dark);
-        text-decoration: none;
-        margin-bottom: var(--space-6);
-        transition: color 200ms;
-    }
-    .breadcrumb:hover {
-        color: var(--color-text);
     }
     .page-title {
         font-family: var(--font-display);

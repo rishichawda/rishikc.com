@@ -20,10 +20,17 @@ let {
   pageSchemaEntities,
 } = Astro.props;
 
+const siteOrigin = (Astro.site || new URL("https://rishikc.com")).origin;
 const canonicalURL = new URL(
   Astro.url.pathname,
   Astro.site || "https://rishikc.com",
 );
+
+// Resolve OG image to absolute URL; fall back to site logo
+const defaultOgImage = new URL(favicon.src, siteOrigin).toString();
+const resolvedImage = image
+  ? (image.startsWith("http") ? image : new URL(image, siteOrigin).toString())
+  : defaultOgImage;
 
 const profileEntry = await getCollection("profile");
 const raw = profileEntry[0].data as any;
@@ -49,7 +56,8 @@ const fullGraph = buildGraphForPage({
   pageTitle: title,
   pageEntities: pageEntities,
 });
-const graphJson = JSON.stringify(fullGraph);
+// Escape < and > to prevent HTML parser interference with JSON-LD content
+const graphJson = JSON.stringify(fullGraph).replace(/</g, '\\u003c').replace(/>/g, '\\u003e');
 
 // OG type: use 'article' for article pages, 'website' for everything else
 const ogType = type === "article" ? "article" : "website";
@@ -58,19 +66,22 @@ const ogType = type === "article" ? "article" : "website";
 <meta charset="UTF-8" />
 <title>{title}</title>
 <meta name="viewport" content="width=device-width" />
+<meta name="author" content={profile.name} />
 <link rel="icon" type="image/png" href={favicon.src} />
 <link rel="canonical" href={canonicalURL.toString()} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <meta name="description" content={description} />
 {noindex ? <meta name="robots" content="noindex, nofollow" /> : null}
-<meta name="image" content={image} />
+<meta name="image" content={resolvedImage} />
 {keywords ? <meta name="keywords" content={keywords} /> : null}
 
 <!-- Open Graph -->
 <meta property="og:title" content={title} />
 <meta property="og:site_name" content="Rishi Kumar Chawda" />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={image} />
+<meta property="og:image" content={resolvedImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta property="og:url" content={canonicalURL.toString()} />
 <meta property="og:type" content={ogType} />
 <meta property="og:locale" content="en_US" />
@@ -83,9 +94,14 @@ const ogType = type === "article" ? "article" : "website";
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content={image} />
+<meta name="twitter:image" content={resolvedImage} />
 <meta name="twitter:site" content="@rishiikc" />
 <meta name="twitter:creator" content="@rishiikc" />
+
+<!-- Identity verification -->
+{profile.socials.map((social: Social) => (
+  <link rel="me" href={social.url} />
+))}
 
 <!-- JSON-LD @graph -->
 <script type="application/ld+json" set:html={graphJson} />

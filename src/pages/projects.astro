@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
 import { buildWebPageEntity, personRef } from "../utils/jsonLd";
+import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
 interface ProjectLink {
     url: string;
@@ -103,6 +104,8 @@ const pageSchemaEntities = [
 <BaseLayout page_info={page_info} activeRoute="/projects/" pageSchemaEntities={pageSchemaEntities}>
 
     <main>
+        <Breadcrumbs items={[{ label: "Projects" }]} />
+
         <!-- Page Header -->
         <section class="page-header" data-reveal>
             <span class="overline">BUILDING IN THE OPEN</span>

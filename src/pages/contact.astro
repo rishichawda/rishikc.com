@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/base_layout.astro";
 import { getCollection } from "astro:content";
 import { buildWebPageEntity, personRef } from "../utils/jsonLd";
+import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
 interface Social { platform: string; url: string; }
 interface ProfileData { name: string; socials: Social[]; }
@@ -34,6 +35,8 @@ const pageSchemaEntities = [
 <BaseLayout page_info={page_info} activeRoute="/contact/" pageSchemaEntities={pageSchemaEntities}>
 
   <main class="contact-page">
+    <Breadcrumbs items={[{ label: "Contact" }]} />
+
     <!-- Page Header -->
     <section class="page-header" data-reveal>
       <span class="overline">SAY HELLO</span>

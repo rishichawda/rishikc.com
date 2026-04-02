@@ -11,6 +11,7 @@ const articles = defineCollection({
             hero_image: image(),
             hero_image_alt: z.string().optional(),
             hero_image_credit_text: z.string().optional(),
+            hero_image_credit_link: z.string().url().optional(),
             path: z.string(),
             date: z.coerce.date(),
             dateModified: z.coerce.date().optional(),

@@ -21,9 +21,9 @@ const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
-	title: `${profile.name} - ${profile.title}`,
-	description: `${profile.name} - ${profile.title}`,
-	keywords: `${profile.name} - ${profile.title}`,
+	title: `${profile.name} — Software Engineer, Writer & Photographer`,
+	description: `Personal portfolio and blog by ${profile.name}. Technical articles on web development, performance optimization, React, TypeScript, and DevSecOps. Photography, open source projects, and more.`,
+	keywords: `${profile.name}, software engineer, web developer, technical articles, React, TypeScript, Astro, DevSecOps, photography, open source`,
 };
 
 const siteUrl = new URL(

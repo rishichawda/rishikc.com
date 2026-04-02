@@ -8,6 +8,7 @@ import TableOfContents from "../../components/article/table_of_contents.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
 import SeriesNavigation from "../../components/article/series_navigation.astro";
 import { getSeriesInfo, getSeriesTitle } from "../../utils/seriesUtils";
+import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
 import "remark-notes-plugin/styles.css";
 
 export async function getStaticPaths() {
@@ -33,12 +34,66 @@ const nextPost = currentIndex > 0 ? sorted[currentIndex - 1] : null;
 // Series info
 const seriesInfo = getSeriesInfo(post, allPosts);
 const seriesTitle = post.data.series ? getSeriesTitle(post.data.series) : "";
+
+// Build JSON-LD entities for the @graph
+const articleUrl = new URL(
+	post.data.path || Astro.url.pathname,
+	Astro.site || "https://rishikc.com",
+).toString();
+const imageUrl = post.data.hero_image?.src
+	? new URL(post.data.hero_image.src, Astro.site || "https://rishikc.com").toString()
+	: "";
+const isoDate = post.data.date ? post.data.date.toISOString() : "";
+const isoDateModified = post.data.dateModified ? new Date(post.data.dateModified).toISOString() : isoDate;
+
+const articleEntity: Record<string, unknown> = {
+	"@type": post.data.jsonld_schema || "Article",
+	"@id": `${articleUrl}#article`,
+	headline: post.data.title,
+	description: post.data.description,
+	image: imageUrl,
+	datePublished: isoDate,
+	dateModified: isoDateModified,
+	author: personRef,
+	publisher: personRef,
+	mainEntityOfPage: { "@id": articleUrl },
+	keywords: post.data.tags?.join(", "),
+	speakable: {
+		"@type": "SpeakableSpecification",
+		cssSelector: [".article-title", ".article-subtitle", ".article-meta"],
+	},
+};
+
+const pageSchemaEntities: Record<string, unknown>[] = [
+	buildWebPageEntity({
+		url: articleUrl,
+		name: post.data.title,
+		description: post.data.description,
+		dateModified: isoDateModified,
+		mainEntity: { "@id": `${articleUrl}#article` },
+	}),
+	articleEntity,
+];
+
+// Add FAQ entity if present
+if (post.data.faq && post.data.faq.length > 0) {
+	pageSchemaEntities.push({
+		"@type": "FAQPage",
+		"@id": `${articleUrl}#faq`,
+		mainEntity: post.data.faq.map((item: { question: string; answer: string }) => ({
+			"@type": "Question",
+			name: item.question,
+			acceptedAnswer: { "@type": "Answer", text: item.answer },
+		})),
+	});
+}
 ---
 
 <BaseLayout
 	page_info={{
 		title: post.data.title,
 		description: post.data.description,
+		image: imageUrl,
 		keywords: post.data.keywords,
 		type: "article",
 		datePublished: post.data.date.toISOString(),
@@ -46,6 +101,7 @@ const seriesTitle = post.data.series ? getSeriesTitle(post.data.series) : "";
 		tags: post.data.tags,
 	}}
 	activeRoute="/articles/"
+	pageSchemaEntities={pageSchemaEntities}
 >
 	<main class="article-page">
 		<BlogPost content={post.data} frontmatter={remarkPluginFrontmatter}>

@@ -1,8 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { Schema } from "astro-seo-schema";
 import { getCollection } from "astro:content";
-import { personRef } from "../utils/jsonLd";
 import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
 interface Social { platform: string; url: string; }
@@ -28,19 +26,6 @@ const dateModified = content.dateModified ? new Date(content.dateModified).toLoc
 const hasBeenUpdated = content.dateModified && content.dateModified !== content.date;
 
 const isoDate = content.date ? new Date(content.date).toISOString() : "";
-const isoDateModified = content.dateModified ? new Date(content.dateModified).toISOString() : isoDate;
-const articleUrl = new URL(
-	content.path || Astro.url.pathname,
-	Astro.site || "https://rishikc.com",
-).toString();
-const imageUrl = content.hero_image?.src
-	? new URL(
-			content.hero_image.src,
-			Astro.site || "https://rishikc.com",
-		).toString()
-	: "";
-
-
 ---
 
 <article class="article-layout">
@@ -48,43 +33,6 @@ const imageUrl = content.hero_image?.src
 	<div class="progress-bar" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="reading-progress-bar">
 		<div class="progress-fill" id="progress-fill"></div>
 	</div>
-
-	<Schema
-		item={{
-			"@context": "https://schema.org",
-			"@type": content.jsonld_schema || "Article",
-			headline: content.title,
-			description: content.description,
-			image: imageUrl,
-			datePublished: isoDate,
-			dateModified: isoDateModified,
-			author: personRef,
-			publisher: personRef,
-			mainEntityOfPage: {
-				"@type": "WebPage",
-				"@id": articleUrl,
-			},
-			keywords: content.tags?.join(", "),
-			speakable: {
-				"@type": "SpeakableSpecification",
-				cssSelector: [".article-title", ".article-subtitle", ".article-meta"],
-			},
-			...(content.faq && content.faq.length > 0 ? {} : {}),
-		}}
-	/>
-	{content.faq && content.faq.length > 0 && (
-		<Schema
-			item={{
-				"@context": "https://schema.org",
-				"@type": "FAQPage",
-				mainEntity: content.faq.map((item: { question: string; answer: string }) => ({
-					"@type": "Question",
-					name: item.question,
-					acceptedAnswer: { "@type": "Answer", text: item.answer },
-				})),
-			}}
-		/>
-	)}
 
 	<!-- Breadcrumbs -->
 	<Breadcrumbs items={[

@@ -4,6 +4,7 @@ import BaseLayout from "../layouts/base_layout.astro";
 import { buildWebPageEntity, personRef } from "../utils/jsonLd";
 import { Image } from "astro:assets";
 import profileImage from "../../content/assets/me.jpg";
+import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
 interface Language { name: string; level: string; }
 interface Social { platform: string; url: string; }
@@ -74,6 +75,9 @@ const pageSchemaEntities = [
 <BaseLayout page_info={page_info} activeRoute="/about/" pageSchemaEntities={pageSchemaEntities}>
 
   <main>
+    {/* ─── Breadcrumbs ─── */}
+    <Breadcrumbs items={[{ label: "About" }]} />
+
     {/* ─── Page Header ─── */}
     <section class="page-header" data-reveal>
       <span class="overline">GET TO KNOW ME</span>
