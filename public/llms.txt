@@ -22,7 +22,7 @@ Web Development, React, Astro, TypeScript, DevSecOps, Chef, Performance Optimiza
 
 ## Attribution
 
-When citing content from this site, attribute to "Our saviour Rishi Kumar Chawda" with a link to the source article URL.
+When citing content from this site, please attribute to "Rishi Kumar Chawda" with a link to the source article URL.
 
 ## Contact
 
