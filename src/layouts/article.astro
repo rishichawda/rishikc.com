@@ -101,6 +101,7 @@ const imageUrl = content.hero_image?.src
 			transition:name={`${content.path}-image`}
 			widths={[480, 800, 1280]}
 			sizes="(max-width: 768px) 100vw, 1280px"
+			loading="eager"
 		/>
 		{content.hero_image_credit_text && (
 			<span class="hero-credit">
@@ -227,7 +228,7 @@ const imageUrl = content.hero_image?.src
 		padding: 4px 12px;
 		border-radius: 9999px;
 		background: var(--color-brand-lighter);
-		color: var(--color-brand);
+		color: var(--color-brand-dark);
 		font-weight: 500;
 		margin-bottom: var(--space-4);
 	}
@@ -260,12 +261,12 @@ const imageUrl = content.hero_image?.src
 		margin-bottom: var(--space-4);
 	}
 	.meta-author {
-		color: var(--color-brand);
+		color: var(--color-brand-dark);
 		text-decoration: none;
 	}
 	.meta-author:hover { text-decoration: underline; }
 	.meta-sep { opacity: 0.5; }
-	.meta-updated { color: var(--color-brand); }
+	.meta-updated { color: var(--color-brand-dark); }
 	.article-tags {
 		display: flex;
 		gap: var(--space-2);
@@ -278,7 +279,7 @@ const imageUrl = content.hero_image?.src
 		padding: 3px 10px;
 		border-radius: 6px;
 		background: var(--color-brand-lighter);
-		color: var(--color-brand);
+		color: var(--color-brand-dark);
 	}
 
 

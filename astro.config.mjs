@@ -54,6 +54,11 @@ export default defineConfig({
   // Output
   output: 'static',
 
+  // Inline all stylesheets to eliminate render-blocking CSS requests
+  build: {
+    inlineStylesheets: 'always',
+  },
+
   // Fonts API (replaces @fontsource-variable packages)
   fonts: [
     {
@@ -68,16 +73,8 @@ export default defineConfig({
       provider: fontProviders.fontsource(),
       name: "Red Hat Display",
       cssVariable: "--font-red-hat-display",
-      weights: [400, 500, 600, 700, 800, 900],
-      styles: ["normal", "italic"],
-      fallbacks: ["sans-serif"],
-    },
-    {
-      provider: fontProviders.fontsource(),
-      name: "Red Hat Text",
-      cssVariable: "--font-red-hat-text",
       weights: [400, 500, 600, 700],
-      styles: ["normal"],
+      styles: ["normal", "italic"],
       fallbacks: ["sans-serif"],
     },
     {

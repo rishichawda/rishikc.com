@@ -101,6 +101,16 @@ export function getSeriesTitle(series: NonNullable<CollectionEntry<"articles">["
 }
 
 /**
+ * Generate a URL-safe slug from a series title
+ */
+export function getSeriesSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+/**
  * Get all series from a collection of articles
  */
 export function getAllSeries(allArticles: CollectionEntry<"articles">[]): Array<{

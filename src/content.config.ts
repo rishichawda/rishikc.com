@@ -157,4 +157,13 @@ const projects = defineCollection({
     loader: file("content/projects/projects.json", { parser: (text) => JSON.parse(text) }),
 })
 
-export const collections = { articles, bits, quotes, logo, gallery, photo_stories, profile, services, projects };
+const series = defineCollection({
+    loader: glob({ pattern: "*.json", base: "./content/series" }),
+    schema: z.object({
+        title: z.string(),
+        description: z.string(),
+        keywords: z.string().optional(),
+    }),
+});
+
+export const collections = { articles, bits, quotes, logo, gallery, photo_stories, profile, services, projects, series };

@@ -200,7 +200,7 @@ const pageSchemaEntities = [
                         {project.organization && (
                             <span class="org-label">{project.organization}</span>
                         )}
-                        <h4 class="contrib-name">{project.name}</h4>
+                        <h3 class="contrib-name">{project.name}</h3>
                         <p class="contrib-desc">{project.description}</p>
                         <div class="contrib-tech">
                             {project.technologies.map((tech: string) => (
@@ -492,7 +492,7 @@ const pageSchemaEntities = [
         font-family: var(--font-display);
         font-size: var(--text-h2);
         font-weight: 700;
-        color: var(--color-brand);
+        color: var(--color-brand-dark);
     }
     .stat-label {
         font-family: var(--font-ui);
@@ -583,7 +583,7 @@ const pageSchemaEntities = [
         font-family: var(--font-ui);
         font-size: 14px;
         font-weight: 500;
-        color: var(--color-brand);
+        color: var(--color-brand-dark);
         text-decoration: none;
         margin-top: auto;
         transition: color 200ms;

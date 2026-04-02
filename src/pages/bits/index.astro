@@ -112,7 +112,7 @@ const pageSchemaEntities = [
                 <section class="bits-grid active-view" data-view-target="grid">
                     {sortedBits.map((bit) => (
                         <a href={bit.data.path} class="bit-card" data-tags={JSON.stringify(bit.data.tags || [])} data-date={bit.data.date.toISOString()} data-reveal>
-                            <h3 class="bit-card-title">{bit.data.title}</h3>
+                            <h2 class="bit-card-title">{bit.data.title}</h2>
                             <p class="bit-card-desc">{bit.data.description}</p>
                             <div class="bit-card-meta">
                                 <time datetime={bit.data.date.toISOString()}>{formatDate(bit.data.date)}</time>
@@ -133,11 +133,11 @@ const pageSchemaEntities = [
                     {yearGroups.map(([year, bits], idx) => (
                         <details class="year-group" open={idx === 0 || year === currentYear} data-year={year}>
                             <summary class="year-divider">
-                                <h3 class="year-heading">
+                                <h2 class="year-heading">
                                     <span class="year-toggle" aria-hidden="true">▸</span>
                                     {year}
                                     <span class="year-count">({bits.length} {bits.length === 1 ? 'bit' : 'bits'})</span>
-                                </h3>
+                                </h2>
                                 <span class="year-line" aria-hidden="true"></span>
                             </summary>
                             <ul role="list">
@@ -249,12 +249,12 @@ const pageSchemaEntities = [
     }
     .tag-pill:hover {
         border-color: var(--color-brand-light);
-        color: var(--color-brand);
+        color: var(--color-brand-dark);
     }
     .tag-pill.active {
-        background: var(--color-brand);
+        background: var(--color-brand-dark);
         color: #fff;
-        border-color: var(--color-brand);
+        border-color: var(--color-brand-dark);
     }
     .controls-right {
         display: flex;
@@ -501,7 +501,7 @@ const pageSchemaEntities = [
     .back-link {
         font-family: var(--font-ui);
         font-size: var(--text-body);
-        color: var(--color-brand);
+        color: var(--color-brand-dark);
         text-decoration: none;
         font-weight: 500;
     }

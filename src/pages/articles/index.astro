@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
 import { buildWebPageEntity } from "../../utils/jsonLd";
-import { getAllSeries } from "../../utils/seriesUtils";
+import { getAllSeries, getSeriesSlug } from "../../utils/seriesUtils";
 
 const page_info = {
     title: "Articles | Rishi Chawda",
@@ -75,13 +75,13 @@ const pageSchemaEntities = [
         {allSeries.length > 0 && (
             <section class="series-section" data-reveal>
                 <div class="series-header">
-                    <h3 class="series-heading">Series</h3>
+                    <h2 class="series-heading">Series</h2>
                     <div class="series-divider"></div>
                 </div>
                 <div class="series-scroll" role="region" aria-label="Article series">
                     {allSeries.map((series) => (
-                        <a href="/articles/series/" class="series-card">
-                            <h4 class="series-card-title">{series.seriesTitle}</h4>
+                        <a href={`/articles/series/${getSeriesSlug(series.seriesTitle)}/`} class="series-card">
+                            <h3 class="series-card-title">{series.seriesTitle}</h3>
                             <span class="series-card-meta">{series.totalParts} parts</span>
                             <span class="series-card-link">View Series <span class="arrow">&rarr;</span></span>
                         </a>
@@ -164,7 +164,7 @@ const pageSchemaEntities = [
         <section class="articles-section">
             <div class="articles-grid" id="articles-grid" role="list">
                 {gridArticles.map((article) => (
-                    <article
+                    <div
                         class="article-card"
                         role="listitem"
                         data-article
@@ -218,7 +218,7 @@ const pageSchemaEntities = [
                                 <time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time>
                             </div>
                         </a>
-                    </article>
+                    </div>
                 ))}
             </div>
 
@@ -467,7 +467,7 @@ const pageSchemaEntities = [
         padding: 4px 12px;
         border-radius: 9999px;
         background: var(--color-brand-lighter);
-        color: var(--color-brand);
+        color: var(--color-brand-dark);
         font-weight: 500;
     }
     .category-pill.small {
@@ -520,7 +520,7 @@ const pageSchemaEntities = [
     .read-link {
         font-family: var(--font-ui);
         font-size: var(--text-body);
-        color: var(--color-brand);
+        color: var(--color-brand-dark);
         font-weight: 500;
         display: inline-flex;
         align-items: center;
@@ -602,7 +602,7 @@ const pageSchemaEntities = [
     .series-card-link {
         font-family: var(--font-ui);
         font-size: 14px;
-        color: var(--color-brand);
+        color: var(--color-brand-dark);
         font-weight: 500;
         margin-top: auto;
     }
@@ -717,7 +717,7 @@ const pageSchemaEntities = [
         padding: 2px 8px;
         border-radius: 6px;
         background: var(--color-brand-lighter);
-        color: var(--color-brand);
+        color: var(--color-brand-dark);
     }
 
     /* List View */

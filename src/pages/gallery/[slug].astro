@@ -147,14 +147,15 @@ const pageSchemaEntities = [
             data-lens={image.lens || ""}
             data-settings={image.settings || ""}
             data-location={image.location || ""}
-            aria-label={`View ${image.alt || image.caption || `${title} photo ${index + 1}`} in full size`}
+            aria-label={`View full size: ${image.alt || image.caption || `photo ${index + 1}`}`}
           >
             <Image
               src={image.src}
-              alt={image.alt || `${title} photo ${index + 1}`}
+              alt=""
               class="grid-image"
               widths={[400, 800, 1200]}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              loading={index < 3 ? "eager" : "lazy"}
             />
             {image.caption && (
               <div class="caption-overlay">

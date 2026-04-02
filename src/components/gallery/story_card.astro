@@ -19,13 +19,13 @@ const { title, description, cover_image, cover_image_alt, tags, reading_time } =
   ]}
   data-cursor="card"
   data-cursor-label="View Story"
-  aria-label={`Read story: ${title}`}
+  aria-label={title}
 >
   <Image
     src={cover_image}
     alt={cover_image_alt || title}
     class="w-full h-full object-cover"
-    widths={featured ? [600, 1200, 1920] : [400, 800, 1200]}
+    widths={featured ? [600, 1200, 1920] : [400, 800]}
     sizes={featured 
       ? "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 66vw" 
       : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}

@@ -1,9 +1,9 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/base_layout.astro";
+import BaseLayout from "../../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
-import { buildWebPageEntity } from "../../utils/jsonLd";
-import { getAllSeries } from "../../utils/seriesUtils";
+import { buildWebPageEntity } from "../../../utils/jsonLd";
+import { getAllSeries, getSeriesSlug } from "../../../utils/seriesUtils";
 
 interface Social { platform: string; url: string; }
 interface ProfileData { name: string; socials: Social[]; }
@@ -77,7 +77,9 @@ const pageSchemaEntities = [
                     <div class="series-block" data-reveal>
                         <div class="series-block-header">
                             <div class="series-block-title-group">
-                                <h2 class="series-block-title">{series.seriesTitle}</h2>
+                                <a href={`/articles/series/${getSeriesSlug(series.seriesTitle)}/`} class="series-block-title-link">
+                                    <h2 class="series-block-title">{series.seriesTitle}</h2>
+                                </a>
                                 <p class="series-block-desc">
                                     A {series.totalParts}-part series exploring {series.seriesTitle.toLowerCase()} in depth.
                                     {series.isOngoing ? ' New parts are being added regularly.' : ''}
@@ -207,6 +209,13 @@ const pageSchemaEntities = [
         flex: 1;
         min-width: 0;
     }
+    .series-block-title-link {
+        text-decoration: none;
+        color: inherit;
+    }
+    .series-block-title-link:hover .series-block-title {
+        color: var(--color-brand-dark);
+    }
     .series-block-title {
         font-family: var(--font-display);
         font-size: var(--text-h1);
@@ -215,6 +224,7 @@ const pageSchemaEntities = [
         letter-spacing: -0.02em;
         color: var(--color-text);
         margin: 0 0 var(--space-2);
+        transition: color 200ms;
     }
     .series-block-desc {
         font-family: var(--font-body);
