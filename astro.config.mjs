@@ -128,7 +128,9 @@ export default defineConfig({
       remarkRehype: { footnoteLabel: 'Footnotes' },
       gfm: true,
     }),
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.includes('/search/'),
+    }),
     playformCompress({
       CSS: true,
       HTML: {
