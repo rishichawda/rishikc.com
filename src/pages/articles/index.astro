@@ -77,15 +77,25 @@ const pageSchemaEntities = [
                 <div class="series-header">
                     <h2 class="series-heading">Series</h2>
                     <div class="series-divider"></div>
+                    <div class="series-nav-arrows">
+                        <button class="series-arrow series-arrow-left" id="series-arrow-left" aria-label="Scroll series left" disabled>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                        </button>
+                        <button class="series-arrow series-arrow-right" id="series-arrow-right" aria-label="Scroll series right">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
                 </div>
-                <div class="series-scroll" role="region" aria-label="Article series">
-                    {allSeries.map((series) => (
-                        <a href={`/articles/series/${getSeriesSlug(series.seriesTitle)}/`} class="series-card">
-                            <h3 class="series-card-title">{series.seriesTitle}</h3>
-                            <span class="series-card-meta">{series.totalParts} parts</span>
-                            <span class="series-card-link">View Series <span class="arrow">&rarr;</span></span>
-                        </a>
-                    ))}
+                <div class="series-scroll-wrapper">
+                    <div class="series-scroll" id="series-scroll" role="region" aria-label="Article series">
+                        {allSeries.map((series) => (
+                            <a href={`/articles/series/${getSeriesSlug(series.seriesTitle)}/`} class="series-card">
+                                <h3 class="series-card-title">{series.seriesTitle}</h3>
+                                <span class="series-card-meta">{series.totalParts} parts</span>
+                                <span class="series-card-link">View Series <span class="arrow">&rarr;</span></span>
+                            </a>
+                        ))}
+                    </div>
                 </div>
             </section>
         )}
@@ -560,6 +570,37 @@ const pageSchemaEntities = [
         height: 1px;
         background: var(--color-border);
     }
+    .series-nav-arrows {
+        display: flex;
+        gap: var(--space-2);
+        flex-shrink: 0;
+    }
+    .series-arrow {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: 1px solid var(--color-border);
+        background: var(--color-surface);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: background 200ms, color 200ms, border-color 200ms, opacity 200ms;
+    }
+    .series-arrow:hover:not(:disabled) {
+        background: var(--color-brand-lighter);
+        color: var(--color-brand);
+        border-color: var(--color-brand-light);
+    }
+    .series-arrow:disabled {
+        opacity: 0.3;
+        cursor: default;
+    }
+    .series-scroll-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
     .series-scroll {
         display: flex;
         gap: var(--space-5);
@@ -567,6 +608,7 @@ const pageSchemaEntities = [
         scrollbar-width: none;
         -ms-overflow-style: none;
         padding-bottom: var(--space-2);
+        scroll-behavior: smooth;
     }
     .series-scroll::-webkit-scrollbar { display: none; }
     .series-card {
@@ -1008,5 +1050,126 @@ const pageSchemaEntities = [
 
         // Initial filter
         filterArticles();
+    });
+</script>
+
+<script>
+    // Series scroll: infinite loop with RAF auto-scroll
+    document.addEventListener('astro:page-load', () => {
+        const scroll = document.getElementById('series-scroll') as HTMLElement | null;
+        const leftBtn = document.getElementById('series-arrow-left') as HTMLButtonElement | null;
+        const rightBtn = document.getElementById('series-arrow-right') as HTMLButtonElement | null;
+        if (!scroll || !leftBtn || !rightBtn) return;
+
+        const SCROLL_AMOUNT = 300;
+        const SPEED = 0.5; // px per animation frame (~30px/s at 60fps
+        const controller = new AbortController();
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Clone all original items and append as aria-hidden duplicates for seamless infinite loop
+        const originals = Array.from(scroll.children) as HTMLElement[];
+        originals.forEach(item => {
+            const clone = item.cloneNode(true) as HTMLElement;
+            clone.setAttribute('aria-hidden', 'true');
+            clone.querySelectorAll<HTMLElement>('a, button, [tabindex]').forEach(el => {
+                el.setAttribute('tabindex', '-1');
+            });
+            scroll.appendChild(clone);
+        });
+
+        // Arrows are never disabled in infinite mode
+        leftBtn.removeAttribute('disabled');
+        rightBtn.removeAttribute('disabled');
+
+        // Half-width is the width of the original (non-cloned) content
+        const getHalfWidth = () => scroll.scrollWidth / 2;
+
+        // Instantly set scrollLeft without triggering smooth-scroll animation
+        function instantScrollTo(left: number) {
+            scroll!.style.scrollBehavior = 'auto';
+            scroll!.scrollLeft = left;
+            scroll!.style.scrollBehavior = '';
+        }
+
+        // Wrap scrollLeft when it enters the cloned region so the loop is seamless
+        let isWrapping = false;
+        function wrapPosition() {
+            if (isWrapping) return;
+            const half = getHalfWidth();
+            if (scroll!.scrollLeft >= half) {
+                isWrapping = true;
+                instantScrollTo(scroll!.scrollLeft - half);
+                isWrapping = false;
+            }
+        }
+        scroll.addEventListener('scroll', wrapPosition, { signal: controller.signal });
+
+        // RAF-based auto-scroll
+        let rafId: number | null = null;
+        let paused = false;
+        let scrollPos = 0;
+
+        function tick() {
+            if (paused) {
+                // Keep scrollPos in sync while paused so resuming is seamless
+                scrollPos = scroll!.scrollLeft % getHalfWidth();
+            } else {
+                scrollPos += SPEED;
+                const half = getHalfWidth();
+                if (scrollPos >= half) scrollPos -= half;
+                instantScrollTo(Math.round(scrollPos));
+            }
+            rafId = requestAnimationFrame(tick);
+        }
+
+        function startAutoScroll() {
+            if (reduceMotion || rafId !== null) return;
+            scrollPos = scroll!.scrollLeft;
+            rafId = requestAnimationFrame(tick);
+        }
+
+        function stopAutoScroll() {
+            if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+                scroll!.style.scrollBehavior = ''; // restore CSS-defined smooth for manual use
+            }
+        }
+
+        // Pause auto-scroll on hover/focus; sync position on resume
+        scroll.addEventListener('mouseenter', () => { paused = true; }, { signal: controller.signal });
+        scroll.addEventListener('mouseleave', () => { paused = false; }, { signal: controller.signal });
+        scroll.addEventListener('focusin', () => { paused = true; }, { signal: controller.signal });
+        scroll.addEventListener('focusout', () => { paused = false; }, { signal: controller.signal });
+
+        // Arrow buttons: stop auto-scroll, manual scroll with infinite wrap support
+        leftBtn.addEventListener('click', () => {
+            stopAutoScroll();
+            const half = getHalfWidth();
+            if (scroll!.scrollLeft < SCROLL_AMOUNT) {
+                // Near the start: jump to the equivalent position in the cloned half so
+                // scrolling left reveals the end of the original content (seamless wrap)
+                instantScrollTo(half + scroll!.scrollLeft);
+            }
+            scroll!.scrollBy({ left: -SCROLL_AMOUNT, behavior: 'smooth' });
+        }, { signal: controller.signal });
+
+        rightBtn.addEventListener('click', () => {
+            stopAutoScroll();
+            scroll!.scrollBy({ left: SCROLL_AMOUNT, behavior: 'smooth' });
+            // wrapPosition scroll listener handles overflow into the cloned region
+        }, { signal: controller.signal });
+
+        // Start auto-scroll only if content overflows
+        requestAnimationFrame(() => {
+            if (scroll!.scrollWidth > scroll!.clientWidth) {
+                startAutoScroll();
+            }
+        });
+
+        document.addEventListener('astro:before-preparation', () => {
+            stopAutoScroll();
+            controller.abort();
+        }, { once: true });
     });
 </script>
