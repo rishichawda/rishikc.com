@@ -5054,10 +5054,17 @@ sax@^1.4.1, sax@^1.5.0:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.6.0.tgz#da59637629307b97e7c4cb28e080a7bc38560d5b"
   integrity sha512-6R3J5M4AcbtLUdZmRv2SygeVaM7IhrLXu9BmnOGmmACak8fiUtOsYNWUS4uK7upbmHIBbLBeFeI//477BKLBzA==
 
-schema-dts@^1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/schema-dts/-/schema-dts-1.1.5.tgz#9237725d305bac3469f02b292a035107595dc324"
-  integrity sha512-RJr9EaCmsLzBX2NDiO5Z3ux2BVosNZN5jo0gWgsyKvxKIUL5R3swNvoorulAeL9kLB0iTSX7V6aokhla2m7xbg==
+schema-dts-lib@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/schema-dts-lib/-/schema-dts-lib-1.0.0.tgz#e10f1e06604fb6c5dcf2d7d56993447a6139364a"
+  integrity sha512-9MEO5vpQH9JdBioUupqluzxSYxPLjhmqRUudk15adUl/ypnRsM2/M1kN3AmVJQeG7nZqcL68H8JlGqQQT6vy9A==
+
+schema-dts@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/schema-dts/-/schema-dts-2.0.0.tgz#9b2550e9e6d5230773376b27615c756226609b6e"
+  integrity sha512-t7NoCy3Rn5GHGx6p7s1qIYK/AeIb8ZxJNR9WUNFkwMv2CiiGZBmqqYWc2FlZVm5ZbiHMY4OvBWhj7QtyrFO2Jw==
+  dependencies:
+    schema-dts-lib "^1.0.0"
 
 semver@^6.0.0:
   version "6.3.1"
