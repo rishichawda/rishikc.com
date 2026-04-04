@@ -87,6 +87,11 @@
       const img = trigger.querySelector("img");
       if (!img) return;
 
+      // Reset any swipe transform
+      lightboxImg.style.transform = "";
+      lightboxImg.style.opacity = "";
+      lightboxImg.style.transition = "";
+
       lightboxImg.src = img.src;
       lightboxImg.alt = img.alt || "Full size image";
 
@@ -132,11 +137,16 @@
       showImage(index);
       lightbox.classList.add("active");
       document.body.style.overflow = "hidden";
+      hasInteracted = false;
+      showSwipeHint();
     }
 
     function closeLightbox() {
       lightbox.classList.remove("active");
       document.body.style.overflow = "";
+      lightboxImg.style.transform = "";
+      lightboxImg.style.opacity = "";
+      lightboxImg.style.transition = "";
       lightboxImg.src = "";
     }
 
@@ -167,5 +177,131 @@
       if (e.key === "ArrowLeft") navigate(-1);
       if (e.key === "ArrowRight") navigate(1);
     });
+
+    // ─── Touch Swipe Gestures ───
+    var touchStartX = 0;
+    var touchStartY = 0;
+    var touchStartTime = 0;
+    var isSwiping = false;
+    var swipeDirection = null; // 'horizontal' or 'vertical'
+    var hasInteracted = false;
+    var SWIPE_THRESHOLD = 50;
+    var SWIPE_MAX_TIME = 400;
+    var DISMISS_THRESHOLD = 120;
+
+    lightbox.addEventListener("touchstart", function(e) {
+      if (!lightbox.classList.contains("active")) return;
+      var touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchStartTime = Date.now();
+      isSwiping = true;
+      swipeDirection = null;
+      lightboxImg.style.transition = "none";
+    }, { passive: true });
+
+    lightbox.addEventListener("touchmove", function(e) {
+      if (!isSwiping || !lightbox.classList.contains("active")) return;
+      var touch = e.touches[0];
+      var dx = touch.clientX - touchStartX;
+      var dy = touch.clientY - touchStartY;
+
+      // Determine swipe direction on first significant movement
+      if (!swipeDirection) {
+        if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+          swipeDirection = Math.abs(dx) > Math.abs(dy) ? "horizontal" : "vertical";
+        } else {
+          return;
+        }
+      }
+
+      if (swipeDirection === "horizontal") {
+        // Horizontal: follow finger for nav preview
+        var resistance = 0.8;
+        lightboxImg.style.transform = "translateX(" + (dx * resistance) + "px)";
+        lightboxImg.style.opacity = String(Math.max(0.3, 1 - Math.abs(dx) / 400));
+        e.preventDefault();
+      } else if (swipeDirection === "vertical" && dy > 0) {
+        // Vertical downward: follow finger for dismiss preview
+        var resistance = 0.6;
+        lightboxImg.style.transform = "translateY(" + (dy * resistance) + "px) scale(" + Math.max(0.85, 1 - dy / 800) + ")";
+        lightboxImg.style.opacity = String(Math.max(0.3, 1 - dy / 400));
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    lightbox.addEventListener("touchend", function(e) {
+      if (!isSwiping || !lightbox.classList.contains("active")) return;
+      isSwiping = false;
+      hasInteracted = true;
+
+      var touch = e.changedTouches[0];
+      var dx = touch.clientX - touchStartX;
+      var dy = touch.clientY - touchStartY;
+      var dt = Date.now() - touchStartTime;
+      var isQuick = dt < SWIPE_MAX_TIME;
+
+      lightboxImg.style.transition = "transform 300ms ease, opacity 300ms ease";
+
+      if (swipeDirection === "horizontal") {
+        if (Math.abs(dx) > SWIPE_THRESHOLD && isQuick) {
+          // Quick horizontal swipe: navigate
+          if (dx > 0) {
+            navigate(-1); // swipe right = previous
+          } else {
+            navigate(1); // swipe left = next
+          }
+        } else if (Math.abs(dx) > DISMISS_THRESHOLD) {
+          // Long slow horizontal drag past threshold: also navigate
+          if (dx > 0) {
+            navigate(-1);
+          } else {
+            navigate(1);
+          }
+        } else {
+          // Snap back
+          lightboxImg.style.transform = "";
+          lightboxImg.style.opacity = "";
+        }
+      } else if (swipeDirection === "vertical") {
+        if (dy > DISMISS_THRESHOLD || (dy > SWIPE_THRESHOLD && isQuick)) {
+          // Swipe down: close lightbox with animation
+          lightboxImg.style.transform = "translateY(100vh) scale(0.8)";
+          lightboxImg.style.opacity = "0";
+          setTimeout(closeLightbox, 300);
+        } else {
+          // Snap back
+          lightboxImg.style.transform = "";
+          lightboxImg.style.opacity = "";
+        }
+      } else {
+        lightboxImg.style.transform = "";
+        lightboxImg.style.opacity = "";
+      }
+    }, { passive: true });
+
+    // ─── Swipe Hint ───
+    function showSwipeHint() {
+      if (hasInteracted || triggers.length <= 1) return;
+      var hintShown = sessionStorage.getItem("lightbox-hint-shown");
+      if (hintShown) return;
+
+      sessionStorage.setItem("lightbox-hint-shown", "true");
+
+      var hint = document.createElement("div");
+      hint.className = "lightbox-swipe-hint";
+      hint.setAttribute("aria-hidden", "true");
+      hint.innerHTML = '<span class="lightbox-hint-icon">←</span> Swipe to navigate <span class="lightbox-hint-icon">→</span>';
+      lightbox.appendChild(hint);
+
+      requestAnimationFrame(function() {
+        hint.classList.add("visible");
+      });
+
+      setTimeout(function() {
+        hint.classList.remove("visible");
+        setTimeout(function() { hint.remove(); }, 400);
+      }, 2500);
+    }
   });
 </script>

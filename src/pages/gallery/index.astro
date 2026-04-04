@@ -625,8 +625,8 @@ const pageSchemaEntities = [
     margin: 0 auto;
   }
 
-  /* Gallery dark mode notification */
-  .gallery-theme-note {
+  /* Gallery dark mode notification — :global() needed because element is created dynamically via JS */
+  :global(.gallery-theme-note) {
     position: fixed;
     bottom: 24px;
     left: 50%;
@@ -634,17 +634,19 @@ const pageSchemaEntities = [
     background: var(--color-surface);
     color: var(--color-text-secondary);
     font-size: 13px;
-    padding: 10px 20px;
-    border-radius: 999px;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-raised);
     opacity: 0;
     transition: opacity 0.4s, transform 0.4s;
     z-index: 1000;
     pointer-events: none;
-    white-space: nowrap;
+    max-width: 90vw;
+    text-align: center;
+    line-height: 1.5;
   }
-  .gallery-theme-note.visible {
+  :global(.gallery-theme-note.visible) {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
@@ -732,7 +734,7 @@ const pageSchemaEntities = [
       note.className = "gallery-theme-note";
       note.setAttribute("role", "status");
       note.setAttribute("aria-live", "polite");
-      note.textContent = "Switched to dark mode for optimal viewing";
+      note.textContent = "Switched to dark mode for best viewing. Will restore your theme when you leave. You can still toggle manually.";
       document.body.appendChild(note);
 
       requestAnimationFrame(function() {

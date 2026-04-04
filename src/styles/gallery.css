@@ -252,6 +252,60 @@
   .gallery-lightbox-nav--next { right: 1.5rem; }
 }
 
+/* Lightbox touch swipe hint */
+.lightbox-swipe-hint {
+  position: absolute;
+  bottom: max(100px, 15vh);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 203;
+  font-family: var(--font-ui);
+  font-size: var(--text-body-sm);
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lightbox-swipe-hint.visible {
+  opacity: 1;
+}
+
+.lightbox-hint-icon {
+  font-size: 14px;
+  animation: hint-bounce 1s ease-in-out 2;
+}
+
+@keyframes hint-bounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+.lightbox-hint-icon:first-child {
+  animation-name: hint-bounce-left;
+}
+
+@keyframes hint-bounce-left {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-3px); }
+}
+
+/* Lightbox image touch interaction */
+.gallery-lightbox img {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* ─── Section Fade-in Stagger ─── */
 .gallery-reveal:nth-child(2) { transition-delay: 100ms; }
 .gallery-reveal:nth-child(3) { transition-delay: 200ms; }

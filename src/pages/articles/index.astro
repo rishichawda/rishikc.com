@@ -875,10 +875,47 @@ const pageSchemaEntities = [
         .featured-card { grid-template-columns: 1fr; }
         .featured-content { padding: var(--space-6); }
         .featured-title { font-size: var(--text-h2); }
-        .filter-controls { display: none; }
         .page-header { padding: var(--space-12) var(--space-4) var(--space-8); }
         .list-link { flex-direction: column; }
         .list-thumb { width: 100%; height: 180px; }
+
+        /* Filter bar: stack vertically on mobile */
+        .filter-inner {
+            flex-direction: column;
+            align-items: stretch;
+            gap: var(--space-3);
+        }
+        .filter-controls {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--space-3);
+        }
+        .sort-select {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Tag filters: compact horizontal strip by default */
+        .tag-filters {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tag-overflow {
+            display: none !important;
+        }
+        .tag-filters.expanded {
+            flex-wrap: wrap;
+        }
+        .tag-filters.expanded .tag-overflow {
+            display: inline-flex !important;
+        }
+
+        /* Series section overflow containment */
+        .series-section {
+            overflow: hidden;
+        }
     }
 </style>
 

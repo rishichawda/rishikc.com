@@ -135,7 +135,9 @@ const footerLinks = [
   .footer-nav {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-3);
+    flex-wrap: wrap;
   }
 
   .footer-link {
@@ -153,6 +155,18 @@ const footerLinks = [
   .footer-sep {
     color: var(--color-text-muted);
     font-size: var(--text-ui-small);
+  }
+
+  @media (max-width: 767px) {
+    .footer-nav {
+      gap: var(--space-2);
+    }
+    .footer-sep {
+      display: none;
+    }
+    .footer-link {
+      padding: var(--space-1) var(--space-2);
+    }
   }
 
   .footer-surprise {
