@@ -102,6 +102,29 @@ const pageSchemaEntities = [
 
 <BaseLayout page_info={page_info} pageSchemaEntities={pageSchemaEntities}>
 
+  <!-- Pre-rendered notification for theme switch — prevents z-index flash -->
+  <div class="gallery-theme-note-backdrop" id="gallery-backdrop" aria-hidden="true"></div>
+  <div class="gallery-theme-note" id="gallery-note" role="alertdialog" aria-modal="true" aria-label="Theme switched for gallery">
+    <p style="margin:0;">Switched to dark mode for the best photo viewing experience. Your previous theme will be restored when you leave this page. You can still toggle the theme manually anytime.</p>
+    <button class="gallery-theme-note-btn" id="gallery-note-btn">Got it</button>
+  </div>
+  <script is:inline>
+    // Blocking script: check theme before page paints gallery images
+    (function() {
+      var shown = sessionStorage.getItem("gallery-theme-note-shown");
+      var manualOverride = sessionStorage.getItem("gallery-manual-override") === "true";
+      var current = document.documentElement.getAttribute("data-theme") || "light";
+      if (!shown && !manualOverride && current !== "dark") {
+        sessionStorage.setItem("gallery-prev-theme", current);
+        document.documentElement.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "dark");
+        document.getElementById("gallery-backdrop").classList.add("visible");
+        document.getElementById("gallery-note").classList.add("visible");
+        sessionStorage.setItem("gallery-theme-note-shown", "true");
+      }
+    })();
+  </script>
+
   <main class="gallery-page min-h-screen">
     <Breadcrumbs items={[{ label: "Gallery" }]} />
 
@@ -625,30 +648,67 @@ const pageSchemaEntities = [
     margin: 0 auto;
   }
 
-  /* Gallery dark mode notification — :global() needed because element is created dynamically via JS */
+  /* Gallery dark mode notification — :global() needed for blocking script class manipulation */
   :global(.gallery-theme-note) {
     position: fixed;
-    bottom: 24px;
+    top: 20%;
     left: 50%;
-    transform: translateX(-50%) translateY(20px);
+    transform: translate(-50%, -50%) scale(0.95);
     background: var(--color-surface);
     color: var(--color-text-secondary);
-    font-size: 13px;
-    padding: 12px 20px;
-    border-radius: var(--radius-md);
+    font-size: 14px;
+    padding: 24px 28px;
+    border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-raised);
     opacity: 0;
-    transition: opacity 0.4s, transform 0.4s;
+    transition: opacity 0.3s, transform 0.3s;
     z-index: 1000;
     pointer-events: none;
-    max-width: 90vw;
+    max-width: min(400px, 90vw);
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.6;
+  }
+  @media (max-width: 480px) {
+    :global(.gallery-theme-note) {
+      max-width: none;
+      width: calc(100vw - 24px);
+      padding: 20px 20px;
+    }
   }
   :global(.gallery-theme-note.visible) {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+  }
+  :global(.gallery-theme-note-backdrop) {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 999;
+    pointer-events: none;
+  }
+  :global(.gallery-theme-note-backdrop.visible) {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  :global(.gallery-theme-note-btn) {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 8px 28px;
+    background: var(--color-brand);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  :global(.gallery-theme-note-btn:hover) {
+    opacity: 0.9;
   }
 </style>
 
@@ -723,27 +783,38 @@ const pageSchemaEntities = [
       if (sessionStorage.getItem("gallery-manual-override") === "true") return;
 
       var current = document.documentElement.getAttribute("data-theme") || "light";
-      if (current === "dark") return; 
 
-      sessionStorage.setItem("gallery-prev-theme", current);
-      document.documentElement.setAttribute("data-theme", "dark");
-      localStorage.setItem("theme", "dark");
+      // Wire up "Got it" button for pre-rendered notification (shown by blocking script)
+      var backdrop = document.getElementById("gallery-backdrop");
+      var note = document.getElementById("gallery-note");
+      var btn = document.getElementById("gallery-note-btn");
+      if (btn && note && backdrop && note.classList.contains("visible")) {
+        btn.focus();
+        btn.addEventListener("click", function() {
+          note.classList.remove("visible");
+          backdrop.classList.remove("visible");
+        });
+      }
 
-      // Notification logic
-      var note = document.createElement("div");
-      note.className = "gallery-theme-note";
-      note.setAttribute("role", "status");
-      note.setAttribute("aria-live", "polite");
-      note.textContent = "Switched to dark mode for best viewing. Will restore your theme when you leave. You can still toggle manually.";
-      document.body.appendChild(note);
+      // Theme switch for SPA navigation (blocking script handles initial load)
+      if (current !== "dark") {
+        sessionStorage.setItem("gallery-prev-theme", current);
+        document.documentElement.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "dark");
 
-      requestAnimationFrame(function() {
-        note.classList.add("visible");
-      });
-      setTimeout(function() {
-        note.classList.remove("visible");
-        setTimeout(function() { note.remove(); }, 400);
-      }, 3000);
+        if (backdrop && note) {
+          backdrop.classList.add("visible");
+          note.classList.add("visible");
+          if (btn) {
+            btn.focus();
+            btn.addEventListener("click", function() {
+              note.classList.remove("visible");
+              backdrop.classList.remove("visible");
+            });
+          }
+        }
+        sessionStorage.setItem("gallery-theme-note-shown", "true");
+      }
 
       // --- Manual Toggle Listener ---
       var toggle = document.querySelector("[data-theme-toggle]");
