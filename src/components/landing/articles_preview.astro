@@ -54,6 +54,7 @@ function formatDate(date: string | Date) {
               src={featured.data.hero_image}
               alt={featured.data.hero_image_alt || featured.data.title}
               width={800}
+              quality="mid"
               class="featured-img"
               transition:name={`article-hero-${featured.id}`}
             />
@@ -92,6 +93,7 @@ function formatDate(date: string | Date) {
                 src={article.data.hero_image}
                 alt={article.data.hero_image_alt || article.data.title}
                 width={300}
+                quality="low"
                 class="recent-img"
               />
             </div>

@@ -48,6 +48,8 @@ const isoDate = content.date ? new Date(content.date).toISOString() : "";
 			alt={content.hero_image_alt || content.title}
 			transition:name={`${content.path}-image`}
 			widths={[480, 800, 1280]}
+			fetchpriority="high"
+			quality="high"
 			sizes="(max-width: 768px) 100vw, 1280px"
 			loading="eager"
 		/>

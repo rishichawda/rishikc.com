@@ -144,6 +144,7 @@ const pageSchemaEntities = [
                             alt={featuredArticle.data.hero_image_alt || featuredArticle.data.title}
                             width={720}
                             height={405}
+                            quality="mid"
                             class="featured-img"
                             transition:name={`${featuredArticle.data.path}-image`}
                         />
@@ -189,6 +190,7 @@ const pageSchemaEntities = [
                                     alt={article.data.hero_image_alt || article.data.title}
                                     width={400}
                                     height={225}
+                                    quality="mid"
                                     class="card-img"
                                     transition:name={`${article.data.path}-image`}
                                 />
@@ -217,6 +219,7 @@ const pageSchemaEntities = [
                                     alt=""
                                     width={340}
                                     height={190}
+                                    quality="mid"
                                     class="list-thumb-img"
                                 />
                             </div>
