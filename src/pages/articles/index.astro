@@ -6,8 +6,8 @@ import { buildWebPageEntity } from "../../utils/jsonLd";
 import { getAllSeries, getSeriesSlug } from "../../utils/seriesUtils";
 
 const page_info = {
-    title: "Articles | Rishi Chawda",
-    description: "Long-form writing about engineering, web performance, and the things I've learned along the way.",
+    title: "Articles | Rishi Kumar Chawda",
+    description: "Technical articles on React, TypeScript, web performance, DevSecOps, and engineering best practices by Rishi Kumar Chawda.",
     keywords: "articles, web development, engineering, tutorials, performance",
 };
 
@@ -62,7 +62,7 @@ const pageSchemaEntities = [
 
 <BaseLayout page_info={page_info} activeRoute="/articles/" pageSchemaEntities={pageSchemaEntities}>
 
-    <main>
+    <div>
         <!-- Page Header -->
         <section class="page-header" data-reveal>
             <span class="overline">THOUGHTS &amp; TUTORIALS</span>
@@ -242,7 +242,7 @@ const pageSchemaEntities = [
                 <button class="clear-filter-btn" id="clear-filter">Clear Filter</button>
             </div>
         </section>
-    </main>
+    </div>
 </BaseLayout>
 
 <style>
@@ -1124,6 +1124,9 @@ const pageSchemaEntities = [
         originals.forEach(item => {
             const clone = item.cloneNode(true) as HTMLElement;
             clone.setAttribute('aria-hidden', 'true');
+            if (clone.matches('a, button, [tabindex]')) {
+                clone.setAttribute('tabindex', '-1');
+            }
             clone.querySelectorAll<HTMLElement>('a, button, [tabindex]').forEach(el => {
                 el.setAttribute('tabindex', '-1');
             });

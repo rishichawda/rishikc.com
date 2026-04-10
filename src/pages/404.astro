@@ -24,7 +24,7 @@ function formatDate(date: Date): string {
 ---
 
 <BaseLayout page_info={page_info}>
-    <main class="not-found">
+    <div class="not-found">
         <div class="content" data-reveal>
                 <!-- Mini-game prompt (appears after 5s idle) -->
                 <div id="game-prompt" class="game-prompt" aria-hidden="true">
@@ -75,7 +75,7 @@ function formatDate(date: Date): string {
                 </div>
             )}
         </div>
-    </main>
+    </div>
 </BaseLayout>
 
 <style>
@@ -330,6 +330,7 @@ function formatDate(date: Date): string {
             gameActive = true;
             prompt.classList.remove('visible');
             area.classList.add('active');
+            area.setAttribute('aria-hidden', 'false');
             player.style.left = `${playerX}px`;
             player.style.top = `${playerY}px`;
             placeDot();
@@ -372,13 +373,16 @@ function formatDate(date: Date): string {
         function endGame() {
             clearInterval(dotDriftTimer);
             area.classList.remove('active');
+            area.setAttribute('aria-hidden', 'true');
             winEl.classList.add('visible');
+            winEl.setAttribute('aria-hidden', 'false');
             gameActive = false;
         }
 
         function dismissGame() {
             clearInterval(dotDriftTimer);
             area.classList.remove('active');
+            area.setAttribute('aria-hidden', 'true');
             prompt.classList.remove('visible');
             gameActive = false;
         }

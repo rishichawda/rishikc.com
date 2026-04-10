@@ -55,4 +55,10 @@
   .fixed:hover div::before {
     animation: none;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fixed div::before {
+      animation: none;
+    }
+  }
 </style>

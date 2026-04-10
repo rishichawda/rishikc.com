@@ -34,8 +34,11 @@ const seo = {
 <html lang="en">
 	<head>
 		<SEO page_info={seo} pageSchemaEntities={pageSchemaEntities} />
-		<Font cssVariable="--font-inter" />
-		<Font cssVariable="--font-red-hat-display" />
+		<!-- Preload LCP-critical fonts: Red Hat Display 700 (hero heading = LCP element)
+		     and Inter (body text). Preload hints start the download during HTML parsing,
+		     before CSS is parsed, reducing time-to-font-swap and thus LCP. -->
+		<Font cssVariable="--font-inter" preload={true} />
+		<Font cssVariable="--font-red-hat-display" preload={[{ weight: "700", style: "normal" }]} />
 		<Font cssVariable="--font-montserrat" />
 		<Font cssVariable="--font-jetbrains-mono" />
 		<ClientRouter />
@@ -82,9 +85,9 @@ const seo = {
 	<body class="max-w-screen bg-[var(--color-bg)] text-[var(--color-text)] transition-colors duration-300">
 		<SkipLink />
 		<Navigation activeRoute={activeRoute} />
-		<div id="main-content" class="pt-[var(--nav-height)]">
+		<main id="main-content" class="pt-[var(--nav-height)]" tabindex="-1">
 			<slot />
-		</div>
+		</main>
 		<Footer />
 		<CustomCursor />
 		<KeyboardShortcutsModal />

@@ -61,7 +61,7 @@ const pageSchemaEntities = [
 
 <BaseLayout
     page_info={{
-        title: bit.data.title,
+        title: `${bit.data.title} | Rishi Kumar Chawda`,
         description: bit.data.description,
         keywords: bit.data.tags?.join(', ') || bit.data.title,
     }}
@@ -69,7 +69,7 @@ const pageSchemaEntities = [
     pageSchemaEntities={pageSchemaEntities}
 >
 
-    <main class="bit-page">
+    <div class="bit-page">
         <Breadcrumbs items={[
             { label: "Bits", href: "/bits/" },
             { label: bit.data.title },
@@ -113,7 +113,7 @@ const pageSchemaEntities = [
                 ) : <div />}
             </nav>
         )}
-    </main>
+    </div>
 </BaseLayout>
 
 <style>

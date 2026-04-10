@@ -11,7 +11,7 @@ const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
-  title: `Contact - ${profile.name}`,
+  title: `Contact | ${profile.name}`,
   description: `Get in touch with ${profile.name} for collaborations, job opportunities, or general inquiries`,
   keywords: `contact, email, collaboration, ${profile.name}, software engineer`,
 };
@@ -34,7 +34,7 @@ const pageSchemaEntities = [
 
 <BaseLayout page_info={page_info} activeRoute="/contact/" pageSchemaEntities={pageSchemaEntities}>
 
-  <main class="contact-page">
+  <div class="contact-page">
     <Breadcrumbs items={[{ label: "Contact" }]} />
 
     <!-- Page Header -->
@@ -47,7 +47,7 @@ const pageSchemaEntities = [
 
     <div class="form-container" data-reveal>
       <!-- Progress Steps -->
-      <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" aria-label="Form progress">
+      <div class="progress-bar" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" aria-label="Form progress: Step 1 of 4">
         <div class="progress-steps">
           <div class="step-dot active" data-step="1"><span>1</span></div>
           <div class="step-line"><div class="step-line-fill"></div></div>
@@ -77,27 +77,27 @@ const pageSchemaEntities = [
           <h2 class="step-title">What brings you here?</h2>
           <p class="step-desc">Pick the topic that best describes your message.</p>
           <div class="subject-grid" role="radiogroup" aria-label="Select a subject">
-            <button type="button" class="subject-card" data-subject="General Inquiry" role="radio" aria-checked="false">
+            <button type="button" class="subject-card" data-subject="General Inquiry" role="radio" aria-checked="false" tabindex="0">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               <span class="subject-label">General Inquiry</span>
               <span class="subject-hint">Say hi or ask a question</span>
             </button>
-            <button type="button" class="subject-card" data-subject="Job Opportunity" role="radio" aria-checked="false">
+            <button type="button" class="subject-card" data-subject="Job Opportunity" role="radio" aria-checked="false" tabindex="-1">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
               <span class="subject-label">Job Opportunity</span>
               <span class="subject-hint">Discuss a role or position</span>
             </button>
-            <button type="button" class="subject-card" data-subject="Collaboration" role="radio" aria-checked="false">
+            <button type="button" class="subject-card" data-subject="Collaboration" role="radio" aria-checked="false" tabindex="-1">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               <span class="subject-label">Collaboration</span>
               <span class="subject-hint">Work on something together</span>
             </button>
-            <button type="button" class="subject-card" data-subject="Consulting" role="radio" aria-checked="false">
+            <button type="button" class="subject-card" data-subject="Consulting" role="radio" aria-checked="false" tabindex="-1">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               <span class="subject-label">Consulting</span>
               <span class="subject-hint">Expert advice on a project</span>
             </button>
-            <button type="button" class="subject-card" data-subject="Other" role="radio" aria-checked="false">
+            <button type="button" class="subject-card" data-subject="Other" role="radio" aria-checked="false" tabindex="-1">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               <span class="subject-label">Other</span>
               <span class="subject-hint">Something else entirely</span>
@@ -163,11 +163,11 @@ const pageSchemaEntities = [
 
         <!-- Navigation -->
         <div class="form-nav">
-          <button type="button" id="prev-btn" class="nav-btn nav-prev" style="visibility: hidden;">
+          <button type="button" id="prev-btn" class="nav-btn nav-prev" style="visibility: hidden;" aria-label="Back to: Topic (Step 1 of 4)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
             Back
           </button>
-          <button type="button" id="next-btn" class="nav-btn nav-next">
+          <button type="button" id="next-btn" class="nav-btn nav-next" aria-label="Continue to: About You (Step 2 of 4)">
             Continue
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
@@ -200,7 +200,7 @@ const pageSchemaEntities = [
       <p class="footer-text">You can also find me on</p>
       <div class="social-links">
         {profile.socials.filter((s: Social) => ['GitHub', 'LinkedIn', 'Instagram'].includes(s.platform)).map((social: Social) => (
-          <a href={social.url} target="_blank" rel="noopener noreferrer" class="social-link" aria-label={social.platform}>
+          <a href={social.url} target="_blank" rel="noopener noreferrer" class="social-link" aria-label={`${social.platform} (opens in new tab)`}>
             {social.platform === 'GitHub' && (
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
             )}
@@ -215,7 +215,7 @@ const pageSchemaEntities = [
         ))}
       </div>
     </div>
-  </main>
+  </div>
 </BaseLayout>
 
 <style>
@@ -687,6 +687,7 @@ const pageSchemaEntities = [
 
     let currentStep = 1;
     const totalSteps = 4;
+    const stepNames = ['Topic', 'About You', 'Message', 'Review'];
     const formLoadTime = Date.now();
 
     // Character count
@@ -705,20 +706,45 @@ const pageSchemaEntities = [
     }
 
     // Subject card selection
-    document.querySelectorAll('.subject-card').forEach(card => {
-      card.addEventListener('click', () => {
-        document.querySelectorAll('.subject-card').forEach(c => {
-          c.classList.remove('selected');
-          c.setAttribute('aria-checked', 'false');
-        });
-        card.classList.add('selected');
-        card.setAttribute('aria-checked', 'true');
-        subjectInput.value = card.getAttribute('data-subject') || '';
-        // Clear error
-        const errorEl = card.closest('.form-step')?.querySelector('.error-text');
-        if (errorEl) errorEl.classList.add('hidden');
+    const subjectCards = Array.from(document.querySelectorAll<HTMLButtonElement>('.subject-card'));
+    function selectSubjectCard(card: HTMLButtonElement) {
+      subjectCards.forEach(c => {
+        c.classList.remove('selected');
+        c.setAttribute('aria-checked', 'false');
+        c.setAttribute('tabindex', '-1');
       });
+      card.classList.add('selected');
+      card.setAttribute('aria-checked', 'true');
+      card.setAttribute('tabindex', '0');
+      card.focus();
+      subjectInput.value = card.getAttribute('data-subject') || '';
+      // Clear error
+      const errorEl = card.closest('.form-step')?.querySelector('.error-text');
+      if (errorEl) errorEl.classList.add('hidden');
+    }
+    subjectCards.forEach(card => {
+      card.addEventListener('click', () => selectSubjectCard(card));
     });
+
+    // Arrow key navigation for radiogroup
+    const radioGroup = document.querySelector('.subject-grid[role="radiogroup"]');
+    if (radioGroup) {
+      radioGroup.addEventListener('keydown', (e: Event) => {
+        const event = e as KeyboardEvent;
+        const keys = ['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'];
+        if (!keys.includes(event.key)) return;
+        event.preventDefault();
+        const currentIndex = subjectCards.indexOf(document.activeElement as HTMLButtonElement);
+        if (currentIndex === -1) return;
+        let nextIndex: number;
+        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+          nextIndex = (currentIndex + 1) % subjectCards.length;
+        } else {
+          nextIndex = (currentIndex - 1 + subjectCards.length) % subjectCards.length;
+        }
+        selectSubjectCard(subjectCards[nextIndex]);
+      });
+    }
 
     function goToStep(step: number) {
       const prevStep = currentStep;
@@ -768,6 +794,19 @@ const pageSchemaEntities = [
       } else {
         nextBtn.style.display = 'inline-flex';
         submitBtn.style.display = 'none';
+      }
+
+      // Update ARIA attributes for progress bar and nav buttons
+      const progressBar = document.querySelector('.progress-bar') as HTMLElement;
+      if (progressBar) {
+        progressBar.setAttribute('aria-valuenow', String(step));
+        progressBar.setAttribute('aria-label', `Form progress: Step ${step} of ${totalSteps}`);
+      }
+      if (step > 1) {
+        prevBtn.setAttribute('aria-label', `Back to: ${stepNames[step - 2]} (Step ${step - 1} of ${totalSteps})`);
+      }
+      if (step < totalSteps) {
+        nextBtn.setAttribute('aria-label', `Continue to: ${stepNames[step]} (Step ${step + 1} of ${totalSteps})`);
       }
 
       // Focus first input in step
@@ -917,9 +956,10 @@ const pageSchemaEntities = [
           submitBtn.disabled = false;
           submitBtn.setAttribute("aria-busy", "false");
           form.reset();
-          document.querySelectorAll('.subject-card').forEach(c => {
+          document.querySelectorAll('.subject-card').forEach((c, i) => {
             c.classList.remove('selected');
             c.setAttribute('aria-checked', 'false');
+            c.setAttribute('tabindex', i === 0 ? '0' : '-1');
           });
 
           errorMessageEl.classList.add("hidden");
@@ -971,6 +1011,14 @@ const pageSchemaEntities = [
           prevBtn.style.visibility = 'hidden';
           nextBtn.style.display = 'inline-flex';
           submitBtn.style.display = 'none';
+
+          // Reset ARIA attributes
+          if (progressBar) {
+            progressBar.setAttribute('aria-valuenow', '1');
+            progressBar.setAttribute('aria-label', 'Form progress: Step 1 of 4');
+          }
+          nextBtn.setAttribute('aria-label', `Continue to: ${stepNames[1]} (Step 2 of ${totalSteps})`);
+          prevBtn.setAttribute('aria-label', `Back to: ${stepNames[0]} (Step 1 of ${totalSteps})`);
 
           gsap.fromTo(form,
             { opacity: 0, y: 10 },

@@ -36,6 +36,7 @@ const services = servicesData[0]?.data || [];
               <p class="service-desc">{service.description}</p>
               <span class="inline-flex items-center gap-2 flex-1">
                 {service.linkText}
+                {service.link.startsWith("http") && <span class="sr-only">(opens in new tab)</span>}
                 <svg
                   class="service-arrow"
                   width="16"

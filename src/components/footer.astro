@@ -44,7 +44,7 @@ const footerLinks = [
             target="_blank"
             rel="noopener noreferrer"
             class="social-link"
-            aria-label={`Visit Rishi's ${link.label} profile`}
+            aria-label={`Visit Rishi's ${link.label} profile (opens in new tab)`}
           >
             <span class="sr-only">{link.label}</span>
             <svg viewBox="0 0 24 24" class="social-icon" aria-hidden="true">
@@ -206,6 +206,7 @@ const footerLinks = [
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             surprise.classList.add('visible');
+            surprise.setAttribute('aria-hidden', 'false');
           }
         });
       },

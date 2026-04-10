@@ -61,7 +61,7 @@ function formatDate(date: string | Date) {
           </div>
           <div class="featured-content">
             <div class="article-meta">
-              <time>{formatDate(featured.data.date)}</time>
+              <time datetime={new Date(featured.data.date).toISOString().split('T')[0]}>{formatDate(featured.data.date)}</time>
             </div>
             <h3 class="featured-title">{featured.data.title}</h3>
             {featured.data.subtitle && (
@@ -99,7 +99,7 @@ function formatDate(date: string | Date) {
             </div>
             <div class="recent-content">
               <div class="article-meta">
-                <time>{formatDate(article.data.date)}</time>
+                <time datetime={new Date(article.data.date).toISOString().split('T')[0]}>{formatDate(article.data.date)}</time>
               </div>
               <h3 class="recent-title">{article.data.title}</h3>
               <p class="recent-desc">{article.data.description}</p>

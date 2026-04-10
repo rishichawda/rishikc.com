@@ -1,0 +1,210 @@
+# rishikc.com - Full Content Index
+
+> Personal website of Rishi Kumar Chawda - software engineer, writer, and photographer.
+> Complete index of all content for LLM consumption.
+
+## Site
+- URL: https://rishikc.com
+- Author: Rishi Kumar Chawda
+- RSS: https://rishikc.com/rss.xml
+
+## Articles
+
+### Engineering and Development
+
+- [Core Web Vitals and SEO: What They Influence, and What They Don't](https://rishikc.com/articles/core-web-vitals-seo-impact-ranking-factors/)
+  A practical, source-backed guide to how Core Web Vitals relate to SEO. Learn what Google actually says, where CWV matter in practice, and how to prioritize performance work without overclaiming ranking impact.
+  Tags: performance, seo, web development, optimization
+
+- [Core Web Vitals Troubleshooting: How to Diagnose and Fix LCP, INP & CLS](https://rishikc.com/articles/core-web-vitals-troubleshooting-fix-lcp-inp-cls/)
+  A practical troubleshooting guide for diagnosing and fixing failing Core Web Vitals. Learn how to separate field and lab data, debug LCP, INP, and CLS, and prioritize the fixes that actually move production metrics.
+  Tags: performance, seo, frontend, optimization, web development
+
+- [HTML Microdata Tutorial: Adding Structured Markup to Your Pages](https://rishikc.com/articles/html-microdata-structured-markup-tutorial/)
+  Learn how to add Schema.org Microdata to HTML pages, understand itemscope, itemtype, itemprop, and itemid, and validate markup for structured data and rich results eligibility.
+  Tags: seo, frontend, web development, tutorial
+
+- [JSON-LD Examples: Ready-to-Use Schema Markup Code Snippets](https://rishikc.com/articles/json-ld-examples-schema-markup-code-snippets/)
+  A practical reference collection of JSON-LD templates for common Schema.org types. Copy, customize, and validate examples for articles, FAQs, products, breadcrumbs, organizations, people, websites, and more.
+  Tags: seo, web development, frontend
+
+- [Microdata for SEO: How Structured Markup Improves Search Visibility](https://rishikc.com/articles/microdata-seo-structured-data-search-rankings/)
+  Learn what Microdata can actually do for SEO: help search engines understand content, make pages eligible for supported rich results, and sometimes improve click-through rate. No ranking myths, just practical guidance.
+  Tags: seo, web development, frontend
+
+- [React Application Architecture in 2026: Patterns, Diagrams & Best Practices](https://rishikc.com/articles/react-application-architecture-patterns-2026/)
+  A practical guide to React application architecture in 2026. Includes architecture diagrams, component patterns, state management strategies, and project structure best practices for scalable applications.
+  Tags: react, frontend, web development, architecture
+
+- [React State Management in 2026: Redux Toolkit vs Context vs Zustand vs Jotai](https://rishikc.com/articles/react-state-management-comparison-2026/)
+  Compare React state management options in 2026. Side-by-side analysis of Redux Toolkit, React Context, Zustand, and Jotai with code examples, performance characteristics, and a decision framework for choosing the right tool.
+  Tags: react, frontend, web development
+
+- [Schema.org for Developers: Complete Structured Data Implementation Guide](https://rishikc.com/articles/schema-org-developer-guide-structured-data/)
+  A developer-focused guide to the Schema.org vocabulary. Learn how Schema.org types and properties work, how to choose the right markup for your content, and how to model structured data without confusing Schema.org validity with Google feature support.
+  Tags: seo, web development, frontend
+
+- [Service Worker Guide: Caching Strategies, Lifecycle & Offline-First Patterns](https://rishikc.com/articles/service-worker-caching-strategies-offline-patterns/)
+  Master service worker caching strategies, lifecycle management, and offline-first patterns. Covers Cache First, Network First, Stale-While-Revalidate, and advanced patterns for building reliable Progressive Web Apps.
+  Tags: performance, frontend, web development, tutorial
+
+- [TypeScript Generics Tutorial: From Basics to Advanced Real-World Patterns](https://rishikc.com/articles/typescript-generics-tutorial-real-world-patterns/)
+  A comprehensive TypeScript generics tutorial with real-world examples. Learn generic functions, constraints, conditional types, mapped types with generics, and advanced patterns you'll actually use in production code.
+  Tags: typescript, frontend, web development, tutorial
+
+- [Web Accessibility Checklist: Complete WCAG 2.2 Compliance Guide](https://rishikc.com/articles/web-accessibility-checklist-wcag-2-2-compliance/)
+  A comprehensive web accessibility checklist based on WCAG 2.2 guidelines. Covers perceivable, operable, understandable, and robust principles with specific checks, code examples, and testing tools for developers.
+  Tags: accessibility, frontend, web development
+
+- [What is JSON-LD? A Beginner's Guide to Structured Data](https://rishikc.com/articles/what-is-json-ld-beginners-guide/)
+  Learn what JSON-LD is, how it relates to Schema.org, and how to add structured data without overcomplicating it. A plain-English guide for beginners who want accurate, current guidance.
+  Tags: seo, web development, tutorial
+
+- [Microdata vs JSON-LD vs RDFa: Which Structured Data Format to Use in 2026](https://rishikc.com/articles/structured-data-formats-compared-microdata-jsonld-rdfa-2026/)
+  Compare Microdata, JSON-LD, and RDFa structured data formats. Learn which format Google recommends in 2026, see side-by-side code examples, and pick the right one for your website's SEO.
+  Tags: seo, frontend, web development
+
+- [Core Web Vitals in 2026: Optimization Strategies & Quick Wins](https://rishikc.com/articles/core-web-vitals-2026-optimization-quick-wins/)
+  Pass Core Web Vitals in 30 minutes with proven quick wins for LCP, INP, and CLS. Plus CDN strategies, SEO impact analysis, a real-world case study, and automated performance monitoring setup.
+  Tags: performance, seo, frontend, optimization, web development
+
+- [Core Web Vitals in 2026: Understanding LCP, INP & CLS](https://rishikc.com/articles/core-web-vitals-guide-2026-lcp-inp-cls/)
+  The complete 2026 guide to Core Web Vitals — what LCP, INP, and CLS actually measure, updated thresholds, how to test them properly, and why your Lighthouse scores don't match real-world data.
+  Tags: performance, seo, frontend, optimization, web development
+
+- [Automated Performance Testing: Lighthouse CI, GitHub Actions & Real User Monitoring](https://rishikc.com/articles/automated-performance-testing-lighthouse-ci-github-actions-rum/)
+  Set up automated web performance testing with Lighthouse CI and GitHub Actions. Learn to configure performance budgets, run Lighthouse in CI/CD, and collect Real User Monitoring data for Core Web Vitals.
+  Tags: performance, testing, ci-cd, automation, web development
+
+- [Modern Redux with Redux Toolkit & RTK Query in 2025](https://rishikc.com/articles/modern-redux-toolkit-rtk-query-2025/)
+  Complete 2025 guide to Redux Toolkit and RTK Query with TypeScript. Learn createSlice, createAsyncThunk, automatic caching, and tag-based invalidation — from setup to production patterns.
+  Tags: react, redux, typescript, frontend
+
+- [Rebuilding My Site with Astro, Tailwind CSS & Content Collections](https://rishikc.com/articles/rebuilding-my-site-with-astro/)
+  Why I ditched Gatsby for Astro — and how I rebuilt my site with Tailwind CSS, Content Collections, and MDX. Includes migration steps, performance benchmarks, and lessons learned.
+  Tags: astro, typescript, tailwind, web development, performance
+
+- [Advanced Core Web Vitals: LCP, INP, CDN & Real User Monitoring](https://rishikc.com/articles/advanced-core-web-vitals-optimization/)
+  Go beyond basic Core Web Vitals fixes. Advanced techniques for LCP under 1.5s, INP under 100ms — including fetchpriority, scheduler.yield(), CDN edge configs, and Real User Monitoring setup.
+  Tags: performance, seo, frontend, optimization, monitoring
+
+- [Automated Accessibility Testing with axe-core, Playwright & GitHub Actions](https://rishikc.com/articles/accessibility-testing-ci-integration/)
+  Set up automated accessibility testing in CI/CD with axe-core, Playwright, and Lighthouse CI. Catch WCAG violations before production — with pipeline configs and code examples.
+  Tags: accessibility, testing, web development, ci-cd
+
+- [Creating Accessible Web Forms](https://rishikc.com/articles/accessible-web-forms/)
+  Learn to build accessible web forms with this developer's guide. Covers WCAG 2.2, ARIA roles, semantic HTML, keyboard navigation, and error handling to create inclusive, compliant user experiences.
+  Tags: accessibility, web development
+
+- [Web Accessibility Guide: ARIA Roles, Keyboard Navigation & Color Contrast](https://rishikc.com/articles/web-accessibility-developer-guide/)
+  Practical web accessibility guide covering ARIA roles, keyboard navigation, focus management, and color contrast. Build WCAG 2.1 AA compliant interfaces with code examples.
+  Tags: accessibility, web development
+
+- [Automating Frontend Workflows with custom webhooks in GitHub Actions](https://rishikc.com/articles/github-actions-frontend-automation-webhooks/)
+  Master GitHub Actions automation for frontend projects. Learn to set up CI/CD pipelines with custom webhooks for automatic deployments of Astro, React, and static sites when content changes.
+  Tags: automation, frontend, tutorial, javascript, web development
+
+- [Image Optimization for the Modern Web](https://rishikc.com/articles/image-optimization-responsive-nextgen-webp-avif-automation/)
+  Cut image load times by 50%+ with responsive srcset/sizes, automatic WebP and AVIF conversion, smart lazy loading, and CI pipeline automation. Step-by-step guide with code examples.
+  Tags: web development, performance, optimization
+
+- [Core Web Vitals: Real-World Optimization Strategies](https://rishikc.com/articles/core-web-vitals-optimization-strategies/)
+  Optimize Core Web Vitals for better SEO and UX. Practical strategies for LCP, INP, and CLS with code examples and real-world implementation tips.
+  Tags: seo, performance, frontend, optimization, web development
+
+- [Advanced PWA Guide: Offline Caching, Push Notifications & Background Sync](https://rishikc.com/articles/advanced-pwa-features-offline-push-background-sync/)
+  Build production-ready offline PWAs from scratch. Covers cache-first and network-first strategies, IndexedDB offline queues, Background Sync API, and Web Push with VAPID keys — with working code.
+  Tags: pwa, frontend, javascript, performance, web development
+
+- [Link Juice & SEO: Complete Guide to Nofollow, Noreferrer & Link Equity](https://rishikc.com/articles/link-juice-nofollow-noreferrer-link-balancing/)
+  Complete guide to link juice optimization, nofollow attributes, and link equity strategies. Learn internal linking best practices, external link management, and SEO techniques to boost page authority and rankings.
+  Tags: seo, frontend, web development, optimization
+
+- [JSON-LD Structured Data: Complete SEO Implementation Guide](https://rishikc.com/articles/json-ld-structured-data-web-development/)
+  Master JSON-LD structured data implementation for better SEO. Complete guide to Schema.org markup, rich snippets, and search engine optimization with practical examples and best practices.
+  Tags: seo, frontend, web development
+
+- [Microdata & Microformats: Essential SEO Markup for Web Developers](https://rishikc.com/articles/microformats-microdata-structured-data-web-development/)
+  Complete guide to implementing Microdata and Microformats for better SEO. Learn Schema.org markup, semantic HTML, and structured data techniques to improve search engine understanding and rich snippets.
+  Tags: seo, frontend, web development
+
+- [Ultimate SEO Checklist for Web Developers: Complete Guide](https://rishikc.com/articles/ultimate-web-developer-seo-check-list/)
+  Complete SEO checklist for web developers covering technical optimizations, meta tags, structured data, and performance. Boost your website's search rankings with this actionable developer's guide to SEO.
+  Tags: seo, web development, frontend, optimization
+
+- [Will Artificial Intelligence fully replace Web Developers?](https://rishikc.com/articles/will-artificial-intelligence-replace-web-developers/)
+  In today's digital age, businesses increasingly use AI-powered solutions to boost efficiency and cut costs. However, when it comes to web development, there is no substitute for human expertise.
+  Tags: ai, web development, career
+
+- [TypeScript Declaration Merging & Module Augmentation: Extend Any Library's Types](https://rishikc.com/articles/typescript-declaration-merging-module-augmentation/)
+  Extend third-party library types without forking. Complete guide to TypeScript declaration merging, module augmentation, ambient declarations, and .d.ts files — with real examples.
+  Tags: typescript, advanced, frontend, web development
+
+- [TypeScript Type Guards & Narrowing: Discriminated Unions, Predicates & typeof](https://rishikc.com/articles/typescript-type-guards-narrowing/)
+  How to use TypeScript type guards for runtime type safety. Covers discriminated unions, custom type predicates, typeof, instanceof, and control flow narrowing — with practical examples.
+  Tags: typescript, frontend, web development, tutorial
+
+- [TypeScript Strict Mode: Best Practices for Production Code](https://rishikc.com/articles/typescript-strict-mode-best-practices/)
+  Complete guide to TypeScript strict mode and compiler options. Learn how to configure strictNullChecks, strictPropertyInitialization, noImplicitAny, and other settings for bulletproof production code.
+  Tags: typescript, frontend, best practices, web development
+
+- [TypeScript Utility Types: Generics, Conditionals & Mapped Types (2026)](https://rishikc.com/articles/typescript-utility-types-advanced-patterns/)
+  Master TypeScript utility types with practical, copy-paste examples. Covers Partial, Pick, Omit, Record, mapped types, conditional types, and template literal types — with real-world patterns you'll actually use in production.
+  Tags: typescript, frontend, web development, tutorial
+
+- [Automate Lighthouse Audits for Performance Testing in CI/CD](https://rishikc.com/articles/automate-lighthouse-audits-progressive-web-app/)
+  Complete guide to automating Lighthouse audits for Progressive Web Apps. Learn to set up automated performance testing with Mocha and Chai, integrate with CI/CD pipelines, and maintain consistent web performance standards.
+  Tags: pwa, performance, automation, testing, frontend, web development
+
+- [React State Management Without Redux: useContext + useReducer Pattern](https://rishikc.com/articles/managing-react-application-state-without-redux/)
+  Learn to manage complex React application state without Redux using useContext and useReducer hooks. Create a scalable, Redux-like state management pattern with zero external dependencies.
+  Tags: react, javascript, frontend, web development, tutorial
+
+- [Scalable React Architecture: Redux, Sagas & Services Pattern](https://rishikc.com/articles/architecting-react-applications-redux-store-services-and-sagas/)
+  Learn Redux architecture patterns for React applications. Complete guide to organizing Redux store, sagas, services, and selectors for enterprise projects.
+  Tags: javascript, react, frontend, web development
+
+- [Scalable React Architecture: Directory Structure Best Practices](https://rishikc.com/articles/architecting-react-applications/)
+  Learn how to structure React applications with scalable, maintainable architecture. Practical directory organization patterns based on real-world experience.
+  Tags: react, frontend, web development
+
+- [How to Install Android Emulator for React Native Without Android Studio | Mac, Linux & Windows](https://rishikc.com/articles/native-app-emulator-android-mac-linux-ios-install-command-line/)
+  Learn how to install and set up Android Emulator for React Native development on Mac, Linux, and Windows without Android Studio. This step-by-step command-line guide helps you create virtual devices with minimal system resources and zero bloatware.
+  Tags: react-native, mobile applications, android, tutorial
+
+- [React Native Data Encryption: Secure Redux Store Persistence](https://rishikc.com/articles/encrypt-persisted-data-react-native-mobile-application/)
+  Complete guide to implementing encrypted data storage in React Native apps. Learn to secure Redux store persistence with redux-persist-transform-encrypt for bulletproof mobile app security and user privacy protection.
+  Tags: react-native, mobile applications, security, redux, tutorial
+
+- [Reduce React Native Android APK Size: Complete Optimization Guide](https://rishikc.com/articles/shrink-react-native-application-build-size-android/)
+  Comprehensive guide to reducing React Native Android app size by up to 50%. Learn ProGuard configuration, architecture-specific builds, and advanced optimization techniques for smaller, faster mobile apps.
+  Tags: react-native, android, mobile applications, optimization, tutorial
+
+### Philosophy
+
+- [Lessons from Photography: Parallels Between Framing Shots and Solving Engineering Problems](https://rishikc.com/articles/lessons-from-photography-composition-light-creativity-tech/)
+  Exploring my thoughts on how photography principles like composition, lighting, and creativity can enhance problem-solving and innovation as an engineer.
+  Tags: photography, engineering, life, philosophy
+
+- [Grays and Whites: Embracing Life's Ambiguities](https://rishikc.com/articles/grays-and-whites/)
+  An exploration of how we define and label the ambiguous aspects of our lives, particularly career choices, and why sometimes embracing the undefined is more valuable than rigid categorization.
+  Tags: life, career, philosophy
+
+- [Trains and the Buddhist Principle of Impermanence](https://rishikc.com/articles/trains-and-buddhist-principle-of-impermanence/)
+  Exploring how train journeys reflect the Buddhist concept of impermanence, teaching us to cherish moments and embrace life's transitory nature.
+  Tags: philosophy, mindfulness, life
+
+## Pages
+
+- [Home](https://rishikc.com/)
+- [About](https://rishikc.com/about/)
+- [Articles](https://rishikc.com/articles/)
+- [Career](https://rishikc.com/career/)
+- [Projects](https://rishikc.com/projects/)
+- [Gallery](https://rishikc.com/gallery/)
+- [Reads](https://rishikc.com/reads/)
+- [Contact](https://rishikc.com/contact/)
+
+## Citation
+When referencing content from this site, please cite as:
+Chawda, R.K. (Year). "Article Title." rishikc.com. URL

@@ -4,7 +4,7 @@ import { buildWebPageEntity } from "../utils/jsonLd";
 import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
 const page_info = {
-    title: "Privacy Policy",
+    title: "Privacy Policy | Rishi Kumar Chawda",
     description: "Privacy Policy for rishikc.com",
     keywords: "privacy policy, data protection, gdpr, cookies",
 };
@@ -24,7 +24,7 @@ const pageSchemaEntities = [
 ---
 
 <BaseLayout page_info={page_info} pageSchemaEntities={pageSchemaEntities}>
-    <main class="privacy-page">
+    <div class="privacy-page">
         <Breadcrumbs items={[{ label: "Privacy Policy" }]} />
 
         <article class="privacy-content">
@@ -107,7 +107,7 @@ const pageSchemaEntities = [
                 If you have any questions about this Privacy Policy, please contact us via our <a href="/contact/">Contact Page</a>.
             </p>
         </article>
-    </main>
+    </div>
 </BaseLayout>
 
 <style>

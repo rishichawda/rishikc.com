@@ -93,7 +93,7 @@
       lightboxImg.style.transition = "";
 
       lightboxImg.src = img.src;
-      lightboxImg.alt = img.alt || "Full size image";
+      lightboxImg.alt = img.alt || caption || `Gallery image ${currentIndex + 1} of ${triggers.length}`;
 
       var caption = trigger.getAttribute("data-caption") || "";
       var camera = trigger.getAttribute("data-camera") || "";
@@ -132,22 +132,47 @@
       if (nextBtn) nextBtn.style.display = triggers.length > 1 ? "" : "none";
     }
 
+    function setBackgroundInert(inert) {
+      var selectors = ["header", "main", "#main-content", "footer"];
+      selectors.forEach(function(sel) {
+        var el = document.querySelector(sel);
+        if (el && el !== lightbox && !lightbox.contains(el)) {
+          if (inert) {
+            el.setAttribute("inert", "");
+          } else {
+            el.removeAttribute("inert");
+          }
+        }
+      });
+    }
+
     function openLightbox(index) {
       collectTriggers();
       showImage(index);
       lightbox.classList.add("active");
       document.body.style.overflow = "hidden";
+      setBackgroundInert(true);
       hasInteracted = false;
       showSwipeHint();
+      // Move focus to the close button after the lightbox is visible
+      requestAnimationFrame(function() {
+        if (closeBtn) closeBtn.focus();
+      });
     }
 
     function closeLightbox() {
       lightbox.classList.remove("active");
       document.body.style.overflow = "";
+      setBackgroundInert(false);
       lightboxImg.style.transform = "";
       lightboxImg.style.opacity = "";
       lightboxImg.style.transition = "";
       lightboxImg.src = "";
+      // Return focus to the trigger element that opened the lightbox
+      var returnTarget = triggers[currentIndex];
+      if (returnTarget && typeof returnTarget.focus === "function") {
+        returnTarget.focus();
+      }
     }
 
     function navigate(delta) {
@@ -176,6 +201,36 @@
       if (e.key === "Escape") closeLightbox();
       if (e.key === "ArrowLeft") navigate(-1);
       if (e.key === "ArrowRight") navigate(1);
+    });
+
+    // ─── Focus Trap ───
+    lightbox.addEventListener("keydown", function(e) {
+      if (e.key !== "Tab" || !lightbox.classList.contains("active")) return;
+
+      var focusable = Array.from(
+        lightbox.querySelectorAll('button:not([disabled]):not([style*="display: none"]):not([style*="display:none"])')
+      ).filter(function(el) {
+        return el.offsetParent !== null; // visible only
+      });
+
+      if (focusable.length === 0) return;
+
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        // Shift+Tab: if focus is on the first element, wrap to the last
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        // Tab: if focus is on the last element, wrap to the first
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     });
 
     // ─── Touch Swipe Gestures ───

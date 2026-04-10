@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/base_layout.astro";
 import { buildWebPageEntity } from "../utils/jsonLd";
 
 const page_info = {
-  title: "Search | Rishi Chawda",
+  title: "Search | Rishi Kumar Chawda",
   description: "Search articles, bits, gallery, and content on Rishi Chawda's website",
   keywords: "search, articles, bits, gallery, photography, development",
   noindex: true,
@@ -26,14 +26,14 @@ const pageSchemaEntities = [
 
 <BaseLayout page_info={page_info} activeRoute="/search/" pageSchemaEntities={pageSchemaEntities}>
 
-  <main class="search-page">
+  <div class="search-page">
     <!-- Page Header -->
     <header class="page-header" data-reveal>
       <h1 class="page-title" id="page-title">Search</h1>
       <p class="page-subtitle" id="search-description">Discover articles, photography galleries, and inspiring quotes</p>
 
       <!-- Search Results Info -->
-      <div id="search-results-info" class="results-info hidden">
+      <div id="search-results-info" class="results-info hidden" aria-live="polite" aria-atomic="true">
         <span id="results-count">0</span>
         result<span id="results-plural">s</span> found for
         &ldquo;<span id="search-query-display"></span>&rdquo;
@@ -135,7 +135,7 @@ const pageSchemaEntities = [
         </div>
       </section>
     </div>
-  </main>
+  </div>
 </BaseLayout>
 
 <style>

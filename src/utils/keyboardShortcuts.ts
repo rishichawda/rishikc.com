@@ -112,12 +112,22 @@ function showFirstUseTip() {
   toast.setAttribute('role', 'status');
   document.body.appendChild(toast);
 
-  // Force reflow then animate in
-  requestAnimationFrame(() => { toast.classList.add('visible'); });
-  setTimeout(() => {
-    toast.classList.remove('visible');
-    setTimeout(() => toast.remove(), 300);
-  }, 4000);
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReducedMotion) {
+    // Skip animations — show immediately, then remove after delay
+    toast.classList.add('visible');
+    setTimeout(() => {
+      toast.remove();
+    }, 4000);
+  } else {
+    // Force reflow then animate in
+    requestAnimationFrame(() => { toast.classList.add('visible'); });
+    setTimeout(() => {
+      toast.classList.remove('visible');
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
 }
 
 function injectTipStyles() {
@@ -146,6 +156,15 @@ function injectTipStyles() {
     .kb-tip-toast.visible {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .kb-tip-toast {
+        transition: none;
+        transform: translateX(-50%) translateY(0);
+      }
+      .kb-tip-toast.visible {
+        opacity: 1;
+      }
     }
   `;
   document.head.appendChild(style);

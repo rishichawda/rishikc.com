@@ -3,7 +3,7 @@
 // Becomes compact on scroll, magnetic hover effects on nav items
 import { Image } from "astro:assets";
 import ThemeToggle from "./common/theme_toggle.astro";
-import logo from "../../content/assets/logo/logo.svg";
+import logo from "../../content/assets/logo/logo.png";
 
 interface Props {
   activeRoute?: string;
@@ -44,31 +44,33 @@ function isActive(path: string): boolean {
       transition:name="site-logo"
     >
       <Image
-        alt="logo"
-        width={32}
-        height={21}
+        alt=""
+        width={64}
+        height={42}
         class="logo-img"
         src={logo}
         loading="eager"
+        densities={[1, 2]}
       />
       <span class="logo-text">Rishi</span>
     </a>
 
     <!-- Desktop nav items -->
-    <div class="nav-links" role="list">
+    <ul class="nav-links">
       {navItems.map((item) => (
-        <a
-          href={item.path}
-          class:list={["nav-link", { active: isActive(item.path) }]}
-          aria-current={isActive(item.path) ? "page" : undefined}
-          data-magnetic
-          data-magnetic-strength="4"
-          role="listitem"
-        >
-          {item.label}
-        </a>
+        <li>
+          <a
+            href={item.path}
+            class:list={["nav-link", { active: isActive(item.path) }]}
+            aria-current={isActive(item.path) ? "page" : undefined}
+            data-magnetic
+            data-magnetic-strength="4"
+          >
+            {item.label}
+          </a>
+        </li>
       ))}
-    </div>
+    </ul>
 
     <!-- Actions -->
     <div class="nav-actions">
@@ -210,6 +212,9 @@ function isActive(path: string): boolean {
     display: none;
     align-items: center;
     gap: var(--space-1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
 
   @media (min-width: 768px) {
@@ -453,6 +458,63 @@ function isActive(path: string): boolean {
 
     // Mobile menu toggle
     if (mobileMenuBtn && mobileMenu) {
+      // Focus trap state
+      let focusTrapHandler: ((e: KeyboardEvent) => void) | null = null;
+
+      // Elements to mark inert while the mobile menu is open
+      function getInertTargets(): HTMLElement[] {
+        const targets: HTMLElement[] = [];
+        const mainContent = document.querySelector<HTMLElement>('#main-content');
+        const footer = document.querySelector<HTMLElement>('footer');
+        if (mainContent) targets.push(mainContent);
+        if (footer) targets.push(footer);
+        return targets;
+      }
+
+      // Get all focusable elements within the mobile menu
+      function getFocusableElements(): HTMLElement[] {
+        const elements = mobileMenu!.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        return Array.from(elements);
+      }
+
+      // Install a keyboard-based focus trap on the mobile menu
+      function addFocusTrap() {
+        focusTrapHandler = (e: KeyboardEvent) => {
+          if (e.key !== 'Tab') return;
+
+          const focusable = getFocusableElements();
+          if (focusable.length === 0) return;
+
+          const firstEl = focusable[0];
+          const lastEl = focusable[focusable.length - 1];
+
+          if (e.shiftKey) {
+            // Shift+Tab: wrap from first → last
+            if (document.activeElement === firstEl) {
+              e.preventDefault();
+              lastEl.focus();
+            }
+          } else {
+            // Tab: wrap from last → first
+            if (document.activeElement === lastEl) {
+              e.preventDefault();
+              firstEl.focus();
+            }
+          }
+        };
+        document.addEventListener('keydown', focusTrapHandler);
+      }
+
+      // Remove the focus trap listener
+      function removeFocusTrap() {
+        if (focusTrapHandler) {
+          document.removeEventListener('keydown', focusTrapHandler);
+          focusTrapHandler = null;
+        }
+      }
+
       function closeMenu() {
         mobileMenu!.classList.remove('open');
         mobileMenuBtn!.setAttribute('aria-expanded', 'false');
@@ -461,17 +523,34 @@ function isActive(path: string): boolean {
         mobileMenu!.style.transform = '';
         mobileMenu!.style.opacity = '';
         mobileMenu!.style.transition = '';
+
+        // Remove focus trap and inert
+        removeFocusTrap();
+        getInertTargets().forEach((el) => el.removeAttribute('inert'));
       }
 
       mobileMenuBtn.addEventListener('click', () => {
         const isOpen = mobileMenu.classList.contains('open');
         if (isOpen) {
           closeMenu();
+          mobileMenuBtn.focus();
         } else {
           mobileMenu.classList.add('open');
           mobileMenuBtn.setAttribute('aria-expanded', 'true');
           mobileMenu.setAttribute('aria-hidden', 'false');
           document.body.style.overflow = 'hidden';
+
+          // Mark background content as inert
+          getInertTargets().forEach((el) => el.setAttribute('inert', ''));
+
+          // Install focus trap
+          addFocusTrap();
+
+          // Move focus to the first link inside the menu
+          const firstFocusable = getFocusableElements()[0];
+          if (firstFocusable) {
+            firstFocusable.focus();
+          }
         }
       });
 

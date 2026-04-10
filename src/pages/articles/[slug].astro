@@ -57,7 +57,11 @@ const articleEntity: Record<string, unknown> = {
 	author: personRef,
 	publisher: personRef,
 	mainEntityOfPage: { "@id": articleUrl },
-	keywords: post.data.tags?.join(", "),
+	keywords: post.data.tags,
+	...(post.data.category ? { articleSection: post.data.category } : {}),
+	...(remarkPluginFrontmatter?.minutesRead ? {
+		wordCount: Math.round(parseInt(remarkPluginFrontmatter.minutesRead, 10) * 250),
+	} : {}),
 	speakable: {
 		"@type": "SpeakableSpecification",
 		cssSelector: [".article-title", ".article-subtitle", ".article-meta"],
@@ -91,7 +95,7 @@ if (post.data.faq && post.data.faq.length > 0) {
 
 <BaseLayout
 	page_info={{
-		title: post.data.title,
+		title: `${post.data.title} | Rishi Kumar Chawda`,
 		description: post.data.description,
 		image: imageUrl,
 		keywords: post.data.keywords,
@@ -103,7 +107,7 @@ if (post.data.faq && post.data.faq.length > 0) {
 	activeRoute="/articles/"
 	pageSchemaEntities={pageSchemaEntities}
 >
-	<main class="article-page">
+	<div class="article-page">
 		<BlogPost content={post.data} frontmatter={remarkPluginFrontmatter}>
 			<TableOfContents headings={headings} />
 			<Prose>
@@ -136,7 +140,7 @@ if (post.data.faq && post.data.faq.length > 0) {
 				</a>
 			) : <div />}
 		</nav>
-	</main>
+	</div>
 </BaseLayout>
 
 <style>

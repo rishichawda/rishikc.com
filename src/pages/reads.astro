@@ -8,7 +8,7 @@ const quotesData = await getCollection("quotes");
 const allQuotes = quotesData[1].data;
 
 const page_info = {
-    title: "Reads - Rishi Chawda",
+    title: "Reads | Rishi Kumar Chawda",
     description: "A collection of quotes and passages that inspire, provoke thought, or simply resonate with me",
     keywords: "quotes, books, reading, inspiration, Rishi Chawda",
 };
@@ -43,7 +43,7 @@ const pageSchemaEntities = [
 
 <BaseLayout page_info={page_info} activeRoute="/reads/" pageSchemaEntities={pageSchemaEntities}>
 
-    <main>
+    <div>
         <Breadcrumbs items={[{ label: "Reads" }]} />
 
         <section class="page-header" data-reveal>
@@ -80,7 +80,7 @@ const pageSchemaEntities = [
                 <p>Coming soon &mdash; collecting words worth sharing.</p>
             </div>
         )}
-    </main>
+    </div>
 </BaseLayout>
 
 <script>
@@ -91,13 +91,14 @@ const pageSchemaEntities = [
         const container = document.getElementById('quotes-container');
         if (!shuffleButton || !container) return;
 
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
         shuffleButton.addEventListener('click', () => {
             const cards = Array.from(container.querySelectorAll('.quote-card'));
             if (cards.length < 2) return;
 
-            if (reduceMotion) {
+            // Check preference fresh on every click so runtime changes are respected
+            if (motionQuery.matches) {
                 // Just reorder without animation
                 for (let i = cards.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));

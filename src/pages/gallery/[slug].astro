@@ -56,7 +56,7 @@ const images =
   }) || [];
 
 const page_info = {
-  title: `${title} - ${profile.name}`,
+  title: `${title} | ${profile.name}`,
   description: description,
   image: featured_image.src,
   keywords: `photography, ${title.toLowerCase()}, portfolio, ${profile.name}`,
@@ -101,7 +101,7 @@ const pageSchemaEntities = [
 
 <BaseLayout page_info={page_info} pageSchemaEntities={pageSchemaEntities}>
 
-  <main class="gallery-page min-h-screen">
+  <div class="gallery-page min-h-screen">
     <div class="page-container">
       <Breadcrumbs items={[
         { label: "Gallery", href: "/gallery/" },
@@ -151,7 +151,8 @@ const pageSchemaEntities = [
           >
             <Image
               src={image.src}
-              alt={image.alt || image.caption || `${title} photo ${index + 1}`}
+              alt=""
+              role="presentation"
               class="grid-image"
               widths={[400, 800, 1200]}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -173,7 +174,7 @@ const pageSchemaEntities = [
         the copyright holder is strictly prohibited.
       </p>
     </div>
-  </main>
+  </div>
 
   <Lightbox />
 

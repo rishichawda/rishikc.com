@@ -12,4 +12,4 @@ if (isExternal && href) {
   rel={isExternal ? "noopener noreferrer" : undefined}
   data-spatial-tooltip={isExternal && domain ? domain : undefined}
   {...Astro.props}
-><slot /></a>
+><slot />{isExternal && <span class="sr-only">(opens in new tab)</span>}</a>

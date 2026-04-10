@@ -5,7 +5,7 @@ import { buildWebPageEntity } from "../../utils/jsonLd";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 
 const page_info = {
-    title: "Bits | Rishi Chawda",
+    title: "Bits | Rishi Kumar Chawda",
     description: "Short thoughts, insights, and ideas - bite-sized posts on technology, creativity, and engineering",
     keywords: "bits, thoughts, insights, short posts, Rishi Chawda",
 };
@@ -73,7 +73,7 @@ const pageSchemaEntities = [
 
 <BaseLayout page_info={page_info} activeRoute="/bits/" pageSchemaEntities={pageSchemaEntities}>
 
-    <main>
+    <div>
         <Breadcrumbs items={[{ label: "Bits" }]} />
 
         <section class="page-header" data-reveal>
@@ -88,10 +88,10 @@ const pageSchemaEntities = [
                 <!-- Controls bar -->
                 <div class="controls-bar">
                     <div class="tag-filters-wrapper">
-                        <div class="tag-filters" role="tablist" aria-label="Filter by tag">
-                            <button class="tag-pill active" data-tag="all" role="tab" aria-selected="true">All</button>
+                        <div class="tag-filters" role="group" aria-label="Filter bits by tag">
+                            <button class="tag-pill active" data-tag="all" aria-pressed="true">All</button>
                             {tagList.map((tag) => (
-                                <button class="tag-pill" data-tag={tag} role="tab" aria-selected="false">{tag}</button>
+                                <button class="tag-pill" data-tag={tag} aria-pressed="false">{tag}</button>
                             ))}
                         </div>
                     </div>
@@ -174,7 +174,7 @@ const pageSchemaEntities = [
                 <a href="/articles/" class="back-link">Browse Articles &rarr;</a>
             </div>
         )}
-    </main>
+    </div>
 </BaseLayout>
 
 <style>
@@ -545,18 +545,18 @@ const pageSchemaEntities = [
 
                 // Toggle: clicking active tag resets to All
                 if (isActive && tag !== 'all') {
-                    pills.forEach(function(p) { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
+                    pills.forEach(function(p) { p.classList.remove('active'); p.setAttribute('aria-pressed', 'false'); });
                     var allPill = document.querySelector('.tag-pill[data-tag="all"]');
-                    if (allPill) { allPill.classList.add('active'); allPill.setAttribute('aria-selected', 'true'); }
+                    if (allPill) { allPill.classList.add('active'); allPill.setAttribute('aria-pressed', 'true'); }
                     gridCards.forEach(function(c) { c.classList.remove('hidden'); });
                     listItems.forEach(function(c) { c.classList.remove('hidden'); });
                     yearGroups.forEach(function(g) { g.classList.remove('hidden'); });
                     return;
                 }
 
-                pills.forEach(function(p) { p.classList.remove('active'); p.setAttribute('aria-selected', 'false'); });
+                pills.forEach(function(p) { p.classList.remove('active'); p.setAttribute('aria-pressed', 'false'); });
                 pill.classList.add('active');
-                pill.setAttribute('aria-selected', 'true');
+                pill.setAttribute('aria-pressed', 'true');
 
                 // Filter grid cards
                 gridCards.forEach(function(card) {

@@ -32,7 +32,28 @@ function velocityDurationScale(): number {
   return Math.max(0.3, 1 - (scrollVelocity - 500) / 2500);
 }
 
+/** Disable all scroll reveals — show elements immediately */
+function disableReveals() {
+  ScrollTrigger.getAll().forEach(t => t.kill());
+  cancelAnimationFrame(velocityRaf);
+  gsap.killTweensOf('[data-reveal], [data-reveal-item], [data-reveal-heading]');
+  gsap.set('[data-reveal]', { clearProps: 'all', opacity: 1, y: 0, x: 0, filter: 'blur(0px)' });
+  gsap.set('[data-reveal-item]', { clearProps: 'all', opacity: 1, y: 0 });
+  gsap.set('[data-reveal-heading]', { clearProps: 'all', opacity: 1, y: 0, clipPath: 'none' });
+}
+
 export function initScrollReveals() {
+  // Listen for runtime changes to the reduced-motion preference
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  motionQuery.addEventListener('change', () => {
+    if (motionQuery.matches) {
+      disableReveals();
+    } else {
+      // Re-initialize reveals when user switches back to full motion
+      initScrollReveals();
+    }
+  });
+
   if (prefersReducedMotion()) {
     gsap.set('[data-reveal]', { opacity: 1, y: 0, x: 0, filter: 'blur(0px)' });
     gsap.set('[data-reveal-item]', { opacity: 1, y: 0 });

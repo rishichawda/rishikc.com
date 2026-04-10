@@ -78,7 +78,7 @@ function formatDate(date: Date): string {
             </div>
             <div class="related-content">
               <div class="related-meta">
-                <time>{formatDate(article.data.date)}</time>
+                <time datetime={new Date(article.data.date).toISOString().split('T')[0]}>{formatDate(article.data.date)}</time>
                 <SeriesIndicator article={article} compact={true} />
               </div>
               <h3 class="related-title" transition:name={`${article.data.path}-title`}>

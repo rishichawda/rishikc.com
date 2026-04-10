@@ -55,7 +55,7 @@ const {
 const useScenarioRenderer = scenario && scenario !== "scrollytelling";
 
 const page_info = {
-  title: `${title} — ${profile.name}`,
+  title: `${title} | ${profile.name}`,
   description,
   image: cover_image.src,
   keywords: `photography, visual essay, ${tags?.join(", ") || ""}, ${profile.name}`,
@@ -93,7 +93,7 @@ const pageSchemaEntities = [
 <BaseLayout page_info={page_info} pageSchemaEntities={pageSchemaEntities}>
   <ScrollProgress />
 
-  <main class="gallery-page story-page relative min-h-screen">
+  <div class="gallery-page story-page relative min-h-screen">
     <!-- Back to gallery breadcrumb -->
     <nav class="story-breadcrumb" aria-label="Breadcrumb">
       <a href="/gallery/" class="breadcrumb-link">
@@ -190,7 +190,7 @@ const pageSchemaEntities = [
         explicit written permission is strictly prohibited.
       </p>
     </footer>
-  </main>
+  </div>
 
   <Lightbox />
 </BaseLayout>
