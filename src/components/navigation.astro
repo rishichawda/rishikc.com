@@ -16,6 +16,7 @@ const navItems = [
   { label: "Articles", path: "/articles/" },
   { label: "Projects", path: "/projects/" },
   { label: "Gallery", path: "/gallery/" },
+  { label: "Career", path: "/career/" },
   { label: "About", path: "/about/" },
 ];
 
@@ -91,6 +92,17 @@ function isActive(path: string): boolean {
         </svg>
         <kbd class="search-kbd">⌘K</kbd>
       </button>
+
+      <!-- Contact CTA (desktop only - mobile menu has its own) -->
+      <a
+        href="/contact/"
+        class:list={["nav-contact-btn", { active: isActive("/contact/") }]}
+        aria-current={isActive("/contact/") ? "page" : undefined}
+        data-magnetic
+        data-magnetic-strength="4"
+      >
+        Contact
+      </a>
 
       <!-- Mobile menu toggle -->
       <button
@@ -169,6 +181,8 @@ function isActive(path: string): boolean {
   .site-header.over-hero:not(.scrolled) :global(.theme-toggle-btn:hover) { color: #fff; }
   .site-header.over-hero:not(.scrolled) [data-open-search] { color: rgba(255,255,255,0.85); }
   .site-header.over-hero:not(.scrolled) .kbd-hint { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.2); }
+  .site-header.over-hero:not(.scrolled) .nav-contact-btn { border-color: rgba(255,255,255,0.6); color: #fff; }
+  .site-header.over-hero:not(.scrolled) .nav-contact-btn:hover { background: rgba(255,255,255,0.15); }
   .site-header.over-hero:not(.scrolled) .hamburger-line { background: #fff; }
 
   .nav-container {
@@ -302,6 +316,35 @@ function isActive(path: string): boolean {
   @media (min-width: 768px) {
     .search-kbd {
       display: inline;
+    }
+  }
+
+  /* ─── Contact CTA ─── */
+  .nav-contact-btn {
+    display: none;
+    align-items: center;
+    padding: var(--space-2) var(--space-5);
+    border: 1.5px solid var(--color-brand);
+    border-radius: var(--radius-full);
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--color-brand-dark);
+    text-decoration: none;
+    transition: background var(--duration-fast) ease,
+                color var(--duration-fast) ease,
+                border-color var(--duration-fast) ease;
+  }
+
+  .nav-contact-btn:hover,
+  .nav-contact-btn.active {
+    background: var(--color-brand);
+    color: #fff;
+  }
+
+  @media (min-width: 900px) {
+    .nav-contact-btn {
+      display: inline-flex;
     }
   }
 
