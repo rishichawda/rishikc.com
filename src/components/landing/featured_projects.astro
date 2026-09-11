@@ -1,0 +1,270 @@
+---
+// Featured projects — proof of work, first thing after the hero
+import { getCollection } from "astro:content";
+
+interface ProjectLink {
+  url: string;
+  label: string;
+}
+
+interface Project {
+  name: string;
+  description: string;
+  tags: string[];
+  github: string;
+  demo?: string;
+  npm?: string;
+  links?: ProjectLink[];
+  language: string;
+  category: string;
+  featured: boolean;
+  year: string;
+}
+
+const projectsCollection = await getCollection("projects");
+const allProjects: Project[] = projectsCollection[0]?.data || [];
+
+const featured = allProjects.filter((project) => project.featured);
+const filler = allProjects
+  .filter((project) => !project.featured)
+  .sort((a, b) => Number(b.year) - Number(a.year));
+
+const shownProjects = [...featured, ...filler].slice(0, 3);
+
+function primaryLink(project: Project): { url: string; label: string } {
+  if (project.links && project.links.length > 0) {
+    const demoLink = project.links.find((link) =>
+      /demo|live|site/i.test(link.label),
+    );
+    return demoLink || project.links[0];
+  }
+  if (project.demo) return { url: project.demo, label: "Live Demo" };
+  if (project.npm) return { url: project.npm, label: "View on npm" };
+  return { url: project.github, label: "Source Code" };
+}
+---
+
+{shownProjects.length > 0 && (
+  <section class="section-featured-work" data-reveal>
+    <div class="section-container">
+      <div class="section-header">
+        <span class="overline">BUILDING IN THE OPEN</span>
+        <h2 class="section-subtitle">
+          A few things I've shipped recently — open source tools, experiments, and side projects
+        </h2>
+      </div>
+
+      <div class="work-grid" data-reveal-group>
+        {shownProjects.map((project) => {
+          const link = primaryLink(project);
+          return (
+            <a
+              href={link.url}
+              class="work-card"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-reveal-item
+              data-cursor="card"
+            >
+              <div class="work-badges">
+                <span class="work-badge">{project.language}</span>
+                <span class="work-badge work-badge-brand">{project.category}</span>
+              </div>
+              <h3 class="work-name">{project.name}</h3>
+              <p class="work-desc">{project.description}</p>
+              <div class="work-tags">
+                {project.tags.slice(0, 3).map((tag) => (
+                  <span class="work-tag">{tag}</span>
+                ))}
+              </div>
+              <span class="work-link">
+                {link.label}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M7 17L17 7" />
+                  <path d="M7 7h10v10" />
+                </svg>
+              </span>
+            </a>
+          );
+        })}
+      </div>
+
+      <div class="section-link-wrap">
+        <a href="/projects/" class="section-link">
+          View All Projects
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .section-featured-work {
+    padding: var(--space-12) 0;
+  }
+
+  .section-container {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .overline {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--text-body);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-brand-dark);
+    margin-bottom: var(--space-3);
+  }
+
+  .section-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-body-lg);
+    color: var(--color-text-secondary);
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+    margin-bottom: var(--space-8);
+  }
+
+  @media (min-width: 768px) {
+    .work-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .work-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-raised);
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--duration-normal) ease,
+                box-shadow var(--duration-normal) ease;
+  }
+
+  .work-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .work-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .work-badge {
+    display: inline-block;
+    padding: 2px var(--space-3);
+    font-family: var(--font-ui);
+    font-size: var(--text-ui-small);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    background: var(--color-bg-alt);
+    border-radius: var(--radius-full);
+  }
+
+  .work-badge-brand {
+    color: var(--color-brand-dark);
+    background: var(--color-brand-lighter);
+  }
+
+  .work-name {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-2);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .work-card:hover .work-name {
+    color: var(--color-brand);
+  }
+
+  .work-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-body-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: var(--space-4);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .work-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+  }
+
+  .work-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-caption);
+    color: var(--color-text-tertiary);
+  }
+
+  .work-tag::before {
+    content: '#';
+  }
+
+  .work-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: auto;
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-brand-dark);
+  }
+
+  .section-link-wrap {
+    text-align: right;
+  }
+
+  .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-brand-dark);
+    text-decoration: none;
+    transition: gap var(--duration-fast) ease;
+  }
+
+  .section-link:hover {
+    gap: var(--space-3);
+  }
+</style>
