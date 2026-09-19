@@ -17,6 +17,8 @@ let {
 	pageSchemaEntities,
 } = Astro.props;
 
+const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+
 const seo = {
 	title: title || "Rishi Kumar Chawda",
 	description: description || "Personal portfolio and blog by Rishi Kumar Chawda.",
@@ -80,6 +82,18 @@ const seo = {
 				}
 			});
 		</script>
+		<!-- GA4, offloaded to a web worker via Partytown so it doesn't block the main thread -->
+		{gaMeasurementId && (
+			<>
+				<script type="text/partytown" src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}></script>
+				<script type="text/partytown" define:vars={{ gaMeasurementId }}>
+					window.dataLayer = window.dataLayer || [];
+					function gtag() { dataLayer.push(arguments); }
+					gtag('js', new Date());
+					gtag('config', gaMeasurementId);
+				</script>
+			</>
+		)}
 		<slot name="head" />
 	</head>
 	<body class="max-w-screen bg-[var(--color-bg)] text-[var(--color-text)] transition-colors duration-300">

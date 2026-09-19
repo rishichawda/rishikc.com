@@ -14,6 +14,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 
 import sitemap from '@astrojs/sitemap';
+import partytown from '@astrojs/partytown';
 
 import playformCompress from '@playform/compress';
 
@@ -130,6 +131,11 @@ export default defineConfig({
     }),
     sitemap({
       filter: (page) => !page.includes('/search/'),
+    }),
+    partytown({
+      config: {
+        forward: ['dataLayer.push'],
+      },
     }),
     playformCompress({
       CSS: true,
