@@ -8,7 +8,8 @@
     "preview": "yarn build && astro preview",
     "astro": "astro",
     "audit:a11y": "node .github/scripts/a11y-audit.mjs",
-    "audit:lighthouse": "node .github/scripts/lighthouse-audit.mjs"
+    "audit:lighthouse": "node .github/scripts/lighthouse-audit.mjs",
+    "check:workflows": "node .github/scripts/check-workflows.mjs"
   },
   "dependencies": {
     "@astrojs/partytown": "^2.1.7",
