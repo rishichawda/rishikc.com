@@ -8,13 +8,23 @@ const problems = [];
 for (const name of (await readdir(dir)).filter((file) => /\.ya?ml$/.test(file))) {
   const text = await readFile(new URL(name, dir), 'utf8');
   if (!/^permissions:/m.test(text)) problems.push(`${name}: no top-level permissions block`);
-  text.split('\n').forEach((line, index) => {
-    const match = line.match(/^\s*(?:-\s*)?uses:\s*(\S+)/);
-    if (!match || match[1].startsWith('./')) return;
-    const [action, revision = ''] = match[1].split('@');
-    if (!/^[0-9a-f]{40}$/.test(revision)) problems.push(`${name}:${index + 1}: ${match[1]} is not pinned to a full commit SHA`);
-    if (!ALLOWED_OWNERS.has(action.split('/')[0])) problems.push(`${name}:${index + 1}: ${action} is not from an allowed owner`);
-  });
+  if (/^\s*permissions:\s*write-all/m.test(text)) problems.push(`${name}: permissions must not be write-all`);
+  // Match every `uses` key wherever it appears (block, flow mapping, quoted key, value on the next line).
+  const uses = /["']?\buses["']?\s*:\s*(["']?)([^\s"',}\]#]*)/g;
+  for (const match of text.matchAll(uses)) {
+    const line = text.slice(0, match.index).split('\n').length;
+    const lineText = text.split('\n')[line - 1];
+    if (lineText.trimStart().startsWith('#')) continue;
+    const value = match[2] || (text.slice(match.index + match[0].length).match(/^\s*\n\s*([^\s"',}\]#]+)/)?.[1] ?? '');
+    if (!value) {
+      problems.push(`${name}:${line}: uses has no value the policy check can read`);
+      continue;
+    }
+    if (value.startsWith('./')) continue;
+    const [action, revision = ''] = value.split('@');
+    if (!/^[0-9a-f]{40}$/.test(revision)) problems.push(`${name}:${line}: ${value} is not pinned to a full commit SHA`);
+    if (!ALLOWED_OWNERS.has(action.split('/')[0])) problems.push(`${name}:${line}: ${action} is not from an allowed owner`);
+  }
 }
 
 for (const problem of problems) console.log(`::error title=Workflow policy::${problem}`);
