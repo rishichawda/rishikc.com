@@ -1,0 +1,168 @@
+name: CI audits
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workflow-policy:
+    name: Workflow policy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Check workflow files
+        run: node .github/scripts/check-workflows.mjs
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+
+  build:
+    name: Build
+    # Forks get no secrets, so they cannot check out the private content submodule.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout with the private content submodule
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: true
+          token: ${{ secrets.READ_ONLY_PAT }}
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: yarn
+      - name: Install dependencies without running install scripts
+        run: yarn install --frozen-lockfile --ignore-scripts
+      - name: Build the site
+        run: yarn build
+      - name: Upload the built site
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+          if-no-files-found: error
+
+  a11y:
+    name: Accessibility (axe)
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: yarn
+      - name: Install dependencies without running install scripts
+        run: yarn install --frozen-lockfile --ignore-scripts
+      - name: Download the built site
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
+      - name: Serve the built site
+        run: |
+          yarn astro preview --port 4321 > preview.log 2>&1 &
+          for _ in $(seq 1 30); do
+            curl --silent --fail http://localhost:4321/ > /dev/null && exit 0
+            sleep 1
+          done
+          cat preview.log
+          exit 1
+      - name: Run axe on every page
+        run: yarn audit:a11y
+        env:
+          BASE_URL: http://localhost:4321
+          SITEMAP_FILE: dist/sitemap-0.xml
+          REPORT_DIR: audit-reports
+      - name: Upload the report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: a11y-report
+          path: audit-reports
+          retention-days: 14
+
+  lighthouse:
+    name: Lighthouse (warn-only)
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: yarn
+      - name: Install dependencies without running install scripts
+        run: yarn install --frozen-lockfile --ignore-scripts
+      - name: Download the built site
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
+      - name: Serve the built site
+        run: |
+          yarn astro preview --port 4321 > preview.log 2>&1 &
+          for _ in $(seq 1 30); do
+            curl --silent --fail http://localhost:4321/ > /dev/null && exit 0
+            sleep 1
+          done
+          cat preview.log
+          exit 1
+      - name: Run Lighthouse
+        run: yarn audit:lighthouse
+        env:
+          BASE_URL: http://localhost:4321
+          REPORT_DIR: audit-reports
+      - name: Upload the reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-report
+          path: audit-reports
+          retention-days: 14
