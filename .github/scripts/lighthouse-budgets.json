@@ -1,0 +1,19 @@
+{
+  "runs": 3,
+  "paths": [
+    "/",
+    "/articles/",
+    "/articles/typescript-strict-mode-best-practices/",
+    "/contact/"
+  ],
+  "budgets": {
+    "performance": { "min": 60 },
+    "accessibility": { "min": 90 },
+    "best-practices": { "min": 90 },
+    "seo": { "min": 90 },
+    "lcp": { "max": 6500 },
+    "tbt": { "max": 200 },
+    "cls": { "max": 0.1 },
+    "kb": { "max": 1300 }
+  }
+}
