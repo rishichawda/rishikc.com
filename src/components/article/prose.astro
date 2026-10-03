@@ -68,7 +68,7 @@
   }
 
   /* Code (inline) */
-  .prose-content code {
+  .prose-content :not(pre) > code {
     font-family: var(--font-mono);
     color: var(--color-brand-dark, var(--color-brand));
     background: var(--color-brand-lighter);
@@ -76,31 +76,11 @@
     border-radius: 4px;
     font-size: 0.875em;
   }
-  .prose-content code::before,
-  .prose-content code::after { content: none; }
+  .prose-content :not(pre) > code::before,
+  .prose-content :not(pre) > code::after { content: none; }
 
-  /* Code (blocks) */
-  .prose-content pre {
-    font-family: var(--font-mono);
-    border-radius: 12px;
-    border: 1px solid var(--color-border);
-    padding: var(--space-5);
-    overflow-x: auto;
-    margin: var(--space-6) 0;
-    -webkit-overflow-scrolling: touch;
-    tab-size: 2;
-  }
-  .prose-content pre code {
-    background: none;
-    padding: 0;
-    color: inherit;
-    font-size: 0.875rem;
-    border-radius: 0;
-  }
-  .prose-content pre code span[style*="color:#6272a4"] {
-    color: #7e92c0 !important;
-  }
-  .prose-content pre[tabindex] { tabindex: 0; }
+  /* Code (blocks): Expressive Code renders them; keep the prose rhythm */
+  .prose-content .expressive-code { margin: var(--space-6) 0; }
 
   /* Images */
   .prose-content img {
