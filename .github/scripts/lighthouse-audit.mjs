@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { appendFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { annotate } from './annotations.mjs';
 
 const baseUrl = process.env.BASE_URL ?? 'http://localhost:4321';
 const outDir = process.env.REPORT_DIR ?? join(tmpdir(), 'rishikc-audit-reports');
@@ -20,7 +21,11 @@ const LABELS = {
 };
 
 const median = (values) => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
-const score = (lhr, category) => Math.round(lhr.categories[category].score * 100);
+function score(lhr, category) {
+  const value = lhr.categories[category].score;
+  if (value === null) throw new Error(`Lighthouse returned no ${category} score for ${lhr.finalDisplayedUrl}`);
+  return Math.round(value * 100);
+}
 
 function metrics(lhr) {
   return {
@@ -73,7 +78,7 @@ for (const path of config.paths) {
     if ('min' in limit && med[key] < limit.min) misses.push(`${LABELS[key]} ${fmt(key, med[key])} is below ${limit.min}`);
     if ('max' in limit && med[key] > limit.max) misses.push(`${LABELS[key]} ${fmt(key, med[key])} is above ${limit.max}`);
   }
-  for (const miss of misses) console.log(`::warning title=Lighthouse ${path}::${miss} (median of ${runs})`);
+  for (const miss of misses) console.log(annotate('warning', `Lighthouse ${path}`, `${miss} (median of ${runs})`));
   console.log(`${path}: ${Object.keys(LABELS).map((key) => `${LABELS[key]} ${fmt(key, med[key])}`).join(', ')}`);
   results.push({ path, median: med, misses });
 }
