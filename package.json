@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build --force",
     "preview": "yarn build && astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "audit:a11y": "node .github/scripts/a11y-audit.mjs"
   },
   "dependencies": {
     "@astrojs/partytown": "^2.1.7",
