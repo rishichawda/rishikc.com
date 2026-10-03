@@ -26,13 +26,12 @@ jobs:
       - name: Install dependencies without running install scripts
         run: yarn install --frozen-lockfile --ignore-scripts
       - name: Run axe on the live site
-        continue-on-error: true
         run: yarn audit:a11y
         env:
           BASE_URL: https://rishikc.com
           REPORT_DIR: audit-reports/a11y
       - name: Run Lighthouse on the live site
-        continue-on-error: true
+        if: ${{ !cancelled() }}
         run: yarn audit:lighthouse
         env:
           BASE_URL: https://rishikc.com
