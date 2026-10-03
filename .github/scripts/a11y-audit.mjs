@@ -3,6 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { chromium } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { annotate } from './annotations.mjs';
 import { sitePaths } from './urls.mjs';
 
 const baseUrl = process.env.BASE_URL ?? 'http://localhost:4321';
@@ -10,7 +11,8 @@ const outDir = process.env.REPORT_DIR ?? join(tmpdir(), 'rishikc-audit-reports')
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const known = new Set(JSON.parse(await readFile(new URL('./a11y-known-issues.json', import.meta.url), 'utf8')).rules);
 
-const paths = await sitePaths(baseUrl);
+// The sitemap leaves out /search/ on purpose, but it is a real page visitors reach.
+const paths = [...new Set([...(await sitePaths(baseUrl)), '/search/'])];
 if (paths.length === 0) throw new Error(`No pages found in the sitemap for ${baseUrl}`);
 const browser = await chromium.launch({ channel: 'chrome' });
 const page = await (await browser.newContext()).newPage();
@@ -54,7 +56,7 @@ const rows = [...rules.values()].map((rule) => ({
 for (const row of rows) {
   const level = row.known ? 'warning' : 'error';
   console.log(
-    `::${level} title=axe ${row.id}::${row.help} (${row.impact}): ${row.pages} page(s), ${row.nodes} node(s), e.g. ${row.example}`,
+    annotate(level, `axe ${row.id}`, `${row.help} (${row.impact}): ${row.pages} page(s), ${row.nodes} node(s), e.g. ${row.example}`),
   );
 }
 console.log(`Checked ${paths.length} pages: ${rows.length} rule(s) with violations.`);
