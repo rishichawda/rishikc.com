@@ -11,12 +11,14 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const known = new Set(JSON.parse(await readFile(new URL('./a11y-known-issues.json', import.meta.url), 'utf8')).rules);
 
 const paths = await sitePaths(baseUrl);
+if (paths.length === 0) throw new Error(`No pages found in the sitemap for ${baseUrl}`);
 const browser = await chromium.launch({ channel: 'chrome' });
 const page = await (await browser.newContext()).newPage();
 const rules = new Map();
 
 for (const path of paths) {
-  await page.goto(new URL(path, baseUrl).href, { waitUntil: 'load' });
+  const response = await page.goto(new URL(path, baseUrl).href, { waitUntil: 'load' });
+  if (!response?.ok()) throw new Error(`${path} returned ${response?.status() ?? 'no response'}`);
   // 'networkidle' never settles here (analytics requests keep the network busy), so wait for 'load'.
   // Expressive Code adds tabindex to scrollable code blocks from an idle callback and a debounced
   // resize observer, so let both run before axe reads the page.
