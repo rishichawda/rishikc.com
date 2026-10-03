@@ -22,7 +22,7 @@ for (const name of (await readdir(dir)).filter((file) => /\.ya?ml$/.test(file)))
     }
     if (value.startsWith('./')) continue;
     const [action, revision = ''] = value.split('@');
-    if (!/^[0-9a-f]{40}$/.test(revision)) problems.push(`${name}:${line}: ${value} is not pinned to a full commit SHA`);
+    if (!/^v\d+\.\d+\.\d+$/.test(revision)) problems.push(`${name}:${line}: ${value} is not pinned to an exact version tag such as v1.2.3`);
     if (!ALLOWED_OWNERS.has(action.split('/')[0])) problems.push(`${name}:${line}: ${action} is not from an allowed owner`);
   }
 }
