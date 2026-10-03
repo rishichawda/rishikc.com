@@ -19,11 +19,6 @@ import partytown from '@astrojs/partytown';
 
 import playformCompress from '@playform/compress';
 
-// Astro's markdown.rehypePlugins accepts only plugin functions, not presets, so wrap the preset.
-function rehypeMinify() {
-  this.use(rehypePresetMinify);
-}
-
 const AnchorLinkIcon = h(
   'span',
   { ariaHidden: 'true', class: 'inline-flex items-center justify-center ml-2' },
@@ -106,7 +101,9 @@ export default defineConfig({
   // replaces the inherited markdown ones and would drop Expressive Code's plugin.
   markdown: {
     rehypePlugins: [
-      rehypeMinify,
+      // Spread the preset's plugins: markdown.rehypePlugins rejects preset objects, and
+      // wrapping it via this.use() runs it after MDX has already converted to estree (no-op).
+      ...rehypePresetMinify.plugins,
       rehypeSlug,
       [rehypeAutolinkHeadings, {
         behavior: 'append',
