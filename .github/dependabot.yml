@@ -4,6 +4,9 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Wait a week before proposing a new release, so a compromised one is usually yanked first.
+    cooldown:
+      default-days: 7
     groups:
       actions:
         patterns: ['*']
@@ -11,6 +14,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     groups:
       audit-tools:
