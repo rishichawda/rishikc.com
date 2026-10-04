@@ -3,7 +3,6 @@
   "paths": [
     "/",
     "/articles/",
-    "/articles/typescript-strict-mode-best-practices/",
     "/contact/"
   ],
   "budgets": {

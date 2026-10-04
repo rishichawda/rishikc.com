@@ -1,1 +1,14 @@
-{ "rules": ["color-contrast"] }
+{
+  "color-contrast": [
+    "/",
+    "/about/",
+    "/articles/",
+    "/articles/series/",
+    "/bits/",
+    "/bits/evaluation-beats-prompt-cleverness/",
+    "/bits/high-leverage-tests/",
+    "/career/",
+    "/contact/",
+    "/projects/"
+  ]
+}
