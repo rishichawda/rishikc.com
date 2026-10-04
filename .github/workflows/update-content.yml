@@ -4,28 +4,32 @@ on:
   repository_dispatch:
     types:
       - content-update
+  # Lets a changed copy of this workflow be tested from a branch; repository_dispatch only
+  # runs the copy on the default branch. The job always works on main, whatever ref started it.
+  workflow_dispatch:
 
 permissions: {}
 
 jobs:
   update-content-submodule:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: main
           submodules: true
           token: ${{ secrets.CONTENT_UPDATE_PAT }}
           persist-credentials: true
 
-      - name: Authorize Git
+      - name: Configure Git identity
         run: |
           git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config --global user.name "$GITHUB_ACTOR"
-          git config --global url."https://${{ secrets.CONTENT_UPDATE_PAT }}@github.com/".insteadOf "https://github.com/"
-          
+
       - name: Update content submodule
         run: |
           git submodule sync
