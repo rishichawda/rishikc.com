@@ -2,6 +2,7 @@
 import { defineConfig, fontProviders } from 'astro/config';
 
 import mdx from '@astrojs/mdx';
+import expressiveCode from 'astro-expressive-code';
 import { h, s } from 'hastscript'
 
 import siteMetadata from './metadata';
@@ -96,6 +97,21 @@ export default defineConfig({
     },
   ],
 
+  // Rehype plugins live here, not in mdx(): mdx's own rehypePlugins option
+  // replaces the inherited markdown ones and would drop Expressive Code's plugin.
+  markdown: {
+    rehypePlugins: [
+      // Spread the preset's plugins: markdown.rehypePlugins rejects preset objects, and
+      // wrapping it via this.use() runs it after MDX has already converted to estree (no-op).
+      ...rehypePresetMinify.plugins,
+      rehypeSlug,
+      [rehypeAutolinkHeadings, {
+        behavior: 'append',
+        content: AnchorLinkIcon,
+      }]
+    ],
+  },
+
   // Images
   image: {
     service: {
@@ -110,21 +126,12 @@ export default defineConfig({
   },
 
   integrations: [
+    expressiveCode(),
     mdx({
-      syntaxHighlight: 'shiki',
-      shikiConfig: { theme: 'dracula' },
       remarkPlugins: [
         remarkToc,
         remarkReadingTime,
         remarkNotes
-      ],
-      rehypePlugins: [
-        rehypePresetMinify,
-        rehypeSlug,
-        [rehypeAutolinkHeadings, {
-          behavior: 'append',
-          content: AnchorLinkIcon,
-        }]
       ],
       remarkRehype: { footnoteLabel: 'Footnotes' },
       gfm: true,
