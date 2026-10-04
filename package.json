@@ -48,5 +48,9 @@
     "remark-smartypants": "^3.0.2",
     "remark-toc": "^9.0.0",
     "tailwindcss": "^4.2.2"
+  },
+  "resolutions": {
+    "@playform/compress/svgo": "^4.1.0",
+    "@playform/compress/sharp": "^0.35.4"
   }
 }
