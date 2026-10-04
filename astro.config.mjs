@@ -2,6 +2,7 @@
 import { defineConfig, fontProviders } from 'astro/config';
 
 import mdx from '@astrojs/mdx';
+import { unified } from '@astrojs/markdown-remark';
 import expressiveCode from 'astro-expressive-code';
 import { h, s } from 'hastscript'
 
@@ -18,6 +19,7 @@ import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
 
 import playformCompress from '@playform/compress';
+import tailwindcss from '@tailwindcss/vite';
 
 const AnchorLinkIcon = h(
   'span',
@@ -97,19 +99,27 @@ export default defineConfig({
     },
   ],
 
-  // Rehype plugins live here, not in mdx(): mdx's own rehypePlugins option
-  // replaces the inherited markdown ones and would drop Expressive Code's plugin.
+  // The remark and rehype plugins live on the unified processor, which both Markdown and MDX
+  // use. Expressive Code adds its own rehype plugin to this processor.
   markdown: {
-    rehypePlugins: [
-      // Spread the preset's plugins: markdown.rehypePlugins rejects preset objects, and
-      // wrapping it via this.use() runs it after MDX has already converted to estree (no-op).
-      ...rehypePresetMinify.plugins,
-      rehypeSlug,
-      [rehypeAutolinkHeadings, {
-        behavior: 'append',
-        content: AnchorLinkIcon,
-      }]
-    ],
+    processor: unified({
+      remarkPlugins: [
+        remarkToc,
+        remarkReadingTime,
+        remarkNotes
+      ],
+      remarkRehype: { footnoteLabel: 'Footnotes' },
+      // Spread the preset's plugins: the rehype plugin list rejects preset objects.
+      rehypePlugins: [
+        ...rehypePresetMinify.plugins,
+        rehypeSlug,
+        [rehypeAutolinkHeadings, {
+          behavior: 'append',
+          content: AnchorLinkIcon,
+        }]
+      ],
+      gfm: true,
+    }),
   },
 
   // Images
@@ -127,15 +137,7 @@ export default defineConfig({
 
   integrations: [
     expressiveCode(),
-    mdx({
-      remarkPlugins: [
-        remarkToc,
-        remarkReadingTime,
-        remarkNotes
-      ],
-      remarkRehype: { footnoteLabel: 'Footnotes' },
-      gfm: true,
-    }),
+    mdx(),
     sitemap({
       filter: (page) => !page.includes('/search/'),
     }),
@@ -167,6 +169,7 @@ export default defineConfig({
 
   // Vite
   vite: {
+    plugins: [tailwindcss()],
     build: {
       cssCodeSplit: true,
       chunkSizeWarningLimit: 1000,
