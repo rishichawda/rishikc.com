@@ -39,7 +39,7 @@
     "hastscript": "^9.0.1",
     "lighthouse": "13.5.0",
     "mdast-util-to-string": "^4.0.0",
-    "postcss": "^8.5.8",
+    "postcss": "^8.5.23",
     "reading-time": "^1.5.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-highlight": "^7.0.2",
