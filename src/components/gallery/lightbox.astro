@@ -65,6 +65,11 @@
 
     if (!lightbox || !lightboxImg) return;
 
+    // This inline script runs again on every View Transition navigation. Bind each lightbox once,
+    // otherwise every click and key press would navigate once per earlier run.
+    if (lightbox.dataset.bound) return;
+    lightbox.dataset.bound = "true";
+
     let triggers = [];
     let currentIndex = 0;
 
@@ -132,18 +137,16 @@
       if (nextBtn) nextBtn.style.display = triggers.length > 1 ? "" : "none";
     }
 
+    // The lightbox lives inside <main>, so make everything around it inert, level by level,
+    // instead of <main> itself. Inerting an ancestor would make the lightbox unclickable.
     function setBackgroundInert(inert) {
-      var selectors = ["header", "main", "#main-content", "footer"];
-      selectors.forEach(function(sel) {
-        var el = document.querySelector(sel);
-        if (el && el !== lightbox && !lightbox.contains(el)) {
-          if (inert) {
-            el.setAttribute("inert", "");
-          } else {
-            el.removeAttribute("inert");
-          }
-        }
-      });
+      for (var node = lightbox; node.parentElement; node = node.parentElement) {
+        Array.from(node.parentElement.children).forEach(function(sibling) {
+          if (sibling === node || sibling.tagName === "SCRIPT") return;
+          sibling.toggleAttribute("inert", inert);
+        });
+        if (node.parentElement === document.body) break;
+      }
     }
 
     function openLightbox(index) {
