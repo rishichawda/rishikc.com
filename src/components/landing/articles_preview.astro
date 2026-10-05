@@ -64,9 +64,7 @@ function formatDate(date: string | Date) {
               <time datetime={new Date(featured.data.date).toISOString().split('T')[0]}>{formatDate(featured.data.date)}</time>
             </div>
             <h3 class="featured-title">{featured.data.title}</h3>
-            {featured.data.subtitle && (
-              <p class="featured-subtitle">{featured.data.subtitle}</p>
-            )}
+            <p class="featured-subtitle">{featured.data.subtitle ?? featured.data.description}</p>
             {featured.data.tags && (
               <div class="article-tags">
                 {featured.data.tags.slice(0, 3).map((tag: string) => (

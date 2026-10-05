@@ -134,26 +134,22 @@ function formatDate(date: Date): string {
   }
 
   .related-grid {
-    columns: 1;
-    column-gap: var(--space-6);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
   }
 
   @media (min-width: 640px) {
-    .related-grid { columns: 2; }
+    .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (min-width: 1024px) {
-    .related-grid { columns: 3; }
-  }
-
-  .related-card-wrap {
-    break-inside: avoid;
-    margin-bottom: var(--space-6);
+    .related-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 
   .related-card {
     display: flex;
     flex-direction: column;
-    height: auto;
+    height: 100%;
     text-decoration: none;
     color: inherit;
     background: var(--color-surface);
@@ -233,10 +229,10 @@ function formatDate(date: Date): string {
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin-bottom: var(--space-4);
-    flex: 1;
   }
 
   .related-tags {
+    margin-top: auto;
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
