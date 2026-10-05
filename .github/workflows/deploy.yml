@@ -11,6 +11,11 @@ on:
 # Each job asks for what it needs: build reads the repo, deploy creates the page deployment.
 permissions: {}
 
+# One Pages deployment at a time. A later run waits for the running one instead of cancelling it.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
