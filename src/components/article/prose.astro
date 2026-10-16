@@ -90,6 +90,16 @@
     display: block;
   }
 
+  /* Image width: wrap the image in <div class="img-w-25|50|75"> */
+  .prose-content .img-w-25 img { max-width: 25%; }
+  .prose-content .img-w-50 img { max-width: 50%; }
+  .prose-content .img-w-75 img { max-width: 75%; }
+  @media (max-width: 640px) {
+    .prose-content .img-w-25 img,
+    .prose-content .img-w-50 img,
+    .prose-content .img-w-75 img { max-width: 100%; }
+  }
+
   /* Lists */
   .prose-content ul,
   .prose-content ol {
