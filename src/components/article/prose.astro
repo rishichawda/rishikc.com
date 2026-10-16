@@ -90,6 +90,14 @@
     display: block;
   }
 
+  /* Caption: put <small>text</small> on the line right after the image */
+  .prose-content img + small {
+    display: block;
+    text-align: center;
+    margin-top: calc(var(--space-2) - var(--space-6));
+    opacity: 0.7;
+  }
+
   /* Image width: wrap the image in <div class="img-w-25|50|75"> */
   .prose-content .img-w-25 img { max-width: 25%; }
   .prose-content .img-w-50 img { max-width: 50%; }
