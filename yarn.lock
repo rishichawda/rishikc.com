@@ -1536,10 +1536,10 @@ astro-expressive-code@^0.44.2:
     rehype-expressive-code "^0.44.2"
     url-extras "^0.1.0"
 
-astro-seo-schema@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/astro-seo-schema/-/astro-seo-schema-6.0.0.tgz#d235b4caa97c8f52bc913b03f8b5554fa8dc0ee9"
-  integrity sha512-6Etg+9zu7XdlUa40BIZrZP3vd+lReeJ1rNgT8Jer+1bPyGdrA/itQwJOhIkX+t5PadVwTmpt6xZouDycrZys6w==
+astro-seo-schema@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/astro-seo-schema/-/astro-seo-schema-7.0.0.tgz#3b7b27e1249cb57fb8cb1f6e39e95a2a23aaa4d7"
+  integrity sha512-icG6vL2pKNf7WBI03JxZYn6gQiLASxq/U3JVv27roaPJ+WH0p3sats9mMInzp6x40G1mVdLLoAEUObmKY1If+A==
 
 astro@*, astro@^7.3.5:
   version "7.3.5"
