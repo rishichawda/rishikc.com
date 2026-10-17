@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
 import { buildWebPageEntity, personRef } from "../utils/jsonLd";
 import Breadcrumbs from "../components/common/breadcrumbs.astro";
+import ProjectIcon from "../components/common/project_icon.astro";
 
 interface ProjectLink {
     url: string;
@@ -24,6 +25,7 @@ interface Project {
     category: string;
     featured: boolean;
     year: string;
+    icon?: string;
 }
 
 interface OpenSourceContribution {
@@ -124,7 +126,10 @@ const pageSchemaEntities = [
                     {featuredProjects.map((project) => (
                         <div class="featured-card" data-reveal data-spatial-tooltip={`★ ${project.stars} · ${project.language}`}>
                             <div class="featured-accent" />
-                            <h3 class="featured-name">{project.name}</h3>
+                            <div class="featured-title">
+                                <ProjectIcon icon={project.icon} name={project.name} />
+                                <h3 class="featured-name">{project.name}</h3>
+                            </div>
                             <div class="featured-badges">
                                 <span class="badge">{project.language}</span>
                                 <span class="badge badge-brand">{project.category}</span>
@@ -383,8 +388,14 @@ const pageSchemaEntities = [
         line-height: 1.2;
         letter-spacing: -0.015em;
         color: var(--color-text);
-        margin: 0 0 var(--space-3);
+        margin: 0;
         transition: color 200ms;
+    }
+    .featured-title {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        margin-bottom: var(--space-3);
     }
     .featured-card:hover .featured-name { color: var(--color-brand); }
     .featured-badges {

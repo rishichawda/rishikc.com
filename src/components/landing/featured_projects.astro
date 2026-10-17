@@ -1,6 +1,7 @@
 ---
 // Featured projects — proof of work, first thing after the hero
 import { getCollection } from "astro:content";
+import ProjectIcon from "../common/project_icon.astro";
 
 interface ProjectLink {
   url: string;
@@ -19,6 +20,7 @@ interface Project {
   category: string;
   featured: boolean;
   year: string;
+  icon?: string;
 }
 
 const projectsCollection = await getCollection("projects");
@@ -70,7 +72,10 @@ function primaryLink(project: Project): { url: string; label: string } {
                 <span class="work-badge">{project.language}</span>
                 <span class="work-badge work-badge-brand">{project.category}</span>
               </div>
-              <h3 class="work-name">{project.name}</h3>
+              <div class="work-title">
+                <ProjectIcon icon={project.icon} name={project.name} />
+                <h3 class="work-name">{project.name}</h3>
+              </div>
               <p class="work-desc">{project.description}</p>
               <div class="work-tags">
                 {project.tags.slice(0, 3).map((tag) => (
@@ -199,8 +204,15 @@ function primaryLink(project: Project): { url: string; label: string } {
     color: var(--color-text);
     line-height: 1.3;
     letter-spacing: -0.01em;
-    margin-bottom: var(--space-2);
+    margin: 0;
     transition: color var(--duration-fast) ease;
+  }
+
+  .work-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
   }
 
   .work-card:hover .work-name {

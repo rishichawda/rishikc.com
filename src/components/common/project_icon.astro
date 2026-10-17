@@ -1,0 +1,36 @@
+---
+// Project icon from content/projects/icons. Renders nothing when the project has no icon.
+import { Image } from "astro:assets";
+
+interface Props {
+  icon?: string;
+  name: string;
+}
+
+const { icon, name } = Astro.props;
+
+const icons = import.meta.glob<{ default: ImageMetadata }>(
+  "/content/projects/icons/*.{png,svg}",
+  { eager: true },
+);
+const image = icon ? icons[`/content/projects/icons/${icon}`]?.default : undefined;
+---
+
+{image && (
+  <Image
+    src={image}
+    alt={`${name} icon`}
+    width={96}
+    class="project-icon"
+  />
+)}
+
+<style>
+  .project-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: var(--radius-md, 10px);
+    flex-shrink: 0;
+  }
+</style>
