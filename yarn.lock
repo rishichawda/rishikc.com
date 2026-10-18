@@ -93,6 +93,20 @@
     smol-toml "^1.6.0"
     unified "^11.0.5"
 
+"@astrojs/internal-helpers@0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@astrojs/internal-helpers/-/internal-helpers-0.12.0.tgz#d6da00e4d3b4cbcc31c4629adea9c3ae7be63f0e"
+  integrity sha512-pKPuwCDtO0L7zgmt1JGd9X4Aes1+0SX3IEBSqBNPHsScYdPMlfmed3Y7DTbXyF7E+8ylnb563o/0OzGQPOFehw==
+  dependencies:
+    "@types/hast" "^3.0.4"
+    "@types/mdast" "^4.0.4"
+    picomatch "^4.0.4"
+    retext-smartypants "^6.2.0"
+    shiki "^4.0.2"
+    smol-toml "^1.8.0"
+    unified "^11.0.5"
+    yaml "^2.9.1"
+
 "@astrojs/markdown-remark@^7.3.1":
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/@astrojs/markdown-remark/-/markdown-remark-7.3.1.tgz#1c698c4d19a874987b1c86769a8359b06de057f3"
@@ -131,14 +145,24 @@
     github-slugger "^2.0.0"
     satteri "^0.10.3"
 
-"@astrojs/mdx@^8.0.2":
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/@astrojs/mdx/-/mdx-8.0.2.tgz#95ab19e6f3d892a87a2fe81f14fd5034d50fcbd2"
-  integrity sha512-WedIVP2Bu8fXSzxb3ZYZ8xDrWWjf2SRKCneh52Llhoa+O3lcpHPhoZVP3FerlivUaH/0LJz2yVaCNvMdg0u8Bw==
+"@astrojs/markdown-satteri@0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@astrojs/markdown-satteri/-/markdown-satteri-0.4.3.tgz#ea1df43536543ba64fda109eb7126864ea64f6c9"
+  integrity sha512-PFbEHPnwUlLvpXd7RXrrKM+j12akF4bG+DSuNuoN+3eiwjOwp4HaPi+QQdbkBV7QEYXmzyKca50OJsmGxhNIUA==
   dependencies:
-    "@astrojs/internal-helpers" "0.11.0"
-    "@astrojs/markdown-satteri" "0.4.2"
-    es-module-lexer "^2.0.0"
+    "@astrojs/internal-helpers" "0.12.0"
+    "@astrojs/prism" "4.0.2"
+    github-slugger "^2.0.0"
+    satteri "^0.10.3"
+
+"@astrojs/mdx@^8.0.3":
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/@astrojs/mdx/-/mdx-8.0.3.tgz#21a239e5338159350a700ae927cff1002538ddcb"
+  integrity sha512-SmwnVrGZSohDG0B9LXiAPbR6fe9TOumli9Vw/9zo815xGTeB1T3Fqt6HEClmBsVwIKFg/ccos4TgjZAedvg7zA==
+  dependencies:
+    "@astrojs/internal-helpers" "0.12.0"
+    "@astrojs/markdown-satteri" "0.4.3"
+    es-module-lexer "^3.0.2"
 
 "@astrojs/partytown@^2.1.7":
   version "2.1.8"
@@ -5343,6 +5367,11 @@ y18n@^5.0.5:
   version "5.0.8"
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
   integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
+
+yaml@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.9.1.tgz#c16233fb31944e705cfefaff38795587f57588ce"
+  integrity sha512-3NxN8+78OdzbT7C/WjGsyfPAtJaN3FNDsWxv7Y7mcDsT/oOmgW8BpyQQFFBnvZE3j9Y2Sdz1ULFLezL7Eb2yFw==
 
 yargs-parser@^21.0.0, yargs-parser@^21.1.1:
   version "21.1.1"
