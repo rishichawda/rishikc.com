@@ -323,12 +323,14 @@ const pageSchemaEntities = [
         break-inside: avoid;
         margin-bottom: var(--space-6);
         color: inherit;
-        transition: border-color 200ms, box-shadow 200ms, transform 200ms;
+        /* No transform transition or hover transform here: scrollReveal.ts (GSAP) owns
+           this element's inline transform via data-reveal, and a CSS transition on
+           transform fights it and leaves cards stuck partway through the fade-up. */
+        transition: border-color 200ms, box-shadow 200ms;
     }
     .bit-card:hover {
         border-color: var(--color-brand-light);
         box-shadow: var(--shadow-raised);
-        transform: translateY(-2px);
     }
     .bit-card-title {
         font-family: var(--font-display);
