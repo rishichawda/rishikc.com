@@ -383,6 +383,17 @@ for (const page of seriesPages) {
   if (page.meta('og:image')?.includes('/og/')) fail(page.path, 'series page uses a card; it should use the hero of part 1');
 }
 
+// ── A <time> element's visible date matches its datetime attribute (both read in UTC) ──
+for (const page of pages) {
+  for (const m of page.html.matchAll(/<time[^>]*datetime="?([^">\s]+)"?[^>]*>([^<]+)<\/time>/g)) {
+    const visible = new Date(`${m[2].trim()} UTC`);
+    const stamp = new Date(m[1].length === 10 ? `${m[1]}T00:00:00Z` : m[1]);
+    if (!Number.isNaN(visible.getTime()) && !Number.isNaN(stamp.getTime()) && visible.toISOString().slice(0, 10) !== stamp.toISOString().slice(0, 10)) {
+      fail(page.path, `<time datetime="${m[1]}"> shows "${m[2].trim()}"`);
+    }
+  }
+}
+
 // ── Rights signals on photography: TDM reservation file and meta, noimageindex ──
 const tdm = (await exists(join(dist, '.well-known/tdmrep.json'))) ? JSON.parse(await readFile(join(dist, '.well-known/tdmrep.json'), 'utf8')) : null;
 if (!Array.isArray(tdm) || !tdm.every((r) => r.location && r['tdm-reservation'] === 1)) fail('/.well-known/tdmrep.json', 'missing or not an array of reserved locations');

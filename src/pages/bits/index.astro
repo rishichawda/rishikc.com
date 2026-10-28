@@ -35,6 +35,7 @@ const yearGroups = Array.from(bitsByYear.entries()).sort(([a], [b]) => b - a);
 
 function formatDate(date: Date): string {
     return new Date(date).toLocaleDateString("en-US", {
+        timeZone: "UTC",
         day: "numeric",
         month: "short",
         year: "numeric",

@@ -42,6 +42,7 @@ const relatedArticles = allArticles
 
 function formatDate(date: Date): string {
   return new Date(date).toLocaleDateString("en-US", {
+    timeZone: "UTC",
     year: "numeric",
     month: "long",
     day: "numeric",

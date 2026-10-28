@@ -34,6 +34,7 @@ const nextBit = currentIndex < sortedBits.length - 1 ? sortedBits[currentIndex +
 
 function formatDate(date: Date): string {
     return new Date(date).toLocaleDateString("en-US", {
+        timeZone: "UTC",
         day: "numeric",
         month: "long",
         year: "numeric",
