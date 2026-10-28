@@ -10,7 +10,7 @@ import "../styles/global.css";
 import BaseLayout from "../layouts/base_layout.astro";
 import favicon from "../../content/assets/logo/logo.png";
 import { getCollection } from "astro:content";
-import { buildWebPageEntity, personRef } from "../utils/jsonLd";
+import { authorRef, buildWebPageEntity, personRef } from "../utils/jsonLd";
 
 interface Social { platform: string; url: string; }
 interface Position { title: string; }
@@ -31,6 +31,19 @@ const siteUrl = new URL(
 	Astro.site || "https://rishikc.com",
 ).toString();
 
+// The services section on this page, as Service nodes provided by the author.
+const services = ((await getCollection("services"))[0]?.data ?? []) as
+	{ title: string; description: string; link: string }[];
+const serviceEntities = services.map((service) => ({
+	"@type": "Service",
+	"@id": `${siteUrl}#service-${service.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+	name: service.title,
+	serviceType: service.title,
+	description: service.description,
+	url: new URL(service.link, siteUrl).toString(),
+	provider: authorRef,
+}));
+
 const pageSchemaEntities = [
 	buildWebPageEntity({
 		url: siteUrl,
@@ -38,6 +51,7 @@ const pageSchemaEntities = [
 		description: page_info.description,
 		mainEntity: personRef,
 	}),
+	...serviceEntities,
 ];
 ---
 

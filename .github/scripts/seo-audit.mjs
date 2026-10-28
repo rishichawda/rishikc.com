@@ -15,7 +15,7 @@ const expectedFile = flag('--expected') >= 0
   : fileURLToPath(new URL('../../src/utils/wikidata.json', import.meta.url));
 const expected = JSON.parse(await readFile(expectedFile, 'utf8'));
 
-const PERSON_KEYS = ['author', 'creator', 'publisher', 'copyrightHolder'];
+const PERSON_KEYS = ['author', 'creator', 'publisher', 'copyrightHolder', 'provider'];
 const failures = [];
 const fail = (page, message) => failures.push({ page, message });
 
@@ -346,6 +346,16 @@ for (const page of pages.filter((p) => p.path.startsWith('/articles/series/') &&
     else if (!Number.isInteger(article.position)) fail(articlePage.path, 'article in a series lacks position');
   }
 }
+
+// ── Projects and services ──
+const projectsList = pageByPath.get('/projects/')?.nodes.find((n) => typesOf(n).includes('CollectionPage'))?.mainEntity;
+if (!projectsList || projectsList.itemListElement.length !== projectsList.numberOfItems) {
+  fail('/projects/', 'the project list does not hold every project');
+}
+for (const { item } of projectsList?.itemListElement ?? []) {
+  if (!item.url || !item.author) fail('/projects/', `project ${item.name} lacks url or author`);
+}
+if (!pageByPath.get('/')?.nodes.some((n) => typesOf(n).includes('Service'))) fail('/', 'no Service nodes for the services section');
 
 // ── Wikidata ──
 for (const id of wikidataIds) {

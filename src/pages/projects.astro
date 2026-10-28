@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
-import { buildWebPageEntity, personRef } from "../utils/jsonLd";
+import { authorRef, buildWebPageEntity } from "../utils/jsonLd";
 import Breadcrumbs from "../components/common/breadcrumbs.astro";
 import ProjectIcon from "../components/common/project_icon.astro";
 
@@ -88,15 +88,20 @@ const pageSchemaEntities = [
         mainEntity: {
             "@type": "ItemList",
             numberOfItems: projects.length,
-            itemListElement: featuredProjects.map((project, index) => ({
+            itemListElement: projects.map((project, index) => ({
                 "@type": "ListItem",
                 position: index + 1,
                 item: {
                     "@type": "SoftwareSourceCode",
                     name: project.name,
                     description: project.description,
+                    url: project.github,
                     codeRepository: project.github,
                     programmingLanguage: project.language,
+                    author: authorRef,
+                    ...(project.year ? { dateCreated: project.year } : {}),
+                    ...(project.tags?.length ? { keywords: project.tags } : {}),
+                    ...(project.npm ? { sameAs: project.npm } : {}),
                 },
             })),
         },
