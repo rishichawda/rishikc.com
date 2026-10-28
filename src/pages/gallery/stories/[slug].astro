@@ -5,6 +5,7 @@ import "../../../styles/gallery.css";
 import { getCollection } from "astro:content";
 import { authorRef, buildWebPageEntity, photoRights, websiteRef } from "../../../utils/jsonLd";
 import { previewImage } from "../../../utils/shareImage";
+import { LOCALE } from "../../../utils/topics";
 import StoryHero from "../../../components/gallery/story_hero.astro";
 import StorySection from "../../../components/gallery/story_section.astro";
 import StoryEpilogue from "../../../components/gallery/story_epilogue.astro";
@@ -93,7 +94,7 @@ const pageSchemaEntities = [
       author: authorRef,
       publisher: authorRef,
       dateModified: date.toISOString(),
-      inLanguage: "en-US",
+      inLanguage: LOCALE,
       isPartOf: websiteRef,
       ...photoRights(date.getUTCFullYear()),
       keywords: tags?.join(", "),

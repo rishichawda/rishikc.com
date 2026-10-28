@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/base_layout.astro";
 import { getCollection } from "astro:content";
-import { buildWebPageEntity } from "../utils/jsonLd";
+import { AUTHOR_NAME, buildWebPageEntity } from "../utils/jsonLd";
 import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
 const quotesData = await getCollection("quotes");
@@ -23,7 +23,7 @@ const pageSchemaEntities = [
     buildWebPageEntity({
         type: "CollectionPage",
         url: pageUrl,
-        name: "Reads - Rishi Kumar Chawda",
+        name: `Reads - ${AUTHOR_NAME}`,
         description: page_info.description,
         mainEntity: {
             "@type": "ItemList",

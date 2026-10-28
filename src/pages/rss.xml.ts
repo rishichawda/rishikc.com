@@ -1,9 +1,11 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
+import { AUTHOR_NAME } from '../utils/jsonLd';
+import { LOCALE } from '../utils/topics';
 
 // RSS wants an email address for <author>, so the author goes in Dublin Core instead.
-const CREATOR = '<dc:creator>Rishi Kumar Chawda</dc:creator>';
+const CREATOR = `<dc:creator>${AUTHOR_NAME}</dc:creator>`;
 
 export async function GET(context: APIContext) {
   const [articles, bits] = await Promise.all([
@@ -38,6 +40,6 @@ export async function GET(context: APIContext) {
     items,
     trailingSlash: true,
     xmlns: { dc: 'http://purl.org/dc/elements/1.1/' },
-    customData: '<language>en-us</language>',
+    customData: `<language>${LOCALE.toLowerCase()}</language>`,
   });
 }

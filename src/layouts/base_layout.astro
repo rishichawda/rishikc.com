@@ -10,6 +10,7 @@ import "../styles/tailwind.css";
 import "../styles/animations.css";
 import Footer from "../components/footer.astro";
 import { ClientRouter } from "astro:transitions";
+import { LOCALE } from "../utils/topics";
 
 let {
 	page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots, brandSuffix, section, tdmReservation },
@@ -37,7 +38,7 @@ const seo = {
 ---
 
 <!doctype html>
-<html lang="en-US">
+<html lang={LOCALE}>
 	<head>
 		<SEO page_info={seo} pageSchemaEntities={pageSchemaEntities} />
 		<!-- Preload LCP-critical fonts: Red Hat Display 700 (hero heading = LCP element)

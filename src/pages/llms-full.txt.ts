@@ -73,7 +73,7 @@ ${pagesSection}
 
 ## Citation
 When referencing content from this site, please cite as:
-Rishi Kumar Chawda (Year). "Article Title." ${site.replace(/^https?:\/\//, '')}. URL
+${siteMetadata.schema.author.name} (Year). "Article Title." ${site.replace(/^https?:\/\//, '')}. URL
 `;
 
   return new Response(body, {

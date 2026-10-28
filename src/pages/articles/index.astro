@@ -2,13 +2,13 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
-import { buildWebPageEntity } from "../../utils/jsonLd";
+import { AUTHOR_NAME, buildWebPageEntity } from "../../utils/jsonLd";
 import { getAllSeries, getSeriesSlug } from "../../utils/seriesUtils";
 
 const page_info = {
     title: "Articles",
     brandSuffix: true,
-    description: "Technical articles on React, TypeScript, web performance, DevSecOps, and engineering best practices by Rishi Kumar Chawda.",
+    description: `Technical articles on React, TypeScript, web performance, DevSecOps, and engineering best practices by ${AUTHOR_NAME}.`,
     keywords: "articles, web development, engineering, tutorials, performance",
 };
 
@@ -40,7 +40,7 @@ const pageSchemaEntities = [
     buildWebPageEntity({
         type: "CollectionPage",
         url: pageUrl,
-        name: "Articles by Rishi Kumar Chawda",
+        name: `Articles by ${AUTHOR_NAME}`,
         description: page_info.description,
         mainEntity: {
             "@type": "ItemList",

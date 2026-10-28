@@ -1,101 +1,43 @@
 /**
- * Wikidata-backed entities for JSON-LD. content/about/wikidata.json holds each ID with the English label
- * Wikidata gives it; .github/scripts/seo-audit.mjs checks every ID in the built pages against that
- * file and against the live Wikidata label, so a wrong ID fails the audit instead of shipping.
+ * Accessors for the structured-data entities. The data lives in content/about: structured-data.json
+ * holds the topic, school, employer, language and place tables, and wikidata.json holds each Wikidata
+ * ID with the English label Wikidata gives it. .github/scripts/seo-audit.mjs checks every ID in the
+ * built pages against that file and against the live Wikidata label, so a wrong ID fails the audit
+ * instead of shipping.
  */
 import wikidata from "../../content/about/wikidata.json";
+import data from "../../content/about/structured-data.json";
 
-export type WikidataId = keyof typeof wikidata;
+type Labels = Record<string, { label: string; name: string }>;
+const labels: Labels = wikidata;
 
-export const wikidataUrl = (id: WikidataId) => `https://www.wikidata.org/wiki/${id}`;
+export const wikidataUrl = (id: string) => `https://www.wikidata.org/wiki/${id}`;
 
-/** A schema.org Thing (or subtype) named and linked by its Wikidata item. */
-export function entity(id: WikidataId, type = "Thing"): Record<string, unknown> {
-  return { "@type": type, name: wikidata[id].name, sameAs: wikidataUrl(id) };
+/** The display name for a Wikidata ID. A missing ID fails the build. */
+export function topicName(id: string): string {
+  const known = labels[id];
+  if (!known) throw new Error(`${id} is not in content/about/wikidata.json`);
+  return known.name;
 }
 
+/** A schema.org Thing (or subtype) named and linked by its Wikidata item. */
+export function entity(id: string, type = "Thing"): Record<string, unknown> {
+  return { "@type": type, name: topicName(id), sameAs: wikidataUrl(id) };
+}
+
+interface Linked { wikidata?: string; url?: string }
+
+export const LOCALE: string = data.locale;
+export const ALTERNATE_NAMES: string[] = data.alternateNames;
 /** What the author knows about: skills, interests, and the topics the articles and gallery cover. */
-export const KNOWS_ABOUT: WikidataId[] = [
-  "Q3025536", // DevOps
-  "Q108525696", // DevSecOps
-  "Q386275", // Web development
-  "Q2988038", // Mobile application development
-  "Q80993", // Software engineering
-  "Q24479", // Chef
-  "Q24964334", // Infrastructure as code
-  "Q126950763", // Policy as code
-  "Q19399674", // React
-  "Q55774523", // React Native
-  "Q978185", // TypeScript
-  "Q2005", // JavaScript
-  "Q756100", // Node.js
-  "Q123162820", // Playwright
-  "Q23679990", // Progressive web app
-  "Q7978612", // Web performance optimization
-  "Q104618838", // Core Web Vitals
-  "Q808932", // Web accessibility
-  "Q180711", // Search engine optimization
-  "Q1130645", // Open-source software
-  "Q1193158", // Technical writing
-  "Q11633", // Photography
-  "Q966880", // Wildlife photography
-  "Q1353984", // Landscape photography
-  "Q182956", // Portrait photography
-  "Q91079944", // Monochrome photography
-];
-
-/** Profile strings (as written in content/about/profile.json) mapped to their Wikidata items. */
-export const UNIVERSITY_IDS: Record<string, WikidataId> = {
-  "Siksha 'O' Anusandhan University": "Q7513963",
-};
-
-/** The schools' own sites (checked to answer with HTTP 200 on 2026-10-28), by profile string. */
-export const SCHOOL_URLS: Record<string, string> = {
-  "Siksha 'O' Anusandhan University": "https://www.soa.ac.in/",
-  "Institute of Technical Education and Research (ITER)": "https://www.soa.ac.in/iter",
-};
-
-export const CREDENTIAL_BODY_URLS: Record<string, string> = {
-  "University of Illinois Urbana-Champaign": "https://illinois.edu/",
-  "Scaled Agile, Inc.": "https://scaledagile.com/",
-};
-
-export const CREDENTIAL_BODY_IDS: Record<string, WikidataId> = {
-  "University of Illinois Urbana-Champaign": "Q457281",
-};
-
-export const CREDENTIAL_SUBJECT_IDS: Record<string, WikidataId> = {
-  "SAFe Agilist Certification": "Q23808624",
-};
-
-export const EMPLOYER_IDS: Record<string, WikidataId[]> = {
-  "Progress Chef": ["Q741046", "Q7098706"],
-};
-
-export const LANGUAGE_IDS: Record<string, { code: string; id: WikidataId }> = {
-  Hindi: { code: "hi", id: "Q1568" },
-  English: { code: "en", id: "Q1860" },
-  Gujarati: { code: "gu", id: "Q5137" },
-  Odia: { code: "or", id: "Q33810" },
-};
-
-export const PLACE_IDS: Record<string, WikidataId> = {
-  Bengaluru: "Q1355",
-  Karnataka: "Q1185",
-};
-
+export const KNOWS_ABOUT: string[] = data.knowsAbout;
 /** Article tags (lower case, as written in the frontmatter) mapped to the topic they are about. */
-export const TAG_TOPIC_IDS: Record<string, WikidataId> = {
-  "web development": "Q386275",
-  typescript: "Q978185",
-  react: "Q19399674",
-  javascript: "Q2005",
-  seo: "Q180711",
-  accessibility: "Q808932",
-  pwa: "Q23679990",
-  "react-native": "Q55774523",
-  performance: "Q7978612",
-  photography: "Q11633",
-  "software-engineering": "Q80993",
-  "mobile applications": "Q2988038",
-};
+export const TAG_TOPIC_IDS: Record<string, string> = data.tagTopics;
+/** The tables below are keyed by the strings written in content/about/profile.json. */
+export const SCHOOLS: Record<string, Linked> = data.schools;
+export const CREDENTIAL_BODIES: Record<string, Linked> = data.credentialBodies;
+export const CREDENTIAL_SUBJECT_IDS: Record<string, string> = data.credentialSubjects;
+export const EMPLOYER_IDS: Record<string, string[]> = data.employers;
+export const LANGUAGES: Record<string, { code: string; wikidata: string }> = data.languages;
+export const PLACE_IDS: Record<string, string> = data.places;
+export const PHOTO_RIGHTS: { licensePath: string; acquireLicensePath: string; notice: string } = data.photoRights;

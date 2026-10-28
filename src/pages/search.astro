@@ -1,11 +1,11 @@
 ---
 import BaseLayout from "../layouts/base_layout.astro";
-import { buildWebPageEntity } from "../utils/jsonLd";
+import { AUTHOR_NAME, buildWebPageEntity } from "../utils/jsonLd";
 
 const page_info = {
   title: "Search",
   brandSuffix: true,
-  description: "Search articles, bits, gallery, and content on Rishi Kumar Chawda's website",
+  description: `Search articles, bits, gallery, and content on ${AUTHOR_NAME}'s website`,
   keywords: "search, articles, bits, gallery, photography, development",
   noindex: true,
 };

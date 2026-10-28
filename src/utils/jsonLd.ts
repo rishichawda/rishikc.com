@@ -7,23 +7,25 @@
  *   - WebSite: https://rishikc.com/#website
  *   - Employer (the Person's worksFor organization): https://rishikc.com/#employer
  */
+import profileFile from "../../content/about/profile.json";
 import {
-  PLACE_IDS,
-  CREDENTIAL_BODY_IDS,
-  CREDENTIAL_BODY_URLS,
+  ALTERNATE_NAMES,
+  CREDENTIAL_BODIES,
   CREDENTIAL_SUBJECT_IDS,
   EMPLOYER_IDS,
   KNOWS_ABOUT,
-  LANGUAGE_IDS,
-  SCHOOL_URLS,
-  UNIVERSITY_IDS,
+  LANGUAGES,
+  LOCALE,
+  PHOTO_RIGHTS,
+  PLACE_IDS,
+  SCHOOLS,
   entity,
   wikidataUrl,
 } from "./topics";
 
 const SITE_URL = "https://rishikc.com";
 const ABOUT_URL = `${SITE_URL}/about/`;
-export const AUTHOR_NAME = "Rishi Kumar Chawda";
+export const AUTHOR_NAME: string = profileFile.data.name;
 
 // ── Stable @id URIs ──
 export const IDS = {
@@ -56,11 +58,11 @@ export function photoRights(year?: number): Record<string, unknown> {
   return {
     creator: authorRef,
     creditText: AUTHOR_NAME,
-    copyrightNotice: `© ${year ? `${year} ` : ""}${AUTHOR_NAME}. All rights reserved.`,
+    copyrightNotice: PHOTO_RIGHTS.notice.replace("{year}", String(year ?? "")).replace("{name}", AUTHOR_NAME).replace(/\s+/g, " "),
     copyrightHolder: authorRef,
     ...(year ? { copyrightYear: year } : {}),
-    license: `${SITE_URL}/gallery/#copyright`,
-    acquireLicensePage: `${SITE_URL}/contact/`,
+    license: `${SITE_URL}${PHOTO_RIGHTS.licensePath}`,
+    acquireLicensePage: `${SITE_URL}${PHOTO_RIGHTS.acquireLicensePath}`,
   };
 }
 
@@ -94,7 +96,7 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
     givenName,
     additionalName,
     familyName,
-    alternateName: ["Rishi Chawda", "rishikc", "rishichawda"],
+    alternateName: ALTERNATE_NAMES,
     jobTitle: profile.title,
     description: profile.summary,
     url: ABOUT_URL,
@@ -141,20 +143,19 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
   if (profile.education?.length) {
     person.alumniOf = profile.education.map((edu) => {
       const name = edu.university || edu.institution;
-      const id = UNIVERSITY_IDS[name];
-      const url = SCHOOL_URLS[name];
+      const school = SCHOOLS[name] ?? {};
       // The institute the degree was taken at, a part of the university.
       const unit = edu.university && edu.institution;
       return {
         "@type": "EducationalOrganization",
         name,
-        ...(url ? { url } : {}),
-        ...(id ? { sameAs: wikidataUrl(id) } : {}),
+        ...(school.url ? { url: school.url } : {}),
+        ...(school.wikidata ? { sameAs: wikidataUrl(school.wikidata) } : {}),
         ...(unit ? {
           department: {
             "@type": "EducationalOrganization",
             name: unit,
-            ...(SCHOOL_URLS[unit] ? { url: SCHOOL_URLS[unit] } : {}),
+            ...(SCHOOLS[unit]?.url ? { url: SCHOOLS[unit].url } : {}),
           },
         } : {}),
       };
@@ -167,11 +168,11 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
   // knowsLanguage
   if (profile.languages?.length) {
     person.knowsLanguage = profile.languages.map((l) => {
-      const known = LANGUAGE_IDS[l.name];
+      const known = LANGUAGES[l.name];
       return {
         "@type": "Language",
         name: l.name,
-        ...(known ? { alternateName: known.code, sameAs: wikidataUrl(known.id) } : {}),
+        ...(known ? { alternateName: known.code, sameAs: wikidataUrl(known.wikidata) } : {}),
       };
     });
   }
@@ -179,9 +180,8 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
   // hasCredential
   if (profile.certifications?.length) {
     person.hasCredential = profile.certifications.map((cert) => {
-      const body = CREDENTIAL_BODY_IDS[cert.institution];
+      const body = CREDENTIAL_BODIES[cert.institution] ?? {};
       const subject = CREDENTIAL_SUBJECT_IDS[cert.title];
-      const bodyUrl = CREDENTIAL_BODY_URLS[cert.institution];
       return {
         "@type": "EducationalOccupationalCredential",
         credentialCategory: "Professional Certification",
@@ -189,8 +189,8 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
         recognizedBy: {
           "@type": "Organization",
           name: cert.institution,
-          ...(bodyUrl ? { url: bodyUrl } : {}),
-          ...(body ? { sameAs: wikidataUrl(body) } : {}),
+          ...(body.url ? { url: body.url } : {}),
+          ...(body.wikidata ? { sameAs: wikidataUrl(body.wikidata) } : {}),
         },
         ...(subject ? { about: entity(subject) } : {}),
       };
@@ -211,7 +211,7 @@ export function buildWebSiteEntity(description: string): Record<string, unknown>
     url: `${SITE_URL}/`,
     description,
     publisher: authorRef,
-    inLanguage: "en-US",
+    inLanguage: LOCALE,
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -299,7 +299,7 @@ export function buildWebPageEntity(options: {
     name: options.name,
     description: options.description,
     isPartOf: websiteRef,
-    inLanguage: "en-US",
+    inLanguage: LOCALE,
   };
 
   // Add breadcrumb reference
