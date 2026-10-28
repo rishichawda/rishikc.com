@@ -34,6 +34,7 @@ const page_info = {
   title: `Gallery | ${profile.name}`,
   description: `Visual stories and photography by ${profile.name}. Immersive photo essays exploring landscapes, streets, and the world through a lens.`,
   keywords: `photography, portfolio, gallery, visual essays, ${profile.name}`,
+  robots: ["noimageindex"],
 };
 
 // Get stories and galleries
@@ -67,7 +68,7 @@ const galleryItems = galleries.map((gallery) => {
       Astro.site || "https://rishikc.com",
     ).toString(),
     image: new URL(
-      gallery.data.featured_image.src,
+      `/previews/${gallery.data.directory}.jpg`,
       Astro.site || "https://rishikc.com",
     ).toString(),
   };
@@ -258,7 +259,7 @@ const pageSchemaEntities = [
     </section>
 
     <!-- Copyright -->
-    <footer class="copyright-footer">
+    <footer class="copyright-footer" id="copyright">
       <p>
         All photographs displayed in this gallery are the intellectual property
         of {profile.name}. Any reproduction, distribution, or use of these

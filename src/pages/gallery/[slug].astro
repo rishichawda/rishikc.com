@@ -5,6 +5,7 @@ import "../../styles/gallery.css";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import { authorRef, buildWebPageEntity } from "../../utils/jsonLd";
+import { previewImage } from "../../utils/preview";
 import type { ImageObject as SchemaImageObject } from "schema-dts";
 import Lightbox from "../../components/gallery/lightbox.astro";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
@@ -37,6 +38,7 @@ const {
   title,
   description,
   featured_image,
+  featured_image_alt,
   tags,
   images: unsortedImages,
 } = gallery.data;
@@ -55,10 +57,14 @@ const images =
     return dateB.getTime() - dateA.getTime();
   }) || [];
 
+// The photograph itself is blocked by robots.txt, so link previews use a downscaled crop.
+const preview = previewImage(`/previews/${gallery.data.directory}.jpg`, featured_image_alt);
+
 const page_info = {
   title: `${title} | ${profile.name}`,
   description: description,
-  image: featured_image.src,
+  image: preview,
+  robots: ["noimageindex"],
   keywords: `photography, ${title.toLowerCase()}, portfolio, ${profile.name}`,
 };
 
@@ -92,6 +98,7 @@ const pageSchemaEntities = [
       headline: title,
       description: description,
       author: authorRef,
+      image: new URL(preview.src, Astro.site || "https://rishikc.com").toString(),
       keywords: tags?.join(", "),
       associatedMedia: galleryImageUrls,
     },

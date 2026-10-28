@@ -16,7 +16,7 @@ interface Education { university: string; institution: string; degree: string; }
 interface LangEntry { name: string; level: string; }
 
 let {
-  page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex },
+  page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots: extraRobots },
   pageSchemaEntities,
 } = Astro.props;
 
@@ -26,11 +26,19 @@ const canonicalURL = new URL(
   Astro.site || "https://rishikc.com",
 );
 
-// Resolve OG image to absolute URL; fall back to site logo
+// Resolve the share image to an absolute URL and its metadata; fall back to the site logo.
+// `image` is a URL string, or { src, width, height, type, alt } when the caller knows the file.
 const defaultOgImage = new URL(favicon.src, siteOrigin).toString();
-const resolvedImage = image
-  ? (image.startsWith("http") ? image : new URL(image, siteOrigin).toString())
+const shareImage = typeof image === "string" ? { src: image } : (image ?? { src: "" });
+const resolvedImage = shareImage.src
+  ? (shareImage.src.startsWith("http") ? shareImage.src : new URL(shareImage.src, siteOrigin).toString())
   : defaultOgImage;
+const imageWidth = shareImage.width ?? 1200;
+const imageHeight = shareImage.height ?? 630;
+const imageAlt = shareImage.alt ?? title;
+
+// One robots meta for the page; directives from the caller (for example noimageindex) join it.
+const robotsDirectives = [...(noindex ? ["noindex", "nofollow"] : []), ...(extraRobots ?? [])];
 
 const profileEntry = await getCollection("profile");
 const raw = profileEntry[0].data as any;
@@ -75,7 +83,7 @@ const ogType = type === "article" ? "article" : "website";
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
 <meta name="description" content={description} />
-{noindex ? <meta name="robots" content="noindex, nofollow" /> : null}
+{robotsDirectives.length ? <meta name="robots" content={robotsDirectives.join(", ")} /> : null}
 <meta name="image" content={resolvedImage} />
 {keywords ? <meta name="keywords" content={keywords} /> : null}
 
@@ -84,9 +92,10 @@ const ogType = type === "article" ? "article" : "website";
 <meta property="og:site_name" content="Rishi Kumar Chawda" />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={resolvedImage} />
-<meta property="og:image:alt" content={title} />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+<meta property="og:image:width" content={imageWidth} />
+<meta property="og:image:height" content={imageHeight} />
+{shareImage.type ? <meta property="og:image:type" content={shareImage.type} /> : null}
 <meta property="og:url" content={canonicalURL.toString()} />
 <meta property="og:type" content={ogType} />
 <meta property="og:locale" content="en_US" />
@@ -100,7 +109,7 @@ const ogType = type === "article" ? "article" : "website";
 <meta name="twitter:description" content={description} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content={resolvedImage} />
-<meta name="twitter:image:alt" content={title} />
+<meta name="twitter:image:alt" content={imageAlt} />
 <meta name="twitter:site" content="@rishiikc" />
 <meta name="twitter:creator" content="@rishiikc" />
 

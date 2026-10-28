@@ -4,6 +4,7 @@ import "../../../styles/global.css";
 import "../../../styles/gallery.css";
 import { getCollection } from "astro:content";
 import { authorRef, buildWebPageEntity } from "../../../utils/jsonLd";
+import { previewImage } from "../../../utils/preview";
 import StoryHero from "../../../components/gallery/story_hero.astro";
 import StorySection from "../../../components/gallery/story_section.astro";
 import StoryEpilogue from "../../../components/gallery/story_epilogue.astro";
@@ -54,10 +55,14 @@ const {
 // Use scenario renderer for non-default scenarios
 const useScenarioRenderer = scenario && scenario !== "scrollytelling";
 
+// The cover photograph is blocked by robots.txt, so link previews use a downscaled crop.
+const preview = previewImage(`/previews/stories/${Astro.params.slug}.jpg`, story.data.cover_image_alt);
+
 const page_info = {
   title: `${title} | ${profile.name}`,
   description,
-  image: cover_image.src,
+  image: preview,
+  robots: ["noimageindex"],
   keywords: `photography, visual essay, ${tags?.join(", ") || ""}, ${profile.name}`,
 };
 
@@ -81,7 +86,7 @@ const pageSchemaEntities = [
       "@type": "Article",
       headline: title,
       description: description,
-      image: cover_image.src,
+      image: new URL(preview.src, Astro.site || "https://rishikc.com").toString(),
       datePublished: date.toISOString(),
       author: authorRef,
       keywords: tags?.join(", "),

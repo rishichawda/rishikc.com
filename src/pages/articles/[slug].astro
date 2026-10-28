@@ -9,6 +9,7 @@ import ExternalLink from "../../components/article/ExternalLink.astro";
 import SeriesNavigation from "../../components/article/series_navigation.astro";
 import { getSeriesInfo, getSeriesTitle } from "../../utils/seriesUtils";
 import { authorRef, buildWebPageEntity } from "../../utils/jsonLd";
+import { isPhotograph, previewImage } from "../../utils/preview";
 import "remark-notes-plugin/styles.css";
 
 export async function getStaticPaths() {
@@ -40,9 +41,12 @@ const articleUrl = new URL(
 	post.data.path || Astro.url.pathname,
 	Astro.site || "https://rishikc.com",
 ).toString();
-const imageUrl = post.data.hero_image?.src
-	? new URL(post.data.hero_image.src, Astro.site || "https://rishikc.com").toString()
-	: "";
+// A hero that is a gallery photograph is blocked by robots.txt, so the share image is a preview of it.
+const shareImage = isPhotograph(post.data.hero_image)
+	? previewImage(`/previews/articles/${post.id}.jpg`, post.data.hero_image_alt)
+	: undefined;
+const heroSrc = shareImage?.src ?? post.data.hero_image?.src;
+const imageUrl = heroSrc ? new URL(heroSrc, Astro.site || "https://rishikc.com").toString() : "";
 const isoDate = post.data.date ? post.data.date.toISOString() : "";
 const isoDateModified = post.data.dateModified ? new Date(post.data.dateModified).toISOString() : isoDate;
 
@@ -97,7 +101,7 @@ if (post.data.faq && post.data.faq.length > 0) {
 	page_info={{
 		title: `${post.data.title} | Rishi Kumar Chawda`,
 		description: post.data.description,
-		image: imageUrl,
+		image: shareImage ?? imageUrl,
 		keywords: post.data.keywords,
 		type: "article",
 		datePublished: post.data.date.toISOString(),

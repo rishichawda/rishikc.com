@@ -234,6 +234,25 @@ for (const agent of robotAgents) {
   }
 }
 
+// ── Share images and JSON-LD images must not point at a protected photograph ──
+for (const page of pages) {
+  for (const key of ['og:image', 'twitter:image', 'image']) {
+    if (page.meta(key)?.includes(PHOTO_PATH)) fail(page.path, `${key} is a photograph under ${PHOTO_PATH}`);
+  }
+  for (const node of page.nodes) {
+    walkGraph(node, (n) => {
+      for (const value of [n.image, n.thumbnailUrl].flat()) {
+        const url = typeof value === 'string' ? value : value?.url;
+        if (url?.includes(PHOTO_PATH)) fail(page.path, `JSON-LD image is a photograph under ${PHOTO_PATH}`);
+      }
+    });
+  }
+  const og = page.meta('og:image');
+  if (og?.includes('/previews/') && (page.ogSize?.width !== 1200 || page.ogSize?.height !== 630)) {
+    fail(page.path, 'preview image is not 1200x630');
+  }
+}
+
 // ── Wikidata ──
 for (const id of wikidataIds) {
   if (!expected[id]) fail('wikidata', `${id} is not in src/utils/wikidata.json`);
