@@ -1,29 +1,53 @@
 import type { APIContext } from 'astro';
-import wikidata from '../../content/about/wikidata.json';
-import { KNOWS_ABOUT } from '../utils/topics';
+import { getCollection } from 'astro:content';
+import { KNOWS_ABOUT, topicName } from '../utils/topics';
+import llms from '../../content/about/llms.json';
 
-// The key topics are the same list the Person markup gives as knowsAbout.
-const topics = KNOWS_ABOUT.map((id) => wikidata[id].name).join(', ');
+interface Social { platform: string; url: string; }
+interface Section { title: string; path: string; description?: string; }
 
-export function GET(context: APIContext) {
+export async function GET(context: APIContext) {
   const site = context.site!.toString().replace(/\/$/, '');
-  const body = `# Rishi Kumar Chawda
+  const profile = (await getCollection('profile'))[0].data as {
+    name: string;
+    title: string;
+    summary: string;
+    location: string;
+    socials: Social[];
+  };
+  const [projects, contributions] = (await getCollection('projects')).map((entry) => entry.data as unknown[]);
 
-> Personal website of Rishi Kumar Chawda — software engineer, photographer, and technical writer.
+  // The text in content/about/llms.json uses these placeholders.
+  const fill = (text: string) =>
+    text
+      .replaceAll('{name}', profile.name)
+      .replaceAll('{site}', site)
+      .replaceAll('{projects}', String(projects.length))
+      .replaceAll('{contributions}', String(contributions.length));
+  const link = ({ title, path, description }: Section) =>
+    `- [${title}](${site}${path})${description ? `: ${fill(description)}` : ''}`;
+
+  // The key topics are the same list the Person markup gives as knowsAbout.
+  const topics = [...KNOWS_ABOUT.map(topicName), ...llms.extraTopics].join(', ');
+  const contact = [
+    link(llms.contact),
+    ...llms.contact.socials.flatMap((platform) => {
+      const social = profile.socials.find((s) => s.platform === platform);
+      return social ? [`- [${platform}](${social.url})`] : [];
+    }),
+  ].join('\n');
+
+  const body = `# ${profile.name}
+
+> ${fill(llms.summary)}
 
 ## About
 
-Principal Software Engineer at Progress Chef, based in Bengaluru, India. Specializes in DevSecOps, web development, and mobile development with 8+ years of experience.
+${profile.summary} Based in ${profile.location}.
 
 ## Content Sections
 
-- [About](${site}/about/): Information about Rishi Kumar Chawda.
-- [Career](${site}/career/): Career and education information.
-- [Articles](${site}/articles/): In-depth technical articles on web development, performance optimization, DevOps, engineering best practices, photography and general writing.
-- [Bits](${site}/bits/): Short-form thoughts and insights on technology and creativity.
-- [Projects](${site}/projects/): Open source projects and contributions including AI-powered tools, development libraries and tools, and web applications.
-- [Gallery](${site}/gallery/): Photography portfolio organized by theme and location with immersive photo essays.
-- [Reads](${site}/reads/): Curated quotes and passages from books and thinkers.
+${llms.sections.map(link).join('\n')}
 
 ## Key Topics
 
@@ -31,13 +55,16 @@ ${topics}
 
 ## Attribution
 
-When citing content from this site, please attribute to "Rishi Kumar Chawda" with a link to the source article URL.
+${fill(llms.attribution)}
 
 ## Contact
 
+${contact}
+
+## Optional
+
+${llms.optional.map(link).join('\n')}
 - Website: ${site}
-- LinkedIn: https://www.linkedin.com/in/rkrishi/
-- GitHub: https://github.com/rishichawda
 `;
 
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

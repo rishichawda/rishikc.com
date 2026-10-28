@@ -378,6 +378,7 @@ for (const page of pages) {
 const about = pageByPath.get('/about/');
 if (about?.meta('og:type') !== 'profile') fail('/about/', 'og:type is not profile');
 for (const key of ['profile:first_name', 'profile:last_name', 'profile:username']) if (!about?.meta(key)) fail('/about/', `missing ${key}`);
+const profileFile = JSON.parse(await readFile(join(repoRoot, 'content/about/profile.json'), 'utf8')).data;
 const aboutPerson = about?.nodes.find((n) => typesOf(n).includes('Person'));
 for (const school of [aboutPerson?.alumniOf ?? []].flat()) {
   if (!school.url) fail('/about/', `alumniOf "${school.name}" has no url`);
@@ -391,6 +392,17 @@ if (sitemapXml.match(/<(changefreq|priority)>/)) fail('sitemap', 'has changefreq
 const rssXml = (await exists(join(dist, 'rss.xml'))) ? await readFile(join(dist, 'rss.xml'), 'utf8') : '';
 for (const needle of ['<dc:creator>', '<category>', '<language>']) if (!rssXml.includes(needle)) fail('/rss.xml', `lacks ${needle}`);
 const llms = (await exists(join(dist, 'llms.txt'))) ? await readFile(join(dist, 'llms.txt'), 'utf8') : '';
+// Every address the file links to must be a page or file the build made, and it must not publish an email.
+for (const [, url] of llms.matchAll(/\]\((https?:[^)\s]+)\)/g)) {
+  if (!url.startsWith(SITE)) continue;
+  const path = new URL(url).pathname;
+  const file = path.endsWith('/') ? join(dist, path, 'index.html') : join(dist, path);
+  if (!(await exists(file))) fail('/llms.txt', `links to ${url}, which the build did not make`);
+}
+if (/[\w.+-]+@[\w-]+\.[\w.]+/.test(llms)) fail('/llms.txt', 'contains an email address');
+for (const needle of [profileFile.name, profileFile.summary, profileFile.location]) {
+  if (needle && !llms.includes(needle)) fail('/llms.txt', `lacks "${needle}" from profile.json`);
+}
 for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.knowsAbout ?? []) {
   if (!llms.includes(topic.name)) fail('/llms.txt', `lacks the topic ${topic.name}`);
 }
