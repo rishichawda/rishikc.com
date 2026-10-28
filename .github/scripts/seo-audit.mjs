@@ -285,6 +285,23 @@ if (await exists(join(dist, 'llms-full.txt')) && shortName(await readFile(join(d
   fail('/llms-full.txt', 'writes "Rishi Chawda"');
 }
 
+// ── Titles: the brand suffix only on short hub pages; every other name and title is bare ──
+const BRAND = ' | Rishi Kumar Chawda';
+const HUBS = new Set(['/404', '/about/', '/articles/', '/articles/series/', '/bits/', '/career/', '/contact/', '/gallery/', '/privacy/', '/projects/', '/reads/', '/search/']);
+for (const page of pages) {
+  const suffixed = page.title.endsWith(BRAND);
+  if (HUBS.has(page.path)) {
+    if (!suffixed) fail(page.path, 'hub page title lacks the brand suffix');
+    if (page.title.length > 60) fail(page.path, `hub page title is ${page.title.length} characters`);
+  } else if (suffixed) {
+    fail(page.path, 'content page title carries the brand suffix');
+  }
+  for (const key of ['og:title', 'twitter:title']) {
+    if (page.meta(key)?.includes(BRAND)) fail(page.path, `${key} carries the brand suffix`);
+  }
+  if (JSON.stringify(page.nodes).includes(BRAND)) fail(page.path, 'JSON-LD name, headline or breadcrumb carries the brand suffix');
+}
+
 // ── Wikidata ──
 for (const id of wikidataIds) {
   if (!expected[id]) fail('wikidata', `${id} is not in src/utils/wikidata.json`);

@@ -59,7 +59,7 @@ const useScenarioRenderer = scenario && scenario !== "scrollytelling";
 const preview = previewImage(`/previews/stories/${Astro.params.slug}.jpg`, story.data.cover_image_alt);
 
 const page_info = {
-  title: `${title} | ${profile.name}`,
+  title,
   description,
   image: preview,
   robots: ["noimageindex"],

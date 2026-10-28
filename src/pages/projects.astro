@@ -68,7 +68,8 @@ const featuredProjects = projects.filter((project) => project.featured);
 const otherProjects = projects.filter((project) => !project.featured);
 
 const page_info = {
-    title: `Projects | ${profile.name}`,
+    title: "Projects",
+    brandSuffix: true,
     description: `Explore ${profile.name}'s development projects including React Native components, web applications, developer tools, and open source contributions.`,
     keywords: `${profile.name}, Projects, Open Source, React, TypeScript`,
 };

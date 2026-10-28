@@ -13,7 +13,8 @@ const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
-    title: `Article Series | ${profile.name}`,
+    title: "Article Series",
+    brandSuffix: true,
     description: `Explore in-depth, multi-part article series by ${profile.name}. Each series takes a deep dive into complex topics like web development, React architecture, SEO, performance optimization, and modern engineering practices — broken into focused, digestible parts.`,
     keywords: "article series, multi-part articles, web development tutorials, React architecture, SEO guides",
 };

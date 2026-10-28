@@ -12,7 +12,7 @@ import Footer from "../components/footer.astro";
 import { ClientRouter } from "astro:transitions";
 
 let {
-	page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots },
+	page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots, brandSuffix },
 	activeRoute,
 	pageSchemaEntities,
 } = Astro.props;
@@ -30,6 +30,7 @@ const seo = {
 	tags,
 	noindex,
 	robots,
+	brandSuffix,
 };
 ---
 

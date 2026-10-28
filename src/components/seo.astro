@@ -17,7 +17,7 @@ interface Education { university: string; institution: string; degree: string; }
 interface LangEntry { name: string; level: string; }
 
 let {
-  page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots: extraRobots },
+  page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots: extraRobots, brandSuffix },
   pageSchemaEntities,
 } = Astro.props;
 
@@ -74,7 +74,7 @@ const ogType = type === "article" ? "article" : "website";
 ---
 
 <meta charset="UTF-8" />
-<title>{title}</title>
+<title>{brandSuffix ? `${title} | ${profile.name}` : title}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- Browser UI colour; the values are --color-bg in src/styles/global.css -->
 <meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)" />

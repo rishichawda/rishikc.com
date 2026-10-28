@@ -35,7 +35,7 @@ const description = seriesData?.data.description
     || `A ${series.totalParts}-part series exploring ${series.seriesTitle.toLowerCase()} in depth.`;
 
 const page_info = {
-    title: `${series.seriesTitle} | ${profile.name}`,
+    title: series.seriesTitle,
     description,
     keywords: seriesData?.data.keywords || series.seriesTitle.toLowerCase(),
 };

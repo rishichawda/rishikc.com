@@ -11,7 +11,8 @@ const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
 const page_info = {
-  title: `Contact | ${profile.name}`,
+  title: "Contact",
+  brandSuffix: true,
   description: `Get in touch with ${profile.name} for collaborations, job opportunities, or general inquiries`,
   keywords: `contact, email, collaboration, ${profile.name}, software engineer`,
 };
