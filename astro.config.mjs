@@ -1,4 +1,7 @@
 // @ts-check
+import { createHash } from 'node:crypto';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { defineConfig, fontProviders } from 'astro/config';
 
 import mdx from '@astrojs/mdx';
@@ -53,6 +56,29 @@ const AnchorLinkIcon = h(
     )
   )
 )
+
+// Gallery photographs are published under /_astro/photos/ so robots.txt can keep every crawler out
+// of that one path while article images stay crawlable. Astro hashes the asset's bytes, not its
+// source folder, so a photo is recognised by the SHA-256 of its file content.
+const IMAGE_FILE = /\.(jpe?g|png|webp|gif|avif)$/i;
+const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
+
+function imageFiles(dir) {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) return entry.name.startsWith('.') ? [] : imageFiles(path);
+    return IMAGE_FILE.test(entry.name) ? [path] : [];
+  });
+}
+
+const photoHashes = new Map(imageFiles('content/gallery').map((file) => [sha256(readFileSync(file)), file]));
+for (const file of imageFiles('content').filter((f) => !f.startsWith(join('content', 'gallery') + '/'))) {
+  const photo = photoHashes.get(sha256(readFileSync(file)));
+  // A copy would be written next to the gallery original and break it, and it could not be protected by path.
+  if (photo) {
+    throw new Error(`${file} is a byte-identical copy of the gallery photo ${photo}. Reference the gallery file instead.`);
+  }
+}
 
 export default defineConfig({
   // Output
@@ -173,6 +199,14 @@ export default defineConfig({
     build: {
       cssCodeSplit: true,
       chunkSizeWarningLimit: 1000,
+      rolldownOptions: {
+        output: {
+          assetFileNames(info) {
+            const photo = info.source && typeof info.source !== 'string' && photoHashes.has(sha256(info.source));
+            return `_astro/${photo ? 'photos/' : ''}[name].[hash][extname]`;
+          },
+        },
+      },
     },
   },
 

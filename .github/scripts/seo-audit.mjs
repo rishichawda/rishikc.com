@@ -179,6 +179,61 @@ for (const page of pages) {
   }
 }
 
+// ── Photography stays under /_astro/photos/ and robots.txt keeps crawlers out of it ──
+const PHOTO_PATH = '/_astro/photos/';
+const repoRoot = fileURLToPath(new URL('../../', import.meta.url));
+const galleryDir = join(repoRoot, 'content/gallery');
+// The build compresses images, so dist files cannot be matched to the originals by content. The
+// original's file name survives as the start of the built name: purple_sunbird.<hash>.jpg.
+const stem = (file) => file.split('/').at(-1).replace(/\.[^.]+\.[^.]+$/, '');
+if (await exists(galleryDir)) {
+  const galleryStems = new Set();
+  for await (const file of walk(galleryDir)) if (/\.jpe?g$/i.test(file)) galleryStems.add(file.split('/').at(-1).replace(/\.[^.]+$/, ''));
+  const published = new Set();
+  for await (const file of walk(join(dist, '_astro'))) {
+    if (!/\.jpe?g$/i.test(file)) continue;
+    const photo = galleryStems.has(stem(file));
+    const underPhotos = file.includes(PHOTO_PATH);
+    if (photo && !underPhotos) fail('photos', `gallery photo published outside ${PHOTO_PATH}: ${relative(dist, file)}`);
+    if (!photo && underPhotos) fail('photos', `non-gallery file under ${PHOTO_PATH}: ${relative(dist, file)}`);
+    if (photo) published.add(stem(file));
+  }
+  for (const name of galleryStems) if (!published.has(name)) fail('photos', `gallery photo ${name} has no original in dist`);
+}
+
+const robots = (await exists(join(dist, 'robots.txt'))) ? await readFile(join(dist, 'robots.txt'), 'utf8') : '';
+const groups = [];
+for (const line of robots.split('\n').map((l) => l.replace(/#.*/, '').trim()).filter(Boolean)) {
+  const [field, ...rest] = line.split(':');
+  const value = rest.join(':').trim();
+  if (/^user-agent$/i.test(field)) {
+    if (!groups.at(-1) || groups.at(-1).rules.length) groups.push({ agents: [], rules: [] });
+    groups.at(-1).agents.push(value.toLowerCase());
+  } else if (/^(dis)?allow$/i.test(field) && groups.length) {
+    groups.at(-1).rules.push({ allow: /^allow$/i.test(field), path: value });
+  }
+}
+// Longest matching rule wins, as in Google's robots.txt parser; plain prefixes are all this file uses.
+const allowed = (agent, path) => {
+  const group = groups.find((g) => g.agents.includes(agent.toLowerCase())) ?? groups.find((g) => g.agents.includes('*'));
+  const match = (group?.rules ?? []).filter((r) => r.path && path.startsWith(r.path)).sort((a, b) => b.path.length - a.path.length)[0];
+  return !match || match.allow;
+};
+const robotAgents = [...new Set([...groups.flatMap((g) => g.agents), 'googlebot', 'bingbot', 'twitterbot'])];
+const heroPaths = new Set();
+for (const page of pages) {
+  const url = page.meta('og:image');
+  if (url?.startsWith(SITE) && !url.includes(PHOTO_PATH)) heroPaths.add(new URL(url).pathname);
+}
+if (groups.length === 0) fail('robots.txt', 'no groups found');
+for (const agent of robotAgents) {
+  if (allowed(agent, `${PHOTO_PATH}x.jpg`)) fail('robots.txt', `${agent} may fetch ${PHOTO_PATH}`);
+  if (allowed(agent, '/api/search-index.json')) fail('robots.txt', `${agent} may fetch /api/`);
+  for (const path of ['/', '/articles/', '/favicon.ico', ...heroPaths]) {
+    if (!allowed(agent, path)) fail('robots.txt', `${agent} is blocked from ${path}`);
+  }
+}
+
 // ── Wikidata ──
 for (const id of wikidataIds) {
   if (!expected[id]) fail('wikidata', `${id} is not in src/utils/wikidata.json`);
