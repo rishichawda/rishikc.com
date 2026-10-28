@@ -15,8 +15,9 @@ const expectedFile = flag('--expected') >= 0
   : fileURLToPath(new URL('../../src/utils/wikidata.json', import.meta.url));
 const expected = JSON.parse(await readFile(expectedFile, 'utf8'));
 
+const PERSON_KEYS = ['author', 'creator', 'publisher', 'copyrightHolder'];
 const failures = [];
-const fail = (page, message) => failures.push(`${page}: ${message}`);
+const fail = (page, message) => failures.push({ page, message });
 
 async function* walk(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -143,6 +144,17 @@ for (const page of pages) {
       else if (Object.keys(node).length === 1) refs.push(node['@id']);
     });
     for (const id of refs) if (!defined.has(id)) fail(page.path, `@id reference with no node ${id}`);
+    // Google wants the author's name and a url that identifies them, not a bare @id reference.
+    walkGraph(data, (node) => {
+      for (const key of PERSON_KEYS) {
+        for (const value of [node[key]].flat()) {
+          if (value?.['@id'] === `${SITE}/#person` && !(value.name && value.url)) {
+            fail(page.path, `${key} references the Person without a name and url`);
+          }
+        }
+      }
+    });
+    if (raw.includes(`${SITE}/#organization`)) fail(page.path, 'uses the #organization id; the employer is #employer');
     page.nodes.push(...top);
   }
 }
@@ -209,7 +221,7 @@ const stripped = (s) => s.replace(SUFFIX, '');
 
 const metrics = {
   'Pages built': pages.length,
-  'Pages with JSON-LD, canonical and description problems': failures.filter((f) => /JSON-LD|canonical|description/.test(f)).length,
+  'Pages with JSON-LD, canonical and description problems': failures.filter((f) => /JSON-LD|canonical|meta description/.test(f.message)).length,
   [`Titles ending in "${SUFFIX}"`]: count(pages, (p) => p.title.endsWith(SUFFIX)),
   'Titles over 60 characters (with suffix / without)': `${count(pages, (p) => p.title.length > 60)} / ${count(pages, (p) => stripped(p.title).length > 60)}`,
   'Longest title': Math.max(...lengths),
@@ -228,8 +240,14 @@ console.log('SEO audit metrics');
 for (const [key, value] of Object.entries(metrics)) console.log(`  ${key}: ${value}`);
 
 if (failures.length > 0) {
+  // Group a failure that repeats on many pages into one line.
+  const groups = Map.groupBy(failures, (f) => f.message);
   console.log(`\n${failures.length} failure(s):`);
-  for (const message of failures) console.log(`  - ${message}`);
+  for (const [message, items] of groups) {
+    const pages = items.map((f) => f.page);
+    const shown = pages.length > 3 ? `${pages.slice(0, 3).join(', ')} and ${pages.length - 3} more` : pages.join(', ');
+    console.log(`  - ${message} [${shown}]`);
+  }
 }
 if (wikidataError) console.log(`\n${wikidataError}`);
 process.exit(failures.length > 0 ? 1 : wikidataError ? 2 : 0);

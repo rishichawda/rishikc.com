@@ -5,21 +5,44 @@
  * All entities use stable @id fragment URIs:
  *   - Person: https://rishikc.com/#person
  *   - WebSite: https://rishikc.com/#website
- *   - Organization: https://rishikc.com/#organization
+ *   - Employer (the Person's worksFor organization): https://rishikc.com/#employer
  */
+import {
+  PLACE_IDS,
+  CREDENTIAL_BODY_IDS,
+  CREDENTIAL_SUBJECT_IDS,
+  EMPLOYER_IDS,
+  KNOWS_ABOUT,
+  LANGUAGE_IDS,
+  UNIVERSITY_IDS,
+  entity,
+  wikidataUrl,
+} from "./topics";
 
 const SITE_URL = "https://rishikc.com";
+const ABOUT_URL = `${SITE_URL}/about/`;
+export const AUTHOR_NAME = "Rishi Kumar Chawda";
 
 // ── Stable @id URIs ──
 export const IDS = {
   person: `${SITE_URL}/#person`,
   website: `${SITE_URL}/#website`,
-  organization: `${SITE_URL}/#organization`,
+  employer: `${SITE_URL}/#employer`,
 } as const;
 
 // ── Reference helpers (use these inside page-level schemas) ──
 export const personRef = { "@id": IDS.person };
 export const websiteRef = { "@id": IDS.website };
+/**
+ * The Person as an author, creator or publisher value. Google asks for the name and a url that
+ * identifies the author, so a bare @id reference is not enough on its own.
+ */
+export const authorRef = {
+  "@type": "Person",
+  "@id": IDS.person,
+  name: AUTHOR_NAME,
+  url: ABOUT_URL,
+};
 
 // ── Profile data types ──
 interface Social { platform: string; url: string; }
@@ -31,6 +54,7 @@ export interface ProfileData {
   name: string;
   title: string;
   summary: string;
+  location?: string;
   socials: Social[];
   certifications?: Certification[];
   education?: Education[];
@@ -42,13 +66,19 @@ export interface ProfileData {
  * Build the canonical Person entity.
  */
 export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string): Record<string, unknown> {
+  const [givenName, additionalName, familyName] = profile.name.split(" ");
   const person: Record<string, unknown> = {
     "@type": "Person",
     "@id": IDS.person,
     name: profile.name,
+    givenName,
+    additionalName,
+    familyName,
+    alternateName: ["Rishi Chawda", "rishikc", "rishichawda"],
     jobTitle: profile.title,
     description: profile.summary,
-    url: `${SITE_URL}/`,
+    url: ABOUT_URL,
+    mainEntityOfPage: ABOUT_URL,
     sameAs: profile.socials.map((s) => s.url),
   };
 
@@ -59,57 +89,79 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
   // worksFor
   if (profile.experience?.length) {
     const employer = profile.experience[0];
+    const websites = employer.website ?? [];
+    const wikidata = (EMPLOYER_IDS[employer.company] ?? []).map(wikidataUrl);
     person.worksFor = {
       "@type": "Organization",
-      "@id": IDS.organization,
+      "@id": IDS.employer,
       name: employer.company,
-      ...(employer.website?.length ? {
-        url: employer.website[0],
-        sameAs: employer.website,
-      } : {}),
+      ...(websites.length ? { url: websites[0] } : {}),
+      ...(websites.length || wikidata.length ? { sameAs: [...websites, ...wikidata] } : {}),
     };
   }
 
-  // address
-  person.address = {
-    "@type": "PostalAddress",
-    addressLocality: "Bengaluru",
-    addressRegion: "KA",
-    addressCountry: "IN",
-  };
+  // address and homeLocation, from "City, Region, Country"
+  if (profile.location) {
+    const [locality, region, country] = profile.location.split(",").map((part) => part.trim());
+    person.address = {
+      "@type": "PostalAddress",
+      addressLocality: locality,
+      ...(region ? { addressRegion: region } : {}),
+      ...(country ? { addressCountry: country } : {}),
+    };
+    person.homeLocation = {
+      "@type": "Place",
+      name: profile.location,
+      ...(PLACE_IDS[locality] ? { sameAs: wikidataUrl(PLACE_IDS[locality]) } : {}),
+      ...(region && PLACE_IDS[region] ? { containedInPlace: entity(PLACE_IDS[region], "AdministrativeArea") } : {}),
+    };
+  }
 
   // alumniOf
   if (profile.education?.length) {
-    person.alumniOf = profile.education.map((edu) => ({
-      "@type": "EducationalOrganization",
-      name: edu.university || edu.institution,
-    }));
+    person.alumniOf = profile.education.map((edu) => {
+      const name = edu.university || edu.institution;
+      const id = UNIVERSITY_IDS[name];
+      return {
+        "@type": "EducationalOrganization",
+        name,
+        ...(id ? { sameAs: wikidataUrl(id) } : {}),
+      };
+    });
   }
 
-  // knowsAbout (Wikidata IDs)
-  person.knowsAbout = [
-    "https://www.wikidata.org/wiki/Q386724",   // DevOps
-    "https://www.wikidata.org/wiki/Q80993",    // Software engineering
-    "https://www.wikidata.org/wiki/Q11034",    // Mobile app development
-    "https://www.wikidata.org/wiki/Q8777",     // Web development
-  ];
+  // knowsAbout (Wikidata-backed topics)
+  person.knowsAbout = KNOWS_ABOUT.map((id) => entity(id));
 
   // knowsLanguage
   if (profile.languages?.length) {
-    person.knowsLanguage = profile.languages.map((l) => l.name);
+    person.knowsLanguage = profile.languages.map((l) => {
+      const known = LANGUAGE_IDS[l.name];
+      return {
+        "@type": "Language",
+        name: l.name,
+        ...(known ? { alternateName: known.code, sameAs: wikidataUrl(known.id) } : {}),
+      };
+    });
   }
 
   // hasCredential
   if (profile.certifications?.length) {
-    person.hasCredential = profile.certifications.map((cert) => ({
-      "@type": "EducationalOccupationalCredential",
-      credentialCategory: "Professional Certification",
-      name: cert.title,
-      recognizedBy: {
-        "@type": "Organization",
-        name: cert.institution,
-      },
-    }));
+    person.hasCredential = profile.certifications.map((cert) => {
+      const body = CREDENTIAL_BODY_IDS[cert.institution];
+      const subject = CREDENTIAL_SUBJECT_IDS[cert.title];
+      return {
+        "@type": "EducationalOccupationalCredential",
+        credentialCategory: "Professional Certification",
+        name: cert.title,
+        recognizedBy: {
+          "@type": "Organization",
+          name: cert.institution,
+          ...(body ? { sameAs: wikidataUrl(body) } : {}),
+        },
+        ...(subject ? { about: entity(subject) } : {}),
+      };
+    });
   }
 
   return person;
@@ -125,7 +177,7 @@ export function buildWebSiteEntity(description: string): Record<string, unknown>
     name: "Rishi Kumar Chawda",
     url: `${SITE_URL}/`,
     description,
-    publisher: personRef,
+    publisher: authorRef,
     inLanguage: "en-US",
     potentialAction: {
       "@type": "SearchAction",

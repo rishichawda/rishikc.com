@@ -3,7 +3,7 @@ import BaseLayout from "../../../layouts/base_layout.astro";
 import "../../../styles/global.css";
 import "../../../styles/gallery.css";
 import { getCollection } from "astro:content";
-import { buildWebPageEntity, personRef } from "../../../utils/jsonLd";
+import { authorRef, buildWebPageEntity } from "../../../utils/jsonLd";
 import StoryHero from "../../../components/gallery/story_hero.astro";
 import StorySection from "../../../components/gallery/story_section.astro";
 import StoryEpilogue from "../../../components/gallery/story_epilogue.astro";
@@ -83,7 +83,7 @@ const pageSchemaEntities = [
       description: description,
       image: cover_image.src,
       datePublished: date.toISOString(),
-      author: personRef,
+      author: authorRef,
       keywords: tags?.join(", "),
     },
   }),

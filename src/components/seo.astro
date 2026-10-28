@@ -38,6 +38,7 @@ const profile: ProfileData = {
   name: raw.name,
   title: raw.title,
   summary: raw.summary,
+  location: raw.location,
   socials: raw.socials as Social[],
   certifications: raw.certifications as Certification[],
   education: raw.education as Education[],
@@ -68,6 +69,7 @@ const ogType = type === "article" ? "article" : "website";
 <title>{title}</title>
 <meta name="viewport" content="width=device-width" />
 <meta name="author" content={profile.name} />
+{ogType === "article" ? <link rel="author" href="/about/" /> : null}
 <link rel="icon" type="image/png" href={favicon.src} />
 <link rel="canonical" href={canonicalURL.toString()} />
 <link rel="sitemap" href="/sitemap-index.xml" />

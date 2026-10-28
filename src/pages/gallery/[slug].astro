@@ -4,7 +4,7 @@ import "../../styles/global.css";
 import "../../styles/gallery.css";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
-import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
+import { authorRef, buildWebPageEntity } from "../../utils/jsonLd";
 import type { ImageObject as SchemaImageObject } from "schema-dts";
 import Lightbox from "../../components/gallery/lightbox.astro";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
@@ -91,7 +91,7 @@ const pageSchemaEntities = [
       "@type": "ImageGallery",
       headline: title,
       description: description,
-      author: personRef,
+      author: authorRef,
       keywords: tags?.join(", "),
       associatedMedia: galleryImageUrls,
     },

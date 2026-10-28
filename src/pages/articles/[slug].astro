@@ -8,7 +8,7 @@ import TableOfContents from "../../components/article/table_of_contents.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
 import SeriesNavigation from "../../components/article/series_navigation.astro";
 import { getSeriesInfo, getSeriesTitle } from "../../utils/seriesUtils";
-import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
+import { authorRef, buildWebPageEntity } from "../../utils/jsonLd";
 import "remark-notes-plugin/styles.css";
 
 export async function getStaticPaths() {
@@ -54,8 +54,8 @@ const articleEntity: Record<string, unknown> = {
 	image: imageUrl,
 	datePublished: isoDate,
 	dateModified: isoDateModified,
-	author: personRef,
-	publisher: personRef,
+	author: authorRef,
+	publisher: authorRef,
 	mainEntityOfPage: { "@id": articleUrl },
 	keywords: post.data.tags,
 	...(post.data.category ? { articleSection: post.data.category } : {}),

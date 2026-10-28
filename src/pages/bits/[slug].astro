@@ -4,7 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/base_layout.astro";
 import Prose from "../../components/article/prose.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
-import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
+import { authorRef, buildWebPageEntity } from "../../utils/jsonLd";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import "remark-notes-plugin/styles.css";
 
@@ -53,7 +53,7 @@ const pageSchemaEntities = [
             description: bit.data.description,
             datePublished: bit.data.date.toISOString(),
             url: pageUrl,
-            author: personRef,
+            author: authorRef,
         },
     }),
 ];
