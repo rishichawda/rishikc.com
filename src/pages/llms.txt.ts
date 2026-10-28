@@ -1,5 +1,5 @@
 import type { APIContext } from 'astro';
-import wikidata from '../utils/wikidata.json';
+import wikidata from '../../content/about/wikidata.json';
 import { KNOWS_ABOUT } from '../utils/topics';
 
 // The key topics are the same list the Person markup gives as knowsAbout.

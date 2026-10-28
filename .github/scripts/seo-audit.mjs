@@ -3,7 +3,7 @@ import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 // Audits the built site's head tags and JSON-LD. Hard failures exit 1; metrics are printed.
-//   node .github/scripts/seo-audit.mjs [--dist dist] [--expected src/utils/wikidata.json] [--offline]
+//   node .github/scripts/seo-audit.mjs [--dist dist] [--expected content/about/wikidata.json] [--offline]
 // --offline skips the live Wikidata label check. A Wikidata outage exits 2, apart from a failed check.
 const args = process.argv.slice(2);
 const flag = (name) => args.indexOf(name);
@@ -12,7 +12,7 @@ const offline = flag('--offline') >= 0;
 const SITE = 'https://rishikc.com';
 const expectedFile = flag('--expected') >= 0
   ? resolve(args[flag('--expected') + 1])
-  : fileURLToPath(new URL('../../src/utils/wikidata.json', import.meta.url));
+  : fileURLToPath(new URL('../../content/about/wikidata.json', import.meta.url));
 const expected = JSON.parse(await readFile(expectedFile, 'utf8'));
 
 const PERSON_KEYS = ['author', 'creator', 'publisher', 'copyrightHolder', 'provider'];
@@ -443,7 +443,7 @@ if (!pageByPath.get('/')?.nodes.some((n) => typesOf(n).includes('Service'))) fai
 
 // ── Wikidata ──
 for (const id of wikidataIds) {
-  if (!expected[id]) fail('wikidata', `${id} is not in src/utils/wikidata.json`);
+  if (!expected[id]) fail('wikidata', `${id} is not in content/about/wikidata.json`);
 }
 let wikidataError = '';
 if (!offline && wikidataIds.size > 0) {

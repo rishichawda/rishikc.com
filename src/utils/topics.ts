@@ -1,9 +1,9 @@
 /**
- * Wikidata-backed entities for JSON-LD. src/utils/wikidata.json holds each ID with the English label
+ * Wikidata-backed entities for JSON-LD. content/about/wikidata.json holds each ID with the English label
  * Wikidata gives it; .github/scripts/seo-audit.mjs checks every ID in the built pages against that
  * file and against the live Wikidata label, so a wrong ID fails the audit instead of shipping.
  */
-import wikidata from "./wikidata.json";
+import wikidata from "../../content/about/wikidata.json";
 
 export type WikidataId = keyof typeof wikidata;
 
