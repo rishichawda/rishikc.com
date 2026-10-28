@@ -144,6 +144,8 @@ if (post.data.faq && post.data.faq.length > 0) {
 		title: post.data.title,
 		description: post.data.description,
 		image: share,
+		// A photograph hero shares a crop of the photo, which crawlers may fetch but must not index.
+		robots: isPhotograph(hero) ? ["noimageindex"] : undefined,
 		keywords: post.data.keywords,
 		type: "article",
 		section: post.data.category,

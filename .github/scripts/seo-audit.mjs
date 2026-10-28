@@ -189,16 +189,19 @@ const stem = (file) => file.split('/').at(-1).replace(/\.[^.]+\.[^.]+$/, '');
 if (await exists(galleryDir)) {
   const galleryStems = new Set();
   for await (const file of walk(galleryDir)) if (/\.jpe?g$/i.test(file)) galleryStems.add(file.split('/').at(-1).replace(/\.[^.]+$/, ''));
+  const IMAGE = /\.(jpe?g|webp|png|avif)$/i;
   const published = new Set();
   for await (const file of walk(join(dist, '_astro'))) {
-    if (!/\.jpe?g$/i.test(file)) continue;
+    if (!IMAGE.test(file)) continue;
     const photo = galleryStems.has(stem(file));
     const underPhotos = file.includes(PHOTO_PATH);
     if (photo && !underPhotos) fail('photos', `gallery photo published outside ${PHOTO_PATH}: ${relative(dist, file)}`);
     if (!photo && underPhotos) fail('photos', `non-gallery file under ${PHOTO_PATH}: ${relative(dist, file)}`);
-    if (photo) published.add(stem(file));
+    if (photo && /\.jpe?g$/i.test(file)) published.add(stem(file));
   }
   for (const name of galleryStems) if (!published.has(name)) fail('photos', `gallery photo ${name} has no original in dist`);
+} else {
+  fail('photos', 'content/gallery not found, so the photo placement checks cannot run');
 }
 
 const robots = (await exists(join(dist, 'robots.txt'))) ? await readFile(join(dist, 'robots.txt'), 'utf8') : '';
@@ -402,6 +405,14 @@ for (const page of pages.filter((p) => p.path.startsWith('/gallery/'))) {
   if (!(page.meta('robots') ?? '').includes('noimageindex')) fail(page.path, 'gallery page lacks noimageindex');
 }
 
+// ── Previews are crops of photographs: crawlers may fetch them, but they must not be indexed ──
+if (Array.isArray(tdm) && !tdm.some((r) => r.location === '/previews/*')) fail('/.well-known/tdmrep.json', 'does not reserve /previews/*');
+for (const page of pages) {
+  if (page.meta('og:image')?.includes('/previews/') && !(page.meta('robots') ?? '').includes('noimageindex')) {
+    fail(page.path, 'share image is a crop of a photograph but the page lacks noimageindex');
+  }
+}
+
 // ── Photo rights: every ImageObject and ImageGallery states who owns it and where to ask ──
 const RIGHTS = ['creator', 'creditText', 'copyrightNotice', 'license', 'acquireLicensePage'];
 for (const page of pages.filter((p) => p.path.startsWith('/gallery/'))) {
@@ -420,8 +431,10 @@ for (const page of pages.filter((p) => p.path.startsWith('/gallery/'))) {
 
 // ── Projects and services ──
 const projectsList = pageByPath.get('/projects/')?.nodes.find((n) => typesOf(n).includes('CollectionPage'))?.mainEntity;
-if (!projectsList || projectsList.itemListElement.length !== projectsList.numberOfItems) {
-  fail('/projects/', 'the project list does not hold every project');
+const projectsFile = join(repoRoot, 'content/projects/projects.json');
+const projectCount = (await exists(projectsFile)) ? JSON.parse(await readFile(projectsFile, 'utf8')).data.length : projectsList?.numberOfItems;
+if (!projectsList || projectsList.itemListElement.length !== projectCount) {
+  fail('/projects/', `the project list holds ${projectsList?.itemListElement.length} of ${projectCount} projects`);
 }
 for (const { item } of projectsList?.itemListElement ?? []) {
   if (!item.url || !item.author) fail('/projects/', `project ${item.name} lacks url or author`);
