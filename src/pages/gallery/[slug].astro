@@ -63,7 +63,9 @@ const page_info = {
   title,
   description: description,
   image: preview,
-  robots: ["noimageindex"],
+  // noai and noimageai are an unofficial convention that some AI crawlers read; harmless to others.
+  robots: ["noimageindex", "noai", "noimageai"],
+  tdmReservation: true,
   keywords: `photography, ${title.toLowerCase()}, portfolio, ${profile.name}`,
 };
 

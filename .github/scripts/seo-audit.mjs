@@ -383,6 +383,14 @@ for (const page of seriesPages) {
   if (page.meta('og:image')?.includes('/og/')) fail(page.path, 'series page uses a card; it should use the hero of part 1');
 }
 
+// ── Rights signals on photography: TDM reservation file and meta, noimageindex ──
+const tdm = (await exists(join(dist, '.well-known/tdmrep.json'))) ? JSON.parse(await readFile(join(dist, '.well-known/tdmrep.json'), 'utf8')) : null;
+if (!Array.isArray(tdm) || !tdm.every((r) => r.location && r['tdm-reservation'] === 1)) fail('/.well-known/tdmrep.json', 'missing or not an array of reserved locations');
+for (const page of pages.filter((p) => p.path.startsWith('/gallery/'))) {
+  if (page.meta('tdm-reservation') !== '1') fail(page.path, 'gallery page lacks <meta name="tdm-reservation">');
+  if (!(page.meta('robots') ?? '').includes('noimageindex')) fail(page.path, 'gallery page lacks noimageindex');
+}
+
 // ── Photo rights: every ImageObject and ImageGallery states who owns it and where to ask ──
 const RIGHTS = ['creator', 'creditText', 'copyrightNotice', 'license', 'acquireLicensePage'];
 for (const page of pages.filter((p) => p.path.startsWith('/gallery/'))) {
