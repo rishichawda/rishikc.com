@@ -8,6 +8,7 @@
     "preview": "yarn build && astro preview",
     "astro": "astro",
     "audit:a11y": "node .github/scripts/a11y-audit.mjs",
+    "audit:seo": "node .github/scripts/seo-audit.mjs",
     "audit:lighthouse": "node .github/scripts/lighthouse-audit.mjs"
   },
   "dependencies": {
