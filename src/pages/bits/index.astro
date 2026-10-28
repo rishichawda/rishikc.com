@@ -309,9 +309,14 @@ const pageSchemaEntities = [
         max-width: 960px;
         margin: 0 auto;
         padding: 0 var(--space-6) var(--space-20);
-        columns: 2;
-        column-gap: var(--space-6);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-6);
+        align-items: start;
     }
+    /* Masonry: script sets each card's row span from its height, so rows stay 1px and
+       auto-placement fills the shortest column in DOM order (left to right). */
+    .bits-grid.is-masonry { grid-auto-rows: 1px; row-gap: 0; }
     .bits-grid:not(.active-view) { display: none; }
 
     .bit-card {
@@ -322,8 +327,6 @@ const pageSchemaEntities = [
         border-radius: 12px;
         background: var(--color-surface);
         text-decoration: none;
-        break-inside: avoid;
-        margin-bottom: var(--space-6);
         color: inherit;
         /* No transform transition or hover transform here: scrollReveal.ts (GSAP) owns
            this element's inline transform via data-reveal, and a CSS transition on
@@ -515,12 +518,26 @@ const pageSchemaEntities = [
     .back-link:hover { text-decoration: underline; }
 
     @media (max-width: 640px) {
-        .bits-grid { columns: 1; }
+        .bits-grid { grid-template-columns: 1fr; }
     }
 </style>
 
 <script is:inline>
     document.addEventListener('astro:page-load', () => {
+        // Masonry — span each card over 1px rows matching its height plus the column gap
+        var masonryGrid = document.querySelector('.bits-grid');
+        if (masonryGrid) {
+            masonryGrid.classList.add('is-masonry');
+            var spanObserver = new ResizeObserver(function(entries) {
+                var gap = parseFloat(getComputedStyle(masonryGrid).columnGap) || 0;
+                entries.forEach(function(entry) {
+                    var height = entry.target.offsetHeight;
+                    entry.target.style.gridRowEnd = 'span ' + (height ? Math.ceil(height + gap) : 1);
+                });
+            });
+            masonryGrid.querySelectorAll('.bit-card').forEach(function(card) { spanObserver.observe(card); });
+        }
+
         // View toggle
         var viewBtns = document.querySelectorAll('.view-btn');
         var viewTargets = document.querySelectorAll('[data-view-target]');
