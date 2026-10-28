@@ -272,6 +272,19 @@ for (const page of pages) {
   }
 }
 
+// ── The name is written in full; "Rishi Chawda" may stay only as a keyword or alternate name ──
+// Text inside <main> comes from the content repository, so only the site's own chrome is checked.
+const shortName = (text) =>
+  text
+    .replace(/<main[\s\S]*<\/main>/i, '')
+    .replace(/<meta[^>]*name="?keywords"?[^>]*>/gi, '')
+    .replace(/"alternateName":\[[^\]]*\]/g, '')
+    .includes('Rishi Chawda');
+for (const page of pages) if (shortName(page.html)) fail(page.path, 'writes "Rishi Chawda" outside keywords and alternateName');
+if (await exists(join(dist, 'llms-full.txt')) && shortName(await readFile(join(dist, 'llms-full.txt'), 'utf8'))) {
+  fail('/llms-full.txt', 'writes "Rishi Chawda"');
+}
+
 // ── Wikidata ──
 for (const id of wikidataIds) {
   if (!expected[id]) fail('wikidata', `${id} is not in src/utils/wikidata.json`);
