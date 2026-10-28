@@ -274,7 +274,7 @@ export function buildWebSiteEntity(description: string): Record<string, unknown>
   return {
     "@type": "WebSite",
     "@id": IDS.website,
-    name: "Rishi Kumar Chawda",
+    name: AUTHOR_NAME,
     url: `${SITE_URL}/`,
     description,
     publisher: authorRef,
