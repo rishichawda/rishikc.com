@@ -44,6 +44,24 @@ export const authorRef = {
   url: ABOUT_URL,
 };
 
+/**
+ * Rights for a photograph or a page of photographs. The gallery text states the policy: every
+ * photograph is the owner's, and no use is allowed without written permission. That is all rights
+ * reserved, which has no standard license URL, so `license` points at the page that states it and
+ * `acquireLicensePage` at the page to ask on.
+ */
+export function photoRights(year?: number): Record<string, unknown> {
+  return {
+    creator: authorRef,
+    creditText: AUTHOR_NAME,
+    copyrightNotice: `© ${year ? `${year} ` : ""}${AUTHOR_NAME}. All rights reserved.`,
+    copyrightHolder: authorRef,
+    ...(year ? { copyrightYear: year } : {}),
+    license: `${SITE_URL}/gallery/#copyright`,
+    acquireLicensePage: `${SITE_URL}/contact/`,
+  };
+}
+
 // ── Profile data types ──
 interface Social { platform: string; url: string; }
 interface Certification { institution: string; title: string; }

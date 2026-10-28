@@ -347,6 +347,22 @@ for (const page of pages.filter((p) => p.path.startsWith('/articles/series/') &&
   }
 }
 
+// ── Photo rights: every ImageObject and ImageGallery states who owns it and where to ask ──
+const RIGHTS = ['creator', 'creditText', 'copyrightNotice', 'license', 'acquireLicensePage'];
+for (const page of pages.filter((p) => p.path.startsWith('/gallery/'))) {
+  for (const node of page.nodes) {
+    walkGraph(node, (n) => {
+      if (!typesOf(n).some((t) => t === 'ImageObject' || t === 'ImageGallery')) return;
+      for (const key of RIGHTS) if (!n[key]) fail(page.path, `${n['@type']} lacks ${key}`);
+      if (n.license) {
+        const target = pageByPath.get(new URL(n.license).pathname);
+        const anchor = new URL(n.license).hash.slice(1);
+        if (!target || !new RegExp(`id="?${anchor}"?[\\s>]`).test(target.html)) fail(page.path, `license ${n.license} does not resolve to an element on the page`);
+      }
+    });
+  }
+}
+
 // ── Projects and services ──
 const projectsList = pageByPath.get('/projects/')?.nodes.find((n) => typesOf(n).includes('CollectionPage'))?.mainEntity;
 if (!projectsList || projectsList.itemListElement.length !== projectsList.numberOfItems) {

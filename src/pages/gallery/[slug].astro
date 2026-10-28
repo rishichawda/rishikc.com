@@ -4,9 +4,8 @@ import "../../styles/global.css";
 import "../../styles/gallery.css";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
-import { authorRef, buildWebPageEntity } from "../../utils/jsonLd";
+import { authorRef, buildWebPageEntity, photoRights } from "../../utils/jsonLd";
 import { previewImage } from "../../utils/shareImage";
-import type { ImageObject as SchemaImageObject } from "schema-dts";
 import Lightbox from "../../components/gallery/lightbox.astro";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import masonry from "masonry-layout/dist/masonry.pkgd.min?url";
@@ -69,19 +68,21 @@ const page_info = {
 };
 
 // Prepare image array for JSON-LD
-const galleryImageUrls: SchemaImageObject[] =
-  images?.map((img) => {
-    const imageObject: SchemaImageObject = {
-      "@type": "ImageObject",
-      contentUrl: new URL(
-        img.src.src,
-        Astro.site || "https://rishikc.com",
-      ).toString(),
-      name: img.caption || img.alt || `${title} image`,
-      description: img.caption || img.alt || `Image from ${title} gallery`,
-    };
-    return imageObject;
-  }) || [];
+const galleryImageUrls: Record<string, unknown>[] =
+  images?.map((img) => ({
+    "@type": "ImageObject",
+    contentUrl: new URL(
+      img.src.src,
+      Astro.site || "https://rishikc.com",
+    ).toString(),
+    name: img.caption || img.alt || `${title} image`,
+    description: img.caption || img.alt || `Image from ${title} gallery`,
+    width: img.src.width,
+    height: img.src.height,
+    ...(img.date ? { dateCreated: img.date.toISOString().slice(0, 10) } : {}),
+    ...(img.location ? { contentLocation: { "@type": "Place", name: img.location } } : {}),
+    ...photoRights(img.date?.getUTCFullYear()),
+  })) || [];
 
 const pageUrl = new URL(
   Astro.url.pathname,
@@ -98,6 +99,7 @@ const pageSchemaEntities = [
       headline: title,
       description: description,
       author: authorRef,
+      ...photoRights(gallery.data.date?.getUTCFullYear()),
       image: new URL(preview.src, Astro.site || "https://rishikc.com").toString(),
       keywords: tags?.join(", "),
       associatedMedia: galleryImageUrls,

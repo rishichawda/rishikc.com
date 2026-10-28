@@ -3,7 +3,7 @@ import BaseLayout from "../../../layouts/base_layout.astro";
 import "../../../styles/global.css";
 import "../../../styles/gallery.css";
 import { getCollection } from "astro:content";
-import { authorRef, buildWebPageEntity } from "../../../utils/jsonLd";
+import { authorRef, buildWebPageEntity, photoRights, websiteRef } from "../../../utils/jsonLd";
 import { previewImage } from "../../../utils/shareImage";
 import StoryHero from "../../../components/gallery/story_hero.astro";
 import StorySection from "../../../components/gallery/story_section.astro";
@@ -89,6 +89,11 @@ const pageSchemaEntities = [
       image: new URL(preview.src, Astro.site || "https://rishikc.com").toString(),
       datePublished: date.toISOString(),
       author: authorRef,
+      publisher: authorRef,
+      dateModified: date.toISOString(),
+      inLanguage: "en-US",
+      isPartOf: websiteRef,
+      ...photoRights(date.getUTCFullYear()),
       keywords: tags?.join(", "),
     },
   }),

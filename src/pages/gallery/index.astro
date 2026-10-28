@@ -5,8 +5,7 @@ import "../../styles/gallery.css";
 import StoryCard from "../../components/gallery/story_card.astro";
 import ProjectCard from "../../components/gallery/project_card.astro";
 import { getCollection } from "astro:content";
-import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
-import type { ListItem, ImageGallery as SchemaImageGallery } from "schema-dts";
+import { buildWebPageEntity, photoRights } from "../../utils/jsonLd";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 
 import { Image } from "astro:assets";
@@ -60,7 +59,7 @@ const pageUrl = new URL(
 
 // Create gallery items for JSON-LD
 const galleryItems = galleries.map((gallery) => {
-  const gallerySchema: SchemaImageGallery = {
+  const gallerySchema: Record<string, unknown> = {
     "@type": "ImageGallery",
     name: gallery.data.title,
     description: gallery.data.description,
@@ -72,11 +71,12 @@ const galleryItems = galleries.map((gallery) => {
       `/previews/${gallery.data.directory}.jpg`,
       Astro.site || "https://rishikc.com",
     ).toString(),
+    ...photoRights(gallery.data.date?.getUTCFullYear()),
   };
   return gallerySchema;
 });
 
-const itemListElements: ListItem[] = galleryItems.map(
+const itemListElements: Record<string, unknown>[] = galleryItems.map(
   (gallerySchema, index) => ({
     "@type": "ListItem",
     position: index + 1,
