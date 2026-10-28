@@ -384,6 +384,16 @@ for (const school of [aboutPerson?.alumniOf ?? []].flat()) {
   if (!school.url) fail('/about/', `alumniOf "${school.name}" has no url`);
   if (school.department && !school.department.url) fail('/about/', `alumniOf department "${school.department.name}" has no url`);
 }
+const positions = profileFile.experience.flatMap((employer) => employer.positions);
+const roles = [aboutPerson?.hasOccupation ?? []].flat();
+if (roles.length !== positions.length) fail('/about/', `hasOccupation has ${roles.length} roles; profile.json has ${positions.length} positions`);
+for (const role of roles) {
+  if (typesOf(role).join() !== 'Role') fail('/about/', `hasOccupation entry "${role.name}" is not a Role`);
+  if (!/^\d{4}-\d{2}$/.test(role.startDate ?? '')) fail('/about/', `role "${role.name}" has no ISO startDate`);
+  if (role.endDate && !/^\d{4}-\d{2}$/.test(role.endDate)) fail('/about/', `role "${role.name}" has a bad endDate`);
+  if (role.hasOccupation?.occupationalCategory?.codeValue !== '15-1252.00') fail('/about/', `role "${role.name}" lacks the O*NET occupation code`);
+}
+if (roles.filter((role) => !role.endDate).length !== positions.filter((p) => !p.end_date).length) fail('/about/', 'open roles differ from profile.json');
 for (const credential of [aboutPerson?.hasCredential ?? []].flat()) {
   if (!credential.recognizedBy?.url) fail('/about/', `credential "${credential.name}" has no recognizedBy url`);
 }

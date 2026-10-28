@@ -40,4 +40,6 @@ export const CREDENTIAL_SUBJECT_IDS: Record<string, string> = data.credentialSub
 export const EMPLOYER_IDS: Record<string, string[]> = data.employers;
 export const LANGUAGES: Record<string, { code: string; wikidata: string }> = data.languages;
 export const PLACE_IDS: Record<string, string> = data.places;
+/** The occupation category the author's roles belong to, as an O*NET-SOC code. */
+export const OCCUPATION: { name: string; code: string; codeSet: string; codeSetUrl: string; url: string } = data.occupation;
 export const PHOTO_RIGHTS: { licensePath: string; acquireLicensePath: string; notice: string } = data.photoRights;

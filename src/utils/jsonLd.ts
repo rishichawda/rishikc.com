@@ -16,6 +16,7 @@ import {
   KNOWS_ABOUT,
   LANGUAGES,
   LOCALE,
+  OCCUPATION,
   PHOTO_RIGHTS,
   PLACE_IDS,
   SCHOOLS,
@@ -70,7 +71,8 @@ export function photoRights(year?: number): Record<string, unknown> {
 interface Social { platform: string; url: string; }
 interface Certification { institution: string; title: string; }
 interface Education { university: string; institution: string; degree: string; }
-interface Experience { company: string; website?: string[]; positions: { title: string }[]; }
+interface Position { title: string; start_date: string; end_date: string | null; description?: string; }
+interface Experience { company: string; website?: string[]; positions: Position[]; }
 
 export interface ProfileData {
   name: string;
@@ -83,6 +85,9 @@ export interface ProfileData {
   experience?: Experience[];
   languages?: { name: string; level: string }[];
 }
+
+/** "12-2025", as profile.json writes a month, to the ISO 8601 "2025-12". */
+const isoMonth = (month: string) => month.split("-").reverse().join("-");
 
 /**
  * Build the canonical Person entity.
@@ -120,6 +125,28 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
       ...(websites.length ? { url: websites[0] } : {}),
       ...(websites.length || wikidata.length ? { sameAs: [...websites, ...wikidata] } : {}),
     };
+  }
+
+  // hasOccupation: one Role per position, with the dates, as schema.org asks for past professions
+  if (profile.experience?.length) {
+    const category = {
+      "@type": "CategoryCode",
+      codeValue: OCCUPATION.code,
+      name: OCCUPATION.name,
+      url: OCCUPATION.url,
+      inCodeSet: { "@type": "CategoryCodeSet", name: OCCUPATION.codeSet, url: OCCUPATION.codeSetUrl },
+    };
+    person.hasOccupation = profile.experience.flatMap((employer) =>
+      employer.positions.map((position) => ({
+        "@type": "Role",
+        roleName: position.title,
+        name: `${position.title}, ${employer.company}`,
+        ...(position.description ? { description: position.description } : {}),
+        startDate: isoMonth(position.start_date),
+        ...(position.end_date ? { endDate: isoMonth(position.end_date) } : {}),
+        hasOccupation: { "@type": "Occupation", name: position.title, occupationalCategory: category },
+      })),
+    );
   }
 
   // address and homeLocation, from "City, Region, Country"
