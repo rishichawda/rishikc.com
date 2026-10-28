@@ -49,6 +49,17 @@ export const UNIVERSITY_IDS: Record<string, WikidataId> = {
   "Siksha 'O' Anusandhan University": "Q7513963",
 };
 
+/** The schools' own sites (checked to answer with HTTP 200 on 2026-10-28), by profile string. */
+export const SCHOOL_URLS: Record<string, string> = {
+  "Siksha 'O' Anusandhan University": "https://www.soa.ac.in/",
+  "Institute of Technical Education and Research (ITER)": "https://www.soa.ac.in/iter",
+};
+
+export const CREDENTIAL_BODY_URLS: Record<string, string> = {
+  "University of Illinois Urbana-Champaign": "https://illinois.edu/",
+  "Scaled Agile, Inc.": "https://scaledagile.com/",
+};
+
 export const CREDENTIAL_BODY_IDS: Record<string, WikidataId> = {
   "University of Illinois Urbana-Champaign": "Q457281",
 };

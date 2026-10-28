@@ -10,10 +10,12 @@
 import {
   PLACE_IDS,
   CREDENTIAL_BODY_IDS,
+  CREDENTIAL_BODY_URLS,
   CREDENTIAL_SUBJECT_IDS,
   EMPLOYER_IDS,
   KNOWS_ABOUT,
   LANGUAGE_IDS,
+  SCHOOL_URLS,
   UNIVERSITY_IDS,
   entity,
   wikidataUrl,
@@ -140,10 +142,21 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
     person.alumniOf = profile.education.map((edu) => {
       const name = edu.university || edu.institution;
       const id = UNIVERSITY_IDS[name];
+      const url = SCHOOL_URLS[name];
+      // The institute the degree was taken at, a part of the university.
+      const unit = edu.university && edu.institution;
       return {
         "@type": "EducationalOrganization",
         name,
+        ...(url ? { url } : {}),
         ...(id ? { sameAs: wikidataUrl(id) } : {}),
+        ...(unit ? {
+          department: {
+            "@type": "EducationalOrganization",
+            name: unit,
+            ...(SCHOOL_URLS[unit] ? { url: SCHOOL_URLS[unit] } : {}),
+          },
+        } : {}),
       };
     });
   }
@@ -168,6 +181,7 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
     person.hasCredential = profile.certifications.map((cert) => {
       const body = CREDENTIAL_BODY_IDS[cert.institution];
       const subject = CREDENTIAL_SUBJECT_IDS[cert.title];
+      const bodyUrl = CREDENTIAL_BODY_URLS[cert.institution];
       return {
         "@type": "EducationalOccupationalCredential",
         credentialCategory: "Professional Certification",
@@ -175,6 +189,7 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
         recognizedBy: {
           "@type": "Organization",
           name: cert.institution,
+          ...(bodyUrl ? { url: bodyUrl } : {}),
           ...(body ? { sameAs: wikidataUrl(body) } : {}),
         },
         ...(subject ? { about: entity(subject) } : {}),

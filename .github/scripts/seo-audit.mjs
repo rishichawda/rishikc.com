@@ -378,6 +378,14 @@ for (const page of pages) {
 const about = pageByPath.get('/about/');
 if (about?.meta('og:type') !== 'profile') fail('/about/', 'og:type is not profile');
 for (const key of ['profile:first_name', 'profile:last_name', 'profile:username']) if (!about?.meta(key)) fail('/about/', `missing ${key}`);
+const aboutPerson = about?.nodes.find((n) => typesOf(n).includes('Person'));
+for (const school of [aboutPerson?.alumniOf ?? []].flat()) {
+  if (!school.url) fail('/about/', `alumniOf "${school.name}" has no url`);
+  if (school.department && !school.department.url) fail('/about/', `alumniOf department "${school.department.name}" has no url`);
+}
+for (const credential of [aboutPerson?.hasCredential ?? []].flat()) {
+  if (!credential.recognizedBy?.url) fail('/about/', `credential "${credential.name}" has no recognizedBy url`);
+}
 for (const path of ['/articles/', '/bits/']) if (!sitemapEntries.get(path)) fail(path, 'sitemap URL has no lastmod');
 if (sitemapXml.match(/<(changefreq|priority)>/)) fail('sitemap', 'has changefreq or priority');
 const rssXml = (await exists(join(dist, 'rss.xml'))) ? await readFile(join(dist, 'rss.xml'), 'utf8') : '';
