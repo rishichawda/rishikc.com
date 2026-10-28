@@ -222,7 +222,12 @@ const allowed = (agent, path) => {
   const match = (group?.rules ?? []).filter((r) => r.path && path.startsWith(r.path)).sort((a, b) => b.path.length - a.path.length)[0];
   return !match || match.allow;
 };
-const robotAgents = [...new Set([...groups.flatMap((g) => g.agents), 'googlebot', 'bingbot', 'twitterbot'])];
+// Link-preview and search bots have no group of their own, so they use "*". Every named group is an
+// AI crawler, AI agent or image indexer.
+const PREVIEW_PATH = '/previews/';
+const previewBots = ['googlebot', 'bingbot', 'twitterbot', 'linkedinbot', 'slackbot', 'discordbot', 'facebookexternalhit'];
+const robotAgents = [...new Set([...groups.flatMap((g) => g.agents), ...previewBots])];
+const isNamed = (agent) => agent !== '*' && groups.some((g) => g.agents.includes(agent.toLowerCase()) && !g.agents.includes('*'));
 const heroPaths = new Set();
 for (const page of pages) {
   const url = page.meta('og:image');
@@ -232,9 +237,16 @@ if (groups.length === 0) fail('robots.txt', 'no groups found');
 for (const agent of robotAgents) {
   if (allowed(agent, `${PHOTO_PATH}x.jpg`)) fail('robots.txt', `${agent} may fetch ${PHOTO_PATH}`);
   if (allowed(agent, '/api/search-index.json')) fail('robots.txt', `${agent} may fetch /api/`);
+  // The crops under /previews/ exist for link previews: named crawlers are kept out, the rest may fetch them.
+  if (isNamed(agent) && allowed(agent, `${PREVIEW_PATH}x.jpg`)) fail('robots.txt', `${agent} may fetch ${PREVIEW_PATH}`);
+  if (!isNamed(agent) && !allowed(agent, `${PREVIEW_PATH}x.jpg`)) fail('robots.txt', `${agent} is blocked from ${PREVIEW_PATH}`);
   for (const path of ['/', '/articles/', '/favicon.ico', ...heroPaths]) {
+    if (isNamed(agent) && path.startsWith(PREVIEW_PATH)) continue;
     if (!allowed(agent, path)) fail('robots.txt', `${agent} is blocked from ${path}`);
   }
+}
+for (const agent of ['gptbot', 'claudebot', 'ccbot', 'googlebot-image', 'google-extended', 'bytespider', 'cohere-ai', 'diffbot']) {
+  if (!isNamed(agent)) fail('robots.txt', `${agent} has no group of its own`);
 }
 
 // ── Share images and JSON-LD images must not point at a protected photograph ──
