@@ -1,7 +1,8 @@
 ---
 import favicon from "../../content/assets/logo/logo.png";
 import { getCollection } from "astro:content";
-import { shareImage as logoShareImage, type ShareImage } from "../utils/shareImage";
+import type { ShareImage } from "../utils/shareImage";
+import { cardImage } from "../utils/cards";
 import {
   buildGraphForPage,
   buildWebPageEntity,
@@ -27,8 +28,8 @@ const canonicalURL = new URL(
   Astro.site || "https://rishikc.com",
 );
 
-// The share image: the page's own, else the site logo. Both carry their real size and type.
-const shareImage: ShareImage = image?.src ? image : { ...logoShareImage(favicon), alt: title };
+// The share image: the page's own, else a generated card (src/pages/og). Both carry their real size and type.
+const shareImage: ShareImage = image?.src ? image : cardImage(Astro.url.pathname, title);
 const resolvedImage = shareImage.src.startsWith("http") ? shareImage.src : new URL(shareImage.src, siteOrigin).toString();
 const defaultOgImage = new URL(favicon.src, siteOrigin).toString();
 const imageAlt = shareImage.alt ?? title;

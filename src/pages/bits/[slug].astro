@@ -6,6 +6,7 @@ import Prose from "../../components/article/prose.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
 import { authorRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
 import { isPhotograph, shareImage } from "../../utils/shareImage";
+import { bitCardImage } from "../../utils/cards";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import "remark-notes-plugin/styles.css";
 
@@ -45,8 +46,9 @@ const pageUrl = new URL(
 ).toString();
 
 // A hero that is a gallery photograph is blocked by robots.txt, so it is not used as the share image.
+// A bit with no usable hero gets a generated card carrying its title.
 const hero = bit.data.hero_image;
-const share = hero && !isPhotograph(hero) ? shareImage(hero, bit.data.title) : undefined;
+const share = hero && !isPhotograph(hero) ? shareImage(hero, bit.data.title) : bitCardImage(bit.id, bit.data.title);
 const isoDate = bit.data.date.toISOString();
 
 const bitEntity: Record<string, unknown> = {
@@ -55,7 +57,7 @@ const bitEntity: Record<string, unknown> = {
     url: pageUrl,
     headline: bit.data.title,
     description: bit.data.description,
-    ...(share ? { image: new URL(share.src, Astro.site || "https://rishikc.com").toString() } : {}),
+    image: new URL(share.src, Astro.site || "https://rishikc.com").toString(),
     datePublished: isoDate,
     dateModified: isoDate,
     author: authorRef,

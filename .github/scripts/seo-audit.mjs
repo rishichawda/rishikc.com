@@ -323,8 +323,8 @@ for (const page of pages) {
     // Hero images that are gallery photographs get the preview as their image instead of a set.
     const images = [article.image].flat().filter(Boolean);
     if (page.meta('og:image')?.includes('/previews/')) continue;
-    // A bit may have no hero image of its own.
-    if (page.path.startsWith('/bits/') && images.length === 0) continue;
+    // A bit has its own hero or a generated card, not a 16x9, 4x3 and 1x1 set.
+    if (page.path.startsWith('/bits/')) continue;
     if (images.length === 0) fail(page.path, 'article lists no image');
     // A hero too small for every crop lists fewer, in the order 16x9, 4x3, 1x1.
     for (const [index, url] of images.entries()) {
@@ -370,6 +370,17 @@ for (const needle of ['<dc:creator>', '<category>', '<language>']) if (!rssXml.i
 const llms = (await exists(join(dist, 'llms.txt'))) ? await readFile(join(dist, 'llms.txt'), 'utf8') : '';
 for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.knowsAbout ?? []) {
   if (!llms.includes(topic.name)) fail('/llms.txt', `lacks the topic ${topic.name}`);
+}
+
+// ── No page shares the logo; generated cards are 1200x630 PNGs ──
+for (const page of pages) {
+  const og = page.meta('og:image') ?? '';
+  if (/\/_astro\/logo\./.test(og)) fail(page.path, 'share image is the logo');
+  if (og.includes('/og/') && page.meta('og:image:type') !== 'image/png') fail(page.path, 'card og:image:type is not image/png');
+}
+const seriesPages = pages.filter((p) => p.path.startsWith('/articles/series/') && p.path !== '/articles/series/');
+for (const page of seriesPages) {
+  if (page.meta('og:image')?.includes('/og/')) fail(page.path, 'series page uses a card; it should use the hero of part 1');
 }
 
 // ── Photo rights: every ImageObject and ImageGallery states who owns it and where to ask ──
