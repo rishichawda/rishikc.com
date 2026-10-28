@@ -7,6 +7,8 @@ import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import cardData from "../../content/about/share-cards.json";
+import { AUTHOR_NAME } from "./jsonLd";
 import type { ShareImage } from "./shareImage";
 
 export interface Card {
@@ -15,25 +17,27 @@ export interface Card {
   kicker: string;
 }
 
-const NAME = "Rishi Kumar Chawda";
+/** The card text, from content/about/share-cards.json; "{name}" stands for the author's name. */
+const source: { footer: string; default: Card; bit: Pick<Card, "kicker" | "subtitle">; pages: Record<string, Card> } = cardData;
+const fill = (card: Card): Card => ({
+  kicker: card.kicker.replaceAll("{name}", AUTHOR_NAME),
+  title: card.title.replaceAll("{name}", AUTHOR_NAME),
+  subtitle: card.subtitle.replaceAll("{name}", AUTHOR_NAME),
+});
 
 /** The card for each hub page, by URL path. Anything else gets the default card. */
-export const HUB_CARDS: Record<string, Card> = {
-  "/": { kicker: "rishikc.com", title: NAME, subtitle: "Software Engineer, Writer & Photographer" },
-  "/about/": { kicker: "About", title: NAME, subtitle: "Engineer. Photographer. Seeker of Adventures." },
-  "/career/": { kicker: "Career", title: "Career", subtitle: "Experience, skills and education" },
-  "/contact/": { kicker: "Contact", title: "Get in touch", subtitle: "Collaborations, jobs and questions" },
-  "/articles/": { kicker: "Articles", title: "Articles", subtitle: "Web development, TypeScript, DevSecOps and engineering practice" },
-  "/articles/series/": { kicker: "Articles", title: "Article series", subtitle: "Multi-part deep dives, in order" },
-  "/bits/": { kicker: "Bits", title: "Bits", subtitle: "Short thoughts on technology, creativity and engineering" },
-  "/gallery/": { kicker: "Gallery", title: "Gallery", subtitle: "Photography by " + NAME },
-  "/projects/": { kicker: "Projects", title: "Projects", subtitle: "Open source work, side projects and experiments" },
-  "/reads/": { kicker: "Reads", title: "Reads", subtitle: "Quotes and passages worth keeping" },
-  "/privacy/": { kicker: "Privacy", title: "Privacy policy", subtitle: "rishikc.com" },
-  "/search/": { kicker: "Search", title: "Search", subtitle: "Articles, bits and the gallery" },
-};
+export const HUB_CARDS: Record<string, Card> = Object.fromEntries(
+  Object.entries(source.pages).map(([path, card]) => [path, fill(card)]),
+);
 
-export const DEFAULT_CARD: Card = { kicker: "rishikc.com", title: NAME, subtitle: "Software Engineer, Writer & Photographer" };
+export const DEFAULT_CARD: Card = fill(source.default);
+
+/** The card for a bit that has no hero image. */
+export const bitCard = (title: string): Card => fill({ ...source.bit, title });
+
+/** What the card shows, as alt text: the section, the title and the line under it. */
+export const cardAlt = (card: Card) =>
+  `${card.kicker !== card.title ? `${card.kicker}: ` : ""}${card.title}. ${card.subtitle}`;
 
 /** The card key for a page path, as used in /og/<key>.png. */
 export const cardKey = (path: string) =>
@@ -45,7 +49,7 @@ export const cardImage = (path: string, alt?: string): ShareImage => ({
   width: 1200,
   height: 630,
   type: "image/png",
-  alt: alt ?? (HUB_CARDS[path] ?? DEFAULT_CARD).title,
+  alt: alt ?? cardAlt(HUB_CARDS[path] ?? DEFAULT_CARD),
 });
 
 /** The share image for a bit that has no hero image. */
@@ -54,7 +58,7 @@ export const bitCardImage = (id: string, title: string): ShareImage => ({
   width: 1200,
   height: 630,
   type: "image/png",
-  alt: title,
+  alt: cardAlt(bitCard(title)),
 });
 
 // satori reads TTF, OTF and WOFF but not WOFF2, so the cards use the WOFF files of the same
@@ -104,7 +108,7 @@ export async function renderCard(card: Card): Promise<Uint8Array> {
             ],
           },
         },
-        text("rishikc.com", { fontSize: 30, fontWeight: 500, color: "#B8B8B8" }),
+        text(source.footer, { fontSize: 30, fontWeight: 500, color: "#B8B8B8" }),
       ],
     },
   };

@@ -411,6 +411,7 @@ for (const page of pages) {
   for (const m of page.html.matchAll(/<time[^>]*datetime="?([^">\s]+)"?[^>]*>([^<]+)<\/time>/g)) {
     const visible = new Date(`${m[2].trim()} UTC`);
     const stamp = new Date(m[1].length === 10 ? `${m[1]}T00:00:00Z` : m[1]);
+  if (og.includes('/og/') && !(page.meta('og:image:alt') ?? '').includes('. ')) fail(page.path, 'card og:image:alt does not describe what the card shows');
     if (!Number.isNaN(visible.getTime()) && !Number.isNaN(stamp.getTime()) && visible.toISOString().slice(0, 10) !== stamp.toISOString().slice(0, 10)) {
       fail(page.path, `<time datetime="${m[1]}"> shows "${m[2].trim()}"`);
     }

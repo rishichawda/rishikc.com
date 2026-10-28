@@ -3,6 +3,7 @@ import favicon from "../../content/assets/logo/logo.png";
 import { getCollection } from "astro:content";
 import type { ShareImage } from "../utils/shareImage";
 import { cardImage } from "../utils/cards";
+import { LOCALE } from "../utils/topics";
 import {
   buildGraphForPage,
   buildWebPageEntity,
@@ -29,7 +30,7 @@ const canonicalURL = new URL(
 );
 
 // The share image: the page's own, else a generated card (src/pages/og). Both carry their real size and type.
-const shareImage: ShareImage = image?.src ? image : cardImage(Astro.url.pathname, title);
+const shareImage: ShareImage = image?.src ? image : cardImage(Astro.url.pathname);
 const resolvedImage = shareImage.src.startsWith("http") ? shareImage.src : new URL(shareImage.src, siteOrigin).toString();
 const defaultOgImage = new URL(favicon.src, siteOrigin).toString();
 const imageAlt = shareImage.alt ?? title;
@@ -107,7 +108,7 @@ const keywordList = [...new Set((keywords ?? "").split(",").map((k: string) => k
 {shareImage.type ? <meta property="og:image:type" content={shareImage.type} /> : null}
 <meta property="og:url" content={canonicalURL.toString()} />
 <meta property="og:type" content={ogType} />
-<meta property="og:locale" content="en_US" />
+<meta property="og:locale" content={LOCALE.replace("-", "_")} />
 {datePublished ? <meta property="article:published_time" content={datePublished} /> : null}
 {dateModified ? <meta property="article:modified_time" content={dateModified} /> : null}
 {ogType === "article" ? <meta property="article:author" content="https://rishikc.com/about/" /> : null}
