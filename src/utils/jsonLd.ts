@@ -242,6 +242,31 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
   return person;
 }
 
+/** The Blog node of a section ("articles" or "bits"); its posts are listed on the section's index page. */
+const BLOG_LABELS = { articles: "Articles", bits: "Bits" } as const;
+export const blogRef = (section: "articles" | "bits") => ({
+  "@type": "Blog",
+  "@id": `${SITE_URL}/${section}/#blog`,
+  url: `${SITE_URL}/${section}/`,
+  name: `${BLOG_LABELS[section]} by ${AUTHOR_NAME}`,
+});
+
+export function buildBlogEntity(options: {
+  section: "articles" | "bits";
+  description: string;
+  posts: { id: string; type: string; headline: string; url: string }[];
+}): Record<string, unknown> {
+  return {
+    ...blogRef(options.section),
+    description: options.description,
+    author: authorRef,
+    publisher: authorRef,
+    inLanguage: LOCALE,
+    isPartOf: websiteRef,
+    blogPost: options.posts.map((post) => ({ "@type": post.type, "@id": post.id, headline: post.headline, url: post.url })),
+  };
+}
+
 /**
  * Build the canonical WebSite entity with SearchAction.
  */

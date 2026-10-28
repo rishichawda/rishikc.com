@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
-import { AUTHOR_NAME, buildWebPageEntity } from "../../utils/jsonLd";
+import { AUTHOR_NAME, buildBlogEntity, buildWebPageEntity } from "../../utils/jsonLd";
 import { getAllSeries, getSeriesSlug } from "../../utils/seriesUtils";
 
 const page_info = {
@@ -58,6 +58,14 @@ const pageSchemaEntities = [
                 }
             }))
         }
+    }),
+    buildBlogEntity({
+        section: "articles",
+        description: page_info.description,
+        posts: sortedArticles.map((article) => {
+            const url = new URL(article.data.path, Astro.site || "https://rishikc.com").toString();
+            return { id: `${url}#article`, type: article.data.jsonld_schema || "Article", headline: article.data.title, url };
+        }),
     }),
 ];
 ---

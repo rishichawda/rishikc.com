@@ -8,7 +8,7 @@ import TableOfContents from "../../components/article/table_of_contents.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
 import SeriesNavigation from "../../components/article/series_navigation.astro";
 import { getSeriesInfo, getSeriesSlug, getSeriesTitle } from "../../utils/seriesUtils";
-import { authorRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
+import { authorRef, blogRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
 import { LOCALE, TAG_TOPIC_IDS, entity } from "../../utils/topics";
 import { getImage } from "astro:assets";
 import { isPhotograph, previewImage, shareImage } from "../../utils/shareImage";
@@ -104,7 +104,7 @@ const articleEntity: Record<string, unknown> = {
 	copyrightYear: post.data.date.getUTCFullYear(),
 	isAccessibleForFree: true,
 	inLanguage: LOCALE,
-	isPartOf: seriesRef ? [websiteRef, seriesRef] : websiteRef,
+	isPartOf: seriesRef ? [websiteRef, blogRef("articles"), seriesRef] : [websiteRef, blogRef("articles")],
 	...(seriesRef ? { position: post.data.series!.currentPart } : {}),
 	mainEntityOfPage: { "@id": articleUrl },
 	keywords: post.data.tags,

@@ -419,6 +419,21 @@ for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.kno
   if (!llms.includes(topic.name)) fail('/llms.txt', `lacks the topic ${topic.name}`);
 }
 
+// ── Blog: each section's index lists its posts, and each post says it is part of the section ──
+for (const [path, section] of [['/articles/', 'articles'], ['/bits/', 'bits']]) {
+  const blog = pageByPath.get(path)?.nodes.find((n) => typesOf(n).includes('Blog'));
+  if (!blog) { fail(path, 'no Blog node'); continue; }
+  const posts = pages.filter((p) => p.path.startsWith(path) && p.path !== path && !p.path.startsWith('/articles/series/'));
+  const postIds = new Set(posts.flatMap((p) => p.nodes.filter((n) => /#article$/.test(n['@id'] ?? '')).map((n) => n['@id'])));
+  const listed = new Set((blog.blogPost ?? []).map((ref) => ref['@id']));
+  for (const id of postIds) if (!listed.has(id)) fail(path, `blogPost lacks ${id}`);
+  for (const id of listed) if (!postIds.has(id)) fail(path, `blogPost lists ${id}, which no page has`);
+  for (const post of posts) {
+    const partOf = [post.nodes.find((n) => /#article$/.test(n['@id'] ?? ''))?.isPartOf ?? []].flat().map((ref) => ref['@id']);
+    if (!partOf.includes(blog['@id'])) fail(post.path, `isPartOf lacks ${blog['@id']}`);
+  }
+}
+
 // ── Mentions: terms the text uses often, apart from the topics the article is about ──
 let pagesWithMentions = 0;
 for (const page of pages) {
