@@ -1,6 +1,6 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
-import { previewResponse } from "../../utils/preview";
+import { previewResponse } from "../../utils/shareImage";
 
 export const getStaticPaths = (async () => {
   const galleries = await getCollection("gallery");

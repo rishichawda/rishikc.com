@@ -1,6 +1,6 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
-import { isPhotograph, previewResponse } from "../../../utils/preview";
+import { isPhotograph, previewResponse } from "../../../utils/shareImage";
 
 // Only articles whose hero image is a gallery photograph need a preview; other heroes are crawlable.
 export const getStaticPaths = (async () => {

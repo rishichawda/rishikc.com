@@ -22,7 +22,7 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 const seo = {
 	title: title || "Rishi Kumar Chawda",
 	description: description || "Personal portfolio and blog by Rishi Kumar Chawda.",
-	image: image || "",
+	image,
 	type: type || "WebSite",
 	keywords: keywords || "",
 	datePublished,
@@ -34,7 +34,7 @@ const seo = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-US">
 	<head>
 		<SEO page_info={seo} pageSchemaEntities={pageSchemaEntities} />
 		<!-- Preload LCP-critical fonts: Red Hat Display 700 (hero heading = LCP element)

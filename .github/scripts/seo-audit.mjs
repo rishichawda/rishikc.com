@@ -253,6 +253,25 @@ for (const page of pages) {
   }
 }
 
+// ── Head basics: language, viewport, robots and the declared share image facts ──
+const MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', avif: 'image/avif', gif: 'image/gif' };
+for (const page of pages) {
+  if (!/<html[^>]*\slang="?en-US"?/i.test(page.html)) fail(page.path, '<html lang> is not en-US');
+  if (!/initial-scale=1/.test(page.meta('viewport') ?? '')) fail(page.path, 'viewport lacks initial-scale=1');
+  const robots = page.meta('robots') ?? '';
+  if (!robots.includes('noindex') && !robots.includes('max-image-preview:large')) {
+    fail(page.path, 'indexable page lacks max-image-preview:large in the robots meta');
+  }
+  if (page.ogSize) {
+    const declared = `${page.meta('og:image:width')}x${page.meta('og:image:height')}`;
+    if (declared !== `${page.ogSize.width}x${page.ogSize.height}`) {
+      fail(page.path, `og:image declares ${declared}, file is ${page.ogSize.width}x${page.ogSize.height}`);
+    }
+    const ext = page.meta('og:image').split('.').at(-1);
+    if (page.meta('og:image:type') !== MIME[ext]) fail(page.path, `og:image:type is ${page.meta('og:image:type')}, file is ${ext}`);
+  }
+}
+
 // ── Wikidata ──
 for (const id of wikidataIds) {
   if (!expected[id]) fail('wikidata', `${id} is not in src/utils/wikidata.json`);

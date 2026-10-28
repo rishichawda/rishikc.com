@@ -1,6 +1,7 @@
 ---
 import favicon from "../../content/assets/logo/logo.png";
 import { getCollection } from "astro:content";
+import { shareImage as logoShareImage, type ShareImage } from "../utils/shareImage";
 import {
   buildGraphForPage,
   buildWebPageEntity,
@@ -26,19 +27,18 @@ const canonicalURL = new URL(
   Astro.site || "https://rishikc.com",
 );
 
-// Resolve the share image to an absolute URL and its metadata; fall back to the site logo.
-// `image` is a URL string, or { src, width, height, type, alt } when the caller knows the file.
+// The share image: the page's own, else the site logo. Both carry their real size and type.
+const shareImage: ShareImage = image?.src ? image : { ...logoShareImage(favicon), alt: title };
+const resolvedImage = shareImage.src.startsWith("http") ? shareImage.src : new URL(shareImage.src, siteOrigin).toString();
 const defaultOgImage = new URL(favicon.src, siteOrigin).toString();
-const shareImage = typeof image === "string" ? { src: image } : (image ?? { src: "" });
-const resolvedImage = shareImage.src
-  ? (shareImage.src.startsWith("http") ? shareImage.src : new URL(shareImage.src, siteOrigin).toString())
-  : defaultOgImage;
-const imageWidth = shareImage.width ?? 1200;
-const imageHeight = shareImage.height ?? 630;
 const imageAlt = shareImage.alt ?? title;
 
 // One robots meta for the page; directives from the caller (for example noimageindex) join it.
-const robotsDirectives = [...(noindex ? ["noindex", "nofollow"] : []), ...(extraRobots ?? [])];
+// Indexable pages allow large image previews (Discover) and unlimited snippets.
+const robotsDirectives = [
+  ...(noindex ? ["noindex", "nofollow"] : ["index", "follow", "max-image-preview:large", "max-snippet:-1"]),
+  ...(extraRobots ?? []),
+];
 
 const profileEntry = await getCollection("profile");
 const raw = profileEntry[0].data as any;
@@ -75,7 +75,10 @@ const ogType = type === "article" ? "article" : "website";
 
 <meta charset="UTF-8" />
 <title>{title}</title>
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Browser UI colour; the values are --color-bg in src/styles/global.css -->
+<meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
 <meta name="author" content={profile.name} />
 {ogType === "article" ? <link rel="author" href="/about/" /> : null}
 <link rel="icon" type="image/png" href={favicon.src} />
@@ -93,8 +96,8 @@ const ogType = type === "article" ? "article" : "website";
 <meta property="og:description" content={description} />
 <meta property="og:image" content={resolvedImage} />
 <meta property="og:image:alt" content={imageAlt} />
-<meta property="og:image:width" content={imageWidth} />
-<meta property="og:image:height" content={imageHeight} />
+<meta property="og:image:width" content={shareImage.width} />
+<meta property="og:image:height" content={shareImage.height} />
 {shareImage.type ? <meta property="og:image:type" content={shareImage.type} /> : null}
 <meta property="og:url" content={canonicalURL.toString()} />
 <meta property="og:type" content={ogType} />
