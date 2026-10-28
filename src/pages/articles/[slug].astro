@@ -82,6 +82,12 @@ const topics = post.data.tags
 	.filter((id, index, ids) => id && ids.indexOf(id) === index)
 	.map((id) => entity(id));
 
+// Terms the text uses often (the remark plugin counts them), apart from the topics it is about.
+const aboutIds = new Set(post.data.tags.map((tag) => TAG_TOPIC_IDS[tag.toLowerCase()]));
+const mentioned = ((remarkPluginFrontmatter?.mentions ?? []) as string[])
+	.filter((id) => !aboutIds.has(id))
+	.map((id) => entity(id));
+
 const articleEntity: Record<string, unknown> = {
 	"@type": post.data.jsonld_schema || "Article",
 	"@id": `${articleUrl}#article`,
@@ -103,6 +109,7 @@ const articleEntity: Record<string, unknown> = {
 	mainEntityOfPage: { "@id": articleUrl },
 	keywords: post.data.tags,
 	...(topics.length ? { about: topics } : {}),
+	...(mentioned.length ? { mentions: mentioned } : {}),
 	...(post.data.category ? { articleSection: post.data.category } : {}),
 	...(remarkPluginFrontmatter?.wordCount ? {
 		wordCount: remarkPluginFrontmatter.wordCount,

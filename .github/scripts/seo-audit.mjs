@@ -417,6 +417,21 @@ for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.kno
   if (!llms.includes(topic.name)) fail('/llms.txt', `lacks the topic ${topic.name}`);
 }
 
+// ── Mentions: terms the text uses often, apart from the topics the article is about ──
+let pagesWithMentions = 0;
+for (const page of pages) {
+  for (const node of page.nodes.filter((n) => typesOf(n).some((t) => ['Article', 'BlogPosting', 'TechArticle'].includes(t)))) {
+    const mentions = node.mentions ?? [];
+    if (mentions.length) pagesWithMentions += 1;
+    if (mentions.length > 8) fail(page.path, 'more than 8 mentions');
+    const aboutNames = new Set((node.about ?? []).map((t) => t.sameAs));
+    for (const mention of mentions) {
+      if (aboutNames.has(mention.sameAs)) fail(page.path, `${mention.name} is in both about and mentions`);
+    }
+  }
+}
+if (pagesWithMentions === 0) fail('mentions', 'no article or bit has mentions');
+
 // ── No page shares the logo; generated cards are 1200x630 PNGs ──
 for (const page of pages) {
   const og = page.meta('og:image') ?? '';

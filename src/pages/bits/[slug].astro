@@ -7,7 +7,7 @@ import ExternalLink from "../../components/article/ExternalLink.astro";
 import { authorRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
 import { isPhotograph, shareImage } from "../../utils/shareImage";
 import { bitCardImage } from "../../utils/cards";
-import { LOCALE } from "../../utils/topics";
+import { LOCALE, entity } from "../../utils/topics";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import "remark-notes-plugin/styles.css";
 
@@ -53,6 +53,9 @@ const hero = bit.data.hero_image;
 const share = hero && !isPhotograph(hero) ? shareImage(hero, bit.data.title) : bitCardImage(bit.id, bit.data.title);
 const isoDate = bit.data.date.toISOString();
 
+// Terms the text uses often; the remark plugin counts them.
+const mentioned = ((remarkPluginFrontmatter?.mentions ?? []) as string[]).map((id) => entity(id));
+
 const bitEntity: Record<string, unknown> = {
     "@type": "BlogPosting",
     "@id": `${pageUrl}#article`,
@@ -71,6 +74,7 @@ const bitEntity: Record<string, unknown> = {
     isPartOf: websiteRef,
     mainEntityOfPage: { "@id": pageUrl },
     ...(bit.data.tags?.length ? { keywords: bit.data.tags } : {}),
+    ...(mentioned.length ? { mentions: mentioned } : {}),
     ...(remarkPluginFrontmatter?.wordCount ? {
         wordCount: remarkPluginFrontmatter.wordCount,
         timeRequired: `PT${remarkPluginFrontmatter.readingMinutes}M`,
