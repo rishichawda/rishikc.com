@@ -399,6 +399,7 @@ for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.kno
 for (const page of pages) {
   const og = page.meta('og:image') ?? '';
   if (/\/_astro\/logo\./.test(og)) fail(page.path, 'share image is the logo');
+  if (og.includes('/og/') && !(page.meta('og:image:alt') ?? '').includes('. ')) fail(page.path, 'card og:image:alt does not describe what the card shows');
   if (og.includes('/og/') && page.meta('og:image:type') !== 'image/png') fail(page.path, 'card og:image:type is not image/png');
 }
 const seriesPages = pages.filter((p) => p.path.startsWith('/articles/series/') && p.path !== '/articles/series/');
@@ -411,7 +412,6 @@ for (const page of pages) {
   for (const m of page.html.matchAll(/<time[^>]*datetime="?([^">\s]+)"?[^>]*>([^<]+)<\/time>/g)) {
     const visible = new Date(`${m[2].trim()} UTC`);
     const stamp = new Date(m[1].length === 10 ? `${m[1]}T00:00:00Z` : m[1]);
-  if (og.includes('/og/') && !(page.meta('og:image:alt') ?? '').includes('. ')) fail(page.path, 'card og:image:alt does not describe what the card shows');
     if (!Number.isNaN(visible.getTime()) && !Number.isNaN(stamp.getTime()) && visible.toISOString().slice(0, 10) !== stamp.toISOString().slice(0, 10)) {
       fail(page.path, `<time datetime="${m[1]}"> shows "${m[2].trim()}"`);
     }
@@ -469,17 +469,22 @@ for (const id of wikidataIds) {
 let wikidataError = '';
 if (!offline && wikidataIds.size > 0) {
   const ids = [...wikidataIds].filter((id) => expected[id]);
-  const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${ids.join('|')}&props=labels&languages=en&format=json`;
   try {
-    const response = await fetch(url, {
-      headers: { 'User-Agent': 'rishikc.com-seo-audit/1.0 (https://rishikc.com)' },
-      signal: AbortSignal.timeout(30_000),
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const { entities } = await response.json();
-    for (const id of ids) {
-      const label = entities?.[id]?.labels?.en?.value;
-      if (label !== expected[id].label) fail('wikidata', `${id} label is "${label}", expected "${expected[id].label}"`);
+    // wbgetentities takes at most 50 IDs per request.
+    for (let start = 0; start < ids.length; start += 50) {
+      const batch = ids.slice(start, start + 50);
+      const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${batch.join('|')}&props=labels&languages=en&format=json`;
+      const response = await fetch(url, {
+        headers: { 'User-Agent': 'rishikc.com-seo-audit/1.0 (https://rishikc.com)' },
+        signal: AbortSignal.timeout(30_000),
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const { entities, error } = await response.json();
+      if (!entities) throw new Error(`no entities in the answer${error ? `: ${error.info}` : ''}`);
+      for (const id of batch) {
+        const label = entities[id]?.labels?.en?.value;
+        if (label !== expected[id].label) fail('wikidata', `${id} label is "${label}", expected "${expected[id].label}"`);
+      }
     }
   } catch (error) {
     wikidataError = `Wikidata check failed to run: ${error.message}. Use --offline to skip it.`;
