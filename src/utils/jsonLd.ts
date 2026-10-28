@@ -204,9 +204,23 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
     });
   }
 
-  // hasCredential
-  if (profile.certifications?.length) {
-    person.hasCredential = profile.certifications.map((cert) => {
+  // hasCredential: the degrees, then the certifications
+  const degrees = (profile.education ?? []).map((edu) => {
+    const school = SCHOOLS[edu.university || edu.institution] ?? {};
+    return {
+      "@type": "EducationalOccupationalCredential",
+      credentialCategory: "degree",
+      name: edu.degree,
+      recognizedBy: {
+        "@type": "EducationalOrganization",
+        name: edu.university || edu.institution,
+        ...(school.url ? { url: school.url } : {}),
+        ...(school.wikidata ? { sameAs: wikidataUrl(school.wikidata) } : {}),
+      },
+    };
+  });
+  if (degrees.length || profile.certifications?.length) {
+    const certifications = (profile.certifications ?? []).map((cert) => {
       const body = CREDENTIAL_BODIES[cert.institution] ?? {};
       const subject = CREDENTIAL_SUBJECT_IDS[cert.title];
       return {
@@ -222,6 +236,7 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
         ...(subject ? { about: entity(subject) } : {}),
       };
     });
+    person.hasCredential = [...degrees, ...certifications];
   }
 
   return person;

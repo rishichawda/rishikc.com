@@ -394,6 +394,8 @@ for (const role of roles) {
   if (role.hasOccupation?.occupationalCategory?.codeValue !== '15-1252.00') fail('/about/', `role "${role.name}" lacks the O*NET occupation code`);
 }
 if (roles.filter((role) => !role.endDate).length !== positions.filter((p) => !p.end_date).length) fail('/about/', 'open roles differ from profile.json');
+const degrees = [aboutPerson?.hasCredential ?? []].flat().filter((c) => c.credentialCategory === 'degree');
+if (degrees.length !== profileFile.education.length) fail('/about/', `${degrees.length} degree credentials; profile.json has ${profileFile.education.length} education entries`);
 for (const credential of [aboutPerson?.hasCredential ?? []].flat()) {
   if (!credential.recognizedBy?.url) fail('/about/', `credential "${credential.name}" has no recognizedBy url`);
 }
