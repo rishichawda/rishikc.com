@@ -315,9 +315,15 @@ for (const page of pages) {
     if (!article.copyrightYear) fail(page.path, 'article lacks copyrightYear');
     const parts = [article.isPartOf].flat().filter(Boolean);
     if (!parts.some((p) => p['@id'] === `${SITE}/#website`)) fail(page.path, 'article is not part of the WebSite');
+    if (page.meta('og:type') !== 'article') fail(page.path, 'article page lacks og:type article');
+    if (!page.meta('article:published_time')) fail(page.path, 'article page lacks article:published_time');
+    if (!page.links.some((l) => l.rel === 'author')) fail(page.path, 'article page lacks <link rel="author">');
+    if (!page.html.includes('>Rishi Kumar Chawda</a>')) fail(page.path, 'article page shows no visible byline linking the author');
     // Hero images that are gallery photographs get the preview as their image instead of a set.
     const images = [article.image].flat().filter(Boolean);
     if (page.meta('og:image')?.includes('/previews/')) continue;
+    // A bit may have no hero image of its own.
+    if (page.path.startsWith('/bits/') && images.length === 0) continue;
     if (images.length === 0) fail(page.path, 'article lists no image');
     // A hero too small for every crop lists fewer, in the order 16x9, 4x3, 1x1.
     for (const [index, url] of images.entries()) {

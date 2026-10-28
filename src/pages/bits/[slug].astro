@@ -4,7 +4,8 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/base_layout.astro";
 import Prose from "../../components/article/prose.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
-import { authorRef, buildWebPageEntity } from "../../utils/jsonLd";
+import { authorRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
+import { isPhotograph, shareImage } from "../../utils/shareImage";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import "remark-notes-plugin/styles.css";
 
@@ -22,7 +23,8 @@ interface Props {
 }
 
 const { bit, allBits } = Astro.props as Props;
-const { Content } = await render(bit);
+const { Content, remarkPluginFrontmatter } = await render(bit);
+const profile = (await getCollection("profile"))[0].data as { name: string };
 
 const sortedBits = allBits.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const currentIndex = sortedBits.findIndex((b) => b.id === bit.id);
@@ -42,20 +44,44 @@ const pageUrl = new URL(
     Astro.site || "https://rishikc.com",
 ).toString();
 
+// A hero that is a gallery photograph is blocked by robots.txt, so it is not used as the share image.
+const hero = bit.data.hero_image;
+const share = hero && !isPhotograph(hero) ? shareImage(hero, bit.data.title) : undefined;
+const isoDate = bit.data.date.toISOString();
+
+const bitEntity: Record<string, unknown> = {
+    "@type": "BlogPosting",
+    "@id": `${pageUrl}#article`,
+    url: pageUrl,
+    headline: bit.data.title,
+    description: bit.data.description,
+    ...(share ? { image: new URL(share.src, Astro.site || "https://rishikc.com").toString() } : {}),
+    datePublished: isoDate,
+    dateModified: isoDate,
+    author: authorRef,
+    publisher: authorRef,
+    copyrightHolder: authorRef,
+    copyrightYear: bit.data.date.getUTCFullYear(),
+    isAccessibleForFree: true,
+    inLanguage: "en-US",
+    isPartOf: websiteRef,
+    mainEntityOfPage: { "@id": pageUrl },
+    ...(bit.data.tags?.length ? { keywords: bit.data.tags } : {}),
+    ...(remarkPluginFrontmatter?.wordCount ? {
+        wordCount: remarkPluginFrontmatter.wordCount,
+        timeRequired: `PT${remarkPluginFrontmatter.readingMinutes}M`,
+    } : {}),
+};
+
 const pageSchemaEntities = [
     buildWebPageEntity({
         url: pageUrl,
         name: bit.data.title,
         description: bit.data.description,
-        mainEntity: {
-            "@type": "BlogPosting",
-            headline: bit.data.title,
-            description: bit.data.description,
-            datePublished: bit.data.date.toISOString(),
-            url: pageUrl,
-            author: authorRef,
-        },
+        dateModified: isoDate,
+        mainEntity: { "@id": `${pageUrl}#article` },
     }),
+    bitEntity,
 ];
 ---
 
@@ -63,7 +89,12 @@ const pageSchemaEntities = [
     page_info={{
         title: bit.data.title,
         description: bit.data.description,
+        image: share,
         keywords: bit.data.tags?.join(', ') || bit.data.title,
+        type: "article",
+        datePublished: isoDate,
+        dateModified: isoDate,
+        tags: bit.data.tags,
     }}
     activeRoute="/bits/"
     pageSchemaEntities={pageSchemaEntities}
@@ -79,6 +110,8 @@ const pageSchemaEntities = [
             <header class="bit-header">
                 <h1 class="bit-title">{bit.data.title}</h1>
                 <div class="bit-meta">
+                    <a href="/about/" class="bit-author">{profile.name}</a>
+                    <span aria-hidden="true"> · </span>
                     <time datetime={bit.data.date.toISOString()}>{formatDate(bit.data.date)}</time>
                 </div>
                 {bit.data.tags && bit.data.tags.length > 0 && (
@@ -142,6 +175,8 @@ const pageSchemaEntities = [
         color: var(--color-text-tertiary);
         margin-bottom: var(--space-4);
     }
+    .bit-author { color: inherit; text-decoration: none; }
+    .bit-author:hover { text-decoration: underline; }
     .bit-tags {
         display: flex;
         gap: var(--space-2);
