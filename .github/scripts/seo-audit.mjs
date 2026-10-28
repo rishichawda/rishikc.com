@@ -302,6 +302,45 @@ for (const page of pages) {
   if (JSON.stringify(page.nodes).includes(BRAND)) fail(page.path, 'JSON-LD name, headline or breadcrumb carries the brand suffix');
 }
 
+// ── Articles: the fields Google and answer engines read ──
+const articleNodes = (page) => page.nodes.filter((n) => typesOf(n).some((t) => /Article|BlogPosting/.test(t)) && /#article$/.test(n['@id'] ?? ''));
+const pageByPath = new Map(pages.map((p) => [p.path, p]));
+const RATIOS = [16 / 9, 4 / 3, 1];
+for (const page of pages) {
+  for (const article of articleNodes(page)) {
+    if (!(article.wordCount > 0)) fail(page.path, 'article has no wordCount');
+    if (!/^PT\d+M$/.test(article.timeRequired ?? '')) fail(page.path, 'article has no timeRequired');
+    if (article.inLanguage !== 'en-US') fail(page.path, 'article inLanguage is not en-US');
+    if (article.isAccessibleForFree !== true) fail(page.path, 'article lacks isAccessibleForFree');
+    if (!article.copyrightYear) fail(page.path, 'article lacks copyrightYear');
+    const parts = [article.isPartOf].flat().filter(Boolean);
+    if (!parts.some((p) => p['@id'] === `${SITE}/#website`)) fail(page.path, 'article is not part of the WebSite');
+    // Hero images that are gallery photographs get the preview as their image instead of a set.
+    const images = [article.image].flat().filter(Boolean);
+    if (page.meta('og:image')?.includes('/previews/')) continue;
+    if (images.length === 0) fail(page.path, 'article lists no image');
+    // A hero too small for every crop lists fewer, in the order 16x9, 4x3, 1x1.
+    for (const [index, url] of images.entries()) {
+      const file = distFile(url);
+      if (!file || !(await exists(file))) { fail(page.path, `article image file missing ${url}`); continue; }
+      const size = imageSize(await readFile(file));
+      if (!size || size.width * size.height < 50_000) fail(page.path, `article image under 50K pixels ${url}`);
+      else if (images.length === 3 && Math.abs(size.width / size.height - RATIOS[index]) > 0.02) fail(page.path, `article image ${index} is not ${['16x9', '4x3', '1x1'][index]}: ${size.width}x${size.height}`);
+      else if (images.length < 3 && !RATIOS.some((r) => Math.abs(size.width / size.height - r) <= 0.02)) fail(page.path, `article image is not 16x9, 4x3 or 1x1: ${size.width}x${size.height}`);
+    }
+  }
+}
+for (const page of pages.filter((p) => p.path.startsWith('/articles/series/') && p.path !== '/articles/series/')) {
+  const series = page.nodes.find((n) => typesOf(n).includes('CollectionPage'))?.mainEntity;
+  for (const part of series?.hasPart ?? []) {
+    const articlePage = pageByPath.get(new URL(part.url).pathname);
+    const article = articlePage && articleNodes(articlePage)[0];
+    const link = [article?.isPartOf].flat().find((p) => p?.['@type'] === 'CreativeWorkSeries');
+    if (!link || link.url !== `${SITE}${page.path}`) fail(articlePage?.path ?? part.url, `article is not linked to its series ${page.path}`);
+    else if (!Number.isInteger(article.position)) fail(articlePage.path, 'article in a series lacks position');
+  }
+}
+
 // ── Wikidata ──
 for (const id of wikidataIds) {
   if (!expected[id]) fail('wikidata', `${id} is not in src/utils/wikidata.json`);

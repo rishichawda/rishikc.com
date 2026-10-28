@@ -61,6 +61,8 @@ const pageSchemaEntities = [
         description,
         mainEntity: {
             "@type": "CreativeWorkSeries",
+            "@id": `${pageUrl}#series`,
+            url: pageUrl,
             name: series.seriesTitle,
             hasPart: series.articles.map((article) => ({
                 "@type": article.data.jsonld_schema || "Article",

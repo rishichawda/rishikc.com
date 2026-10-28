@@ -72,3 +72,19 @@ export const PLACE_IDS: Record<string, WikidataId> = {
   Bengaluru: "Q1355",
   Karnataka: "Q1185",
 };
+
+/** Article tags (lower case, as written in the frontmatter) mapped to the topic they are about. */
+export const TAG_TOPIC_IDS: Record<string, WikidataId> = {
+  "web development": "Q386275",
+  typescript: "Q978185",
+  react: "Q19399674",
+  javascript: "Q2005",
+  seo: "Q180711",
+  accessibility: "Q808932",
+  pwa: "Q23679990",
+  "react-native": "Q55774523",
+  performance: "Q7978612",
+  photography: "Q11633",
+  "software-engineering": "Q80993",
+  "mobile applications": "Q2988038",
+};

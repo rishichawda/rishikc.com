@@ -7,8 +7,10 @@ import BaseLayout from "../../layouts/base_layout.astro";
 import TableOfContents from "../../components/article/table_of_contents.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
 import SeriesNavigation from "../../components/article/series_navigation.astro";
-import { getSeriesInfo, getSeriesTitle } from "../../utils/seriesUtils";
-import { authorRef, buildWebPageEntity } from "../../utils/jsonLd";
+import { getSeriesInfo, getSeriesSlug, getSeriesTitle } from "../../utils/seriesUtils";
+import { authorRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
+import { TAG_TOPIC_IDS, entity } from "../../utils/topics";
+import { getImage } from "astro:assets";
 import { isPhotograph, previewImage, shareImage } from "../../utils/shareImage";
 import "remark-notes-plugin/styles.css";
 
@@ -50,21 +52,61 @@ const imageUrl = share ? new URL(share.src, Astro.site || "https://rishikc.com")
 const isoDate = post.data.date ? post.data.date.toISOString() : "";
 const isoDateModified = post.data.dateModified ? new Date(post.data.dateModified).toISOString() : isoDate;
 
+const siteUrl = Astro.site || "https://rishikc.com";
+const absolute = (path: string) => new URL(path, siteUrl).toString();
+
+// Google recommends the same image at 16x9, 4x3 and 1x1 (each at least 50K pixels). A crop never
+// upscales: it takes the largest size the hero allows, up to 1200px wide. A hero that is a gallery
+// photograph gets none, because its derivatives sit under /_astro/photos/, which robots.txt blocks.
+const imageSet = hero && !isPhotograph(hero)
+	? (await Promise.all([16 / 9, 4 / 3, 1].map(async (ratio) => {
+		const width = Math.min(1200, hero.width, Math.floor(hero.height * ratio));
+		const height = Math.round(width / ratio);
+		// A small hero (a wide logo, say) cannot make every crop; skip those under 50K pixels.
+		if (width * height < 50_000) return null;
+		const crop = await getImage({ src: hero, width, height, fit: "cover", format: "jpg" });
+		return absolute(crop.src);
+	}))).filter((url): url is string => url !== null)
+	: [];
+
+const seriesRef = post.data.series
+	? {
+		"@type": "CreativeWorkSeries",
+		"@id": `${absolute(`/articles/series/${getSeriesSlug(post.data.series.title)}/`)}#series`,
+		name: post.data.series.title,
+		url: absolute(`/articles/series/${getSeriesSlug(post.data.series.title)}/`),
+	}
+	: null;
+const topics = post.data.tags
+	.map((tag) => TAG_TOPIC_IDS[tag.toLowerCase()])
+	.filter((id, index, ids) => id && ids.indexOf(id) === index)
+	.map((id) => entity(id));
+
 const articleEntity: Record<string, unknown> = {
 	"@type": post.data.jsonld_schema || "Article",
 	"@id": `${articleUrl}#article`,
+	url: articleUrl,
 	headline: post.data.title,
 	description: post.data.description,
-	image: imageUrl,
+	image: imageSet.length ? imageSet : imageUrl,
+	...(imageSet.length ? { thumbnailUrl: imageSet.at(-1) } : {}),
 	datePublished: isoDate,
 	dateModified: isoDateModified,
 	author: authorRef,
 	publisher: authorRef,
+	copyrightHolder: authorRef,
+	copyrightYear: post.data.date.getUTCFullYear(),
+	isAccessibleForFree: true,
+	inLanguage: "en-US",
+	isPartOf: seriesRef ? [websiteRef, seriesRef] : websiteRef,
+	...(seriesRef ? { position: post.data.series!.currentPart } : {}),
 	mainEntityOfPage: { "@id": articleUrl },
 	keywords: post.data.tags,
+	...(topics.length ? { about: topics } : {}),
 	...(post.data.category ? { articleSection: post.data.category } : {}),
-	...(remarkPluginFrontmatter?.minutesRead ? {
-		wordCount: Math.round(parseInt(remarkPluginFrontmatter.minutesRead, 10) * 250),
+	...(remarkPluginFrontmatter?.wordCount ? {
+		wordCount: remarkPluginFrontmatter.wordCount,
+		timeRequired: `PT${remarkPluginFrontmatter.readingMinutes}M`,
 	} : {}),
 	speakable: {
 		"@type": "SpeakableSpecification",
