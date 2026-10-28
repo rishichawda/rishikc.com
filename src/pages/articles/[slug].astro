@@ -146,6 +146,7 @@ if (post.data.faq && post.data.faq.length > 0) {
 		image: share,
 		keywords: post.data.keywords,
 		type: "article",
+		section: post.data.category,
 		datePublished: post.data.date.toISOString(),
 		dateModified: post.data.dateModified ? new Date(post.data.dateModified).toISOString() : post.data.date.toISOString(),
 		tags: post.data.tags,

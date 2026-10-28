@@ -10,6 +10,7 @@ import expressiveCode from 'astro-expressive-code';
 import { h, s } from 'hastscript'
 
 import siteMetadata from './metadata';
+import { lastModified } from './src/utils/lastmod.mjs';
 import remarkToc from 'remark-toc';
 import rehypePresetMinify from 'rehype-preset-minify';
 
@@ -70,6 +71,8 @@ function imageFiles(dir) {
     return IMAGE_FILE.test(entry.name) ? [path] : [];
   });
 }
+
+const contentDates = lastModified();
 
 const photoHashes = new Map(imageFiles('content/gallery').map((file) => [sha256(readFileSync(file)), file]));
 for (const file of imageFiles('content').filter((f) => !f.startsWith(join('content', 'gallery') + '/'))) {
@@ -166,6 +169,11 @@ export default defineConfig({
     mdx(),
     sitemap({
       filter: (page) => !page.includes('/search/'),
+      // Only pages with a real date get a lastmod; changefreq and priority are left out on purpose.
+      serialize(item) {
+        const lastmod = contentDates.get(new URL(item.url).pathname);
+        return lastmod ? { ...item, lastmod } : item;
+      },
     }),
     partytown({
       config: {

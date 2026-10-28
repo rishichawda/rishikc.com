@@ -305,6 +305,7 @@ for (const page of pages) {
 // ── Articles: the fields Google and answer engines read ──
 const articleNodes = (page) => page.nodes.filter((n) => typesOf(n).some((t) => /Article|BlogPosting/.test(t)) && /#article$/.test(n['@id'] ?? ''));
 const pageByPath = new Map(pages.map((p) => [p.path, p]));
+const sitemapXml = (await Promise.all((await readdir(dist)).filter((f) => /^sitemap-\d+\.xml$/.test(f)).map((f) => readFile(join(dist, f), 'utf8')))).join('');
 const RATIOS = [16 / 9, 4 / 3, 1];
 for (const page of pages) {
   for (const article of articleNodes(page)) {
@@ -345,6 +346,30 @@ for (const page of pages.filter((p) => p.path.startsWith('/articles/series/') &&
     if (!link || link.url !== `${SITE}${page.path}`) fail(articlePage?.path ?? part.url, `article is not linked to its series ${page.path}`);
     else if (!Number.isInteger(article.position)) fail(articlePage.path, 'article in a series lacks position');
   }
+}
+
+// ── Remaining head items: section, profile, keywords, sitemap lastmod, RSS, llms.txt ──
+const sitemapEntries = new Map();
+for (const match of sitemapXml.matchAll(/<url>([\s\S]*?)<\/url>/g)) {
+  sitemapEntries.set(new URL(match[1].match(/<loc>(.*?)<\/loc>/)[1]).pathname, match[1].match(/<lastmod>(.*?)<\/lastmod>/)?.[1]);
+}
+for (const page of pages) {
+  if (page.meta('keywords') && page.meta('keywords').split(',').length > 8) fail(page.path, 'more than 8 meta keywords');
+  const category = articleNodes(page)[0]?.articleSection;
+  if (category && page.meta('article:section') !== category) fail(page.path, 'article:section is missing or differs from the category');
+  const dated = page.meta('article:modified_time') || page.meta('article:published_time');
+  if (dated && sitemapEntries.has(page.path) && !sitemapEntries.get(page.path)) fail(page.path, 'sitemap URL has no lastmod');
+}
+const about = pageByPath.get('/about/');
+if (about?.meta('og:type') !== 'profile') fail('/about/', 'og:type is not profile');
+for (const key of ['profile:first_name', 'profile:last_name', 'profile:username']) if (!about?.meta(key)) fail('/about/', `missing ${key}`);
+for (const path of ['/articles/', '/bits/']) if (!sitemapEntries.get(path)) fail(path, 'sitemap URL has no lastmod');
+if (sitemapXml.match(/<(changefreq|priority)>/)) fail('sitemap', 'has changefreq or priority');
+const rssXml = (await exists(join(dist, 'rss.xml'))) ? await readFile(join(dist, 'rss.xml'), 'utf8') : '';
+for (const needle of ['<dc:creator>', '<category>', '<language>']) if (!rssXml.includes(needle)) fail('/rss.xml', `lacks ${needle}`);
+const llms = (await exists(join(dist, 'llms.txt'))) ? await readFile(join(dist, 'llms.txt'), 'utf8') : '';
+for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.knowsAbout ?? []) {
+  if (!llms.includes(topic.name)) fail('/llms.txt', `lacks the topic ${topic.name}`);
 }
 
 // ── Photo rights: every ImageObject and ImageGallery states who owns it and where to ask ──
@@ -410,7 +435,6 @@ const wrongSize = pages.filter((p) => {
 });
 const photoFiles = [];
 for await (const file of walk(join(dist, '_astro'))) if (file.includes('/photos/')) photoFiles.push(file);
-const sitemapXml = (await Promise.all((await readdir(dist)).filter((f) => /^sitemap-\d+\.xml$/.test(f)).map((f) => readFile(join(dist, f), 'utf8')))).join('');
 const stripped = (s) => s.replace(SUFFIX, '');
 
 const metrics = {
