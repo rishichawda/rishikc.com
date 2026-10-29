@@ -87,8 +87,8 @@ const keywordList = [...new Set((keywords ?? "").split(",").map((k: string) => k
 <title>{brandSuffix ? `${title} | ${profile.name}` : title}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- Browser UI colour; the values are --color-bg in src/styles/global.css -->
-<meta name="theme-color" content={structuredData.head.themeColor.light} media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content={structuredData.head.themeColor.dark} media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content={structuredData.head.themeColor.light} media="(prefers-color-scheme: light)" data-theme-color="light" />
+<meta name="theme-color" content={structuredData.head.themeColor.dark} media="(prefers-color-scheme: dark)" data-theme-color="dark" />
 <meta name="author" content={profile.name} />
 {ogType === "article" ? <link rel="author" href="/about/" /> : null}
 <link rel="icon" href="/favicon.ico" sizes="48x48" />
