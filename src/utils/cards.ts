@@ -73,6 +73,30 @@ const text = (content: string, style: Record<string, string | number>) => ({
   props: { style: { display: "flex", ...style }, children: content },
 });
 
+/** A translucent strip with one line of white text, to lay over the bottom edge of a preview. */
+export async function renderCreditStrip(line: string, width: number, height: number): Promise<Uint8Array> {
+  const tree = {
+    type: "div",
+    props: {
+      style: {
+        width,
+        height,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0, 0, 0, 0.6)",
+        color: "#FFFFFF",
+        fontSize: Math.round(height * 0.5),
+        fontWeight: 500,
+        fontFamily: "Red Hat Display",
+      },
+      children: line,
+    },
+  };
+  const svg = await satori(tree as Parameters<typeof satori>[0], { width, height, fonts });
+  return new Resvg(svg).render().asPng();
+}
+
 /** Render a card to PNG bytes. */
 export async function renderCard(card: Card): Promise<Uint8Array> {
   const titleSize = card.title.length > 70 ? 54 : card.title.length > 40 ? 66 : 82;

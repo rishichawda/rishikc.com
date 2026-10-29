@@ -55,11 +55,14 @@ export const authorRef = {
  * reserved, which has no standard license URL, so `license` points at the page that states it and
  * `acquireLicensePage` at the page to ask on.
  */
+export const rightsNotice = (year?: number) =>
+  PHOTO_RIGHTS.notice.replace("{year}", String(year ?? "")).replace("{name}", AUTHOR_NAME).replace(/\s+/g, " ");
+
 export function photoRights(year?: number): Record<string, unknown> {
   return {
     creator: authorRef,
     creditText: AUTHOR_NAME,
-    copyrightNotice: PHOTO_RIGHTS.notice.replace("{year}", String(year ?? "")).replace("{name}", AUTHOR_NAME).replace(/\s+/g, " "),
+    copyrightNotice: rightsNotice(year),
     copyrightHolder: authorRef,
     ...(year ? { copyrightYear: year } : {}),
     license: `${SITE_URL}${PHOTO_RIGHTS.licensePath}`,

@@ -263,8 +263,17 @@ for (const page of pages) {
     });
   }
   const og = page.meta('og:image');
-  if (og?.includes('/previews/') && (page.ogSize?.width !== 1200 || page.ogSize?.height !== 630)) {
-    fail(page.path, 'preview image is not 1200x630');
+  if (og?.includes('/previews/') && (page.ogSize?.width !== 600 || page.ogSize?.height !== 315)) {
+    fail(page.path, 'preview image is not 600x315');
+  }
+}
+// A preview is a small, lossy crop: a large file means the size or quality setting was lost.
+const previewDir = join(dist, 'previews');
+if (await exists(previewDir)) {
+  for (const entry of await readdir(previewDir, { recursive: true })) {
+    if (!entry.endsWith('.jpg')) continue;
+    const { size } = await stat(join(previewDir, entry));
+    if (size > 60_000) fail(`/previews/${entry}`, `preview is ${Math.round(size / 1000)} KB; the limit is 60 KB`);
   }
 }
 
