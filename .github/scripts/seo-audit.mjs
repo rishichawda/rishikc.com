@@ -40,6 +40,15 @@ async function* walk(dir) {
 // One pass, so that the text "&quot;" (written &amp;quot; in the HTML) is not decoded a second time.
 const ENTITIES = { amp: '&', quot: '"', '#39': "'", lt: '<', gt: '>' };
 const decode = (text) => text.replace(/&(amp|quot|#39|lt|gt);/g, (_, name) => ENTITIES[name]);
+// Removes tags until none are left, so that "<scr<b>ipt>" does not turn into a tag after one pass.
+const stripTags = (html) => {
+  let text = html;
+  for (let before = ''; before !== text; ) {
+    before = text;
+    text = text.replace(/<[^>]+>/g, '');
+  }
+  return text;
+};
 
 function attributes(tag) {
   const attrs = {};
@@ -446,7 +455,7 @@ for (const needle of [profileFile.name, profileFile.summary, profileFile.locatio
 }
 if (!llms.includes(contentLicense.url)) fail('/llms.txt', `lacks the content license ${contentLicense.url}`);
 // ── License notice: every page's footer carries the notice for its kind of page ──
-const footerNotice = (page) => decode((page.html.match(/<p class="footer-license[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? '').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
+const footerNotice = (page) => decode(stripTags(page.html.match(/<p class="footer-license[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? '')).replace(/\s+/g, ' ').trim();
 const footerHtml = (page) => page.html.match(/<p class="footer-license[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? '';
 const licenseContextOf = (path) =>
   /^\/articles\/(?!series\/)[^/]+\/$/.test(path) ? 'article'
@@ -475,7 +484,7 @@ for (const page of pages) {
 for (const path of pages.map((p) => p.path).filter((path) => /^\/(articles|bits)\/[^/]+\/$/.test(path) && !path.startsWith('/articles/series/'))) {
   const page = pageByPath.get(path);
   // A header image credited to anyone other than the author is not covered.
-  const credit = decode((page.html.match(/class="hero-credit[^>]*>([\s\S]*?)<\/span>/)?.[1] ?? '').replace(/<[^>]+>/g, '')).replace(/^\s*Image credits:/, '').trim();
+  const credit = decode(stripTags(page.html.match(/class="hero-credit[^>]*>([\s\S]*?)<\/span>/)?.[1] ?? '')).replace(/^\s*Image credits:/, '').trim();
   const credited = path.startsWith('/articles/') && credit !== '' && credit.toLowerCase() !== profileFile.name.toLowerCase();
   if (footerNotice(page).includes(contentLicense.heroCredited) !== credited) fail(path, credited ? 'credited header image is not marked as not covered' : 'footer says the header image is not covered, but it has no credit to someone else');
 }
