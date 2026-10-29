@@ -50,7 +50,6 @@ const page_info = {
 };
 
 const siteUrl = new URL(Astro.url.pathname, Astro.site || "https://rishikc.com").toString();
-const profileImageUrl = `${siteUrl.replace(/\/$/, "")}/${profileImage.src}`;
 
 const firstJobStartDate = new Date("2018-07-01");
 const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear();
