@@ -42,8 +42,14 @@ const WIDTH = 600;
 const HEIGHT = 315;
 const STRIP_HEIGHT = 28;
 
-/** True for an image the build moved to /_astro/photos/, which robots.txt blocks. */
-export const isPhotograph = (image?: ImageMetadata) => Boolean(image?.src.includes("/_astro/photos/"));
+/**
+ * True for an image from the gallery folder. The build moves these to /_astro/photos/, which robots.txt
+ * blocks; the source folder is checked instead of that path so that `astro dev` agrees with the build.
+ * Astro defines the source path on every imported image, in the build and in dev; it is not an
+ * enumerable property.
+ */
+export const isPhotograph = (image?: ImageMetadata) =>
+  Boolean((image as (ImageMetadata & { fsPath?: string }) | undefined)?.fsPath?.includes("/content/gallery/"));
 
 /** The SEO image value for a preview file served at `path`. */
 export const previewImage = (path: string, alt?: string): ShareImage => ({
