@@ -7,7 +7,15 @@ import type { Section } from '../utils/siteData';
 
 export async function GET(context: APIContext) {
   const site = context.site!.toString().replace(/\/$/, '');
-  const [projects, contributions] = (await getCollection('projects')).map((entry) => entry.data as unknown[]);
+  // The projects collection has one entry per top-level key of projects.json; look the lists up by id.
+  const projectEntries = await getCollection('projects');
+  const listOf = (id: string) => {
+    const entry = projectEntries.find((e) => e.id === id);
+    if (!Array.isArray(entry?.data)) throw new Error(`projects.json has no list named ${id}`);
+    return entry.data as unknown[];
+  };
+  const projects = listOf('data');
+  const contributions = listOf('open_source_contributions');
 
   // The text in content/about/llms.json uses these placeholders.
   const fill = (text: string) =>
