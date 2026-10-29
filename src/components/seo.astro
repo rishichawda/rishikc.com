@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
+import portrait from "../../content/assets/me-profesh.jpg";
 import type { ShareImage } from "../utils/shareImage";
 import { cardImage } from "../utils/cards";
 import { LOCALE } from "../utils/topics";
@@ -32,8 +34,8 @@ const canonicalURL = new URL(
 // The share image: the page's own, else a generated card (src/pages/og). Both carry their real size and type.
 const shareImage: ShareImage = image?.src ? image : cardImage(Astro.url.pathname);
 const resolvedImage = shareImage.src.startsWith("http") ? shareImage.src : new URL(shareImage.src, siteOrigin).toString();
-// The square icon stands for the author wherever the markup asks for an image of the Person.
-const profileImage = new URL("/icons/512.png", siteOrigin).toString();
+// The square headshot (the one on the career page) stands for the author wherever the markup asks for an image of the Person.
+const profileImage = new URL((await getImage({ src: portrait, width: 800, height: 800, format: "jpg" })).src, siteOrigin).toString();
 const imageAlt = shareImage.alt ?? title;
 
 // One robots meta for the page; directives from the caller (for example noimageindex) join it.
