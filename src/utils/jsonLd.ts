@@ -86,6 +86,24 @@ export interface ProfileData {
   languages?: { name: string; level: string }[];
 }
 
+/**
+ * The school an education entry names: the institute when there is one (it grants the degree), with
+ * its university as the parent; otherwise the university.
+ */
+function educationalOrganization(edu: Education): Record<string, unknown> {
+  const organization = (name: string) => {
+    const school = SCHOOLS[name] ?? {};
+    return {
+      "@type": "EducationalOrganization",
+      name,
+      ...(school.url ? { url: school.url } : {}),
+      ...(school.wikidata ? { sameAs: wikidataUrl(school.wikidata) } : {}),
+    };
+  };
+  if (!edu.university || !edu.institution) return organization(edu.university || edu.institution);
+  return { ...organization(edu.institution), parentOrganization: organization(edu.university) };
+}
+
 /** "12-2025", as profile.json writes a month, to the ISO 8601 "2025-12". */
 const isoMonth = (month: string) => month.split("-").reverse().join("-");
 
@@ -166,27 +184,9 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
     };
   }
 
-  // alumniOf
+  // alumniOf: the institute the degree was taken at, a part of its university
   if (profile.education?.length) {
-    person.alumniOf = profile.education.map((edu) => {
-      const name = edu.university || edu.institution;
-      const school = SCHOOLS[name] ?? {};
-      // The institute the degree was taken at, a part of the university.
-      const unit = edu.university && edu.institution;
-      return {
-        "@type": "EducationalOrganization",
-        name,
-        ...(school.url ? { url: school.url } : {}),
-        ...(school.wikidata ? { sameAs: wikidataUrl(school.wikidata) } : {}),
-        ...(unit ? {
-          department: {
-            "@type": "EducationalOrganization",
-            name: unit,
-            ...(SCHOOLS[unit]?.url ? { url: SCHOOLS[unit].url } : {}),
-          },
-        } : {}),
-      };
-    });
+    person.alumniOf = profile.education.map((edu) => educationalOrganization(edu));
   }
 
   // knowsAbout (Wikidata-backed topics)
@@ -205,20 +205,12 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
   }
 
   // hasCredential: the degrees, then the certifications
-  const degrees = (profile.education ?? []).map((edu) => {
-    const school = SCHOOLS[edu.university || edu.institution] ?? {};
-    return {
-      "@type": "EducationalOccupationalCredential",
-      credentialCategory: "degree",
-      name: edu.degree,
-      recognizedBy: {
-        "@type": "EducationalOrganization",
-        name: edu.university || edu.institution,
-        ...(school.url ? { url: school.url } : {}),
-        ...(school.wikidata ? { sameAs: wikidataUrl(school.wikidata) } : {}),
-      },
-    };
-  });
+  const degrees = (profile.education ?? []).map((edu) => ({
+    "@type": "EducationalOccupationalCredential",
+    credentialCategory: "degree",
+    name: edu.degree,
+    recognizedBy: educationalOrganization(edu),
+  }));
   if (degrees.length || profile.certifications?.length) {
     const certifications = (profile.certifications ?? []).map((cert) => {
       const body = CREDENTIAL_BODIES[cert.institution] ?? {};

@@ -382,7 +382,7 @@ const profileFile = JSON.parse(await readFile(join(repoRoot, 'content/about/prof
 const aboutPerson = about?.nodes.find((n) => typesOf(n).includes('Person'));
 for (const school of [aboutPerson?.alumniOf ?? []].flat()) {
   if (!school.url) fail('/about/', `alumniOf "${school.name}" has no url`);
-  if (school.department && !school.department.url) fail('/about/', `alumniOf department "${school.department.name}" has no url`);
+  if (school.parentOrganization && !school.parentOrganization.url) fail('/about/', `alumniOf parent "${school.parentOrganization.name}" has no url`);
 }
 const positions = profileFile.experience.flatMap((employer) => employer.positions);
 const roles = [aboutPerson?.hasOccupation ?? []].flat();
