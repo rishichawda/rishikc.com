@@ -456,7 +456,8 @@ for (const page of pages) {
   }
 }
 const iconFile = (path) => join(dist, path);
-for (const [path, side] of [['/apple-touch-icon.png', 180], ['/icons/192.png', 192], ['/icons/512.png', 512]]) {
+const headIcons = JSON.parse(await readFile(join(repoRoot, 'content/about/structured-data.json'), 'utf8')).data.head.icons;
+for (const [path, side] of [['/apple-touch-icon.png', 180], ...headIcons.map(({ name, size }) => [`/icons/${name}.png`, size])]) {
   if (!(await exists(iconFile(path)))) { fail(path, 'icon was not built'); continue; }
   const size = imageSize(await readFile(iconFile(path)));
   if (size?.width !== side || size?.height !== side) fail(path, `icon is ${size?.width}x${size?.height}, expected ${side}x${side}`);
@@ -470,6 +471,10 @@ if (await exists(manifestFile)) {
   const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
   if (manifest.name !== profileFile.name) fail('/manifest.webmanifest', 'name differs from profile.json');
   for (const icon of manifest.icons ?? []) if (!(await exists(iconFile(icon.src)))) fail('/manifest.webmanifest', `icon ${icon.src} was not built`);
+  for (const { name, purpose } of headIcons) {
+    if (!manifest.icons?.some((icon) => icon.src === `/icons/${name}.png` && icon.purpose === purpose)) fail('/manifest.webmanifest', `lacks the ${purpose} icon ${name}`);
+  }
+  if (!manifest.icons?.some((icon) => icon.purpose === 'maskable')) fail('/manifest.webmanifest', 'lists no maskable icon');
 } else fail('/manifest.webmanifest', 'was not built');
 const personImage = aboutPerson?.image ?? '';
 const personImageSize = personImage.startsWith(SITE) && (await exists(distFile(personImage))) ? imageSize(await readFile(distFile(personImage))) : null;

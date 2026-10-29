@@ -27,7 +27,11 @@ export interface StructuredData {
   languages: Record<string, { code: string; wikidata: string }>;
   places: Record<string, string>;
   occupation: { name: string; code: string; codeSet: string; codeSetUrl: string; url: string };
-  head: { shortName: string; themeColor: { light: string; dark: string } };
+  head: {
+    shortName: string;
+    themeColor: { light: string; dark: string };
+    icons: { name: string; size: number; purpose: "any" | "maskable" }[];
+  };
   photoRights: {
     licensePath: string;
     acquireLicensePath: string;

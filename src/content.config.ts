@@ -45,7 +45,7 @@ const bits = defineCollection({
 });
 
 const logo = defineCollection({
-    loader: glob({ pattern: "**/*.{png,svg,jpg}", base: "./content/assets/logo" }),
+    loader: glob({ pattern: "*.{png,svg,jpg}", base: "./content/assets/logo" }),
     schema: ({ image }) => z.object({ image: image() })
 })
 

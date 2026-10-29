@@ -1,40 +1,27 @@
 /**
- * The site icons, cut from the square logo master in content/assets/logo. The master has wide margins
- * around the artwork, so each icon is a centred square crop of it, which keeps the artwork readable at
- * 16 pixels.
+ * The site icons. The PNGs come from content/assets/logo/icons (exported from the logo); the favicon is
+ * cut from the 512 pixel icon, which keeps the artwork readable at 16 pixels.
  */
 import sharp from "sharp";
-import master from "../../content/assets/logo/logo_square/1024.png";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
-/** Share of the master's width and height that the icons keep. */
-const CROP = 0.88;
-
-/** Sizes of the PNG icons the web manifest lists. */
-export const MANIFEST_ICON_SIZES = [192, 512] as const;
-export const APPLE_TOUCH_ICON_SIZE = 180;
 /** Sizes packed into favicon.ico. */
 export const FAVICON_SIZES = [16, 32, 48] as const;
 
-export async function iconPng(size: number): Promise<Buffer> {
-  // Astro defines the source path on every imported image; it is not an enumerable property.
-  const fsPath = (master as typeof master & { fsPath?: string }).fsPath;
-  if (!fsPath) throw new Error("No source path for the logo master");
-  const side = Math.round(Math.min(master.width, master.height) * CROP);
-  return sharp(fsPath.split("?")[0])
-    .extract({
-      left: Math.round((master.width - side) / 2),
-      top: Math.round((master.height - side) / 2),
-      width: side,
-      height: side,
-    })
-    .resize(size, size)
-    .png({ compressionLevel: 9 })
-    .toBuffer();
-}
+/** A PNG from content/assets/logo/icons, by file name without the extension. */
+export const iconPng = (name: string): Promise<Buffer> =>
+  readFile(join(process.cwd(), "content/assets/logo/icons", `${name}.png`));
 
 /** A favicon.ico holding one PNG image per size. */
 export async function faviconIco(): Promise<Buffer> {
-  const images = await Promise.all(FAVICON_SIZES.map(async (size) => ({ size, data: await iconPng(size) })));
+  const master = await iconPng("icon-512");
+  const images = await Promise.all(
+    FAVICON_SIZES.map(async (size) => ({
+      size,
+      data: await sharp(master).resize(size, size).png({ compressionLevel: 9 }).toBuffer(),
+    })),
+  );
   const header = Buffer.alloc(6);
   header.writeUInt16LE(1, 2); // type: icon
   header.writeUInt16LE(images.length, 4);
