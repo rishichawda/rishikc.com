@@ -531,20 +531,31 @@ const pageSchemaEntities = [
 </style>
 
 <script is:inline>
+    // Masonry: span each card over 1px rows matching its height plus the column gap. This runs as soon as
+    // the grid is parsed, while the footer does not exist yet, so nothing below the grid moves; the
+    // observer keeps the spans right when a card changes size and is released before a page swap.
+    function setUpMasonry() {
+        var grid = document.querySelector('.bits-grid');
+        if (!grid || grid.dataset.masonry) return;
+        grid.dataset.masonry = 'true';
+        grid.classList.add('is-masonry');
+        var span = function(card) {
+            var gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+            var height = card.offsetHeight;
+            card.style.gridRowEnd = 'span ' + (height ? Math.ceil(height + gap) : 1);
+        };
+        var cards = grid.querySelectorAll('.bit-card');
+        cards.forEach(span);
+        var observer = new ResizeObserver(function(entries) {
+            entries.forEach(function(entry) { span(entry.target); });
+        });
+        cards.forEach(function(card) { observer.observe(card); });
+        document.addEventListener('astro:before-swap', function() { observer.disconnect(); }, { once: true });
+    }
+    setUpMasonry();
+
     document.addEventListener('astro:page-load', () => {
-        // Masonry — span each card over 1px rows matching its height plus the column gap
-        var masonryGrid = document.querySelector('.bits-grid');
-        if (masonryGrid) {
-            masonryGrid.classList.add('is-masonry');
-            var spanObserver = new ResizeObserver(function(entries) {
-                var gap = parseFloat(getComputedStyle(masonryGrid).columnGap) || 0;
-                entries.forEach(function(entry) {
-                    var height = entry.target.offsetHeight;
-                    entry.target.style.gridRowEnd = 'span ' + (height ? Math.ceil(height + gap) : 1);
-                });
-            });
-            masonryGrid.querySelectorAll('.bit-card').forEach(function(card) { spanObserver.observe(card); });
-        }
+        setUpMasonry();
 
         // View toggle
         var viewBtns = document.querySelectorAll('.view-btn');
