@@ -428,6 +428,35 @@ for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.kno
   if (!llms.includes(topic.name)) fail('/llms.txt', `lacks the topic ${topic.name}`);
 }
 
+// ── Icons: favicon.ico, square PNG icons, the apple-touch-icon and the manifest ──
+// The minifier reorders attributes, so a link is matched by its rel and href in any order.
+const hasLink = (html, rel, href) =>
+  [...html.matchAll(/<link\b[^>]*>/g)].some((m) => m[0].includes(`rel="${rel}"`) && m[0].includes(`href="${href}"`));
+for (const page of pages) {
+  for (const [rel, href] of [['icon', '/favicon.ico'], ['apple-touch-icon', '/apple-touch-icon.png'], ['manifest', '/manifest.webmanifest']]) {
+    if (!hasLink(page.html, rel, href)) fail(page.path, `head lacks <link rel="${rel}" href="${href}">`);
+  }
+}
+const iconFile = (path) => join(dist, path);
+for (const [path, side] of [['/apple-touch-icon.png', 180], ['/icons/192.png', 192], ['/icons/512.png', 512]]) {
+  if (!(await exists(iconFile(path)))) { fail(path, 'icon was not built'); continue; }
+  const size = imageSize(await readFile(iconFile(path)));
+  if (size?.width !== side || size?.height !== side) fail(path, `icon is ${size?.width}x${size?.height}, expected ${side}x${side}`);
+}
+if (await exists(iconFile('/favicon.ico'))) {
+  const ico = await readFile(iconFile('/favicon.ico'));
+  if (ico.readUInt16LE(0) !== 0 || ico.readUInt16LE(2) !== 1 || ico.readUInt16LE(4) < 3) fail('/favicon.ico', 'not an icon file with three images');
+} else fail('/favicon.ico', 'was not built');
+const manifestFile = iconFile('/manifest.webmanifest');
+if (await exists(manifestFile)) {
+  const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
+  if (manifest.name !== profileFile.name) fail('/manifest.webmanifest', 'name differs from profile.json');
+  for (const icon of manifest.icons ?? []) if (!(await exists(iconFile(icon.src)))) fail('/manifest.webmanifest', `icon ${icon.src} was not built`);
+} else fail('/manifest.webmanifest', 'was not built');
+const personImage = aboutPerson?.image ?? '';
+const personImageSize = personImage.startsWith(SITE) && (await exists(distFile(personImage))) ? imageSize(await readFile(distFile(personImage))) : null;
+if (!personImageSize || personImageSize.width !== personImageSize.height) fail('/about/', 'Person image is not a square image of the site');
+
 // ── Blog: each section's index lists its posts, and each post says it is part of the section ──
 for (const [path, section] of [['/articles/', 'articles'], ['/bits/', 'bits']]) {
   const blog = pageByPath.get(path)?.nodes.find((n) => typesOf(n).includes('Blog'));

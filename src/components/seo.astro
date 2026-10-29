@@ -1,9 +1,9 @@
 ---
-import favicon from "../../content/assets/logo/logo.png";
 import { getCollection } from "astro:content";
 import type { ShareImage } from "../utils/shareImage";
 import { cardImage } from "../utils/cards";
 import { LOCALE } from "../utils/topics";
+import { structuredData } from "../utils/siteData";
 import {
   buildGraphForPage,
   buildWebPageEntity,
@@ -32,7 +32,8 @@ const canonicalURL = new URL(
 // The share image: the page's own, else a generated card (src/pages/og). Both carry their real size and type.
 const shareImage: ShareImage = image?.src ? image : cardImage(Astro.url.pathname);
 const resolvedImage = shareImage.src.startsWith("http") ? shareImage.src : new URL(shareImage.src, siteOrigin).toString();
-const defaultOgImage = new URL(favicon.src, siteOrigin).toString();
+// The square icon stands for the author wherever the markup asks for an image of the Person.
+const profileImage = new URL("/icons/512.png", siteOrigin).toString();
 const imageAlt = shareImage.alt ?? title;
 
 // One robots meta for the page; directives from the caller (for example noimageindex) join it.
@@ -62,7 +63,7 @@ const siteDescription = `Personal portfolio, technical articles, photography, an
 const pageEntities = pageSchemaEntities || [];
 const fullGraph = buildGraphForPage({
   profile,
-  profileImageUrl: defaultOgImage,
+  profileImageUrl: profileImage,
   siteDescription,
   pathname: Astro.url.pathname,
   pageTitle: title,
@@ -84,11 +85,14 @@ const keywordList = [...new Set((keywords ?? "").split(",").map((k: string) => k
 <title>{brandSuffix ? `${title} | ${profile.name}` : title}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!-- Browser UI colour; the values are --color-bg in src/styles/global.css -->
-<meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content={structuredData.head.themeColor.light} media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content={structuredData.head.themeColor.dark} media="(prefers-color-scheme: dark)" />
 <meta name="author" content={profile.name} />
 {ogType === "article" ? <link rel="author" href="/about/" /> : null}
-<link rel="icon" type="image/png" href={favicon.src} />
+<link rel="icon" href="/favicon.ico" sizes="48x48" />
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/192.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
 <link rel="canonical" href={canonicalURL.toString()} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
