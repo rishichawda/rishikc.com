@@ -2,6 +2,7 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
+import { exifAscii, extractExif } from '../../src/utils/imageMetadata.mjs';
 
 // Audits the built site's head tags and JSON-LD. Hard failures exit 1; metrics are printed.
 //   node .github/scripts/seo-audit.mjs [--dist dist] [--expected content/about/wikidata.json] [--offline]
@@ -485,6 +486,7 @@ for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.kno
 
 // ── Rights metadata: every published JPEG and WebP photograph carries the XMP statement and EXIF tags ──
 const rightsDir = join(dist, '_astro', 'photos');
+const photoNotice = structuredFile.photoRights.notice.replace('{year}', '').replace('{name}', profileFile.name).replace(/\s+/g, ' ').trim();
 let rightsFiles = 0;
 for (const name of await readdir(rightsDir).catch(() => [])) {
   const extension = name.slice(name.lastIndexOf('.') + 1).toLowerCase();
@@ -494,6 +496,12 @@ for (const name of await readdir(rightsDir).catch(() => [])) {
   const text = bytes.toString('latin1');
   for (const needle of ['xmpRights:Marked', 'xmpRights:WebStatement', 'plus:DataMining', 'dc:rights', profileFile.name]) {
     if (!text.includes(needle)) fail(`/_astro/photos/${name}`, `lacks ${needle} in its metadata`);
+  }
+  // The EXIF Artist and Copyright say the same as the XMP, whatever EXIF the file had before.
+  const tiff = extractExif(bytes);
+  for (const [tag, label, expected] of [[0x013b, 'Artist', profileFile.name], [0x8298, 'Copyright', photoNotice]]) {
+    const actual = tiff ? exifAscii(tiff, tag) : undefined;
+    if (actual !== expected) fail(`/_astro/photos/${name}`, `EXIF ${label} is ${JSON.stringify(actual)}, expected ${JSON.stringify(expected)}`);
   }
   const decoded = await sharp(bytes).metadata().catch(() => null);
   if (!decoded?.width) fail(`/_astro/photos/${name}`, 'does not decode after the metadata was written');
