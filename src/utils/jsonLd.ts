@@ -5,38 +5,112 @@
  * All entities use stable @id fragment URIs:
  *   - Person: https://rishikc.com/#person
  *   - WebSite: https://rishikc.com/#website
- *   - Organization: https://rishikc.com/#organization
+ *   - Employer (the Person's worksFor organization): https://rishikc.com/#employer
  */
+import { profile as author } from "./siteData";
+import {
+  ALTERNATE_NAMES,
+  BLOG_LABELS,
+  CREDENTIAL_BODIES,
+  CREDENTIAL_SUBJECT_IDS,
+  EMPLOYER_IDS,
+  KNOWS_ABOUT,
+  LANGUAGES,
+  LOCALE,
+  NAME_PARTS,
+  OCCUPATION,
+  PHOTO_RIGHTS,
+  PLACE_IDS,
+  SCHOOLS,
+  entity,
+  wikidataUrl,
+} from "./topics";
 
 const SITE_URL = "https://rishikc.com";
+const ABOUT_URL = `${SITE_URL}/about/`;
+export const AUTHOR_NAME = author.name;
 
 // ── Stable @id URIs ──
 export const IDS = {
   person: `${SITE_URL}/#person`,
   website: `${SITE_URL}/#website`,
-  organization: `${SITE_URL}/#organization`,
+  employer: `${SITE_URL}/#employer`,
 } as const;
 
 // ── Reference helpers (use these inside page-level schemas) ──
 export const personRef = { "@id": IDS.person };
 export const websiteRef = { "@id": IDS.website };
+/**
+ * The Person as an author, creator or publisher value. Google asks for the name and a url that
+ * identifies the author, so a bare @id reference is not enough on its own.
+ */
+export const authorRef = {
+  "@type": "Person",
+  "@id": IDS.person,
+  name: AUTHOR_NAME,
+  url: ABOUT_URL,
+};
+
+/**
+ * Rights for a photograph or a page of photographs. The gallery text states the policy: every
+ * photograph is the owner's, and no use is allowed without written permission. That is all rights
+ * reserved, which has no standard license URL, so `license` points at the page that states it and
+ * `acquireLicensePage` at the page to ask on.
+ */
+export const rightsNotice = (year?: number) =>
+  PHOTO_RIGHTS.notice.replace("{year}", String(year ?? "")).replace("{name}", AUTHOR_NAME).replace(/\s+/g, " ");
+
+export function photoRights(year?: number): Record<string, unknown> {
+  return {
+    creator: authorRef,
+    creditText: AUTHOR_NAME,
+    copyrightNotice: rightsNotice(year),
+    copyrightHolder: authorRef,
+    ...(year ? { copyrightYear: year } : {}),
+    license: `${SITE_URL}${PHOTO_RIGHTS.licensePath}`,
+    acquireLicensePage: `${SITE_URL}${PHOTO_RIGHTS.acquireLicensePath}`,
+  };
+}
 
 // ── Profile data types ──
 interface Social { platform: string; url: string; }
 interface Certification { institution: string; title: string; }
 interface Education { university: string; institution: string; degree: string; }
-interface Experience { company: string; website?: string[]; positions: { title: string }[]; }
+interface Position { title: string; start_date: string; end_date: string | null; description?: string; }
+interface Experience { company: string; website?: string[]; positions: Position[]; }
 
 export interface ProfileData {
   name: string;
   title: string;
   summary: string;
+  location?: string;
   socials: Social[];
   certifications?: Certification[];
   education?: Education[];
   experience?: Experience[];
   languages?: { name: string; level: string }[];
 }
+
+/**
+ * The school an education entry names: the institute when there is one (it grants the degree), with
+ * its university as the parent; otherwise the university.
+ */
+function educationalOrganization(edu: Education): Record<string, unknown> {
+  const organization = (name: string) => {
+    const school = SCHOOLS[name] ?? {};
+    return {
+      "@type": "EducationalOrganization",
+      name,
+      ...(school.url ? { url: school.url } : {}),
+      ...(school.wikidata ? { sameAs: wikidataUrl(school.wikidata) } : {}),
+    };
+  };
+  if (!edu.university || !edu.institution) return organization(edu.university || edu.institution);
+  return { ...organization(edu.institution), parentOrganization: organization(edu.university) };
+}
+
+/** "12-2025", as profile.json writes a month, to the ISO 8601 "2025-12". */
+const isoMonth = (month: string) => month.split("-").reverse().join("-");
 
 /**
  * Build the canonical Person entity.
@@ -46,9 +120,15 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
     "@type": "Person",
     "@id": IDS.person,
     name: profile.name,
+    givenName: NAME_PARTS.given,
+    // schema.org holds a middle name in additionalName.
+    additionalName: NAME_PARTS.middle,
+    familyName: NAME_PARTS.family,
+    alternateName: ALTERNATE_NAMES,
     jobTitle: profile.title,
     description: profile.summary,
-    url: `${SITE_URL}/`,
+    url: ABOUT_URL,
+    mainEntityOfPage: ABOUT_URL,
     sameAs: profile.socials.map((s) => s.url),
   };
 
@@ -59,60 +139,128 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
   // worksFor
   if (profile.experience?.length) {
     const employer = profile.experience[0];
+    const websites = employer.website ?? [];
+    const wikidata = (EMPLOYER_IDS[employer.company] ?? []).map(wikidataUrl);
     person.worksFor = {
       "@type": "Organization",
-      "@id": IDS.organization,
+      "@id": IDS.employer,
       name: employer.company,
-      ...(employer.website?.length ? {
-        url: employer.website[0],
-        sameAs: employer.website,
-      } : {}),
+      ...(websites.length ? { url: websites[0] } : {}),
+      ...(websites.length || wikidata.length ? { sameAs: [...websites, ...wikidata] } : {}),
     };
   }
 
-  // address
-  person.address = {
-    "@type": "PostalAddress",
-    addressLocality: "Bengaluru",
-    addressRegion: "KA",
-    addressCountry: "IN",
-  };
-
-  // alumniOf
-  if (profile.education?.length) {
-    person.alumniOf = profile.education.map((edu) => ({
-      "@type": "EducationalOrganization",
-      name: edu.university || edu.institution,
-    }));
+  // hasOccupation: one Role per position, with the dates, as schema.org asks for past professions
+  if (profile.experience?.length) {
+    const category = {
+      "@type": "CategoryCode",
+      codeValue: OCCUPATION.code,
+      name: OCCUPATION.name,
+      url: OCCUPATION.url,
+      inCodeSet: { "@type": "CategoryCodeSet", name: OCCUPATION.codeSet, url: OCCUPATION.codeSetUrl },
+    };
+    person.hasOccupation = profile.experience.flatMap((employer) =>
+      employer.positions.map((position) => ({
+        "@type": "Role",
+        roleName: position.title,
+        name: `${position.title}, ${employer.company}`,
+        ...(position.description ? { description: position.description } : {}),
+        startDate: isoMonth(position.start_date),
+        ...(position.end_date ? { endDate: isoMonth(position.end_date) } : {}),
+        hasOccupation: { "@type": "Occupation", name: position.title, occupationalCategory: category },
+      })),
+    );
   }
 
-  // knowsAbout (Wikidata IDs)
-  person.knowsAbout = [
-    "https://www.wikidata.org/wiki/Q386724",   // DevOps
-    "https://www.wikidata.org/wiki/Q80993",    // Software engineering
-    "https://www.wikidata.org/wiki/Q11034",    // Mobile app development
-    "https://www.wikidata.org/wiki/Q8777",     // Web development
-  ];
+  // address and homeLocation, from "City, Region, Country"
+  if (profile.location) {
+    const [locality, region, country] = profile.location.split(",").map((part) => part.trim());
+    person.address = {
+      "@type": "PostalAddress",
+      addressLocality: locality,
+      ...(region ? { addressRegion: region } : {}),
+      ...(country ? { addressCountry: country } : {}),
+    };
+    person.homeLocation = {
+      "@type": "Place",
+      name: profile.location,
+      ...(PLACE_IDS[locality] ? { sameAs: wikidataUrl(PLACE_IDS[locality]) } : {}),
+      ...(region && PLACE_IDS[region] ? { containedInPlace: entity(PLACE_IDS[region], "AdministrativeArea") } : {}),
+    };
+  }
+
+  // alumniOf: the institute the degree was taken at, a part of its university
+  if (profile.education?.length) {
+    person.alumniOf = profile.education.map((edu) => educationalOrganization(edu));
+  }
+
+  // knowsAbout (Wikidata-backed topics)
+  person.knowsAbout = KNOWS_ABOUT.map((id) => entity(id));
 
   // knowsLanguage
   if (profile.languages?.length) {
-    person.knowsLanguage = profile.languages.map((l) => l.name);
+    person.knowsLanguage = profile.languages.map((l) => {
+      const known = LANGUAGES[l.name];
+      return {
+        "@type": "Language",
+        name: l.name,
+        ...(known ? { alternateName: known.code, sameAs: wikidataUrl(known.wikidata) } : {}),
+      };
+    });
   }
 
-  // hasCredential
-  if (profile.certifications?.length) {
-    person.hasCredential = profile.certifications.map((cert) => ({
-      "@type": "EducationalOccupationalCredential",
-      credentialCategory: "Professional Certification",
-      name: cert.title,
-      recognizedBy: {
-        "@type": "Organization",
-        name: cert.institution,
-      },
-    }));
+  // hasCredential: the degrees, then the certifications
+  const degrees = (profile.education ?? []).map((edu) => ({
+    "@type": "EducationalOccupationalCredential",
+    credentialCategory: "degree",
+    name: edu.degree,
+    recognizedBy: educationalOrganization(edu),
+  }));
+  if (degrees.length || profile.certifications?.length) {
+    const certifications = (profile.certifications ?? []).map((cert) => {
+      const body = CREDENTIAL_BODIES[cert.institution] ?? {};
+      const subject = CREDENTIAL_SUBJECT_IDS[cert.title];
+      return {
+        "@type": "EducationalOccupationalCredential",
+        credentialCategory: "Professional Certification",
+        name: cert.title,
+        recognizedBy: {
+          "@type": "Organization",
+          name: cert.institution,
+          ...(body.url ? { url: body.url } : {}),
+          ...(body.wikidata ? { sameAs: wikidataUrl(body.wikidata) } : {}),
+        },
+        ...(subject ? { about: entity(subject) } : {}),
+      };
+    });
+    person.hasCredential = [...degrees, ...certifications];
   }
 
   return person;
+}
+
+/** The Blog node of a section ("articles" or "bits"); its posts are listed on the section's index page. */
+export const blogRef = (section: "articles" | "bits") => ({
+  "@type": "Blog",
+  "@id": `${SITE_URL}/${section}/#blog`,
+  url: `${SITE_URL}/${section}/`,
+  name: `${BLOG_LABELS[section]} by ${AUTHOR_NAME}`,
+});
+
+export function buildBlogEntity(options: {
+  section: "articles" | "bits";
+  description: string;
+  posts: { id: string; type: string; headline: string; url: string }[];
+}): Record<string, unknown> {
+  return {
+    ...blogRef(options.section),
+    description: options.description,
+    author: authorRef,
+    publisher: authorRef,
+    inLanguage: LOCALE,
+    isPartOf: websiteRef,
+    blogPost: options.posts.map((post) => ({ "@type": post.type, "@id": post.id, headline: post.headline, url: post.url })),
+  };
 }
 
 /**
@@ -122,11 +270,11 @@ export function buildWebSiteEntity(description: string): Record<string, unknown>
   return {
     "@type": "WebSite",
     "@id": IDS.website,
-    name: "Rishi Kumar Chawda",
+    name: AUTHOR_NAME,
     url: `${SITE_URL}/`,
     description,
-    publisher: personRef,
-    inLanguage: "en-US",
+    publisher: authorRef,
+    inLanguage: LOCALE,
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -214,7 +362,7 @@ export function buildWebPageEntity(options: {
     name: options.name,
     description: options.description,
     isPartOf: websiteRef,
-    inLanguage: "en-US",
+    inLanguage: LOCALE,
   };
 
   // Add breadcrumb reference

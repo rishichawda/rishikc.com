@@ -2,12 +2,13 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
-import { buildWebPageEntity } from "../../utils/jsonLd";
+import { AUTHOR_NAME, buildBlogEntity, buildWebPageEntity } from "../../utils/jsonLd";
 import { getAllSeries, getSeriesSlug } from "../../utils/seriesUtils";
 
 const page_info = {
-    title: "Articles | Rishi Kumar Chawda",
-    description: "Technical articles on React, TypeScript, web performance, DevSecOps, and engineering best practices by Rishi Kumar Chawda.",
+    title: "Articles",
+    brandSuffix: true,
+    description: `Technical articles on React, TypeScript, web performance, DevSecOps, and engineering best practices by ${AUTHOR_NAME}.`,
     keywords: "articles, web development, engineering, tutorials, performance",
 };
 
@@ -23,6 +24,7 @@ const allSeries = getAllSeries(allArticles);
 
 function formatDate(date: Date): string {
     return new Date(date).toLocaleDateString("en-US", {
+        timeZone: "UTC",
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -38,7 +40,7 @@ const pageSchemaEntities = [
     buildWebPageEntity({
         type: "CollectionPage",
         url: pageUrl,
-        name: "Articles by Rishi Chawda",
+        name: `Articles by ${AUTHOR_NAME}`,
         description: page_info.description,
         mainEntity: {
             "@type": "ItemList",
@@ -56,6 +58,14 @@ const pageSchemaEntities = [
                 }
             }))
         }
+    }),
+    buildBlogEntity({
+        section: "articles",
+        description: page_info.description,
+        posts: sortedArticles.map((article) => {
+            const url = new URL(article.data.path, Astro.site || "https://rishikc.com").toString();
+            return { id: `${url}#article`, type: article.data.jsonld_schema || "Article", headline: article.data.title, url };
+        }),
     }),
 ];
 ---

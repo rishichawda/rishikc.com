@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
-import { buildWebPageEntity, personRef } from "../utils/jsonLd";
+import { authorRef, buildWebPageEntity } from "../utils/jsonLd";
 import Breadcrumbs from "../components/common/breadcrumbs.astro";
 import ProjectIcon from "../components/common/project_icon.astro";
 
@@ -68,7 +68,8 @@ const featuredProjects = projects.filter((project) => project.featured);
 const otherProjects = projects.filter((project) => !project.featured);
 
 const page_info = {
-    title: `Projects | ${profile.name}`,
+    title: "Projects",
+    brandSuffix: true,
     description: `Explore ${profile.name}'s development projects including React Native components, web applications, developer tools, and open source contributions.`,
     keywords: `${profile.name}, Projects, Open Source, React, TypeScript`,
 };
@@ -87,15 +88,20 @@ const pageSchemaEntities = [
         mainEntity: {
             "@type": "ItemList",
             numberOfItems: projects.length,
-            itemListElement: featuredProjects.map((project, index) => ({
+            itemListElement: projects.map((project, index) => ({
                 "@type": "ListItem",
                 position: index + 1,
                 item: {
                     "@type": "SoftwareSourceCode",
                     name: project.name,
                     description: project.description,
+                    url: project.github,
                     codeRepository: project.github,
                     programmingLanguage: project.language,
+                    author: authorRef,
+                    ...(project.year ? { dateCreated: project.year } : {}),
+                    ...(project.tags?.length ? { keywords: project.tags } : {}),
+                    ...(project.npm ? { sameAs: project.npm } : {}),
                 },
             })),
         },

@@ -1,0 +1,5 @@
+[
+  { "location": "/_astro/photos/*", "tdm-reservation": 1 },
+  { "location": "/previews/*", "tdm-reservation": 1 },
+  { "location": "/gallery/*", "tdm-reservation": 1 }
+]

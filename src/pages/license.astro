@@ -1,0 +1,127 @@
+---
+import BaseLayout from "../layouts/base_layout.astro";
+import { AUTHOR_NAME, buildWebPageEntity } from "../utils/jsonLd";
+import { CONTENT_LICENSE } from "../utils/topics";
+import Breadcrumbs from "../components/common/breadcrumbs.astro";
+
+const description = "How the articles, bits, code samples and photographs on rishikc.com may be used.";
+const page_info = {
+    title: "License",
+    brandSuffix: true,
+    description,
+    keywords: "license, creative commons, cc by-nc, mit license, copyright",
+};
+
+const siteUrl = new URL(Astro.url.pathname, Astro.site || "https://rishikc.com").toString();
+const pageSchemaEntities = [buildWebPageEntity({ url: siteUrl, name: "License", description })];
+
+const codeText = CONTENT_LICENSE.code.text.split("\n\n");
+---
+
+<BaseLayout page_info={page_info} pageSchemaEntities={pageSchemaEntities}>
+    <div class="license-page">
+        <Breadcrumbs items={[{ label: "License" }]} />
+
+        <article class="license-content">
+            <h1 class="page-title">License</h1>
+            <p>
+                Different parts of this site are under different terms. Articles, bits and the code samples in them are licensed, and
+                photographs are all rights reserved. This page sums the terms up. Where it differs from the license texts themselves, the
+                license texts control.
+            </p>
+
+            <h2>Articles and bits</h2>
+            <p>
+                The text of the articles and bits is licensed under the Creative Commons Attribution-NonCommercial 4.0 International
+                license (CC BY-NC 4.0). Its legal code is at
+                <a href={CONTENT_LICENSE.url} target="_blank" rel="noopener noreferrer">{CONTENT_LICENSE.url}</a>. You may copy, share and
+                adapt the text for noncommercial purposes if you meet the conditions in section 3 of the license. Section 1 of the license
+                defines NonCommercial.
+            </p>
+            <p>
+                Section 3 of the license requires, among other things, that you credit the author, keep the copyright notice, say that the
+                text is licensed under CC BY-NC 4.0 with a link to the legal code, and say if you changed the text. The credit asked for is
+                "{AUTHOR_NAME}" with the address of the page you took the text from. The copyright notice to keep is the one in the footer
+                of that page, which names the year the article or bit was published.
+            </p>
+            <p>To use the text commercially, ask for permission first through the <a href="/contact/">contact page</a>.</p>
+
+            <h2 id="code">Code samples</h2>
+            <p>
+                The code samples in the articles and bits are licensed under the {CONTENT_LICENSE.code.name} license below, instead of CC BY-NC
+                4.0. In the notice, "the Software" means those code samples. Keep the notice in all copies or substantial portions of the
+                code. The year of a code sample's copyright is the year of the article or bit it appears in, shown in the footer of that
+                page.
+            </p>
+            <div class="license-text" role="group" aria-label={`${CONTENT_LICENSE.code.name} license text`}>
+                <p>Copyright (c) {AUTHOR_NAME}</p>
+                {codeText.map((paragraph) => <p>{paragraph}</p>)}
+            </div>
+
+            <h2>What the licenses do not cover</h2>
+            <p>
+                The terms above cover only what {AUTHOR_NAME} wrote and made. They do not cover {CONTENT_LICENSE.exclusions}. Those stay
+                with their owners or under their own terms. A header image that its article credits to anyone other than the author is one
+                of these.
+            </p>
+
+            <h2>Photographs</h2>
+            <p>
+                All photographs taken by {AUTHOR_NAME} are all rights reserved, wherever they appear on this site: in the gallery, in
+                articles and in bits. No reproduction, distribution or use of such a photograph, in whole or in part, is allowed without
+                written permission. To ask, use the <a href="/contact/">contact page</a>. The gallery's
+                <a href="/gallery/#copyright">copyright section</a> states the terms for the photographs displayed there.
+            </p>
+
+            <h2>What the law already allows</h2>
+            <p>
+                The CC BY-NC 4.0 license does not limit uses that copyright law allows without permission, such as fair use or fair
+                dealing (section 2(a)(2) of the license).
+            </p>
+        </article>
+    </div>
+</BaseLayout>
+
+<style>
+    .license-page {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: var(--space-16) var(--space-6) var(--space-20);
+    }
+    .page-title {
+        font-family: var(--font-display);
+        font-size: var(--text-display);
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        color: var(--color-text);
+        margin: 0 0 var(--space-6);
+    }
+    .license-content h2 {
+        font-family: var(--font-display);
+        font-size: var(--text-h2);
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: -0.015em;
+        color: var(--color-text);
+        margin: var(--space-10) 0 var(--space-4);
+    }
+    .license-content p {
+        font-family: var(--font-body);
+        font-size: var(--text-body);
+        color: var(--color-text-secondary);
+        line-height: 1.7;
+        margin: 0 0 var(--space-4);
+    }
+    .license-content a {
+        color: var(--color-brand-dark);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+    .license-text {
+        border-left: 3px solid var(--color-border);
+        padding-left: var(--space-4);
+    }
+    .license-text p {
+        font-size: var(--text-ui-small);
+    }
+</style>

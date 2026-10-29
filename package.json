@@ -8,6 +8,7 @@
     "preview": "yarn build && astro preview",
     "astro": "astro",
     "audit:a11y": "node .github/scripts/a11y-audit.mjs",
+    "audit:seo": "node .github/scripts/seo-audit.mjs",
     "audit:lighthouse": "node .github/scripts/lighthouse-audit.mjs"
   },
   "dependencies": {
@@ -22,7 +23,8 @@
     "gsap": "^3.14.2",
     "imagesloaded": "^5.0.0",
     "masonry-layout": "^4.2.2",
-    "schema-dts": "^2.0.0"
+    "schema-dts": "^2.0.0",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
     "@astrojs/markdown-remark": "^7.3.1",
@@ -30,7 +32,9 @@
     "@astrojs/sitemap": "^3.7.2",
     "@axe-core/playwright": "4.13.0",
     "@expressive-code/plugin-collapsible-sections": "^0.44.2",
+    "@fontsource/red-hat-display": "^5.3.0",
     "@playwright/test": "1.63.0",
+    "@resvg/resvg-js": "2.6.2",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",
     "astro-expressive-code": "^0.44.2",
@@ -47,6 +51,7 @@
     "remark-notes-plugin": "^2.0.0",
     "remark-smartypants": "^3.0.2",
     "remark-toc": "^9.0.0",
+    "satori": "0.63.2",
     "tailwindcss": "^4.2.2"
   },
   "resolutions": {
@@ -54,6 +59,7 @@
     "@playform/compress/sharp": "^0.35.4",
     "@playform/compress/deepmerge-ts": "^8.0.0",
     "@playform/compress/@playform/pipe/deepmerge-ts": "^8.0.0",
-    "@tailwindcss/typography/postcss-selector-parser": "^6.1.5"
+    "@tailwindcss/typography/postcss-selector-parser": "^6.1.5",
+    "satori/fflate": "^0.7.5"
   }
 }

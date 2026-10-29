@@ -10,9 +10,10 @@ import "../styles/tailwind.css";
 import "../styles/animations.css";
 import Footer from "../components/footer.astro";
 import { ClientRouter } from "astro:transitions";
+import { LOCALE } from "../utils/topics";
 
 let {
-	page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex },
+	page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots, brandSuffix, section, tdmReservation, heroCredited, copyrightYear },
 	activeRoute,
 	pageSchemaEntities,
 } = Astro.props;
@@ -22,18 +23,22 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 const seo = {
 	title: title || "Rishi Kumar Chawda",
 	description: description || "Personal portfolio and blog by Rishi Kumar Chawda.",
-	image: image || "",
+	image,
 	type: type || "WebSite",
 	keywords: keywords || "",
 	datePublished,
 	dateModified,
 	tags,
 	noindex,
+	robots,
+	brandSuffix,
+	section,
+	tdmReservation,
 };
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={LOCALE}>
 	<head>
 		<SEO page_info={seo} pageSchemaEntities={pageSchemaEntities} />
 		<!-- Preload LCP-critical fonts: Red Hat Display 700 (hero heading = LCP element)
@@ -61,6 +66,22 @@ const seo = {
 				var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 				document.documentElement.setAttribute('data-theme', theme);
 			})();
+
+			// The theme toggle overrides the system setting, so point the browser's theme-color at the chosen
+			// theme too. The colors stay in the meta tags (written by seo.astro from the site data).
+			function applyThemeColor() {
+				var theme = document.documentElement.getAttribute('data-theme');
+				var tags = document.querySelectorAll('meta[name="theme-color"][data-theme-color]');
+				var color;
+				tags.forEach(function(tag) {
+					if (!tag.dataset.color) tag.dataset.color = tag.getAttribute('content');
+					if (tag.dataset.themeColor === theme) color = tag.dataset.color;
+				});
+				if (color) tags.forEach(function(tag) { tag.setAttribute('content', color); });
+			}
+			new MutationObserver(applyThemeColor).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+			document.addEventListener('DOMContentLoaded', applyThemeColor);
+			document.addEventListener('astro:after-swap', applyThemeColor);
 
 			// Preserve theme across View Transitions (ClientRouter SPA navigation)
 			document.addEventListener('astro:before-swap', function(e) {
@@ -102,7 +123,7 @@ const seo = {
 		<main id="main-content" class="pt-[var(--nav-height)]" tabindex="-1">
 			<slot />
 		</main>
-		<Footer />
+		<Footer heroCredited={heroCredited} copyrightYear={copyrightYear} />
 		<CustomCursor />
 		<KeyboardShortcutsModal />
 	</body>

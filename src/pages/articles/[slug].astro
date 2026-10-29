@@ -7,8 +7,12 @@ import BaseLayout from "../../layouts/base_layout.astro";
 import TableOfContents from "../../components/article/table_of_contents.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
 import SeriesNavigation from "../../components/article/series_navigation.astro";
-import { getSeriesInfo, getSeriesTitle } from "../../utils/seriesUtils";
-import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
+import { getSeriesInfo, getSeriesSlug, getSeriesTitle } from "../../utils/seriesUtils";
+import { AUTHOR_NAME, authorRef, blogRef, buildWebPageEntity, photoRights, websiteRef } from "../../utils/jsonLd";
+import { CONTENT_LICENSE, LOCALE, ROBOTS, TAG_TOPIC_IDS, entity } from "../../utils/topics";
+import { findMentions } from "../../utils/mentions";
+import { getImage } from "astro:assets";
+import { isPhotograph, previewImage, shareImage } from "../../utils/shareImage";
 import "remark-notes-plugin/styles.css";
 
 export async function getStaticPaths() {
@@ -40,27 +44,79 @@ const articleUrl = new URL(
 	post.data.path || Astro.url.pathname,
 	Astro.site || "https://rishikc.com",
 ).toString();
-const imageUrl = post.data.hero_image?.src
-	? new URL(post.data.hero_image.src, Astro.site || "https://rishikc.com").toString()
-	: "";
+// A hero that is a gallery photograph is blocked by robots.txt, so the share image is a preview of it.
+const hero = post.data.hero_image;
+const share = isPhotograph(hero)
+	? previewImage(`/previews/articles/${post.id}.jpg`, post.data.hero_image_alt)
+	: hero ? shareImage(hero, post.data.hero_image_alt) : undefined;
+const imageUrl = share ? new URL(share.src, Astro.site || "https://rishikc.com").toString() : "";
 const isoDate = post.data.date ? post.data.date.toISOString() : "";
 const isoDateModified = post.data.dateModified ? new Date(post.data.dateModified).toISOString() : isoDate;
+
+const siteUrl = Astro.site || "https://rishikc.com";
+const absolute = (path: string) => new URL(path, siteUrl).toString();
+
+// Google recommends the same image at 16x9, 4x3 and 1x1 (each at least 50K pixels). A crop never
+// upscales: it takes the largest size the hero allows, up to 1200px wide. A hero that is a gallery
+// photograph gets none, because its derivatives sit under /_astro/photos/, which robots.txt blocks.
+const imageSet = hero && !isPhotograph(hero)
+	? (await Promise.all([16 / 9, 4 / 3, 1].map(async (ratio) => {
+		const width = Math.min(1200, hero.width, Math.floor(hero.height * ratio));
+		const height = Math.round(width / ratio);
+		// A small hero (a wide logo, say) cannot make every crop; skip those under 50K pixels.
+		if (width * height < 50_000) return null;
+		const crop = await getImage({ src: hero, width, height, fit: "cover", format: "jpg" });
+		return absolute(crop.src);
+	}))).filter((url): url is string => url !== null)
+	: [];
+
+const seriesRef = post.data.series
+	? {
+		"@type": "CreativeWorkSeries",
+		"@id": `${absolute(`/articles/series/${getSeriesSlug(post.data.series.title)}/`)}#series`,
+		name: post.data.series.title,
+		url: absolute(`/articles/series/${getSeriesSlug(post.data.series.title)}/`),
+	}
+	: null;
+const topics = post.data.tags
+	.map((tag) => TAG_TOPIC_IDS[tag.toLowerCase()])
+	.filter((id, index, ids) => id && ids.indexOf(id) === index)
+	.map((id) => entity(id));
+
+// Terms the text uses often (thresholds in content/about/structured-data.json), apart from the topics it is about.
+const aboutIds = new Set(post.data.tags.map((tag) => TAG_TOPIC_IDS[tag.toLowerCase()]));
+const mentioned = findMentions(post.body ?? "")
+	.filter((id) => !aboutIds.has(id))
+	.map((id) => entity(id));
 
 const articleEntity: Record<string, unknown> = {
 	"@type": post.data.jsonld_schema || "Article",
 	"@id": `${articleUrl}#article`,
+	url: articleUrl,
 	headline: post.data.title,
 	description: post.data.description,
-	image: imageUrl,
+	// A photograph hero is the author's, so its rights travel with it: the preview is an ImageObject with the photo rights.
+	image: imageSet.length ? imageSet : isPhotograph(hero) ? { "@type": "ImageObject", url: imageUrl, contentUrl: imageUrl, ...photoRights(post.data.date.getUTCFullYear()) } : imageUrl,
+	...(imageSet.length ? { thumbnailUrl: imageSet.at(-1) } : {}),
 	datePublished: isoDate,
 	dateModified: isoDateModified,
-	author: personRef,
-	publisher: personRef,
+	author: authorRef,
+	publisher: authorRef,
+	copyrightHolder: authorRef,
+	license: CONTENT_LICENSE.url,
+	copyrightYear: post.data.date.getUTCFullYear(),
+	isAccessibleForFree: true,
+	inLanguage: LOCALE,
+	isPartOf: seriesRef ? [websiteRef, blogRef("articles"), seriesRef] : [websiteRef, blogRef("articles")],
+	...(seriesRef ? { position: post.data.series!.currentPart } : {}),
 	mainEntityOfPage: { "@id": articleUrl },
 	keywords: post.data.tags,
+	...(topics.length ? { about: topics } : {}),
+	...(mentioned.length ? { mentions: mentioned } : {}),
 	...(post.data.category ? { articleSection: post.data.category } : {}),
-	...(remarkPluginFrontmatter?.minutesRead ? {
-		wordCount: Math.round(parseInt(remarkPluginFrontmatter.minutesRead, 10) * 250),
+	...(remarkPluginFrontmatter?.wordCount ? {
+		wordCount: remarkPluginFrontmatter.wordCount,
+		timeRequired: `PT${remarkPluginFrontmatter.readingMinutes}M`,
 	} : {}),
 	speakable: {
 		"@type": "SpeakableSpecification",
@@ -95,14 +151,20 @@ if (post.data.faq && post.data.faq.length > 0) {
 
 <BaseLayout
 	page_info={{
-		title: `${post.data.title} | Rishi Kumar Chawda`,
+		title: post.data.title,
 		description: post.data.description,
-		image: imageUrl,
+		image: share,
+		// A photograph hero shares a crop of the photo, which crawlers may fetch but must not index.
+		robots: isPhotograph(hero) ? ROBOTS.photographHero : undefined,
 		keywords: post.data.keywords,
 		type: "article",
+		section: post.data.category,
 		datePublished: post.data.date.toISOString(),
 		dateModified: post.data.dateModified ? new Date(post.data.dateModified).toISOString() : post.data.date.toISOString(),
 		tags: post.data.tags,
+		copyrightYear: post.data.date.getUTCFullYear(),
+		// An image credited to the author is the author's own; any other credit means it came from someone or something else.
+		heroCredited: Boolean(post.data.hero_image_credit_text) && post.data.hero_image_credit_text.trim().toLowerCase() !== AUTHOR_NAME.toLowerCase(),
 	}}
 	activeRoute="/articles/"
 	pageSchemaEntities={pageSchemaEntities}

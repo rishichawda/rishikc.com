@@ -1,11 +1,12 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/base_layout.astro";
-import { buildWebPageEntity } from "../../utils/jsonLd";
+import { AUTHOR_NAME, buildBlogEntity, buildWebPageEntity } from "../../utils/jsonLd";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 
 const page_info = {
-    title: "Bits | Rishi Kumar Chawda",
+    title: "Bits",
+    brandSuffix: true,
     description: "Short thoughts, insights, and ideas - bite-sized posts on technology, creativity, and engineering",
     keywords: "bits, thoughts, insights, short posts, Rishi Chawda",
 };
@@ -34,6 +35,7 @@ const yearGroups = Array.from(bitsByYear.entries()).sort(([a], [b]) => b - a);
 
 function formatDate(date: Date): string {
     return new Date(date).toLocaleDateString("en-US", {
+        timeZone: "UTC",
         day: "numeric",
         month: "short",
         year: "numeric",
@@ -49,7 +51,7 @@ const pageSchemaEntities = [
     buildWebPageEntity({
         type: "CollectionPage",
         url: pageUrl,
-        name: "Bits by Rishi Chawda",
+        name: `Bits by ${AUTHOR_NAME}`,
         description: page_info.description,
         mainEntity: {
             "@type": "ItemList",
@@ -67,6 +69,14 @@ const pageSchemaEntities = [
                 }
             }))
         }
+    }),
+    buildBlogEntity({
+        section: "bits",
+        description: page_info.description,
+        posts: sortedBits.map((bit) => {
+            const url = new URL(bit.data.path, Astro.site || "https://rishikc.com").toString();
+            return { id: `${url}#article`, type: "BlogPosting", headline: bit.data.title, url };
+        }),
     }),
 ];
 ---
@@ -307,9 +317,14 @@ const pageSchemaEntities = [
         max-width: 960px;
         margin: 0 auto;
         padding: 0 var(--space-6) var(--space-20);
-        columns: 2;
-        column-gap: var(--space-6);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-6);
+        align-items: start;
     }
+    /* Masonry: script sets each card's row span from its height, so rows stay 1px and
+       auto-placement fills the shortest column in DOM order (left to right). */
+    .bits-grid.is-masonry { grid-auto-rows: 1px; row-gap: 0; }
     .bits-grid:not(.active-view) { display: none; }
 
     .bit-card {
@@ -320,8 +335,6 @@ const pageSchemaEntities = [
         border-radius: 12px;
         background: var(--color-surface);
         text-decoration: none;
-        break-inside: avoid;
-        margin-bottom: var(--space-6);
         color: inherit;
         /* No transform transition or hover transform here: scrollReveal.ts (GSAP) owns
            this element's inline transform via data-reveal, and a CSS transition on
@@ -513,12 +526,37 @@ const pageSchemaEntities = [
     .back-link:hover { text-decoration: underline; }
 
     @media (max-width: 640px) {
-        .bits-grid { columns: 1; }
+        .bits-grid { grid-template-columns: 1fr; }
     }
 </style>
 
 <script is:inline>
+    // Masonry: span each card over 1px rows matching its height plus the column gap. This runs as soon as
+    // the grid is parsed, while the footer does not exist yet, so nothing below the grid moves; the
+    // observer keeps the spans right when a card changes size and is released before a page swap.
+    function setUpMasonry() {
+        var grid = document.querySelector('.bits-grid');
+        if (!grid || grid.dataset.masonry) return;
+        grid.dataset.masonry = 'true';
+        grid.classList.add('is-masonry');
+        var span = function(card) {
+            var gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+            var height = card.offsetHeight;
+            card.style.gridRowEnd = 'span ' + (height ? Math.ceil(height + gap) : 1);
+        };
+        var cards = grid.querySelectorAll('.bit-card');
+        cards.forEach(span);
+        var observer = new ResizeObserver(function(entries) {
+            entries.forEach(function(entry) { span(entry.target); });
+        });
+        cards.forEach(function(card) { observer.observe(card); });
+        document.addEventListener('astro:before-swap', function() { observer.disconnect(); }, { once: true });
+    }
+    setUpMasonry();
+
     document.addEventListener('astro:page-load', () => {
+        setUpMasonry();
+
         // View toggle
         var viewBtns = document.querySelectorAll('.view-btn');
         var viewTargets = document.querySelectorAll('[data-view-target]');

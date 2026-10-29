@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
 import { buildWebPageEntity } from "../../../utils/jsonLd";
+import { isPhotograph, shareImage } from "../../../utils/shareImage";
 import { getAllSeries, getSeriesSlug } from "../../../utils/seriesUtils";
 import Breadcrumbs from "../../../components/common/breadcrumbs.astro";
 
@@ -34,14 +35,19 @@ const profile = profileEntry[0].data as ProfileData;
 const description = seriesData?.data.description
     || `A ${series.totalParts}-part series exploring ${series.seriesTitle.toLowerCase()} in depth.`;
 
+// The series shares the hero of its first part; a photograph hero is blocked, so the page falls back to a card.
+const firstHero = series.articles[0]?.data.hero_image;
+
 const page_info = {
-    title: `${series.seriesTitle} | ${profile.name}`,
+    title: series.seriesTitle,
     description,
+    image: firstHero && !isPhotograph(firstHero) ? shareImage(firstHero, series.articles[0].data.hero_image_alt) : undefined,
     keywords: seriesData?.data.keywords || series.seriesTitle.toLowerCase(),
 };
 
 function formatDate(date: Date): string {
     return new Date(date).toLocaleDateString("en-US", {
+        timeZone: "UTC",
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -61,6 +67,8 @@ const pageSchemaEntities = [
         description,
         mainEntity: {
             "@type": "CreativeWorkSeries",
+            "@id": `${pageUrl}#series`,
+            url: pageUrl,
             name: series.seriesTitle,
             hasPart: series.articles.map((article) => ({
                 "@type": article.data.jsonld_schema || "Article",

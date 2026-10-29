@@ -7,6 +7,8 @@ import expressiveCode from 'astro-expressive-code';
 import { h, s } from 'hastscript'
 
 import siteMetadata from './metadata';
+import { lastModified } from './src/utils/lastmod.mjs';
+import { photoHashes, sha256 } from './src/utils/photoHashes.mjs';
 import remarkToc from 'remark-toc';
 import rehypePresetMinify from 'rehype-preset-minify';
 
@@ -19,6 +21,7 @@ import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
 
 import playformCompress from '@playform/compress';
+import photoRights from './src/integrations/photo-rights.mjs';
 import tailwindcss from '@tailwindcss/vite';
 
 const AnchorLinkIcon = h(
@@ -53,6 +56,10 @@ const AnchorLinkIcon = h(
     )
   )
 )
+
+const contentDates = lastModified();
+
+const photos = photoHashes();
 
 export default defineConfig({
   // Output
@@ -140,6 +147,11 @@ export default defineConfig({
     mdx(),
     sitemap({
       filter: (page) => !page.includes('/search/'),
+      // Only pages with a real date get a lastmod; changefreq and priority are left out on purpose.
+      serialize(item) {
+        const lastmod = contentDates.get(new URL(item.url).pathname);
+        return lastmod ? { ...item, lastmod } : item;
+      },
     }),
     partytown({
       config: {
@@ -161,7 +173,9 @@ export default defineConfig({
       JavaScript: true,
       SVG: true,
       Logger: 0,
-    })
+    }),
+    // Runs after compress, which drops embedded metadata.
+    photoRights(),
   ],
   site: siteMetadata.siteUrl,
   trailingSlash: 'always',
@@ -173,6 +187,14 @@ export default defineConfig({
     build: {
       cssCodeSplit: true,
       chunkSizeWarningLimit: 1000,
+      rolldownOptions: {
+        output: {
+          assetFileNames(info) {
+            const photo = info.source && typeof info.source !== 'string' && photos.has(sha256(info.source));
+            return `_astro/${photo ? 'photos/' : ''}[name].[hash][extname]`;
+          },
+        },
+      },
     },
   },
 

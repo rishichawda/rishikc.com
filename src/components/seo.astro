@@ -1,6 +1,11 @@
 ---
-import favicon from "../../content/assets/logo/logo.png";
 import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
+import portrait from "../../content/assets/me-profesh.jpg";
+import type { ShareImage } from "../utils/shareImage";
+import { cardImage } from "../utils/cards";
+import { LOCALE, NAME_PARTS } from "../utils/topics";
+import { structuredData } from "../utils/siteData";
 import {
   buildGraphForPage,
   buildWebPageEntity,
@@ -16,7 +21,7 @@ interface Education { university: string; institution: string; degree: string; }
 interface LangEntry { name: string; level: string; }
 
 let {
-  page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex },
+  page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots: extraRobots, brandSuffix, section, tdmReservation },
   pageSchemaEntities,
 } = Astro.props;
 
@@ -26,11 +31,19 @@ const canonicalURL = new URL(
   Astro.site || "https://rishikc.com",
 );
 
-// Resolve OG image to absolute URL; fall back to site logo
-const defaultOgImage = new URL(favicon.src, siteOrigin).toString();
-const resolvedImage = image
-  ? (image.startsWith("http") ? image : new URL(image, siteOrigin).toString())
-  : defaultOgImage;
+// The share image: the page's own, else a generated card (src/pages/og). Both carry their real size and type.
+const shareImage: ShareImage = image?.src ? image : cardImage(Astro.url.pathname);
+const resolvedImage = shareImage.src.startsWith("http") ? shareImage.src : new URL(shareImage.src, siteOrigin).toString();
+// The square headshot (the one on the career page) stands for the author wherever the markup asks for an image of the Person.
+const profileImage = new URL((await getImage({ src: portrait, width: 800, height: 800, format: "jpg" })).src, siteOrigin).toString();
+const imageAlt = shareImage.alt ?? title;
+
+// One robots meta for the page; directives from the caller (for example noimageindex) join it.
+// Indexable pages allow large image previews (Discover) and unlimited snippets.
+const robotsDirectives = [
+  ...(noindex ? ["noindex", "nofollow"] : ["index", "follow", "max-image-preview:large", "max-snippet:-1"]),
+  ...(extraRobots ?? []),
+];
 
 const profileEntry = await getCollection("profile");
 const raw = profileEntry[0].data as any;
@@ -38,6 +51,7 @@ const profile: ProfileData = {
   name: raw.name,
   title: raw.title,
   summary: raw.summary,
+  location: raw.location,
   socials: raw.socials as Social[],
   certifications: raw.certifications as Certification[],
   education: raw.education as Education[],
@@ -45,13 +59,13 @@ const profile: ProfileData = {
   languages: raw.languages as LangEntry[],
 };
 
-const siteDescription = "Personal portfolio, technical articles, photography, and open source projects by Rishi Kumar Chawda.";
+const siteDescription = `Personal portfolio, technical articles, photography, and open source projects by ${profile.name}.`;
 
 // Build the @graph for this page
 const pageEntities = pageSchemaEntities || [];
 const fullGraph = buildGraphForPage({
   profile,
-  profileImageUrl: defaultOgImage,
+  profileImageUrl: profileImage,
   siteDescription,
   pathname: Astro.url.pathname,
   pageTitle: title,
@@ -60,37 +74,54 @@ const fullGraph = buildGraphForPage({
 // Escape < and > to prevent HTML parser interference with JSON-LD content
 const graphJson = JSON.stringify(fullGraph).replace(/</g, '\\u003c').replace(/>/g, '\\u003e');
 
-// OG type: use 'article' for article pages, 'website' for everything else
-const ogType = type === "article" ? "article" : "website";
+// OG type: 'article' for articles and bits, 'profile' for the about page, 'website' for the rest
+const ogType = type === "article" || type === "profile" ? type : "website";
+const githubUser = profile.socials.find((s: Social) => s.platform === "GitHub")?.url.split("/").pop();
+
+// Google ignores meta keywords; Bing may read a long list as stuffing. Keep the first 8 distinct terms.
+const keywordList = [...new Set((keywords ?? "").split(",").map((k: string) => k.trim()).filter(Boolean))].slice(0, 8).join(", ");
 ---
 
 <meta charset="UTF-8" />
-<title>{title}</title>
-<meta name="viewport" content="width=device-width" />
+<title>{brandSuffix ? `${title} | ${profile.name}` : title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Browser UI colour; the values are --color-bg in src/styles/global.css -->
+<meta name="theme-color" content={structuredData.head.themeColor.light} media="(prefers-color-scheme: light)" data-theme-color="light" />
+<meta name="theme-color" content={structuredData.head.themeColor.dark} media="(prefers-color-scheme: dark)" data-theme-color="dark" />
 <meta name="author" content={profile.name} />
-<link rel="icon" type="image/png" href={favicon.src} />
+{ogType === "article" ? <link rel="author" href="/about/" /> : null}
+<link rel="icon" href="/favicon.ico" sizes="48x48" />
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
 <link rel="canonical" href={canonicalURL.toString()} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
 <meta name="description" content={description} />
-{noindex ? <meta name="robots" content="noindex, nofollow" /> : null}
+{robotsDirectives.length ? <meta name="robots" content={robotsDirectives.join(", ")} /> : null}
 <meta name="image" content={resolvedImage} />
-{keywords ? <meta name="keywords" content={keywords} /> : null}
+{keywordList ? <meta name="keywords" content={keywordList} /> : null}
 
 <!-- Open Graph -->
 <meta property="og:title" content={title} />
-<meta property="og:site_name" content="Rishi Kumar Chawda" />
+<meta property="og:site_name" content={profile.name} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={resolvedImage} />
-<meta property="og:image:alt" content={title} />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+<meta property="og:image:width" content={shareImage.width} />
+<meta property="og:image:height" content={shareImage.height} />
+{shareImage.type ? <meta property="og:image:type" content={shareImage.type} /> : null}
 <meta property="og:url" content={canonicalURL.toString()} />
 <meta property="og:type" content={ogType} />
-<meta property="og:locale" content="en_US" />
+<meta property="og:locale" content={LOCALE.replace("-", "_")} />
 {datePublished ? <meta property="article:published_time" content={datePublished} /> : null}
 {dateModified ? <meta property="article:modified_time" content={dateModified} /> : null}
 {ogType === "article" ? <meta property="article:author" content="https://rishikc.com/about/" /> : null}
+{tdmReservation ? <meta name="tdm-reservation" content="1" /> : null}
+{section ? <meta property="article:section" content={section} /> : null}
+{ogType === "profile" ? <meta property="profile:first_name" content={NAME_PARTS.given} /> : null}
+{ogType === "profile" ? <meta property="profile:last_name" content={NAME_PARTS.family} /> : null}
+{ogType === "profile" && githubUser ? <meta property="profile:username" content={githubUser} /> : null}
 {tags?.map((tag: string) => <meta property="article:tag" content={tag} />)}
 
 <!-- Twitter -->
@@ -98,7 +129,7 @@ const ogType = type === "article" ? "article" : "website";
 <meta name="twitter:description" content={description} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:image" content={resolvedImage} />
-<meta name="twitter:image:alt" content={title} />
+<meta name="twitter:image:alt" content={imageAlt} />
 <meta name="twitter:site" content="@rishiikc" />
 <meta name="twitter:creator" content="@rishiikc" />
 

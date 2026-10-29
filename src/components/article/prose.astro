@@ -95,7 +95,8 @@
     display: block;
     text-align: center;
     margin-top: calc(var(--space-2) - var(--space-6));
-    opacity: 0.7;
+    /* A muted color, not opacity: opacity blends caption links and code into the background below 4.5:1. */
+    color: var(--color-text-tertiary);
   }
 
   /* Image width: wrap the image in <div class="img-w-25|50|75"> */

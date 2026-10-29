@@ -5,8 +5,8 @@ import "../../styles/gallery.css";
 import StoryCard from "../../components/gallery/story_card.astro";
 import ProjectCard from "../../components/gallery/project_card.astro";
 import { getCollection } from "astro:content";
-import { buildWebPageEntity, personRef } from "../../utils/jsonLd";
-import type { ListItem, ImageGallery as SchemaImageGallery } from "schema-dts";
+import { buildWebPageEntity, photoRights } from "../../utils/jsonLd";
+import { ROBOTS } from "../../utils/topics";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 
 import { Image } from "astro:assets";
@@ -31,9 +31,13 @@ const instagramSocial = profile.socials.find(
 );
 
 const page_info = {
-  title: `Gallery | ${profile.name}`,
+  title: "Gallery",
+  brandSuffix: true,
   description: `Visual stories and photography by ${profile.name}. Immersive photo essays exploring landscapes, streets, and the world through a lens.`,
   keywords: `photography, portfolio, gallery, visual essays, ${profile.name}`,
+  // noai and noimageai are an unofficial convention that some AI crawlers read; harmless to others.
+  robots: ROBOTS.photographs,
+  tdmReservation: true,
 };
 
 // Get stories and galleries
@@ -58,7 +62,7 @@ const pageUrl = new URL(
 
 // Create gallery items for JSON-LD
 const galleryItems = galleries.map((gallery) => {
-  const gallerySchema: SchemaImageGallery = {
+  const gallerySchema: Record<string, unknown> = {
     "@type": "ImageGallery",
     name: gallery.data.title,
     description: gallery.data.description,
@@ -67,14 +71,15 @@ const galleryItems = galleries.map((gallery) => {
       Astro.site || "https://rishikc.com",
     ).toString(),
     image: new URL(
-      gallery.data.featured_image.src,
+      `/previews/${gallery.data.directory}.jpg`,
       Astro.site || "https://rishikc.com",
     ).toString(),
+    ...photoRights(gallery.data.date?.getUTCFullYear()),
   };
   return gallerySchema;
 });
 
-const itemListElements: ListItem[] = galleryItems.map(
+const itemListElements: Record<string, unknown>[] = galleryItems.map(
   (gallerySchema, index) => ({
     "@type": "ListItem",
     position: index + 1,
@@ -258,10 +263,11 @@ const pageSchemaEntities = [
     </section>
 
     <!-- Copyright -->
-    <footer class="copyright-footer">
+    <footer class="copyright-footer" id="copyright">
       <p>
-        All photographs displayed in this gallery are the intellectual property
-        of {profile.name}. Any reproduction, distribution, or use of these
+        All photographs taken by {profile.name}, whether displayed in this
+        gallery or elsewhere on this site, are the intellectual property of
+        {profile.name}. Any reproduction, distribution, or use of these
         images, in whole or in part, without explicit written permission from
         the copyright holder is strictly prohibited.
       </p>

@@ -12,12 +12,14 @@ const profile = profileEntry[0].data as ProfileData;
 let { content, frontmatter } = Astro.props;
 
 const date = new Date(content.date).toLocaleDateString("en-us", {
+	timeZone: "UTC",
 	year: "numeric",
 	month: "long",
 	day: "numeric",
 });
 
 const dateModified = content.dateModified ? new Date(content.dateModified).toLocaleDateString("en-us", {
+	timeZone: "UTC",
 	year: "numeric",
 	month: "long",
 	day: "numeric",

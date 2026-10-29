@@ -29,6 +29,16 @@ try {
     // Expressive Code adds tabindex to scrollable code blocks from an idle callback and a debounced
     // resize observer, so let both run before axe reads the page.
     await page.evaluate(() => new Promise((resolve) => requestIdleCallback(() => setTimeout(resolve, 400))));
+    // The scroll reveals fade elements in over up to 1.6s, and axe reads a half-faded element's blended colors,
+    // which can fail contrast on text that passes once it is fully shown. Wait until every revealed element is
+    // opaque (or give up after 4s: an element that never reveals is not a reason to fail the audit).
+    await page
+      .waitForFunction(
+        () => [...document.querySelectorAll('[data-reveal], [data-reveal-item], [data-reveal-heading]')].every((el) => getComputedStyle(el).opacity === '1'),
+        undefined,
+        { timeout: 4000 },
+      )
+      .catch(() => {});
     const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
     for (const violation of violations) {
       const rule = rules.get(violation.id) ?? {

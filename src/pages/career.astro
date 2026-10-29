@@ -3,7 +3,6 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/base_layout.astro";
 import { buildWebPageEntity, personRef } from "../utils/jsonLd";
 import { Image } from "astro:assets";
-import favicon from "../../content/assets/logo/logo.png";
 import profilePhoto from "../../content/assets/me-profesh.jpg";
 import { fetchMetadata, type WebsiteMeta } from "../utils/metadataFetcher";
 import LinkCard from "../components/LinkCard.astro";
@@ -105,7 +104,8 @@ const currentRole = experiencesWithMeta[0];
 const pastExperiences = experiencesWithMeta.slice(1);
 
 const page_info = {
-  title: `Career | ${profile.name}`,
+  title: "Career",
+  brandSuffix: true,
   description: `Explore ${profile.name}'s professional journey as a ${profile.title}. Learn about work experience, skills, and career achievements.`,
   keywords: `${profile.name}, Career, Software Engineer, Experience, Skills, ${profile.skills.join(', ')}`,
 };

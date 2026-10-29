@@ -42,13 +42,14 @@ const skillCategories = [
 ];
 
 const page_info = {
-  title: `About | ${profile.name}`,
+  title: "About",
+  brandSuffix: true,
+  type: "profile",
   description: profile.summary || `Learn more about ${profile.name}.`,
   keywords: `Rishi Chawda, About Me, Software Engineer, ${profile.skills.join(', ')}`,
 };
 
 const siteUrl = new URL(Astro.url.pathname, Astro.site || "https://rishikc.com").toString();
-const profileImageUrl = `${siteUrl.replace(/\/$/, "")}/${profileImage.src}`;
 
 const firstJobStartDate = new Date("2018-07-01");
 const yearsExperience = new Date().getFullYear() - firstJobStartDate.getFullYear();
