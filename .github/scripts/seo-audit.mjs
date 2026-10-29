@@ -1,6 +1,7 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import sharp from 'sharp';
 
 // Audits the built site's head tags and JSON-LD. Hard failures exit 1; metrics are printed.
 //   node .github/scripts/seo-audit.mjs [--dist dist] [--expected content/about/wikidata.json] [--offline]
@@ -427,6 +428,23 @@ for (const needle of [profileFile.name, profileFile.summary, profileFile.locatio
 for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.knowsAbout ?? []) {
   if (!llms.includes(topic.name)) fail('/llms.txt', `lacks the topic ${topic.name}`);
 }
+
+// ── Rights metadata: every published JPEG and WebP photograph carries the XMP statement and EXIF tags ──
+const rightsDir = join(dist, '_astro', 'photos');
+let rightsFiles = 0;
+for (const name of await readdir(rightsDir).catch(() => [])) {
+  const extension = name.slice(name.lastIndexOf('.') + 1).toLowerCase();
+  if (!['jpg', 'jpeg', 'webp'].includes(extension)) continue;
+  rightsFiles += 1;
+  const bytes = await readFile(join(rightsDir, name));
+  const text = bytes.toString('latin1');
+  for (const needle of ['xmpRights:Marked', 'xmpRights:WebStatement', 'plus:DataMining', 'dc:rights', profileFile.name]) {
+    if (!text.includes(needle)) fail(`/_astro/photos/${name}`, `lacks ${needle} in its metadata`);
+  }
+  const decoded = await sharp(bytes).metadata().catch(() => null);
+  if (!decoded?.width) fail(`/_astro/photos/${name}`, 'does not decode after the metadata was written');
+}
+if (rightsFiles === 0) fail('photos', 'no JPEG or WebP photographs found to check');
 
 // ── Icons: favicon.ico, square PNG icons, the apple-touch-icon and the manifest ──
 // The minifier reorders attributes, so a link is matched by its rel and href in any order.

@@ -28,7 +28,14 @@ export interface StructuredData {
   places: Record<string, string>;
   occupation: { name: string; code: string; codeSet: string; codeSetUrl: string; url: string };
   head: { shortName: string; themeColor: { light: string; dark: string } };
-  photoRights: { licensePath: string; acquireLicensePath: string; notice: string };
+  photoRights: {
+    licensePath: string;
+    acquireLicensePath: string;
+    notice: string;
+    usageTerms: string;
+    dataMining: string;
+    digitalSourceType: string;
+  };
   mentions: { minimumCount: number; limit: number; terms: { pattern: string; wikidata: string; flags?: string }[] };
 }
 

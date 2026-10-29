@@ -23,6 +23,7 @@ import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
 
 import playformCompress from '@playform/compress';
+import photoRights from './src/integrations/photo-rights.mjs';
 import tailwindcss from '@tailwindcss/vite';
 
 const AnchorLinkIcon = h(
@@ -195,7 +196,9 @@ export default defineConfig({
       JavaScript: true,
       SVG: true,
       Logger: 0,
-    })
+    }),
+    // Runs after compress, which drops embedded metadata.
+    photoRights(),
   ],
   site: siteMetadata.siteUrl,
   trailingSlash: 'always',
