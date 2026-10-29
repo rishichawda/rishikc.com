@@ -1,20 +1,11 @@
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 import { KNOWS_ABOUT, topicName } from '../utils/topics';
-import llms from '../../content/about/llms.json';
-
-interface Social { platform: string; url: string; }
-interface Section { title: string; path: string; description?: string; }
+import { llms, profile } from '../utils/siteData';
+import type { Section } from '../utils/siteData';
 
 export async function GET(context: APIContext) {
   const site = context.site!.toString().replace(/\/$/, '');
-  const profile = (await getCollection('profile'))[0].data as {
-    name: string;
-    title: string;
-    summary: string;
-    location: string;
-    socials: Social[];
-  };
   const [projects, contributions] = (await getCollection('projects')).map((entry) => entry.data as unknown[]);
 
   // The text in content/about/llms.json uses these placeholders.

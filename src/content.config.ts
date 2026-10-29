@@ -150,6 +150,24 @@ const profile = defineCollection({
     loader: file("content/about/profile.json", { parser: (text) => JSON.parse(text) }),
 })
 
+// Site data for the structured data, the share cards and llms.txt. Each file wraps its data in a
+// "data" key, like profile.json.
+const wikidata = defineCollection({
+    loader: file("content/about/wikidata.json", { parser: (text) => JSON.parse(text) }),
+})
+
+const structuredData = defineCollection({
+    loader: file("content/about/structured-data.json", { parser: (text) => JSON.parse(text) }),
+})
+
+const shareCards = defineCollection({
+    loader: file("content/about/share-cards.json", { parser: (text) => JSON.parse(text) }),
+})
+
+const llms = defineCollection({
+    loader: file("content/about/llms.json", { parser: (text) => JSON.parse(text) }),
+})
+
 const services = defineCollection({
     loader: file("content/about/services.json", { parser: (text) => JSON.parse(text) })
 })
@@ -167,4 +185,4 @@ const series = defineCollection({
     }),
 });
 
-export const collections = { articles, bits, quotes, logo, gallery, photo_stories, profile, services, projects, series };
+export const collections = { articles, bits, quotes, logo, gallery, photo_stories, profile, services, projects, series, wikidata, structuredData, shareCards, llms };

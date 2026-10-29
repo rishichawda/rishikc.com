@@ -7,7 +7,7 @@
  *   - WebSite: https://rishikc.com/#website
  *   - Employer (the Person's worksFor organization): https://rishikc.com/#employer
  */
-import profileFile from "../../content/about/profile.json";
+import { profile as author } from "./siteData";
 import {
   ALTERNATE_NAMES,
   CREDENTIAL_BODIES,
@@ -26,7 +26,7 @@ import {
 
 const SITE_URL = "https://rishikc.com";
 const ABOUT_URL = `${SITE_URL}/about/`;
-export const AUTHOR_NAME: string = profileFile.data.name;
+export const AUTHOR_NAME = author.name;
 
 // ── Stable @id URIs ──
 export const IDS = {

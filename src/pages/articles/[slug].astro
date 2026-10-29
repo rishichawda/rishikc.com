@@ -10,6 +10,7 @@ import SeriesNavigation from "../../components/article/series_navigation.astro";
 import { getSeriesInfo, getSeriesSlug, getSeriesTitle } from "../../utils/seriesUtils";
 import { authorRef, blogRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
 import { LOCALE, TAG_TOPIC_IDS, entity } from "../../utils/topics";
+import { findMentions } from "../../utils/mentions";
 import { getImage } from "astro:assets";
 import { isPhotograph, previewImage, shareImage } from "../../utils/shareImage";
 import "remark-notes-plugin/styles.css";
@@ -82,9 +83,9 @@ const topics = post.data.tags
 	.filter((id, index, ids) => id && ids.indexOf(id) === index)
 	.map((id) => entity(id));
 
-// Terms the text uses often (the remark plugin counts them), apart from the topics it is about.
+// Terms the text uses often (thresholds in content/about/structured-data.json), apart from the topics it is about.
 const aboutIds = new Set(post.data.tags.map((tag) => TAG_TOPIC_IDS[tag.toLowerCase()]));
-const mentioned = ((remarkPluginFrontmatter?.mentions ?? []) as string[])
+const mentioned = findMentions(post.body ?? "")
 	.filter((id) => !aboutIds.has(id))
 	.map((id) => entity(id));
 

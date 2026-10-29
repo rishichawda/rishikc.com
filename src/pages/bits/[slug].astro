@@ -8,6 +8,7 @@ import { authorRef, blogRef, buildWebPageEntity, websiteRef } from "../../utils/
 import { isPhotograph, shareImage } from "../../utils/shareImage";
 import { bitCardImage } from "../../utils/cards";
 import { LOCALE, entity } from "../../utils/topics";
+import { findMentions } from "../../utils/mentions";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import "remark-notes-plugin/styles.css";
 
@@ -53,8 +54,8 @@ const hero = bit.data.hero_image;
 const share = hero && !isPhotograph(hero) ? shareImage(hero, bit.data.title) : bitCardImage(bit.id, bit.data.title);
 const isoDate = bit.data.date.toISOString();
 
-// Terms the text uses often; the remark plugin counts them.
-const mentioned = ((remarkPluginFrontmatter?.mentions ?? []) as string[]).map((id) => entity(id));
+// Terms the text uses often; the thresholds are in content/about/structured-data.json.
+const mentioned = findMentions(bit.body ?? "").map((id) => entity(id));
 
 const bitEntity: Record<string, unknown> = {
     "@type": "BlogPosting",

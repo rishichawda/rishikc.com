@@ -13,7 +13,7 @@ const SITE = 'https://rishikc.com';
 const expectedFile = flag('--expected') >= 0
   ? resolve(args[flag('--expected') + 1])
   : fileURLToPath(new URL('../../content/about/wikidata.json', import.meta.url));
-const expected = JSON.parse(await readFile(expectedFile, 'utf8'));
+const expected = JSON.parse(await readFile(expectedFile, 'utf8')).data;
 
 const PERSON_KEYS = ['author', 'creator', 'publisher', 'copyrightHolder', 'provider'];
 const failures = [];

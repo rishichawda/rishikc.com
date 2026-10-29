@@ -7,18 +7,13 @@ import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import cardData from "../../content/about/share-cards.json";
+import { shareCards as source, type Card } from "./siteData";
 import { AUTHOR_NAME } from "./jsonLd";
 import type { ShareImage } from "./shareImage";
 
-export interface Card {
-  title: string;
-  subtitle: string;
-  kicker: string;
-}
+export type { Card };
 
 /** The card text, from content/about/share-cards.json; "{name}" stands for the author's name. */
-const source: { footer: string; default: Card; bit: Pick<Card, "kicker" | "subtitle">; pages: Record<string, Card> } = cardData;
 const fill = (card: Card): Card => ({
   kicker: card.kicker.replaceAll("{name}", AUTHOR_NAME),
   title: card.title.replaceAll("{name}", AUTHOR_NAME),
