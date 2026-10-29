@@ -333,6 +333,7 @@ const pageByPath = new Map(pages.map((p) => [p.path, p]));
 const sitemapXml = (await Promise.all((await readdir(dist)).filter((f) => /^sitemap-\d+\.xml$/.test(f)).map((f) => readFile(join(dist, f), 'utf8')))).join('');
 const structuredFile = JSON.parse(await readFile(join(repoRoot, 'content/about/structured-data.json'), 'utf8')).data;
 const contentLicense = structuredFile.contentLicense;
+const photoLicensePath = structuredFile.photoRights.licensePath;
 const RATIOS = [16 / 9, 4 / 3, 1];
 for (const page of pages) {
   for (const article of articleNodes(page)) {
@@ -350,7 +351,12 @@ for (const page of pages) {
     if (!page.html.includes('>Rishi Kumar Chawda</a>')) fail(page.path, 'article page shows no visible byline linking the author');
     // Hero images that are gallery photographs get the preview as their image instead of a set.
     const images = [article.image].flat().filter(Boolean);
-    if (page.meta('og:image')?.includes('/previews/')) continue;
+    if (page.meta('og:image')?.includes('/previews/')) {
+      // A photograph hero carries the photograph rights, not the article license.
+      const photo = [article.image].flat().find((image) => typeof image === 'object');
+      if (!photo || !String(photo.license).endsWith(photoLicensePath) || !photo.copyrightNotice || !photo.acquireLicensePage) fail(page.path, 'photograph hero image lacks the photograph rights markup');
+      continue;
+    }
     // A bit has its own hero or a generated card, not a 16x9, 4x3 and 1x1 set.
     if (page.path.startsWith('/bits/')) continue;
     if (images.length === 0) fail(page.path, 'article lists no image');

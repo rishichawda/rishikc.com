@@ -8,7 +8,7 @@ import TableOfContents from "../../components/article/table_of_contents.astro";
 import ExternalLink from "../../components/article/ExternalLink.astro";
 import SeriesNavigation from "../../components/article/series_navigation.astro";
 import { getSeriesInfo, getSeriesSlug, getSeriesTitle } from "../../utils/seriesUtils";
-import { AUTHOR_NAME, authorRef, blogRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
+import { AUTHOR_NAME, authorRef, blogRef, buildWebPageEntity, photoRights, websiteRef } from "../../utils/jsonLd";
 import { CONTENT_LICENSE, LOCALE, TAG_TOPIC_IDS, entity } from "../../utils/topics";
 import { findMentions } from "../../utils/mentions";
 import { getImage } from "astro:assets";
@@ -95,7 +95,8 @@ const articleEntity: Record<string, unknown> = {
 	url: articleUrl,
 	headline: post.data.title,
 	description: post.data.description,
-	image: imageSet.length ? imageSet : imageUrl,
+	// A photograph hero is the author's, so its rights travel with it: the preview is an ImageObject with the photo rights.
+	image: imageSet.length ? imageSet : isPhotograph(hero) ? { "@type": "ImageObject", url: imageUrl, contentUrl: imageUrl, ...photoRights(post.data.date.getUTCFullYear()) } : imageUrl,
 	...(imageSet.length ? { thumbnailUrl: imageSet.at(-1) } : {}),
 	datePublished: isoDate,
 	dateModified: isoDateModified,
