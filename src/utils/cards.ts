@@ -69,6 +69,24 @@ const fonts = await Promise.all(
   })),
 );
 
+// The card font is the latin subset. A character outside it would be drawn as an empty box, so a card
+// whose text has one fails the build, naming the character, instead of shipping a broken share image.
+const latinRanges = (
+  JSON.parse(await readFile(join(fontDir, "..", "unicode.json"), "utf8")).latin as string
+)
+  .split(",")
+  .map((range) => range.replace("U+", "").split("-U+").join("-").split("-").map((hex) => parseInt(hex, 16)))
+  .map(([from, to = from]) => [from, to] as const);
+
+function assertCovered(text: string, where: string) {
+  for (const char of text) {
+    const code = char.codePointAt(0)!;
+    if (!latinRanges.some(([from, to]) => code >= from && code <= to)) {
+      throw new Error(`The ${where} "${text}" has "${char}" (U+${code.toString(16).toUpperCase()}), which the card font does not have. Add a font that does to src/utils/cards.ts.`);
+    }
+  }
+}
+
 // The wide logo (5:3, white tile) sits in the top-right corner, drawn at twice its size so it stays sharp.
 const LOGO_WIDTH = 120;
 const LOGO_HEIGHT = Math.round((LOGO_WIDTH * 3) / 5);
@@ -86,6 +104,7 @@ const text = (content: string, style: Record<string, string | number>) => ({
 
 /** A translucent strip with one line of white text, to lay over the bottom edge of a preview. */
 export async function renderCreditStrip(line: string, width: number, height: number): Promise<Uint8Array> {
+  assertCovered(line, "credit line");
   const tree = {
     type: "div",
     props: {
@@ -110,7 +129,12 @@ export async function renderCreditStrip(line: string, width: number, height: num
 
 /** Render a card to PNG bytes: a white print-style card on a grey mat, with the logo top-right. */
 export async function renderCard(card: Card): Promise<Uint8Array> {
-  const titleSize = card.title.length > 70 ? 55 : card.title.length > 40 ? 69 : 88;
+  assertCovered(card.kicker, "card kicker");
+  assertCovered(card.title, "card title");
+  assertCovered(card.subtitle, "card subtitle");
+  assertCovered(source.footer, "card footer");
+  // The title shrinks in steps as it gets longer; the line clamps cut anything that is still too long.
+  const titleSize = card.title.length > 110 ? 44 : card.title.length > 70 ? 55 : card.title.length > 40 ? 69 : 88;
   const row = { display: "flex", justifyContent: "space-between", alignItems: "center" };
   const tree = {
     type: "div",
@@ -154,8 +178,8 @@ export async function renderCard(card: Card): Promise<Uint8Array> {
               props: {
                 style: { display: "flex", flexDirection: "column", gap: 18 },
                 children: [
-                  text(card.title, { fontSize: titleSize, fontWeight: 700, color: "#141414", lineHeight: 1.08 }),
-                  text(card.subtitle, { fontSize: 34, fontWeight: 500, color: "#5A5A5A", lineHeight: 1.3 }),
+                  text(card.title, { fontSize: titleSize, fontWeight: 700, color: "#141414", lineHeight: 1.08, display: "block", lineClamp: 3 }),
+                  text(card.subtitle, { fontSize: 34, fontWeight: 500, color: "#5A5A5A", lineHeight: 1.3, display: "block", lineClamp: 2 }),
                 ],
               },
             },
