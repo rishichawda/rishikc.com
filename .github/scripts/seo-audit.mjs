@@ -12,6 +12,14 @@ const flag = (name) => args.indexOf(name);
 const dist = resolve(flag('--dist') >= 0 ? args[flag('--dist') + 1] : 'dist');
 const offline = flag('--offline') >= 0;
 const SITE = 'https://rishikc.com';
+// True for an address on the site itself; a prefix test would also accept https://rishikc.com.example.
+const isSiteUrl = (url) => {
+  try {
+    return new URL(url).origin === SITE;
+  } catch {
+    return false;
+  }
+};
 const expectedFile = flag('--expected') >= 0
   ? resolve(args[flag('--expected') + 1])
   : fileURLToPath(new URL('../../content/about/wikidata.json', import.meta.url));
@@ -29,8 +37,9 @@ async function* walk(dir) {
   }
 }
 
-const decode = (text) =>
-  text.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+// One pass, so that the text "&quot;" (written &amp;quot; in the HTML) is not decoded a second time.
+const ENTITIES = { amp: '&', quot: '"', '#39': "'", lt: '<', gt: '>' };
+const decode = (text) => text.replace(/&(amp|quot|#39|lt|gt);/g, (_, name) => ENTITIES[name]);
 
 function attributes(tag) {
   const attrs = {};
@@ -88,7 +97,7 @@ function imageSize(buf) {
 
 // Local file for a site URL, or null for an external one.
 function distFile(url) {
-  if (!url.startsWith(SITE)) return null;
+  if (!isSiteUrl(url)) return null;
   const path = decodeURIComponent(new URL(url).pathname);
   return join(dist, path.endsWith('/') ? `${path}index.html` : path);
 }
@@ -233,7 +242,7 @@ const isNamed = (agent) => agent !== '*' && groups.some((g) => g.agents.includes
 const heroPaths = new Set();
 for (const page of pages) {
   const url = page.meta('og:image');
-  if (url?.startsWith(SITE) && !url.includes(PHOTO_PATH)) heroPaths.add(new URL(url).pathname);
+  if (isSiteUrl(url) && !url.includes(PHOTO_PATH)) heroPaths.add(new URL(url).pathname);
 }
 if (groups.length === 0) fail('robots.txt', 'no groups found');
 for (const agent of robotAgents) {
@@ -426,7 +435,7 @@ for (const needle of ['<dc:creator>', '<category>', '<language>']) if (!rssXml.i
 const llms = (await exists(join(dist, 'llms.txt'))) ? await readFile(join(dist, 'llms.txt'), 'utf8') : '';
 // Every address the file links to must be a page or file the build made, and it must not publish an email.
 for (const [, url] of llms.matchAll(/\]\((https?:[^)\s]+)\)/g)) {
-  if (!url.startsWith(SITE)) continue;
+  if (!isSiteUrl(url)) continue;
   const path = new URL(url).pathname;
   const file = path.endsWith('/') ? join(dist, path, 'index.html') : join(dist, path);
   if (!(await exists(file))) fail('/llms.txt', `links to ${url}, which the build did not make`);
@@ -539,7 +548,7 @@ if (await exists(manifestFile)) {
   if (!manifest.icons?.some((icon) => icon.purpose === 'maskable')) fail('/manifest.webmanifest', 'lists no maskable icon');
 } else fail('/manifest.webmanifest', 'was not built');
 const personImage = aboutPerson?.image ?? '';
-const personImageSize = personImage.startsWith(SITE) && (await exists(distFile(personImage))) ? imageSize(await readFile(distFile(personImage))) : null;
+const personImageSize = isSiteUrl(personImage) && (await exists(distFile(personImage))) ? imageSize(await readFile(distFile(personImage))) : null;
 if (!personImageSize || personImageSize.width !== personImageSize.height) fail('/about/', 'Person image is not a square image of the site');
 
 // ── Blog: each section's index lists its posts, and each post says it is part of the section ──
