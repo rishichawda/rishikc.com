@@ -271,7 +271,8 @@ export class ClientSideSearch {
         return new Date(dateString).toLocaleDateString("en-US", {
             day: "numeric",
             month: "long",
-                        year: "numeric",
+            year: "numeric",
+            timeZone: "UTC",
         });
     }
 }    // Singleton initialization function to prevent multiple instances
