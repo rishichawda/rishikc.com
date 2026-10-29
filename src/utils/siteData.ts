@@ -40,6 +40,7 @@ export interface StructuredData {
     dataMining: string;
     digitalSourceType: string;
   };
+  contentLicense: { name: string; url: string; footerNotice: string };
   mentions: { minimumCount: number; limit: number; terms: { pattern: string; wikidata: string; flags?: string }[] };
 }
 

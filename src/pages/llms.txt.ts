@@ -2,6 +2,7 @@ import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 import { KNOWS_ABOUT, topicName } from '../utils/topics';
 import { llms, profile } from '../utils/siteData';
+import { CONTENT_LICENSE } from '../utils/topics';
 import type { Section } from '../utils/siteData';
 
 export async function GET(context: APIContext) {
@@ -13,6 +14,7 @@ export async function GET(context: APIContext) {
     text
       .replaceAll('{name}', profile.name)
       .replaceAll('{site}', site)
+      .replaceAll('{license}', `${CONTENT_LICENSE.name} (${CONTENT_LICENSE.url})`)
       .replaceAll('{projects}', String(projects.length))
       .replaceAll('{contributions}', String(contributions.length));
   const link = ({ title, path, description }: Section) =>

@@ -7,7 +7,7 @@ import ExternalLink from "../../components/article/ExternalLink.astro";
 import { authorRef, blogRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
 import { isPhotograph, shareImage } from "../../utils/shareImage";
 import { bitCardImage } from "../../utils/cards";
-import { LOCALE, entity } from "../../utils/topics";
+import { CONTENT_LICENSE, LOCALE, entity } from "../../utils/topics";
 import { findMentions } from "../../utils/mentions";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import "remark-notes-plugin/styles.css";
@@ -69,6 +69,7 @@ const bitEntity: Record<string, unknown> = {
     author: authorRef,
     publisher: authorRef,
     copyrightHolder: authorRef,
+    license: CONTENT_LICENSE.url,
     copyrightYear: bit.data.date.getUTCFullYear(),
     isAccessibleForFree: true,
     inLanguage: LOCALE,

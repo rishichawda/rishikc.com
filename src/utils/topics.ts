@@ -37,3 +37,5 @@ export const PLACE_IDS = data.places;
 /** The occupation category the author's roles belong to, as an O*NET-SOC code. */
 export const OCCUPATION = data.occupation;
 export const PHOTO_RIGHTS = data.photoRights;
+/** The license of the articles and bits (the photographs are all rights reserved). */
+export const CONTENT_LICENSE = data.contentLicense;

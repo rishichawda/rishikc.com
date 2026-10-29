@@ -331,6 +331,7 @@ for (const page of pages) {
 const articleNodes = (page) => page.nodes.filter((n) => typesOf(n).some((t) => /Article|BlogPosting/.test(t)) && /#article$/.test(n['@id'] ?? ''));
 const pageByPath = new Map(pages.map((p) => [p.path, p]));
 const sitemapXml = (await Promise.all((await readdir(dist)).filter((f) => /^sitemap-\d+\.xml$/.test(f)).map((f) => readFile(join(dist, f), 'utf8')))).join('');
+const contentLicense = JSON.parse(await readFile(join(repoRoot, 'content/about/structured-data.json'), 'utf8')).data.contentLicense;
 const RATIOS = [16 / 9, 4 / 3, 1];
 for (const page of pages) {
   for (const article of articleNodes(page)) {
@@ -339,6 +340,7 @@ for (const page of pages) {
     if (article.inLanguage !== 'en-US') fail(page.path, 'article inLanguage is not en-US');
     if (article.isAccessibleForFree !== true) fail(page.path, 'article lacks isAccessibleForFree');
     if (!article.copyrightYear) fail(page.path, 'article lacks copyrightYear');
+    if (article.license !== contentLicense.url) fail(page.path, `article license is ${article.license}, expected ${contentLicense.url}`);
     const parts = [article.isPartOf].flat().filter(Boolean);
     if (!parts.some((p) => p['@id'] === `${SITE}/#website`)) fail(page.path, 'article is not part of the WebSite');
     if (page.meta('og:type') !== 'article') fail(page.path, 'article page lacks og:type article');
@@ -424,6 +426,11 @@ for (const [, url] of llms.matchAll(/\]\((https?:[^)\s]+)\)/g)) {
 if (/[\w.+-]+@[\w-]+\.[\w.]+/.test(llms)) fail('/llms.txt', 'contains an email address');
 for (const needle of [profileFile.name, profileFile.summary, profileFile.location]) {
   if (needle && !llms.includes(needle)) fail('/llms.txt', `lacks "${needle}" from profile.json`);
+}
+if (!llms.includes(contentLicense.url)) fail('/llms.txt', `lacks the content license ${contentLicense.url}`);
+for (const path of ['/', '/articles/', '/gallery/']) {
+  const html = (await exists(join(dist, path, 'index.html'))) ? await readFile(join(dist, path, 'index.html'), 'utf8') : '';
+  if (!html.includes(`href=${contentLicense.url}`) && !html.includes(`href="${contentLicense.url}"`)) fail(path, 'the footer does not link the content license');
 }
 for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.knowsAbout ?? []) {
   if (!llms.includes(topic.name)) fail('/llms.txt', `lacks the topic ${topic.name}`);

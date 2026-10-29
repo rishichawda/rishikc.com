@@ -1,7 +1,9 @@
 ---
 import { AUTHOR_NAME } from "../utils/jsonLd";
+import { CONTENT_LICENSE } from "../utils/topics";
 
 const currentYear = new Date().getFullYear();
+const [licenseBefore, licenseAfter] = CONTENT_LICENSE.footerNotice.split("{license}");
 
 const socialLinks = [
   {
@@ -59,6 +61,9 @@ const footerLinks = [
       <!-- Copyright -->
       <p class="footer-copyright">
         © {currentYear} {AUTHOR_NAME}
+      </p>
+      <p class="footer-license">
+        {licenseBefore}<a href={CONTENT_LICENSE.url} rel="license noopener noreferrer" target="_blank">{CONTENT_LICENSE.name}</a>{licenseAfter}
       </p>
 
       <!-- Footer navigation -->
@@ -128,10 +133,21 @@ const footerLinks = [
     height: 24px;
   }
 
-  .footer-copyright {
+  .footer-copyright,
+  .footer-license {
     font-family: var(--font-ui);
     font-size: var(--text-ui-small);
     color: var(--color-text-muted);
+  }
+
+  .footer-license {
+    max-width: 60ch;
+    text-align: center;
+  }
+
+  .footer-license a {
+    color: inherit;
+    text-decoration: underline;
   }
 
   .footer-nav {

@@ -9,7 +9,7 @@ import ExternalLink from "../../components/article/ExternalLink.astro";
 import SeriesNavigation from "../../components/article/series_navigation.astro";
 import { getSeriesInfo, getSeriesSlug, getSeriesTitle } from "../../utils/seriesUtils";
 import { authorRef, blogRef, buildWebPageEntity, websiteRef } from "../../utils/jsonLd";
-import { LOCALE, TAG_TOPIC_IDS, entity } from "../../utils/topics";
+import { CONTENT_LICENSE, LOCALE, TAG_TOPIC_IDS, entity } from "../../utils/topics";
 import { findMentions } from "../../utils/mentions";
 import { getImage } from "astro:assets";
 import { isPhotograph, previewImage, shareImage } from "../../utils/shareImage";
@@ -102,6 +102,7 @@ const articleEntity: Record<string, unknown> = {
 	author: authorRef,
 	publisher: authorRef,
 	copyrightHolder: authorRef,
+	license: CONTENT_LICENSE.url,
 	copyrightYear: post.data.date.getUTCFullYear(),
 	isAccessibleForFree: true,
 	inLanguage: LOCALE,
