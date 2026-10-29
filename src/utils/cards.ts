@@ -1,10 +1,11 @@
 /**
  * Generated share cards (1200x630 PNG) for pages that have no image of their own: the home page,
- * the hub pages and bits without a hero image. Text on a brand background, no photographs, so a
- * card is crawlable and never lands under /_astro/photos/. Served from /og/ by src/pages/og.
+ * the hub pages and bits without a hero image. Text and the wide logo on a white card, no
+ * photographs, so a card is crawlable and never lands under /_astro/photos/. Served from /og/ by src/pages/og.
  */
 import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
+import sharp from "sharp";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { shareCards as source, type Card } from "./siteData";
@@ -68,6 +69,16 @@ const fonts = await Promise.all(
   })),
 );
 
+// The wide logo (5:3, white tile) sits in the top-right corner, drawn at twice its size so it stays sharp.
+const LOGO_WIDTH = 120;
+const LOGO_HEIGHT = Math.round((LOGO_WIDTH * 3) / 5);
+const logoSrc = `data:image/png;base64,${(
+  await sharp(join(process.cwd(), "content/assets/logo/logo_wide.png"))
+    .resize(LOGO_WIDTH * 2, LOGO_HEIGHT * 2)
+    .png({ compressionLevel: 9 })
+    .toBuffer()
+).toString("base64")}`;
+
 const text = (content: string, style: Record<string, string | number>) => ({
   type: "div",
   props: { style: { display: "flex", ...style }, children: content },
@@ -97,9 +108,10 @@ export async function renderCreditStrip(line: string, width: number, height: num
   return new Resvg(svg).render().asPng();
 }
 
-/** Render a card to PNG bytes. */
+/** Render a card to PNG bytes: a white print-style card on a grey mat, with the logo top-right. */
 export async function renderCard(card: Card): Promise<Uint8Array> {
-  const titleSize = card.title.length > 70 ? 54 : card.title.length > 40 ? 66 : 82;
+  const titleSize = card.title.length > 70 ? 55 : card.title.length > 40 ? 69 : 88;
+  const row = { display: "flex", justifyContent: "space-between", alignItems: "center" };
   const tree = {
     type: "div",
     props: {
@@ -107,28 +119,59 @@ export async function renderCard(card: Card): Promise<Uint8Array> {
         width: 1200,
         height: 630,
         display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
         boxSizing: "border-box",
-        padding: 80,
-        background: "#141414",
-        borderLeft: "16px solid #9aa7d7",
+        padding: 36,
+        background: "#F0F0F0",
         fontFamily: "Red Hat Display",
       },
-      children: [
-        text(card.kicker, { fontSize: 32, fontWeight: 700, color: "#9aa7d7", letterSpacing: 2 }),
-        {
-          type: "div",
-          props: {
-            style: { display: "flex", flexDirection: "column", gap: 24 },
-            children: [
-              text(card.title, { fontSize: titleSize, fontWeight: 700, color: "#ECECEC", lineHeight: 1.12 }),
-              text(card.subtitle, { fontSize: 36, fontWeight: 500, color: "#B8B8B8", lineHeight: 1.3 }),
-            ],
+      children: {
+        type: "div",
+        props: {
+          style: {
+            display: "flex",
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "space-between",
+            boxSizing: "border-box",
+            padding: "44px 56px",
+            background: "#FFFFFF",
+            borderRadius: 6,
+            boxShadow: "0 6px 28px rgba(0, 0, 0, 0.14)",
           },
+          children: [
+            {
+              type: "div",
+              props: {
+                style: row,
+                children: [
+                  text(card.kicker.toUpperCase(), { fontSize: 28, fontWeight: 700, color: "#586898", letterSpacing: 2 }),
+                  { type: "img", props: { src: logoSrc, width: LOGO_WIDTH, height: LOGO_HEIGHT } },
+                ],
+              },
+            },
+            {
+              type: "div",
+              props: {
+                style: { display: "flex", flexDirection: "column", gap: 18 },
+                children: [
+                  text(card.title, { fontSize: titleSize, fontWeight: 700, color: "#141414", lineHeight: 1.08 }),
+                  text(card.subtitle, { fontSize: 34, fontWeight: 500, color: "#5A5A5A", lineHeight: 1.3 }),
+                ],
+              },
+            },
+            {
+              type: "div",
+              props: {
+                style: row,
+                children: [
+                  text(source.footer, { fontSize: 26, fontWeight: 500, color: "#777777" }),
+                  text("", { width: 200, height: 8, borderRadius: 4, background: "linear-gradient(90deg, #9aa7d7, #E8A87C)" }),
+                ],
+              },
+            },
+          ],
         },
-        text(source.footer, { fontSize: 30, fontWeight: 500, color: "#B8B8B8" }),
-      ],
+      },
     },
   };
   const svg = await satori(tree as Parameters<typeof satori>[0], { width: 1200, height: 630, fonts });
