@@ -15,6 +15,8 @@ export async function GET(context: APIContext) {
       .replaceAll('{name}', profile.name)
       .replaceAll('{site}', site)
       .replaceAll('{license}', `${CONTENT_LICENSE.name} (${CONTENT_LICENSE.url})`)
+      .replaceAll('{exclusions}', CONTENT_LICENSE.exclusions)
+      .replaceAll('{code}', `${CONTENT_LICENSE.code.name} (${site}${CONTENT_LICENSE.termsPath}#code)`)
       .replaceAll('{projects}', String(projects.length))
       .replaceAll('{contributions}', String(contributions.length));
   const link = ({ title, path, description }: Section) =>

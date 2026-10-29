@@ -105,6 +105,7 @@ const pageSchemaEntities = [
         datePublished: isoDate,
         dateModified: isoDate,
         tags: bit.data.tags,
+        copyrightYear: bit.data.date.getUTCFullYear(),
     }}
     activeRoute="/bits/"
     pageSchemaEntities={pageSchemaEntities}

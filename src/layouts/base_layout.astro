@@ -13,7 +13,7 @@ import { ClientRouter } from "astro:transitions";
 import { LOCALE } from "../utils/topics";
 
 let {
-	page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots, brandSuffix, section, tdmReservation },
+	page_info: { title, description, image, keywords, type, datePublished, dateModified, tags, noindex, robots, brandSuffix, section, tdmReservation, heroCredited, copyrightYear },
 	activeRoute,
 	pageSchemaEntities,
 } = Astro.props;
@@ -123,7 +123,7 @@ const seo = {
 		<main id="main-content" class="pt-[var(--nav-height)]" tabindex="-1">
 			<slot />
 		</main>
-		<Footer />
+		<Footer heroCredited={heroCredited} copyrightYear={copyrightYear} />
 		<CustomCursor />
 		<KeyboardShortcutsModal />
 	</body>

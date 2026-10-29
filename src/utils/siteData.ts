@@ -40,7 +40,18 @@ export interface StructuredData {
     dataMining: string;
     digitalSourceType: string;
   };
-  contentLicense: { name: string; url: string; footerNotice: string };
+  contentLicense: {
+    name: string;
+    copyrightYear: number;
+    url: string;
+    code: { name: string; text: string };
+    termsPath: string;
+    termsLabel: string;
+    exclusions: string;
+    notices: Record<"site" | "articles" | "article" | "bits" | "bit" | "gallery", string>;
+    heroCredited: string;
+    feedNotice: string;
+  };
   mentions: { minimumCount: number; limit: number; terms: { pattern: string; wikidata: string; flags?: string }[] };
 }
 

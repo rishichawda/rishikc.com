@@ -312,7 +312,7 @@ if (await exists(join(dist, 'llms-full.txt')) && shortName(await readFile(join(d
 
 // ── Titles: the brand suffix only on short hub pages; every other name and title is bare ──
 const BRAND = ' | Rishi Kumar Chawda';
-const HUBS = new Set(['/404', '/about/', '/articles/', '/articles/series/', '/bits/', '/career/', '/contact/', '/gallery/', '/privacy/', '/projects/', '/reads/', '/search/']);
+const HUBS = new Set(['/404', '/about/', '/articles/', '/articles/series/', '/bits/', '/career/', '/contact/', '/gallery/', '/license/', '/privacy/', '/projects/', '/reads/', '/search/']);
 for (const page of pages) {
   const suffixed = page.title.endsWith(BRAND);
   if (HUBS.has(page.path)) {
@@ -331,7 +331,8 @@ for (const page of pages) {
 const articleNodes = (page) => page.nodes.filter((n) => typesOf(n).some((t) => /Article|BlogPosting/.test(t)) && /#article$/.test(n['@id'] ?? ''));
 const pageByPath = new Map(pages.map((p) => [p.path, p]));
 const sitemapXml = (await Promise.all((await readdir(dist)).filter((f) => /^sitemap-\d+\.xml$/.test(f)).map((f) => readFile(join(dist, f), 'utf8')))).join('');
-const contentLicense = JSON.parse(await readFile(join(repoRoot, 'content/about/structured-data.json'), 'utf8')).data.contentLicense;
+const structuredFile = JSON.parse(await readFile(join(repoRoot, 'content/about/structured-data.json'), 'utf8')).data;
+const contentLicense = structuredFile.contentLicense;
 const RATIOS = [16 / 9, 4 / 3, 1];
 for (const page of pages) {
   for (const article of articleNodes(page)) {
@@ -428,10 +429,50 @@ for (const needle of [profileFile.name, profileFile.summary, profileFile.locatio
   if (needle && !llms.includes(needle)) fail('/llms.txt', `lacks "${needle}" from profile.json`);
 }
 if (!llms.includes(contentLicense.url)) fail('/llms.txt', `lacks the content license ${contentLicense.url}`);
-for (const path of ['/', '/articles/', '/gallery/']) {
-  const html = (await exists(join(dist, path, 'index.html'))) ? await readFile(join(dist, path, 'index.html'), 'utf8') : '';
-  if (!html.includes(`href=${contentLicense.url}`) && !html.includes(`href="${contentLicense.url}"`)) fail(path, 'the footer does not link the content license');
+// ── License notice: every page's footer carries the notice for its kind of page ──
+const footerNotice = (page) => decode((page.html.match(/<p class="footer-license[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? '').replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
+const footerHtml = (page) => page.html.match(/<p class="footer-license[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? '';
+const licenseContextOf = (path) =>
+  /^\/articles\/(?!series\/)[^/]+\/$/.test(path) ? 'article'
+  : path.startsWith('/articles/') ? 'articles'
+  : /^\/bits\/[^/]+\/$/.test(path) ? 'bit'
+  : path.startsWith('/bits/') ? 'bits'
+  : path.startsWith('/gallery/') ? 'gallery'
+  : 'site';
+for (const page of pages) {
+  const context = licenseContextOf(page.path);
+  const text = footerNotice(page);
+  // An article or bit shows the year it was published; any other page shows the year the site was first published.
+  const footerYear = page.html.match(/<p class="footer-copyright[^>]*>\s*©\s*(\d{4})/)?.[1];
+  const expectedYear = context === 'article' || context === 'bit' ? page.meta('article:published_time')?.slice(0, 4) : String(contentLicense.copyrightYear);
+  if (!expectedYear || footerYear !== expectedYear) fail(page.path, `footer copyright year is ${footerYear}, expected ${expectedYear}`);
+  const expected = contentLicense.notices[context].split('{')[0].trim();
+  if (!text.startsWith(expected)) fail(page.path, `the footer notice for a ${context} page should start "${expected}", got "${text.slice(0, 60)}"`);
+  if (!footerHtml(page).includes(`href="${contentLicense.termsPath}"`)) fail(page.path, 'the footer does not link the license page');
+  const claimsCc = ['article', 'articles', 'bit', 'bits'].includes(context);
+  if (claimsCc !== text.includes(contentLicense.name)) fail(page.path, claimsCc ? `the footer does not name ${contentLicense.name}` : `the footer names ${contentLicense.name} on a ${context} page`);
+  if (claimsCc && !text.includes(contentLicense.exclusions)) fail(page.path, 'the footer does not list what the licenses do not cover');
+  if (claimsCc && !footerHtml(page).includes(contentLicense.url)) fail(page.path, 'the footer does not link the legal code');
+  // A page that shows a photograph must say photographs are not under the article license.
+  if (page.html.includes('/_astro/photos/') && !/photograph/i.test(text)) fail(page.path, 'the page shows a photograph but its footer notice does not mention photographs');
 }
+for (const path of pages.map((p) => p.path).filter((path) => /^\/(articles|bits)\/[^/]+\/$/.test(path) && !path.startsWith('/articles/series/'))) {
+  const page = pageByPath.get(path);
+  // A header image credited to anyone other than the author is not covered.
+  const credit = decode((page.html.match(/class="hero-credit[^>]*>([\s\S]*?)<\/span>/)?.[1] ?? '').replace(/<[^>]+>/g, '')).replace(/^\s*Image credits:/, '').trim();
+  const credited = path.startsWith('/articles/') && credit !== '' && credit.toLowerCase() !== profileFile.name.toLowerCase();
+  if (footerNotice(page).includes(contentLicense.heroCredited) !== credited) fail(path, credited ? 'credited header image is not marked as not covered' : 'footer says the header image is not covered, but it has no credit to someone else');
+}
+const licensePage = pageByPath.get('/license/');
+if (!licensePage) fail('/license/', 'the terms page was not built');
+else {
+  if (!/The copyright notice to keep is the one in the footer/.test(licensePage.html)) fail('/license/', 'does not point reusers to the footer copyright notice');
+  if (!licensePage.html.includes('id="code"')) fail('/license/', 'has no #code section');
+  if (!licensePage.html.includes(contentLicense.code.text.split('\n\n')[0].slice(0, 60))) fail('/license/', `lacks the ${contentLicense.code.name} license text`);
+  if (!licensePage.html.includes(contentLicense.url)) fail('/license/', 'does not link the content license');
+}
+if (!rssXml.includes('<copyright>') || !rssXml.includes(contentLicense.url) || !rssXml.includes(`© ${contentLicense.copyrightYear}`)) fail('/rss.xml', 'lacks a <copyright> with the year and the content license');
+if (!llms.includes(contentLicense.code.name)) fail('/llms.txt', `does not name the ${contentLicense.code.name} code license`);
 for (const topic of about?.nodes.find((n) => typesOf(n).includes('Person'))?.knowsAbout ?? []) {
   if (!llms.includes(topic.name)) fail('/llms.txt', `lacks the topic ${topic.name}`);
 }

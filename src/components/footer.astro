@@ -1,9 +1,20 @@
 ---
 import { AUTHOR_NAME } from "../utils/jsonLd";
 import { CONTENT_LICENSE } from "../utils/topics";
+import { CODE_LICENSE_PATH, licenseContext, noticeParts } from "../utils/license";
 
-const currentYear = new Date().getFullYear();
-const [licenseBefore, licenseAfter] = CONTENT_LICENSE.footerNotice.split("{license}");
+// An article or bit shows the year it was published; any other page shows the year the site was first published.
+const { heroCredited = false, copyrightYear = CONTENT_LICENSE.copyrightYear } = Astro.props;
+const context = licenseContext(Astro.url.pathname);
+const links = {
+  "{license}": { href: CONTENT_LICENSE.url, label: CONTENT_LICENSE.name, external: true },
+  "{code}": { href: CODE_LICENSE_PATH, label: CONTENT_LICENSE.code.name, external: false },
+};
+// An article whose header image has a credit says that image is not covered.
+const notice = [CONTENT_LICENSE.notices[context], context === "article" && heroCredited ? CONTENT_LICENSE.heroCredited : ""]
+  .filter(Boolean)
+  .join(" ");
+const noticeLinks = noticeParts(notice).map((part) => ({ part, link: links[part as keyof typeof links] }));
 
 const socialLinks = [
   {
@@ -60,10 +71,17 @@ const footerLinks = [
 
       <!-- Copyright -->
       <p class="footer-copyright">
-        © {currentYear} {AUTHOR_NAME}
+        © {copyrightYear} {AUTHOR_NAME}
       </p>
       <p class="footer-license">
-        {licenseBefore}<a href={CONTENT_LICENSE.url} rel="license noopener noreferrer" target="_blank">{CONTENT_LICENSE.name}</a>{licenseAfter}
+        {noticeLinks.map(({ part, link }) =>
+          link ? (
+            <a href={link.href} rel={link.external ? "noopener noreferrer" : undefined} target={link.external ? "_blank" : undefined}>{link.label}</a>
+          ) : (
+            part
+          ),
+        )}
+        {" "}<a href={CONTENT_LICENSE.termsPath}>{CONTENT_LICENSE.termsLabel}</a>
       </p>
 
       <!-- Footer navigation -->
