@@ -10,12 +10,14 @@
 import { profile as author } from "./siteData";
 import {
   ALTERNATE_NAMES,
+  BLOG_LABELS,
   CREDENTIAL_BODIES,
   CREDENTIAL_SUBJECT_IDS,
   EMPLOYER_IDS,
   KNOWS_ABOUT,
   LANGUAGES,
   LOCALE,
+  NAME_PARTS,
   OCCUPATION,
   PHOTO_RIGHTS,
   PLACE_IDS,
@@ -114,14 +116,14 @@ const isoMonth = (month: string) => month.split("-").reverse().join("-");
  * Build the canonical Person entity.
  */
 export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string): Record<string, unknown> {
-  const [givenName, additionalName, familyName] = profile.name.split(" ");
   const person: Record<string, unknown> = {
     "@type": "Person",
     "@id": IDS.person,
     name: profile.name,
-    givenName,
-    additionalName,
-    familyName,
+    givenName: NAME_PARTS.given,
+    // schema.org holds a middle name in additionalName.
+    additionalName: NAME_PARTS.middle,
+    familyName: NAME_PARTS.family,
     alternateName: ALTERNATE_NAMES,
     jobTitle: profile.title,
     description: profile.summary,
@@ -238,7 +240,6 @@ export function buildPersonEntity(profile: ProfileData, profileImageUrl?: string
 }
 
 /** The Blog node of a section ("articles" or "bits"); its posts are listed on the section's index page. */
-const BLOG_LABELS = { articles: "Articles", bits: "Bits" } as const;
 export const blogRef = (section: "articles" | "bits") => ({
   "@type": "Blog",
   "@id": `${SITE_URL}/${section}/#blog`,

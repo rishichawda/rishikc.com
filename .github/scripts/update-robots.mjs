@@ -6,16 +6,17 @@
 // Every crawler on that list, plus the extras below, is kept off the gallery photographs, the
 // share-image crops under /previews/ and /api/. Every other crawler (search engines, link-preview
 // bots) is kept off the photographs and /api/ only, so a shared link still gets its preview image.
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 const SOURCE = 'https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/main/robots.json';
 const OUT = fileURLToPath(new URL('../../public/robots.txt', import.meta.url));
 
-// Crawlers the community list does not carry: the Google image indexer and Meta's search indexer.
-const EXTRA = ['Googlebot-Image', 'Meta-WebIndexer'];
-// On the list, but Facebook and WhatsApp fetch the share image with it, so it must reach /previews/.
-const LINK_PREVIEW = ['facebookexternalhit'];
+// The crawler names that are not taken from the community list are in the content repository.
+const DATA = fileURLToPath(new URL('../../content/about/structured-data.json', import.meta.url));
+// EXTRA: crawlers the list does not carry (the Google image indexer, Meta's search indexer).
+// LINK_PREVIEW: on the list, but Facebook and WhatsApp fetch the share image with it, so it must reach /previews/.
+const { extraCrawlers: EXTRA, linkPreviewCrawlers: LINK_PREVIEW } = JSON.parse(await readFile(DATA, 'utf8')).data.robots;
 
 const response = await fetch(SOURCE);
 if (!response.ok) throw new Error(`${SOURCE} answered ${response.status}`);

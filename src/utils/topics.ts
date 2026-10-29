@@ -39,3 +39,9 @@ export const OCCUPATION = data.occupation;
 export const PHOTO_RIGHTS = data.photoRights;
 /** The license of the articles and bits (the photographs are all rights reserved). */
 export const CONTENT_LICENSE = data.contentLicense;
+/** The author's given, middle and family names. Kumar is a middle name, not a second family name. */
+export const NAME_PARTS = data.nameParts;
+/** The label of each blog section in the Blog node's name. */
+export const BLOG_LABELS = data.blogLabels;
+/** Robots directives: for pages of the gallery photographs, and for an article whose header is one. */
+export const ROBOTS = data.robots;

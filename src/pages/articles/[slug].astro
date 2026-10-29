@@ -9,7 +9,7 @@ import ExternalLink from "../../components/article/ExternalLink.astro";
 import SeriesNavigation from "../../components/article/series_navigation.astro";
 import { getSeriesInfo, getSeriesSlug, getSeriesTitle } from "../../utils/seriesUtils";
 import { AUTHOR_NAME, authorRef, blogRef, buildWebPageEntity, photoRights, websiteRef } from "../../utils/jsonLd";
-import { CONTENT_LICENSE, LOCALE, TAG_TOPIC_IDS, entity } from "../../utils/topics";
+import { CONTENT_LICENSE, LOCALE, ROBOTS, TAG_TOPIC_IDS, entity } from "../../utils/topics";
 import { findMentions } from "../../utils/mentions";
 import { getImage } from "astro:assets";
 import { isPhotograph, previewImage, shareImage } from "../../utils/shareImage";
@@ -155,7 +155,7 @@ if (post.data.faq && post.data.faq.length > 0) {
 		description: post.data.description,
 		image: share,
 		// A photograph hero shares a crop of the photo, which crawlers may fetch but must not index.
-		robots: isPhotograph(hero) ? ["noimageindex"] : undefined,
+		robots: isPhotograph(hero) ? ROBOTS.photographHero : undefined,
 		keywords: post.data.keywords,
 		type: "article",
 		section: post.data.category,

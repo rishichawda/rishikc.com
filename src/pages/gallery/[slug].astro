@@ -6,6 +6,7 @@ import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import { authorRef, buildWebPageEntity, photoRights } from "../../utils/jsonLd";
 import { previewImage } from "../../utils/shareImage";
+import { ROBOTS } from "../../utils/topics";
 import Lightbox from "../../components/gallery/lightbox.astro";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 import masonry from "masonry-layout/dist/masonry.pkgd.min?url";
@@ -64,7 +65,7 @@ const page_info = {
   description: description,
   image: preview,
   // noai and noimageai are an unofficial convention that some AI crawlers read; harmless to others.
-  robots: ["noimageindex", "noai", "noimageai"],
+  robots: ROBOTS.photographs,
   tdmReservation: true,
   keywords: `photography, ${title.toLowerCase()}, portfolio, ${profile.name}`,
 };

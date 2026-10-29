@@ -6,6 +6,7 @@ import StoryCard from "../../components/gallery/story_card.astro";
 import ProjectCard from "../../components/gallery/project_card.astro";
 import { getCollection } from "astro:content";
 import { buildWebPageEntity, photoRights } from "../../utils/jsonLd";
+import { ROBOTS } from "../../utils/topics";
 import Breadcrumbs from "../../components/common/breadcrumbs.astro";
 
 import { Image } from "astro:assets";
@@ -35,7 +36,7 @@ const page_info = {
   description: `Visual stories and photography by ${profile.name}. Immersive photo essays exploring landscapes, streets, and the world through a lens.`,
   keywords: `photography, portfolio, gallery, visual essays, ${profile.name}`,
   // noai and noimageai are an unofficial convention that some AI crawlers read; harmless to others.
-  robots: ["noimageindex", "noai", "noimageai"],
+  robots: ROBOTS.photographs,
   tdmReservation: true,
 };
 

@@ -52,6 +52,9 @@ export interface StructuredData {
     heroCredited: string;
     feedNotice: string;
   };
+  nameParts: { given: string; middle: string; family: string };
+  blogLabels: Record<"articles" | "bits", string>;
+  robots: { photographs: string[]; photographHero: string[]; extraCrawlers: string[]; linkPreviewCrawlers: string[] };
   mentions: { minimumCount: number; limit: number; terms: { pattern: string; wikidata: string; flags?: string }[] };
 }
 

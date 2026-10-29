@@ -5,7 +5,7 @@ import "../../../styles/gallery.css";
 import { getCollection } from "astro:content";
 import { authorRef, buildWebPageEntity, photoRights, websiteRef } from "../../../utils/jsonLd";
 import { previewImage } from "../../../utils/shareImage";
-import { LOCALE } from "../../../utils/topics";
+import { LOCALE, ROBOTS } from "../../../utils/topics";
 import StoryHero from "../../../components/gallery/story_hero.astro";
 import StorySection from "../../../components/gallery/story_section.astro";
 import StoryEpilogue from "../../../components/gallery/story_epilogue.astro";
@@ -64,7 +64,7 @@ const page_info = {
   description,
   image: preview,
   // noai and noimageai are an unofficial convention that some AI crawlers read; harmless to others.
-  robots: ["noimageindex", "noai", "noimageai"],
+  robots: ROBOTS.photographs,
   tdmReservation: true,
   keywords: `photography, visual essay, ${tags?.join(", ") || ""}, ${profile.name}`,
 };

@@ -4,7 +4,7 @@ import { getImage } from "astro:assets";
 import portrait from "../../content/assets/me-profesh.jpg";
 import type { ShareImage } from "../utils/shareImage";
 import { cardImage } from "../utils/cards";
-import { LOCALE } from "../utils/topics";
+import { LOCALE, NAME_PARTS } from "../utils/topics";
 import { structuredData } from "../utils/siteData";
 import {
   buildGraphForPage,
@@ -77,7 +77,6 @@ const graphJson = JSON.stringify(fullGraph).replace(/</g, '\\u003c').replace(/>/
 // OG type: 'article' for articles and bits, 'profile' for the about page, 'website' for the rest
 const ogType = type === "article" || type === "profile" ? type : "website";
 const githubUser = profile.socials.find((s: Social) => s.platform === "GitHub")?.url.split("/").pop();
-const [firstName, , lastName] = profile.name.split(" ");
 
 // Google ignores meta keywords; Bing may read a long list as stuffing. Keep the first 8 distinct terms.
 const keywordList = [...new Set((keywords ?? "").split(",").map((k: string) => k.trim()).filter(Boolean))].slice(0, 8).join(", ");
@@ -120,8 +119,8 @@ const keywordList = [...new Set((keywords ?? "").split(",").map((k: string) => k
 {ogType === "article" ? <meta property="article:author" content="https://rishikc.com/about/" /> : null}
 {tdmReservation ? <meta name="tdm-reservation" content="1" /> : null}
 {section ? <meta property="article:section" content={section} /> : null}
-{ogType === "profile" ? <meta property="profile:first_name" content={firstName} /> : null}
-{ogType === "profile" ? <meta property="profile:last_name" content={lastName} /> : null}
+{ogType === "profile" ? <meta property="profile:first_name" content={NAME_PARTS.given} /> : null}
+{ogType === "profile" ? <meta property="profile:last_name" content={NAME_PARTS.family} /> : null}
 {ogType === "profile" && githubUser ? <meta property="profile:username" content={githubUser} /> : null}
 {tags?.map((tag: string) => <meta property="article:tag" content={tag} />)}
 
