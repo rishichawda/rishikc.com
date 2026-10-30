@@ -18,23 +18,35 @@ export interface ShareImage {
   alt?: string;
 }
 
-const MIME: Record<string, string> = {
-  png: "image/png",
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  webp: "image/webp",
-  avif: "image/avif",
-  gif: "image/gif",
-};
+const SHARE_WIDTH = 1200;
+const SHARE_HEIGHT = 630;
 
-/** The share image value for an imported image, with its real size and type. */
-export const shareImage = (image: ImageMetadata, alt?: string): ShareImage => ({
-  src: image.src,
-  width: image.width,
-  height: image.height,
-  type: MIME[image.format],
+/** The share image value for a 1200x630 JPEG served at `path` (see shareResponse). */
+export const shareImage = (path: string, alt?: string): ShareImage => ({
+  src: path,
+  width: SHARE_WIDTH,
+  height: SHARE_HEIGHT,
+  type: "image/jpeg",
   alt,
 });
+
+/**
+ * A 1200x630 JPEG of an imported image, as an endpoint response. Link previews want that size, and
+ * WhatsApp drops images over 500 KB, which a full-size hero often is. A hero much wider or taller than
+ * the card (a wide logo, say) is fitted whole on a white card instead of cropped.
+ */
+export async function shareResponse(image: ImageMetadata): Promise<Response> {
+  // Astro defines the source path on every imported image; it is not an enumerable property.
+  const fsPath = (image as ImageMetadata & { fsPath?: string }).fsPath;
+  if (!fsPath) throw new Error(`No source path for the image ${image.src}`);
+  const ratio = image.width / image.height;
+  const jpeg = await sharp(fsPath.split("?")[0])
+    .resize(SHARE_WIDTH, SHARE_HEIGHT, ratio > 2.6 || ratio < 1.3 ? { fit: "contain", background: "#ffffff" } : { fit: "cover" })
+    .flatten({ background: "#ffffff" })
+    .jpeg({ quality: 80, mozjpeg: true })
+    .toBuffer();
+  return new Response(new Uint8Array(jpeg), { headers: { "Content-Type": "image/jpeg" } });
+}
 
 // Previews are small on purpose: link previews show them at a few hundred pixels, and a small, lossy
 // crop with the credit across it is of little use to anyone who saves it.

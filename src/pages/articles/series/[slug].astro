@@ -41,7 +41,7 @@ const firstHero = series.articles[0]?.data.hero_image;
 const page_info = {
     title: series.seriesTitle,
     description,
-    image: firstHero && !isPhotograph(firstHero) ? shareImage(firstHero, series.articles[0].data.hero_image_alt) : undefined,
+    image: firstHero && !isPhotograph(firstHero) ? shareImage(`/shares/articles/${series.articles[0].id}.jpg`, series.articles[0].data.hero_image_alt) : undefined,
     keywords: seriesData?.data.keywords || series.seriesTitle.toLowerCase(),
 };
 

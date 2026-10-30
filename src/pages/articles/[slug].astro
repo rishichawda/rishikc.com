@@ -48,7 +48,7 @@ const articleUrl = new URL(
 const hero = post.data.hero_image;
 const share = isPhotograph(hero)
 	? previewImage(`/previews/articles/${post.id}.jpg`, post.data.hero_image_alt)
-	: hero ? shareImage(hero, post.data.hero_image_alt) : undefined;
+	: hero ? shareImage(`/shares/articles/${post.id}.jpg`, post.data.hero_image_alt) : undefined;
 const imageUrl = share ? new URL(share.src, Astro.site || "https://rishikc.com").toString() : "";
 const isoDate = post.data.date ? post.data.date.toISOString() : "";
 const isoDateModified = post.data.dateModified ? new Date(post.data.dateModified).toISOString() : isoDate;

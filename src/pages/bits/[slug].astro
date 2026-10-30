@@ -51,7 +51,7 @@ const pageUrl = new URL(
 // A hero that is a gallery photograph is blocked by robots.txt, so it is not used as the share image.
 // A bit with no usable hero gets a generated card carrying its title.
 const hero = bit.data.hero_image;
-const share = hero && !isPhotograph(hero) ? shareImage(hero, bit.data.title) : bitCardImage(bit.id, bit.data.title);
+const share = hero && !isPhotograph(hero) ? shareImage(`/shares/bits/${bit.id}.jpg`, bit.data.title) : bitCardImage(bit.id, bit.data.title);
 const isoDate = bit.data.date.toISOString();
 
 // Terms the text uses often; the thresholds are in content/about/structured-data.json.
