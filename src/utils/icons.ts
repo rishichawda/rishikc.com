@@ -13,14 +13,19 @@ export const FAVICON_SIZES = [16, 32, 48] as const;
 export const iconPng = (name: string): Promise<Buffer> =>
   readFile(join(process.cwd(), "content/assets/logo/icons", `${name}.png`));
 
+/** The vector icon, favicon.svg in content/assets/logo/icons (the logo redrawn as paths). */
+export const faviconSvg = (): Promise<Buffer> =>
+  readFile(join(process.cwd(), "content/assets/logo/icons", "favicon.svg"));
+
+/** A square PNG of the icon at `size` pixels, cut from the 512 pixel master. */
+export async function iconPngAt(size: number): Promise<Buffer> {
+  return sharp(await iconPng("icon-512")).resize(size, size).png({ compressionLevel: 9 }).toBuffer();
+}
+
 /** A favicon.ico holding one PNG image per size. */
 export async function faviconIco(): Promise<Buffer> {
-  const master = await iconPng("icon-512");
   const images = await Promise.all(
-    FAVICON_SIZES.map(async (size) => ({
-      size,
-      data: await sharp(master).resize(size, size).png({ compressionLevel: 9 }).toBuffer(),
-    })),
+    FAVICON_SIZES.map(async (size) => ({ size, data: await iconPngAt(size) })),
   );
   const header = Buffer.alloc(6);
   header.writeUInt16LE(1, 2); // type: icon
