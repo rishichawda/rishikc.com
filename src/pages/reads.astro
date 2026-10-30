@@ -1,8 +1,8 @@
 ---
 import BaseLayout from "../layouts/base_layout.astro";
 import { getCollection } from "astro:content";
+import { Font } from "astro:assets";
 import { AUTHOR_NAME, buildWebPageEntity } from "../utils/jsonLd";
-import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
 const quotesData = await getCollection("quotes");
 const allQuotes = quotesData[1].data;
@@ -44,251 +44,138 @@ const pageSchemaEntities = [
 
 <BaseLayout page_info={page_info} activeRoute="/reads/" pageSchemaEntities={pageSchemaEntities}>
 
-    <div>
-        <Breadcrumbs items={[{ label: "Reads" }]} />
+    <Fragment slot="head">
+        <Font cssVariable="--font-source-serif-4" />
+        <Font cssVariable="--font-jost" />
+    </Fragment>
 
+    <div id="reads-stage" class="stage">
+        <canvas id="reads-canvas" class="stage-canvas" aria-hidden="true"></canvas>
         <section class="page-header" data-reveal>
-            <span class="overline">WORDS THAT RESONATE</span>
             <h1 class="page-title">Reads</h1>
             <p class="page-subtitle">A collection of quotes, passages, and ideas that have shaped my thinking.</p>
         </section>
+        <p id="reads-live" class="visually-hidden" aria-live="polite"></p>
 
-        {allQuotes.length > 0 ? (
-            <section class="quotes-list">
-                <div class="shuffle-row">
-                    <button id="shuffle-button" class="shuffle-btn" type="button" aria-label="Shuffle quotes">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 13.5V21m0 0l2.5-2.5M16 21l-2.5-2.5M8 10.5V3m0 0l2.5 2.5M8 3L5.5 5.5M18.5 5.5l-13 13" />
-                        </svg>
-                        Shuffle
-                    </button>
-                </div>
-
-                <div id="quotes-container">
-                    {allQuotes.map((quote: any) => (
-                        <blockquote class="quote-card" data-quote={quote.quote} data-info={quote.info || ""}>
-                            <span class="quote-mark" aria-hidden="true">&ldquo;</span>
-                            <p class="quote-text">{quote.quote}</p>
-                            {quote.info && (
-                                <cite class="quote-author">&mdash; {quote.info}</cite>
-                            )}
-                        </blockquote>
-                    ))}
-                </div>
-            </section>
-        ) : (
-            <div class="empty-state" data-reveal>
-                <p>Coming soon &mdash; collecting words worth sharing.</p>
-            </div>
-        )}
+        <!-- The canvas is not readable by assistive tech, so the quotes also live here, and feed the scene. -->
+        <div class="quote-list visually-hidden">
+            {allQuotes.map((quote: any) => (
+                <blockquote data-quote={quote.quote} data-info={quote.info || ""} data-theme={quote.theme} data-art={quote.art}>
+                    <p>{quote.quote}</p>
+                    {quote.info && <cite>{quote.info}</cite>}
+                </blockquote>
+            ))}
+        </div>
     </div>
 </BaseLayout>
 
 <script>
-    import gsap from 'gsap';
+    type Scene = { dispose(): void };
+    let scene: Scene | null = null;
 
-    document.addEventListener('astro:page-load', () => {
-        const shuffleButton = document.getElementById('shuffle-button');
-        const container = document.getElementById('quotes-container');
-        if (!shuffleButton || !container) return;
+    async function mountStage() {
+        const stage = document.getElementById('reads-stage');
+        const canvas = document.getElementById('reads-canvas') as HTMLCanvasElement | null;
+        const live = document.getElementById('reads-live');
+        if (!stage || !canvas || !live) return;
 
-        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const quotes = Array.from(document.querySelectorAll<HTMLElement>('.quote-list blockquote')).map((card) => ({
+            quote: card.dataset.quote ?? '',
+            info: card.dataset.info ?? '',
+            theme: card.dataset.theme,
+            art: card.dataset.art,
+        }));
 
-        shuffleButton.addEventListener('click', () => {
-            const cards = Array.from(container.querySelectorAll('.quote-card'));
-            if (cards.length < 2) return;
+        const { mount } = await import('../scripts/reads_scene.js');
+        if (!stage.isConnected) return;
 
-            // Check preference fresh on every click so runtime changes are respected
-            if (motionQuery.matches) {
-                // Just reorder without animation
-                for (let i = cards.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    container.appendChild(cards[j]);
-                }
-                return;
-            }
-
-            // Animate out
-            gsap.to(cards, {
-                opacity: 0,
-                y: -20,
-                scale: 0.95,
-                stagger: 0.03,
-                duration: 0.25,
-                ease: 'power2.in',
-                onComplete: () => {
-                    // Fisher-Yates shuffle
-                    for (let i = cards.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        container.appendChild(cards[j]);
-                    }
-
-                    // Get new order
-                    const newCards = Array.from(container.querySelectorAll('.quote-card'));
-
-                    // Animate in
-                    gsap.fromTo(newCards, {
-                        opacity: 0,
-                        y: 30,
-                        scale: 0.95,
-                    }, {
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        stagger: 0.05,
-                        duration: 0.4,
-                        ease: 'back.out(1.2)',
-                    });
-                }
-            });
-
-            // Rotate the shuffle icon
-            const svg = shuffleButton.querySelector('svg');
-            if (svg) {
-                gsap.to(svg, { rotation: '+=360', duration: 0.5, ease: 'power2.inOut' });
-            }
+        scene = mount(stage, canvas, quotes, {
+            onChange: (card: { q: string; a: string }) => {
+                live.textContent = card.a ? `${card.q} — ${card.a}` : card.q;
+            },
         });
+        if (!scene) return;
+        stage.tabIndex = 0;
+        stage.setAttribute('role', 'group');
+        stage.setAttribute('aria-label', 'Quote cards. Scroll, swipe, click a card or use the arrow keys to move between quotes.');
+    }
+
+    document.addEventListener('astro:before-swap', () => {
+        scene?.dispose();
+        scene = null;
     });
+
+    document.addEventListener('astro:page-load', mountStage);
 </script>
 
 <style>
-    .page-header {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: var(--space-20) var(--space-6) var(--space-12);
-        text-align: center;
+    /* The nav floats over the sky, so the stage pulls up under it. The sky does not follow the site theme,
+       so until the nav gets its own background on scroll, it uses the light-theme text colors. */
+    :global(.site-header:not(.scrolled)) {
+        --color-text: #1c2650;
+        --color-text-secondary: #38446d;
+        --color-text-tertiary: #38446d;
+        --color-brand-dark: #1b2552;
+        --color-brand-lighter: rgba(255, 255, 255, 0.35);
     }
-    .overline {
+    .stage {
+        position: relative;
+        margin-top: calc(var(--nav-height) * -1);
+        height: 100svh;
+        min-height: 520px;
+        overflow: hidden;
+        touch-action: none;
+        background: linear-gradient(180deg, #7d9dd0 0%, #c8d6ec 48%, #f2e6dc 72%, #61768a 100%);
+    }
+    .stage:focus-visible {
+        outline: 3px solid #1b2552;
+        outline-offset: -6px;
+    }
+    .stage-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
         display: block;
-        font-family: var(--font-mono);
-        font-size: var(--text-overline);
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--color-text-tertiary);
-        margin-bottom: var(--space-4);
+    }
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .page-header {
+        position: absolute;
+        top: calc(var(--nav-height) + clamp(16px, 3vh, 40px));
+        left: 16px;
+        right: 16px;
+        text-align: center;
+        pointer-events: none;
     }
     .page-title {
         font-family: var(--font-display);
-        font-size: var(--text-display-lg);
+        font-size: clamp(40px, 4.6vw, 72px);
         font-weight: 700;
-        color: var(--color-text);
-        margin: 0 0 var(--space-4);
         line-height: 1.1;
         letter-spacing: -0.025em;
+        color: #1b2552;
+        text-shadow: 0 2px 28px rgba(255, 255, 255, 0.6);
+        margin: 0 0 10px;
     }
     .page-subtitle {
-        font-family: var(--font-body);
-        font-size: var(--text-body-lg);
-        color: var(--color-text-secondary);
         max-width: 560px;
         margin: 0 auto;
-        line-height: 1.6;
-    }
-
-    /* Quotes List */
-    .quotes-list {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 0 var(--space-6) var(--space-20);
-    }
-    .shuffle-row {
-        display: flex;
-        justify-content: center;
-        margin-bottom: var(--space-10);
-    }
-    .shuffle-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--space-2);
-        font-family: var(--font-ui);
-        font-size: 14px;
-        font-weight: 500;
-        padding: 8px 20px;
-        border-radius: 9999px;
-        background: var(--btn-bg);
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: background 200ms;
-    }
-    .shuffle-btn:hover { background: var(--btn-bg-hover); }
-    .shuffle-btn:focus-visible {
-        outline: 2px solid var(--color-brand);
-        outline-offset: 2px;
-    }
-
-    #quotes-container {
-        columns: 1;
-        column-gap: var(--space-6);
-    }
-
-    @media (min-width: 640px) {
-        #quotes-container {
-            columns: 2;
-        }
-    }
-
-    /* Quote Card */
-    .quote-card {
-        position: relative;
-        background: var(--color-surface);
-        border: 1px solid var(--color-border);
-        border-radius: 16px;
-        padding: 28px;
-        margin: 0 0 var(--space-6);
-        break-inside: avoid;
-        box-shadow: var(--shadow-subtle);
-        transition: box-shadow 300ms, transform 300ms, border-color 200ms;
-    }
-    .quote-card:hover {
-        box-shadow: var(--shadow-raised);
-        transform: translateY(-2px);
-        border-color: var(--color-brand-light);
-    }
-    .quote-mark {
-        font-family: var(--font-display);
-        font-size: 48px;
-        font-weight: 700;
-        color: var(--color-brand);
-        opacity: 0.15;
-        position: absolute;
-        top: 8px;
-        left: 16px;
-        line-height: 1;
-    }
-    .quote-text {
-        font-family: var(--font-body);
-        font-size: var(--text-body);
-        color: var(--color-text);
-        line-height: 1.75;
-        font-style: italic;
-        margin: 0;
-    }
-    .quote-author {
-        display: block;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--color-text-tertiary);
-        text-align: right;
-        margin-top: var(--space-4);
-        font-style: normal;
-        padding-top: var(--space-3);
-        border-top: 1px solid var(--color-border);
-    }
-
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: var(--space-20) var(--space-6);
-        font-family: var(--font-body);
-        font-size: var(--text-body);
-        color: var(--color-text-muted);
-    }
-
-    @media (max-width: 767px) {
-        .quote-card { padding: 20px; }
-        .quote-text { font-size: 16px; }
+        font-family: var(--font-jost);
+        font-size: clamp(14px, 1.05vw, 17px);
+        line-height: 1.5;
+        letter-spacing: 0.03em;
+        text-wrap: balance;
+        color: #38446d;
+        text-shadow: 0 1px 14px rgba(255, 255, 255, 0.7);
     }
 </style>

@@ -104,6 +104,23 @@ export default defineConfig({
       styles: ["normal"],
       fallbacks: ["monospace"],
     },
+    // The Reads page draws these into its quote-card textures; only that page asks for them.
+    {
+      provider: fontProviders.fontsource(),
+      name: "Source Serif 4",
+      cssVariable: "--font-source-serif-4",
+      weights: [400, 600, 700],
+      styles: ["normal"],
+      fallbacks: ["serif"],
+    },
+    {
+      provider: fontProviders.fontsource(),
+      name: "Jost",
+      cssVariable: "--font-jost",
+      weights: [400, 500],
+      styles: ["normal"],
+      fallbacks: ["sans-serif"],
+    },
   ],
 
   // The remark and rehype plugins live on the unified processor, which both Markdown and MDX
