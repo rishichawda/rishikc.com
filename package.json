@@ -14,7 +14,7 @@
   "dependencies": {
     "@astrojs/partytown": "^2.1.7",
     "@astrojs/rss": "^4.0.18",
-    "@emailjs/browser": "^4.4.1",
+    "@emailjs/browser": "^5.0.3",
     "@playform/compress": "^0.2.2",
     "@unpic/astro": "^1.0.2",
     "astro": "^7.3.5",
