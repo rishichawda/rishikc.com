@@ -18,7 +18,7 @@
     "@playform/compress": "^0.2.2",
     "@unpic/astro": "^1.0.2",
     "astro": "^7.3.5",
-    "astro-seo-schema": "^6.0.0",
+    "astro-seo-schema": "^7.0.1",
     "dompurify": "^3.3.3",
     "gsap": "^3.14.2",
     "imagesloaded": "^5.0.0",
