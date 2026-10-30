@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/base_layout.astro";
 import { getCollection } from "astro:content";
 import { Font } from "astro:assets";
+import backgroundPhoto from "../../content/gallery/landscape-photography/himalayas.jpg";
 import { AUTHOR_NAME, buildWebPageEntity } from "../utils/jsonLd";
 
 const quotesData = await getCollection("quotes");
@@ -49,7 +50,7 @@ const pageSchemaEntities = [
         <Font cssVariable="--font-jost" />
     </Fragment>
 
-    <div id="reads-stage" class="stage">
+    <div id="reads-stage" class="stage" data-background={backgroundPhoto.src}>
         <canvas id="reads-canvas" class="stage-canvas" aria-hidden="true"></canvas>
         <section class="page-header" data-reveal>
             <h1 class="page-title">Reads</h1>
@@ -90,6 +91,7 @@ const pageSchemaEntities = [
         if (!stage.isConnected) return;
 
         scene = mount(stage, canvas, quotes, {
+            background: stage.dataset.background,
             onChange: (card: { q: string; a: string }) => {
                 live.textContent = card.a ? `${card.q} — ${card.a}` : card.q;
             },
