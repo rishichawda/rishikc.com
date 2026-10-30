@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/base_layout.astro";
 import { getCollection } from "astro:content";
 import { Font } from "astro:assets";
 import backgroundPhoto from "../../content/gallery/landscape-photography/himalayas.jpg";
+import backgroundPhotoDark from "../../content/gallery/landscape-photography/moon-rise-in-himalayas.jpg";
 import { AUTHOR_NAME, buildWebPageEntity } from "../utils/jsonLd";
 
 const quotesData = await getCollection("quotes");
@@ -50,7 +51,7 @@ const pageSchemaEntities = [
         <Font cssVariable="--font-jost" />
     </Fragment>
 
-    <div id="reads-stage" class="stage" data-background={backgroundPhoto.src}>
+    <div id="reads-stage" class="stage" data-background={backgroundPhoto.src} data-background-dark={backgroundPhotoDark.src}>
         <canvas id="reads-canvas" class="stage-canvas" aria-hidden="true"></canvas>
         <section class="page-header" data-reveal>
             <h1 class="page-title">Reads</h1>
@@ -91,7 +92,7 @@ const pageSchemaEntities = [
         if (!stage.isConnected) return;
 
         scene = mount(stage, canvas, quotes, {
-            background: stage.dataset.background,
+            backgrounds: { light: stage.dataset.background, dark: stage.dataset.backgroundDark },
             onChange: (card: { q: string; a: string }) => {
                 live.textContent = card.a ? `${card.q} — ${card.a}` : card.q;
             },
@@ -111,9 +112,9 @@ const pageSchemaEntities = [
 </script>
 
 <style>
-    /* The nav floats over the sky, so the stage pulls up under it. The sky does not follow the site theme,
-       so until the nav gets its own background on scroll, it uses the light-theme text colors. */
-    :global(.site-header:not(.scrolled)) {
+    /* The nav floats over the stage, so the stage pulls up under it. Over the light photo it keeps dark text until it
+       gets its own background on scroll; in dark theme the stage is dark and the nav keeps its default light text. */
+    :global([data-theme="light"] .site-header:not(.scrolled)) {
         --color-text: #1c2650;
         --color-text-secondary: #38446d;
         --color-text-tertiary: #38446d;
@@ -128,6 +129,9 @@ const pageSchemaEntities = [
         overflow: hidden;
         touch-action: none;
         background: linear-gradient(180deg, #7d9dd0 0%, #c8d6ec 48%, #f2e6dc 72%, #61768a 100%);
+    }
+    :global([data-theme="dark"]) .stage {
+        background: linear-gradient(180deg, #060a16 0%, #16203a 100%);
     }
     .stage:focus-visible {
         outline: 3px solid #1b2552;
@@ -168,6 +172,14 @@ const pageSchemaEntities = [
         color: #1b2552;
         text-shadow: 0 2px 28px rgba(255, 255, 255, 0.6);
         margin: 0 0 10px;
+    }
+    :global([data-theme="dark"]) .page-title {
+        color: #f1f3fa;
+        text-shadow: 0 2px 28px rgba(0, 0, 0, 0.6);
+    }
+    :global([data-theme="dark"]) .page-subtitle {
+        color: #c9d0e6;
+        text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
     }
     .page-subtitle {
         max-width: 560px;

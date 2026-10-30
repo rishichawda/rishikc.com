@@ -878,9 +878,28 @@ function hexVec(hex) {
   return new THREE.Vector3((n >> 16) / 255, (n >> 8 & 255) / 255, (n & 255) / 255);
 }
 
+// What changes with the site theme: the tint the photo's top edge is extended with, the veil over the photo, and the fog
+// colour distant cards fade into.
+var BG_THEMES = {
+  light: { lift: [176, 196, 228], skyTop: [150, 176, 218], veil: ['rgba(206,218,240,0.62)', 'rgba(214,224,242,0.38)', 'rgba(190,204,228,0.22)'], haze: [0.86, 0.88, 0.94] },
+  dark: { lift: [12, 18, 34], skyTop: [6, 10, 22], veil: ['rgba(8,12,28,0.5)', 'rgba(10,16,34,0.28)', 'rgba(8,12,26,0.18)'], haze: [0.1, 0.13, 0.2] }
+};
+
+function siteTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+}
+
+// Stands in for the photo until it loads.
+function drawNight() {
+  var c = mk(BGW, BGH), g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 0, BGH);
+  gr.addColorStop(0, '#060a16'); gr.addColorStop(1, '#16203a');
+  g.fillStyle = gr; g.fillRect(0, 0, BGW, BGH);
+  return c;
+}
+
 // Cover-fit a photo into the background canvas, set lower so its top edge clears the title area. The gap above it is
 // filled with a sky tinted from the photo's own top edge, which fades into the photo.
-function photoBackground(img) {
+function photoBackground(img, th) {
   var c = mk(BGW, BGH), g = c.getContext('2d');
   var k = Math.max(BGW / img.naturalWidth, BGH / img.naturalHeight);
   var w = img.naturalWidth * k, h = img.naturalHeight * k, top = Math.round(BGH * 0.12);
@@ -888,13 +907,13 @@ function photoBackground(img) {
   g.drawImage(img, (BGW - w) / 2, top, w, h);
   var d = g.getImageData(0, top + 2, BGW, 6).data, sum = [0, 0, 0], n = d.length / 4;
   for (var i = 0; i < d.length; i += 4) { sum[0] += d[i]; sum[1] += d[i + 1]; sum[2] += d[i + 2]; }
-  var edge = mixc([sum[0] / n, sum[1] / n, sum[2] / n], [176, 196, 228], 0.35);
+  var edge = mixc([sum[0] / n, sum[1] / n, sum[2] / n], th.lift, 0.35);
   var sky = g.createLinearGradient(0, 0, 0, top + h * 0.16);
-  sky.addColorStop(0, rgba(mixc(edge, [150, 176, 218], 0.5), 1)); sky.addColorStop(top / (top + h * 0.16), rgba(edge, 1)); sky.addColorStop(1, rgba(edge, 0));
+  sky.addColorStop(0, rgba(mixc(edge, th.skyTop, 0.5), 1)); sky.addColorStop(top / (top + h * 0.16), rgba(edge, 1)); sky.addColorStop(1, rgba(edge, 0));
   g.fillStyle = sky; g.fillRect(0, 0, BGW, top + h * 0.16);
-  // a hazy veil keeps the title and nav readable and the photo dreamy rather than busy
+  // a veil keeps the title and nav readable and the photo soft rather than busy
   var veil = g.createLinearGradient(0, 0, 0, BGH);
-  veil.addColorStop(0, 'rgba(206,218,240,0.62)'); veil.addColorStop(0.5, 'rgba(214,224,242,0.38)'); veil.addColorStop(1, 'rgba(190,204,228,0.22)');
+  veil.addColorStop(0, th.veil[0]); veil.addColorStop(0.5, th.veil[1]); veil.addColorStop(1, th.veil[2]);
   g.fillStyle = veil; g.fillRect(0, 0, BGW, BGH);
   return c;
 }
@@ -944,19 +963,30 @@ function start(root, canvas, defs, opts) {
   }
 
   // background + its blurred twin (frosted glass and sky reflections)
-  var bgCanvas = drawBackground();
-  var bgTex = tex(bgCanvas);
-  var frostTex = tex(blurBg(bgCanvas), false);
-  if (opts.background) {
+  var bgTex = tex(mk(BGW, BGH)), frostTex = tex(blurBg(mk(BGW, BGH)), false);
+  function setBackground(c) {
+    bgTex.image = c; bgTex.needsUpdate = true;
+    frostTex.image = blurBg(c); frostTex.needsUpdate = true;
+  }
+  // the background follows the site theme: a photo per theme, with the drawn sky or night until it loads
+  var themeName = '';
+  function applyTheme() {
+    var name = siteTheme();
+    if (name === themeName) return;
+    themeName = name;
+    var th = BG_THEMES[name], url = opts.backgrounds && opts.backgrounds[name];
+    HAZE.set(th.haze[0], th.haze[1], th.haze[2]);
+    setBackground(name === 'dark' ? drawNight() : drawBackground());
+    if (!url) return;
     var photo = new Image();
     photo.onload = function () {
-      if (disposed) return;
-      var c = photoBackground(photo);
-      bgTex.image = c; bgTex.needsUpdate = true;
-      frostTex.image = blurBg(c); frostTex.needsUpdate = true;
+      if (!disposed && themeName === name) setBackground(photoBackground(photo, th));
     };
-    photo.src = opts.background;
+    photo.src = url;
   }
+  applyTheme();
+  var themeObserver = new MutationObserver(applyTheme);
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   var bgMat = new THREE.ShaderMaterial({ uniforms: { map: { value: bgTex } }, vertexShader: VS, fragmentShader: FS_BG, depthWrite: false, depthTest: false });
   var bgGeo = new THREE.PlaneGeometry(1, 1);
   var bg = new THREE.Mesh(bgGeo, bgMat); bg.position.copy(BG_POS); bg.renderOrder = -10;
@@ -1233,6 +1263,7 @@ function start(root, canvas, defs, opts) {
   return {
     dispose: function () {
       disposed = true;
+      themeObserver.disconnect();
       cancelAnimationFrame(raf);
       if (ro) ro.disconnect(); else window.removeEventListener('resize', resize);
       root.removeEventListener('keydown', key);
