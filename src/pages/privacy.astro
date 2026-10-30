@@ -3,10 +3,13 @@ import BaseLayout from "../layouts/base_layout.astro";
 import { buildWebPageEntity } from "../utils/jsonLd";
 import Breadcrumbs from "../components/common/breadcrumbs.astro";
 
+const description =
+    "How rishikc.com collects and uses visitor data, its cookies and third-party services, and your rights under GDPR and CPRA.";
+
 const page_info = {
-    title: "Privacy Policy",
+    title: "Privacy Policy and Data Use",
     brandSuffix: true,
-    description: "Privacy Policy for rishikc.com",
+    description,
     keywords: "privacy policy, data protection, gdpr, cookies",
 };
 
@@ -19,7 +22,7 @@ const pageSchemaEntities = [
     buildWebPageEntity({
         url: siteUrl,
         name: "Privacy Policy",
-        description: "Privacy Policy for rishikc.com",
+        description,
     }),
 ];
 ---

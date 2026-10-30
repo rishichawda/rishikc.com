@@ -180,6 +180,8 @@ const series = defineCollection({
     loader: glob({ pattern: "*.json", base: "./content/series" }),
     schema: z.object({
         title: z.string(),
+        // The page title when `title`, which also keys the series and its URL, is too long for one.
+        shortTitle: z.string().optional(),
         description: z.string(),
         keywords: z.string().optional(),
     }),

@@ -60,8 +60,9 @@ const images =
 // The photograph itself is blocked by robots.txt, so link previews use a downscaled crop.
 const preview = previewImage(`/previews/${gallery.data.directory}.jpg`, featured_image_alt);
 
+// A one-word gallery name is too short for a page title.
 const page_info = {
-  title,
+  title: /photograph/i.test(title) ? title : `${title} Photography Gallery`,
   description: description,
   image: preview,
   // noai and noimageai are an unofficial convention that some AI crawlers read; harmless to others.
