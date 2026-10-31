@@ -1,10 +1,7 @@
-// Reads: floating quote-card cluster. The page paints each card face to a 2D canvas (that is where the fonts are) and
-// handles input; a worker renders them with three.js to an OffscreenCanvas, so the WebGL start-up and every frame stay off
+// Reads: floating quote-card cluster. The page handles input and tells a worker what to show; the worker paints the card
+// faces and renders them with three.js to an OffscreenCanvas, so the painting, the WebGL start-up and every frame stay off
 // the main thread. Where that is unavailable the same renderer runs on the main thread.
-import { drawCard, blurCanvas, fontsReady, setFonts, themeOf, look } from './cards.js';
-
-// Card faces cross over as bitmaps that are already flipped and premultiplied, the way the renderer's textures want them.
-var BITMAP = { imageOrientation: 'flipY', premultiplyAlpha: 'premultiply', colorSpaceConversion: 'none' };
+import { readFonts, fetchFonts } from './fonts.js';
 
 function siteTheme() {
   return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
@@ -18,6 +15,7 @@ function openRenderer(canvas, onMessage) {
     worker.onerror = function () { onMessage({ type: 'failed' }); };
     var offscreen = canvas.transferControlToOffscreen();
     return {
+      worker: true,
       post: function (msg, transfer) {
         if (msg.type === 'init') { msg.canvas = offscreen; transfer = [offscreen]; }
         worker.postMessage(msg, transfer || []);
@@ -45,11 +43,7 @@ function openRenderer(canvas, onMessage) {
 export function mount(root, canvas, quotes, opts) {
   if (!quotes.length) return null;
   opts = opts || {};
-  setFonts();
-  var defs = quotes.map(function (q) {
-    return { q: q.quote, a: q.info || '', t: themeOf(q.theme), art: q.art };
-  });
-  var N = defs.length, disposed = false;
+  var defs = quotes.map(function (q) { return { q: q.quote, a: q.info || '' }; });
 
   var renderer = openRenderer(canvas, function (msg) {
     if (msg.type === 'change') { if (opts.onChange) opts.onChange(defs[msg.idx], msg.idx); }
@@ -64,8 +58,9 @@ export function mount(root, canvas, quotes, opts) {
     return { w: root.clientWidth, h: root.clientHeight, dpr: window.devicePixelRatio || 1 };
   }
   var s = size();
+  var fonts = readFonts();
   renderer.post({
-    type: 'init', cards: defs.map(function (d) { return look(d.t); }), theme: siteTheme(), backgrounds: backgrounds,
+    type: 'init', quotes: quotes, fonts: { serif: fonts.serif, sans: fonts.sans }, theme: siteTheme(), backgrounds: backgrounds,
     reduced: !!reduced, w: s.w, h: s.h, dpr: s.dpr
   });
 
@@ -137,25 +132,17 @@ export function mount(root, canvas, quotes, opts) {
   root.addEventListener('pointerdown', onDown);
   root.addEventListener('pointerup', onUp);
 
-  // paint the card faces once the fonts are in, one per frame so no single task runs long
-  function send(i) {
-    var face = drawCard(defs[i]);
-    Promise.all([createImageBitmap(face, BITMAP), createImageBitmap(blurCanvas(face), BITMAP)]).then(function (b) {
-      if (!disposed) renderer.post({ type: 'card', i: i, face: b[0], blur: b[1] }, b);
+  // the worker paints with the page's fonts, so it gets them as bytes; on the page itself they load where they are
+  if (renderer.worker) {
+    fetchFonts(fonts).then(function (f) {
+      renderer.post({ type: 'fonts', fonts: f }, f.faces.map(function (x) { return x.data; }));
     });
+  } else {
+    renderer.post({ type: 'fonts', fonts: fonts });
   }
-  fontsReady().then(function () {
-    var i = 0;
-    (function next() {
-      if (disposed) return;
-      send(i++);
-      if (i < N) requestAnimationFrame(next);
-    })();
-  });
 
   return {
     dispose: function () {
-      disposed = true;
       themeObserver.disconnect();
       if (ro) ro.disconnect();
       root.removeEventListener('keydown', key);

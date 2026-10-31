@@ -1,12 +1,9 @@
-// Reads: card painting. Each quote card is drawn to a 2D canvas on the main thread, where the page fonts are available.
+// Reads: card painting. Each quote card is drawn to a 2D canvas, in the worker with the rest of the scene.
 import { TW, TH, TR, clamp, mk, rng, roundRect, rgba, mixc, ridge, cloud } from './paint.js';
 
-// Astro registers the fonts under hashed family names, so the stacks come from the CSS variables it defines.
+// Replaced by the page's own stacks (see fonts.js).
 var SERIF = 'Georgia, "Times New Roman", serif';
 var SANS = '"Helvetica Neue", Arial, sans-serif';
-function cssFont(name, fallback) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
-}
 
 var DEFAULT_THEME = 'paper';
 var THEMES = {
@@ -560,19 +557,9 @@ export function blurCanvas(src) {
   return o;
 }
 
-export function fontsReady() {
-  if (!document.fonts || !document.fonts.load) return Promise.resolve();
-  var loads = Promise.all([
-    document.fonts.load('400 78px ' + SERIF),
-    document.fonts.load('600 200px ' + SERIF),
-    document.fonts.load('400 35px ' + SANS)
-  ]).catch(function () {});
-  return Promise.race([loads, new Promise(function (res) { setTimeout(res, 3000); })]);
-}
-
-export function setFonts() {
-  SERIF = cssFont('--font-source-serif-4', SERIF);
-  SANS = cssFont('--font-jost', SANS);
+export function setFonts(serif, sans) {
+  SERIF = serif || SERIF;
+  SANS = sans || SANS;
 }
 
 export function themeOf(name) { return THEMES[name] ? name : DEFAULT_THEME; }
