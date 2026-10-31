@@ -53,10 +53,17 @@ const pageSchemaEntities = [
 
     <div id="reads-stage" class="stage" data-background={backgroundPhoto.src} data-background-dark={backgroundPhotoDark.src}>
         <canvas id="reads-canvas" class="stage-canvas" aria-hidden="true"></canvas>
+        <!-- On touch screens these strips stay out of the swipe, so the browser's own back gesture still works there. -->
+        <div class="stage-edge stage-edge-left" data-edge aria-hidden="true"></div>
+        <div class="stage-edge stage-edge-right" data-edge aria-hidden="true"></div>
         <section class="page-header" data-reveal>
             <h1 class="page-title">Reads</h1>
             <p class="page-subtitle">A collection of quotes, passages, and ideas that have shaped my thinking.</p>
         </section>
+        <div class="stage-loader" aria-hidden="true">
+            <div class="loader-cards"><span></span><span></span><span></span></div>
+            <p class="loader-caption">Gathering quotes<span class="loader-dots"><i>.</i><i>.</i><i>.</i></span></p>
+        </div>
         <p id="reads-live" class="visually-hidden" aria-live="polite"></p>
 
         <!-- The canvas is not readable by assistive tech, so the quotes also live here, and feed the scene. -->
@@ -88,14 +95,18 @@ const pageSchemaEntities = [
             art: card.dataset.art,
         }));
 
-        const { mount } = await import('../scripts/reads_scene.js');
+        const { mount } = await import('../scripts/reads/scene.js');
         if (!stage.isConnected) return;
 
+        // the loading screen goes once the cards fade in, or when there is no WebGL to show them with
+        const loaded = () => stage.classList.add('is-loaded');
         scene = mount(stage, canvas, quotes, {
             backgrounds: { light: stage.dataset.background, dark: stage.dataset.backgroundDark },
             onChange: (card: { q: string; a: string }) => {
                 live.textContent = card.a ? `${card.q} — ${card.a}` : card.q;
             },
+            onBuilt: loaded,
+            onFailed: loaded,
         });
         if (!scene) return;
         stage.tabIndex = 0;
@@ -127,7 +138,6 @@ const pageSchemaEntities = [
         height: 100svh;
         min-height: 520px;
         overflow: hidden;
-        touch-action: none;
         background: linear-gradient(180deg, #7d9dd0 0%, #c8d6ec 48%, #f2e6dc 72%, #61768a 100%);
     }
     :global([data-theme="dark"]) .stage {
@@ -143,6 +153,121 @@ const pageSchemaEntities = [
         width: 100%;
         height: 100%;
         display: block;
+        /* sideways drags move the cards; vertical ones scroll the page */
+        touch-action: pan-y;
+    }
+    .stage-edge {
+        display: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+    }
+    .stage-edge-left {
+        left: 0;
+    }
+    .stage-edge-right {
+        right: 0;
+    }
+    @media (pointer: coarse) {
+        .stage-edge {
+            display: block;
+        }
+    }
+    .stage-loader {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 34px;
+        pointer-events: none;
+        transition: opacity 0.7s ease, visibility 0s linear 0.7s;
+    }
+    .stage.is-loaded .stage-loader {
+        opacity: 0;
+        visibility: hidden;
+    }
+    /* three cards fan out and shuffle back in while the scene starts up */
+    .loader-cards {
+        position: relative;
+        width: 96px;
+        height: 88px;
+    }
+    .loader-cards span {
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(27, 37, 82, 0.22);
+        box-shadow: 0 10px 28px rgba(27, 37, 82, 0.18);
+        transform-origin: 50% 120%;
+        animation: loader-fan 2.1s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+    .loader-cards span:nth-child(1) { --fan: -17deg; }
+    .loader-cards span:nth-child(3) { --fan: 17deg; }
+    .loader-cards span:nth-child(2) {
+        --fan: 0deg;
+        animation-name: loader-fan, loader-bob;
+        animation-duration: 2.1s, 1.4s;
+        animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1), ease-in-out;
+    }
+    .loader-cards span:nth-child(2)::before {
+        content: "\201C";
+        position: absolute;
+        left: 16px;
+        top: 6px;
+        font-family: var(--font-source-serif-4, serif);
+        font-size: 54px;
+        font-weight: 600;
+        line-height: 1;
+        color: #1b2552;
+        opacity: 0.7;
+    }
+    .loader-caption {
+        margin: 0;
+        font-family: var(--font-jost);
+        font-size: 14px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #38446d;
+        text-shadow: 0 1px 14px rgba(255, 255, 255, 0.8);
+    }
+    .loader-dots i {
+        font-style: normal;
+        animation: loader-dot 1.2s ease-in-out infinite;
+    }
+    .loader-dots i:nth-child(2) { animation-delay: 0.15s; }
+    .loader-dots i:nth-child(3) { animation-delay: 0.3s; }
+    :global([data-theme="dark"]) .loader-cards span {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.22);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+    }
+    :global([data-theme="dark"]) .loader-cards span:nth-child(2)::before,
+    :global([data-theme="dark"]) .loader-caption {
+        color: #c9d0e6;
+    }
+    @keyframes loader-fan {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(var(--fan)); }
+    }
+    @keyframes loader-bob {
+        0%, 100% { translate: 0 0; }
+        50% { translate: 0 -6px; }
+    }
+    @keyframes loader-dot {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .loader-cards span,
+        .loader-dots i {
+            animation: none;
+        }
+        .loader-cards span:nth-child(1) { transform: rotate(-17deg); }
+        .loader-cards span:nth-child(3) { transform: rotate(17deg); }
     }
     .visually-hidden {
         position: absolute;
