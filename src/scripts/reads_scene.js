@@ -1079,14 +1079,27 @@ function start(root, canvas, defs, opts) {
     if (e.deltaMode === 1) dy *= 18; else if (e.deltaMode === 2) dy *= 400;
     nudge(clamp(dy, -140, 140) * 0.0034);
   }
-  var ty = null;
-  function onTouchStart(e) { if (e.touches.length === 1) ty = e.touches[0].clientY; }
-  function onTouchMove(e) {
-    if (ty == null || !e.touches.length) return;
-    e.preventDefault();
-    var y = e.touches[0].clientY; nudge((ty - y) * 0.0065); ty = y;
+  // Swipe sideways: the next card sits to the right, so a swipe left brings it in. Vertical drags are left to the browser
+  // to scroll the page, and touches starting on a [data-edge] strip are left to the browser's back gesture.
+  var tx = null, t0 = null, horizontal = false;
+  function onTouchStart(e) {
+    var t = e.touches[0];
+    if (e.touches.length !== 1 || e.target.closest('[data-edge]')) { tx = null; return; }
+    tx = t.clientX; t0 = { x: t.clientX, y: t.clientY }; horizontal = false;
   }
-  function onTouchEnd() { ty = null; }
+  function onTouchMove(e) {
+    if (tx == null) return;
+    var t = e.touches[0];
+    if (!horizontal) {
+      var dx = Math.abs(t.clientX - t0.x), dy = Math.abs(t.clientY - t0.y);
+      if (dx + dy < 8) return;
+      if (dy > dx) { tx = null; return; }
+      horizontal = true;
+    }
+    e.preventDefault();
+    nudge((tx - t.clientX) * 0.008); tx = t.clientX;
+  }
+  function onTouchEnd() { tx = null; }
   function toNdc(e) {
     var r = root.getBoundingClientRect();
     return { x: (e.clientX - r.left) / r.width * 2 - 1, y: (e.clientY - r.top) / r.height * 2 - 1 };
@@ -1138,6 +1151,7 @@ function start(root, canvas, defs, opts) {
   root.addEventListener('touchstart', onTouchStart, { passive: true });
   root.addEventListener('touchmove', onTouchMove, { passive: false });
   root.addEventListener('touchend', onTouchEnd);
+  root.addEventListener('touchcancel', onTouchEnd);
   root.addEventListener('pointermove', onPointer);
   root.addEventListener('pointerleave', onLeave);
   root.addEventListener('pointerdown', onDown);
@@ -1271,6 +1285,7 @@ function start(root, canvas, defs, opts) {
       root.removeEventListener('touchstart', onTouchStart);
       root.removeEventListener('touchmove', onTouchMove);
       root.removeEventListener('touchend', onTouchEnd);
+      root.removeEventListener('touchcancel', onTouchEnd);
       root.removeEventListener('pointermove', onPointer);
       root.removeEventListener('pointerleave', onLeave);
       root.removeEventListener('pointerdown', onDown);

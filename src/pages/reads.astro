@@ -53,6 +53,9 @@ const pageSchemaEntities = [
 
     <div id="reads-stage" class="stage" data-background={backgroundPhoto.src} data-background-dark={backgroundPhotoDark.src}>
         <canvas id="reads-canvas" class="stage-canvas" aria-hidden="true"></canvas>
+        <!-- On touch screens these strips stay out of the swipe, so the browser's own back gesture still works there. -->
+        <div class="stage-edge stage-edge-left" data-edge aria-hidden="true"></div>
+        <div class="stage-edge stage-edge-right" data-edge aria-hidden="true"></div>
         <section class="page-header" data-reveal>
             <h1 class="page-title">Reads</h1>
             <p class="page-subtitle">A collection of quotes, passages, and ideas that have shaped my thinking.</p>
@@ -127,7 +130,6 @@ const pageSchemaEntities = [
         height: 100svh;
         min-height: 520px;
         overflow: hidden;
-        touch-action: none;
         background: linear-gradient(180deg, #7d9dd0 0%, #c8d6ec 48%, #f2e6dc 72%, #61768a 100%);
     }
     :global([data-theme="dark"]) .stage {
@@ -143,6 +145,26 @@ const pageSchemaEntities = [
         width: 100%;
         height: 100%;
         display: block;
+        /* sideways drags move the cards; vertical ones scroll the page */
+        touch-action: pan-y;
+    }
+    .stage-edge {
+        display: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+    }
+    .stage-edge-left {
+        left: 0;
+    }
+    .stage-edge-right {
+        right: 0;
+    }
+    @media (pointer: coarse) {
+        .stage-edge {
+            display: block;
+        }
     }
     .visually-hidden {
         position: absolute;
