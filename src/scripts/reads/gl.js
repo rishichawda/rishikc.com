@@ -1,6 +1,8 @@
 // Reads: the three.js quote-card stage. Runs in a worker on an OffscreenCanvas, or on the main thread when that is unavailable.
 import * as THREE from 'three';
 import { CW, CH, CR, BGW, BGH, BG_THEMES, clamp, mk, drawBackground, drawNight, drawShadow, photoBackground, blurBg } from './paint.js';
+import { drawCard, blurCanvas, setFonts, themeOf, look } from './cards.js';
+import { loadFonts } from './fonts.js';
 
 var CAMZ = 24, FOV = 30, TAN = Math.tan(FOV * Math.PI / 360), D2R = Math.PI / 180;
 
@@ -162,9 +164,9 @@ var cancelFrame = typeof cancelAnimationFrame === 'function' ? function (id) { c
 
 // ---------------------------------------------------------------- renderer
 // The page (or the worker's host) drives this with messages, and gets messages back through post:
-//   in:  init { canvas, cards: [look], theme, backgrounds: { light, dark }, reduced, w, h, dpr }, size { w, h, dpr }, theme { name },
-//        card { i, face, blur } (ImageBitmaps, flipped), nudge { amount }, step { d }, hover { x, y } (-1..1, y down), leave, tap { x, y }, dispose
-//   out: failed (no WebGL), built (every card is in and fading up), change { idx }, cursor { pointer }
+//   in:  init { canvas, quotes: [{ quote, info, theme, art }], fonts: { serif, sans }, theme, backgrounds: { light, dark }, reduced, w, h, dpr },
+//        fonts { fonts } (see fonts.js), size { w, h, dpr }, theme { name }, nudge { amount }, step { d }, hover { x, y } (-1..1, y down), leave, tap { x, y }, dispose
+//   out: failed (no WebGL), built (every card is painted and fading up), change { idx }, cursor { pointer }
 export function createRenderer(post) {
   var run = null;
   return {
@@ -176,7 +178,10 @@ export function createRenderer(post) {
 }
 
 function start(m, post) {
-  var N = m.cards.length, slots = buildSlots(N), renderer;
+  var defs = m.quotes.map(function (q) {
+    return { q: q.quote, a: q.info || '', t: themeOf(q.theme), art: q.art };
+  });
+  var N = defs.length, slots = buildSlots(N), renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas: m.canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
   } catch (e) {
@@ -197,11 +202,9 @@ function start(m, post) {
   var FACE_SIZE = new THREE.Vector2(FW, FH);
   var disposed = false;
 
-  // src is a canvas, or an ImageBitmap that was already flipped and premultiplied when it was made
-  function tex(src, mip) {
-    var t = new THREE.CanvasTexture(src), bitmap = typeof ImageBitmap !== 'undefined' && src instanceof ImageBitmap;
-    t.premultiplyAlpha = !bitmap;
-    t.flipY = !bitmap;
+  function tex(c, mip) {
+    var t = new THREE.CanvasTexture(c);
+    t.premultiplyAlpha = true;
     t.generateMipmaps = mip !== false;
     t.minFilter = mip === false ? THREE.LinearFilter : THREE.LinearMipmapLinearFilter;
     t.magFilter = THREE.LinearFilter;
@@ -253,8 +256,8 @@ function start(m, post) {
   var softTex = tex(drawShadow(), false);
   var WHITE = new THREE.Vector3(1, 1, 1), SHADOW = new THREE.Vector3(0.1, 0.14, 0.24);
 
-  var cards = m.cards.map(function (th, i) {
-    var group = new THREE.Group();
+  var cards = defs.map(function (def, i) {
+    var th = look(def.t), group = new THREE.Group();
     var faceU = {
       map: { value: null }, mapB: { value: null }, bgMap: { value: frostTex },
       blur: { value: 0 }, fog: { value: 0 }, opacity: { value: 0 }, hover: { value: 0 },
@@ -335,16 +338,23 @@ function start(m, post) {
     target = Math.round(target) + d; lastDir = d > 0 ? 1 : -1; lastInput = -1e9;
   }
 
-  // card faces arrive from the page once its fonts are in
-  var readyAt = 0, built = false, got = 0;
-  function addCard(c) {
-    var card = cards[c.i];
-    card.faceU.map.value = tex(c.face);
-    card.faceU.mapB.value = tex(c.blur);
-    if (++got < N) return;
-    cards.forEach(function (k) { k.group.visible = true; });
-    built = true; readyAt = performance.now();
-    post({ type: 'built' });
+  // paint the card faces once the fonts are in, one per turn so frames keep flowing meanwhile
+  var readyAt = 0, built = false;
+  setFonts(m.fonts.serif, m.fonts.sans);
+  function paintCards(s) {
+    loadFonts(s.fonts).then(function () {
+      var i = 0;
+      (function next() {
+        if (disposed) return;
+        var face = drawCard(defs[i]);
+        cards[i].faceU.map.value = tex(face);
+        cards[i].faceU.mapB.value = tex(blurCanvas(face));
+        if (++i < N) { setTimeout(next, 0); return; }
+        cards.forEach(function (k) { k.group.visible = true; });
+        built = true; readyAt = performance.now();
+        post({ type: 'built' });
+      })();
+    });
   }
 
   // ---------------------------------------------------------------- physics
@@ -445,9 +455,9 @@ function start(m, post) {
   raf = nextFrame(frame);
 
   return {
+    fonts: paintCards,
     size: resize,
     theme: function (s) { applyTheme(s.name); },
-    card: addCard,
     nudge: function (s) { nudge(s.amount); },
     step: function (s) { step(s.d); },
     hover: function (s) { mx = clamp(s.x, -1, 1); my = clamp(s.y, -1, 1); ndc.set(s.x, -s.y); },

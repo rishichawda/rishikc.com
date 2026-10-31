@@ -99,7 +99,11 @@ const pageSchemaEntities = [
         if (!stage.isConnected) return;
 
         // the loading screen goes once the cards fade in, or when there is no WebGL to show them with
-        const loaded = () => stage.classList.add('is-loaded');
+        const loaded = () => {
+            stage.classList.add('is-loaded');
+            const loader = stage.querySelector('.stage-loader');
+            loader?.addEventListener('transitionend', () => loader.remove(), { once: true });
+        };
         scene = mount(stage, canvas, quotes, {
             backgrounds: { light: stage.dataset.background, dark: stage.dataset.backgroundDark },
             onChange: (card: { q: string; a: string }) => {
@@ -183,11 +187,10 @@ const pageSchemaEntities = [
         justify-content: center;
         gap: 34px;
         pointer-events: none;
-        transition: opacity 0.7s ease, visibility 0s linear 0.7s;
+        transition: opacity 0.7s ease;
     }
     .stage.is-loaded .stage-loader {
         opacity: 0;
-        visibility: hidden;
     }
     /* three cards fan out and shuffle back in while the scene starts up */
     .loader-cards {
