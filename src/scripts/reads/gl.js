@@ -1,6 +1,6 @@
 // Reads: the three.js quote-card stage. Runs in a worker on an OffscreenCanvas, or on the main thread when that is unavailable.
 import * as THREE from 'three';
-import { CW, CH, CR, BGW, BGH, BG_THEMES, clamp, mk, drawBackground, drawNight, drawShadow, photoBackground, blurBg } from './paint.js';
+import { CW, CH, CR, BGW, BGH, BG_THEMES, clamp, mk, drawShadow, photoBackground, blurBg } from './paint.js';
 import { drawCard, blurCanvas, setFonts, themeOf, look } from './cards.js';
 import { loadFonts } from './fonts.js';
 
@@ -166,7 +166,7 @@ var cancelFrame = typeof cancelAnimationFrame === 'function' ? function (id) { c
 // The page (or the worker's host) drives this with messages, and gets messages back through post:
 //   in:  init { canvas, quotes: [{ quote, info, theme, art }], fonts: { serif, sans }, theme, backgrounds: { light, dark }, reduced, w, h, dpr },
 //        fonts { fonts } (see fonts.js), size { w, h, dpr }, theme { name }, nudge { amount }, step { d }, hover { x, y } (-1..1, y down), leave, tap { x, y }, dispose
-//   out: failed (no WebGL), built (every card is painted and fading up), change { idx }, cursor { pointer }
+//   out: failed (no WebGL), built (the photo is in and every card is painted and fading up), change { idx }, cursor { pointer }
 export function createRenderer(post) {
   var run = null;
   return {
@@ -219,21 +219,21 @@ function start(m, post) {
     bgTex.image = c; bgTex.needsUpdate = true;
     frostTex.image = blurBg(c); frostTex.needsUpdate = true;
   }
-  // the background follows the site theme: a photo per theme, with the drawn sky or night until it loads
+  // the background follows the site theme: a photo per theme. A switch keeps the old photo until the new one has
+  // decoded, and the resolved promise lets the first reveal wait for it.
   var themeName = '';
   function applyTheme(name) {
-    if (name === themeName) return;
+    if (name === themeName) return Promise.resolve();
     themeName = name;
     var th = BG_THEMES[name], url = m.backgrounds && m.backgrounds[name];
     HAZE.set(th.haze[0], th.haze[1], th.haze[2]);
-    setBackground(name === 'dark' ? drawNight() : drawBackground());
-    if (!url) return;
-    fetch(url).then(function (r) { return r.blob(); }).then(createImageBitmap).then(function (photo) {
+    if (!url) return Promise.resolve();
+    return fetch(url).then(function (r) { return r.blob(); }).then(createImageBitmap).then(function (photo) {
       if (!disposed && themeName === name) setBackground(photoBackground(photo, th));
       photo.close();
     }).catch(function () {});
   }
-  applyTheme(m.theme);
+  var backgroundReady = applyTheme(m.theme);
   var bgMat = new THREE.ShaderMaterial({ uniforms: { map: { value: bgTex } }, vertexShader: VS, fragmentShader: FS_BG, depthWrite: false, depthTest: false });
   var bgGeo = new THREE.PlaneGeometry(1, 1);
   var bg = new THREE.Mesh(bgGeo, bgMat); bg.position.copy(BG_POS); bg.renderOrder = -10;
@@ -350,9 +350,12 @@ function start(m, post) {
         cards[i].faceU.map.value = tex(face);
         cards[i].faceU.mapB.value = tex(blurCanvas(face));
         if (++i < N) { setTimeout(next, 0); return; }
-        cards.forEach(function (k) { k.group.visible = true; });
-        built = true; readyAt = performance.now();
-        post({ type: 'built' });
+        backgroundReady.then(function () {
+          if (disposed) return;
+          cards.forEach(function (k) { k.group.visible = true; });
+          built = true; readyAt = performance.now();
+          post({ type: 'built' });
+        });
       })();
     });
   }

@@ -25,7 +25,9 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
       - name: Install dependencies without running install scripts
-        run: yarn install --frozen-lockfile --ignore-scripts
+        run: yarn install --immutable
+        env:
+          YARN_ENABLE_SCRIPTS: "false"
       - name: Run axe on the live site
         run: yarn audit:a11y
         env:
