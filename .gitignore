@@ -31,3 +31,17 @@ pnpm-debug.log*
 
 # design files
 design/
+
+# local AI assistant config, not for the repo
+.github/copilot-instructions.md
+.github/prompts/
+.claude/skills/
+.claude/agents/
+
+# yarn: track the release and plugins, ignore install state
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
