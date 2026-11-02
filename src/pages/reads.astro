@@ -159,6 +159,13 @@ const pageSchemaEntities = [
         display: block;
         /* sideways drags move the cards; vertical ones scroll the page */
         touch-action: pan-y;
+        /* the scene renders before the photo and the cards are ready; hold it back so it fades in over the stage
+           gradient together with them instead of popping over it */
+        opacity: 0;
+        transition: opacity 0.7s ease;
+    }
+    .stage.is-loaded .stage-canvas {
+        opacity: 1;
     }
     .stage-edge {
         display: none;
