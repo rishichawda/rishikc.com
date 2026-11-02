@@ -98,12 +98,24 @@ const pageSchemaEntities = [
         const { mount } = await import('../scripts/reads/scene.js');
         if (!stage.isConnected) return;
 
+        // Astro marks <html> with data-astro-transition while a view transition runs. Safari flashes the canvas when its
+        // fade-in straddles the end of that transition, so the reveal waits until the transition is over.
+        const whenSettled = (fn: () => void) => {
+            const root = document.documentElement;
+            if (!root.hasAttribute('data-astro-transition')) return fn();
+            const settled = new MutationObserver(() => {
+                if (root.hasAttribute('data-astro-transition')) return;
+                settled.disconnect();
+                fn();
+            });
+            settled.observe(root, { attributes: true, attributeFilter: ['data-astro-transition'] });
+        };
         // the loading screen goes once the cards fade in, or when there is no WebGL to show them with
-        const loaded = () => {
+        const loaded = () => whenSettled(() => {
             stage.classList.add('is-loaded');
             const loader = stage.querySelector('.stage-loader');
             loader?.addEventListener('transitionend', () => loader.remove(), { once: true });
-        };
+        });
         scene = mount(stage, canvas, quotes, {
             backgrounds: { light: stage.dataset.background, dark: stage.dataset.backgroundDark },
             onChange: (card: { q: string; a: string }) => {
