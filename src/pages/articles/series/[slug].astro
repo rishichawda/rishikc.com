@@ -100,6 +100,7 @@ const pageSchemaEntities = [
                     <span class="ongoing-badge">Ongoing</span>
                 )}
             </div>
+            <p class="series-updated">Last updated <time datetime={series.lastUpdated.toISOString()}>{formatDate(series.lastUpdated)}</time></p>
         </section>
 
         <section class="series-content">
@@ -176,6 +177,12 @@ const pageSchemaEntities = [
         align-items: center;
         justify-content: center;
         gap: var(--space-3);
+    }
+    .series-updated {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-tertiary);
+        margin: var(--space-3) 0 0;
     }
     .series-meta-item {
         font-family: var(--font-mono);
