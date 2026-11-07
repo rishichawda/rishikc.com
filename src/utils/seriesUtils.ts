@@ -161,12 +161,12 @@ export function getAllSeries(allArticles: CollectionEntry<"articles">[]): Array<
     totalParts: series.articles.length
   }));
 
-  // Sort series by the publication date of their first article
-  allSeries.sort((a, b) => {
-    const aFirstDate = a.articles[0]?.data.date.getTime() || 0;
-    const bFirstDate = b.articles[0]?.data.date.getTime() || 0;
-    return bFirstDate - aFirstDate; // Most recent first
-  });
+  // Most recently updated first; the publication date of a series' newest article breaks ties
+  const newestPublished = (series: { articles: CollectionEntry<"articles">[] }) =>
+    Math.max(...series.articles.map(article => article.data.date.getTime()));
+  allSeries.sort((a, b) =>
+    b.lastUpdated.getTime() - a.lastUpdated.getTime() || newestPublished(b) - newestPublished(a)
+  );
 
   return allSeries;
 }
