@@ -170,3 +170,17 @@ export function getAllSeries(allArticles: CollectionEntry<"articles">[]): Array<
 
   return allSeries;
 }
+
+/**
+ * Find the content/series entry that describes a series; a series without one has no description to show
+ */
+export function getSeriesData(
+  seriesCollection: CollectionEntry<"series">[],
+  seriesTitle: string
+): CollectionEntry<"series"> {
+  const entry = seriesCollection.find((s) => s.data.title === seriesTitle);
+  if (!entry) {
+    throw new Error(`No content/series entry with the title "${seriesTitle}"`);
+  }
+  return entry;
+}

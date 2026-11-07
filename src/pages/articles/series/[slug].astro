@@ -4,7 +4,7 @@ import BaseLayout from "../../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
 import { buildWebPageEntity } from "../../../utils/jsonLd";
 import { isPhotograph, shareImage } from "../../../utils/shareImage";
-import { getAllSeries, getSeriesSlug } from "../../../utils/seriesUtils";
+import { getAllSeries, getSeriesData, getSeriesSlug } from "../../../utils/seriesUtils";
 import Breadcrumbs from "../../../components/common/breadcrumbs.astro";
 
 interface Social { platform: string; url: string; }
@@ -17,9 +17,7 @@ export async function getStaticPaths() {
 
     return allSeries.map((series) => {
         const slug = getSeriesSlug(series.seriesTitle);
-        const seriesData = seriesCollection.find(
-            (s) => s.data.title === series.seriesTitle
-        );
+        const seriesData = getSeriesData(seriesCollection, series.seriesTitle);
         return {
             params: { slug },
             props: { series, seriesData },
@@ -32,17 +30,16 @@ const { series, seriesData } = Astro.props;
 const profileEntry = await getCollection("profile");
 const profile = profileEntry[0].data as ProfileData;
 
-const description = seriesData?.data.description
-    || `A ${series.totalParts}-part series exploring ${series.seriesTitle.toLowerCase()} in depth.`;
+const description = seriesData.data.description;
 
 // The series shares the hero of its first part; a photograph hero is blocked, so the page falls back to a card.
 const firstHero = series.articles[0]?.data.hero_image;
 
 const page_info = {
-    title: seriesData?.data.shortTitle ?? series.seriesTitle,
+    title: seriesData.data.shortTitle ?? series.seriesTitle,
     description,
     image: firstHero && !isPhotograph(firstHero) ? shareImage(`/shares/articles/${series.articles[0].id}.jpg`, series.articles[0].data.hero_image_alt) : undefined,
-    keywords: seriesData?.data.keywords || series.seriesTitle.toLowerCase(),
+    keywords: seriesData.data.keywords || series.seriesTitle.toLowerCase(),
 };
 
 function formatDate(date: Date): string {

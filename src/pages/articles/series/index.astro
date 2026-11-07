@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/base_layout.astro";
 import { Image } from "astro:assets";
 import { buildWebPageEntity } from "../../../utils/jsonLd";
-import { getAllSeries, getSeriesSlug } from "../../../utils/seriesUtils";
+import { getAllSeries, getSeriesData, getSeriesSlug } from "../../../utils/seriesUtils";
 import Breadcrumbs from "../../../components/common/breadcrumbs.astro";
 
 interface Social { platform: string; url: string; }
@@ -21,6 +21,7 @@ const page_info = {
 
 const allArticles = await getCollection("articles");
 const allSeries = getAllSeries(allArticles);
+const seriesCollection = await getCollection("series");
 
 function formatDate(date: Date): string {
     return new Date(date).toLocaleDateString("en-US", {
@@ -88,10 +89,7 @@ const pageSchemaEntities = [
                                 <a href={`/articles/series/${getSeriesSlug(series.seriesTitle)}/`} class="series-block-title-link">
                                     <h2 class="series-block-title">{series.seriesTitle}</h2>
                                 </a>
-                                <p class="series-block-desc">
-                                    A {series.totalParts}-part series exploring {series.seriesTitle.toLowerCase()} in depth.
-                                    {series.isOngoing ? ' New parts are being added regularly.' : ''}
-                                </p>
+                                <p class="series-block-desc">{getSeriesData(seriesCollection, series.seriesTitle).data.description}</p>
                                 <p class="series-block-updated">Last updated <time datetime={series.lastUpdated.toISOString()}>{formatDate(series.lastUpdated)}</time></p>
                             </div>
                             <div class="series-block-meta">
