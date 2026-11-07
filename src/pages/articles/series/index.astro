@@ -92,6 +92,7 @@ const pageSchemaEntities = [
                                     A {series.totalParts}-part series exploring {series.seriesTitle.toLowerCase()} in depth.
                                     {series.isOngoing ? ' New parts are being added regularly.' : ''}
                                 </p>
+                                <p class="series-block-updated">Last updated <time datetime={series.lastUpdated.toISOString()}>{formatDate(series.lastUpdated)}</time></p>
                             </div>
                             <div class="series-block-meta">
                                 <span>{series.totalParts} parts</span>
@@ -240,6 +241,12 @@ const pageSchemaEntities = [
         color: var(--color-text-secondary);
         line-height: 1.6;
         margin: 0;
+    }
+    .series-block-updated {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--color-text-tertiary);
+        margin: var(--space-2) 0 0;
     }
     .series-block-meta {
         font-family: var(--font-mono);
