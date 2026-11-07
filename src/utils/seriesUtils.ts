@@ -118,12 +118,14 @@ export function getAllSeries(allArticles: CollectionEntry<"articles">[]): Array<
   articles: CollectionEntry<"articles">[];
   isOngoing: boolean;
   totalParts: number;
+  lastUpdated: Date;
 }> {
   const seriesMap = new Map<string, {
     seriesTitle: string;
     articles: CollectionEntry<"articles">[];
     isOngoing: boolean;
     totalParts: number;
+    lastUpdated: Date;
   }>();
 
   allArticles.forEach(article => {
@@ -135,11 +137,16 @@ export function getAllSeries(allArticles: CollectionEntry<"articles">[]): Array<
           seriesTitle,
           articles: [],
           isOngoing: article.data.series!.ongoing || false,
-          totalParts: 0
+          totalParts: 0,
+          lastUpdated: new Date(0)
         });
       }
       
-      seriesMap.get(seriesTitle)!.articles.push(article);
+      const entry = seriesMap.get(seriesTitle)!;
+      entry.articles.push(article);
+      // A series is as fresh as its most recently updated part.
+      const updated = article.data.dateModified ?? article.data.date;
+      if (updated > entry.lastUpdated) entry.lastUpdated = updated;
     }
   });
 
