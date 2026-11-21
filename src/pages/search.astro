@@ -1097,7 +1097,8 @@ const pageSchemaEntities = [
   const fetchSearchIndex = async () => {
     if (window.searchIndex) return;
     try {
-      const response = await fetch('/api/search-index.json');
+      // Revalidate on every load: the index holds hashed thumbnail URLs that change with each deploy.
+      const response = await fetch('/api/search-index.json', { cache: 'no-cache' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       window.searchIndex = await response.json();
     } catch (error) {
