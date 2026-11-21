@@ -1,5 +1,9 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
+
+// Search results show article banners 240px wide. Twice that width covers high-density screens.
+const SEARCH_THUMB_WIDTH = 480;
 
 export const GET: APIRoute = async () => {
     const allArticles = await getCollection("articles");
@@ -8,13 +12,15 @@ export const GET: APIRoute = async () => {
     const allQuotes = await getCollection("quotes");
 
     const searchIndex = {
-        articles: allArticles.map((article) => ({
+        articles: await Promise.all(allArticles.map(async (article) => ({
             title: article.data.title,
             description: article.data.description,
             tags: article.data.tags || [],
             path: article.data.path,
             date: article.data.date.toISOString(),
-            hero_image: article.data.hero_image,
+            hero_image: {
+                src: (await getImage({ src: article.data.hero_image, width: SEARCH_THUMB_WIDTH, format: "webp" })).src,
+            },
             hero_image_alt: article.data.hero_image_alt || article.data.title,
             searchableContent: [
                 article.data.title,
@@ -27,7 +33,7 @@ export const GET: APIRoute = async () => {
                 .filter(Boolean)
                 .join(" ")
                 .toLowerCase(),
-        })),
+        }))),
         bits: allBits.map((bit) => ({
             title: bit.data.title,
             description: bit.data.description,
